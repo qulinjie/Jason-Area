@@ -142,7 +142,8 @@ a:hover { text-decoration: none;}
 .entirety .top{width:1349px; margin:auto; height:75px;  border-bottom:1px solid #dadada; background:#ffffff;}
 .entirety .top .logo{float:left; }
 .entirety .top .nav{float:right;margin-top:40px; margin-right:189px;}
-.entirety .top .nav a{font:500 14px 微软雅黑; color:#000000; margin-left:53px; padding-bottom:20px;}
+.entirety .top .nav .discolor{border-bottom:3px solid #498ec9; color:#498ec9;}
+.entirety .top .nav a{font:500 14px 微软雅黑; color:#000000; margin-left:53px; padding-bottom:14px; }
 .entirety .content{ width:935px; height:460px; margin:auto; padding-top:35px; padding-bottom:43px;}
 .entirety .content .tb{float:left; width:287px; height:211px; margin:0 0 37px 37px; background:#498ec9; position:relative;}
 .entirety .content .tb a{ display:block;width:287px; height:211px;}
@@ -168,83 +169,147 @@ a:hover { text-decoration: none;}
 .tabs li a {display: block;outline: none; color:#bbbbbb;}	
 .tabs .thistab,.tabs .thistab a:hover{background: #008aff; color:#ffffff; }
 .tabs .thistab,.tabs .thistab a:visited {color:#ffffff;}
-.entirety .tab .seek{ width:987px; height:104px; position:relative;}
-.entirety .tab .seek .p1{padding-top:19px; padding-left:12px;}
-.entirety .tab .seek .p2{padding-top:10px;}
-.entirety .tab .seek .p1 .dh input{ width:201px; height:24px; margin-left:6px;}
-.entirety .tab .seek .p1 .d_h input{ width:201px; height:24px; margin-left:6px;}
+.entirety .tab .seek{ width:987px; height:81px; position:relative;margin-top:19px;}
+.entirety .tab .seek .p1{ margin-left:12px;}
+.entirety .tab .seek .p2{margin-top:10px;}
+.entirety .tab .seek .p1 .dh input{ width:201px; height:24px; margin-left:6px; line-height:24px;}
+.entirety .tab .seek .p1 .d_h input{ width:201px; height:24px; margin-left:6px; line-height:24px;}
 .entirety .tab .seek .p1 .d_h{ padding-left:13px;}
 .entirety .tab .seek .p1 .sj{padding-left:35px;}
-.entirety .tab .seek .p1 .sj input{width:92px; height:24px;}
-.entirety .tab .seek .p1 .s_j input{width:92px; height:24px;}
+.entirety .tab .seek .p1 .sj input{width:92px; height:24px; line-height:24px}
+.entirety .tab .seek .p1 .s_j input{width:92px; height:24px; line-height:24px;}
 .entirety .tab .seek .p1 .mj{padding-left:35px;}
-.entirety .tab .seek .p1 .mj input{width:201px; height:24px;  margin-left:6px;}
+.entirety .tab .seek .p1 .mj input{width:201px; height:24px;  margin-left:6px; line-height:24px;}
 .entirety .tab .seek .p1 .m_j{padding-left:24px;}
-.entirety .tab .seek .p1 .m_j input{width:201px; height:24px;  margin-left:6px;}
-.entirety .tab .seek .p2 .yw input{ width:201px; height:24px; margin-left:6px;}
-.entirety .tab .seek .p2 .y_w select{width:206px; height:30px;  margin-left:6px;}
+.entirety .tab .seek .p1 .m_j input{width:201px; height:24px;  margin-left:6px; line-height:24px;}
+.entirety .tab .seek .p2 .yw input{ width:201px; height:24px; margin-left:6px; line-height:24px;}
+.entirety .tab .seek .p2 .y_w select{width:206px; height:30px;  margin-left:6px; line-height:24px; padding-top:5px; padding-bottom:5px;}
 .entirety .tab .seek .p2 .je{padding-left:35px;}
-.entirety .tab .seek .p2 .je input{width:92px; height:24px;}
+.entirety .tab .seek .p2 .je input{width:92px; height:24px; line-height:24px;}
 .entirety .tab .seek .p2 .j__e{padding-left:26px;}
-.entirety .tab .seek .p2 .j__e input{width:92px; height:24px;}
-.entirety .tab .seek .p2 .j_e input{width:92px; height:24px;}
+.entirety .tab .seek .p2 .j__e input{width:92px; height:24px; line-height:24px;}
+.entirety .tab .seek .p2 .j_e input{width:92px; height:24px; line-height:24px;}
 .entirety .tab .seek .p2 .lb{padding-left:11px;}
 .entirety .tab .seek .p2 .lb select{width:206px; height:30px;  margin-left:6px;}
-.entirety .tab .seek .p2 .l_b select{width:206px; height:30px;  margin-left:6px;}
-.entirety .tab .seek .p2 .query{ width:102px; height:30px; background:#498ec9; border:0; font:500 14px 微软雅黑; color:#ffffff; position:absolute; top:58px; right:20px; }
-.entirety .tab .seek p span{font:500 12px 微软雅黑; color:#404040; }
+.entirety .tab .seek .p2 .l_b select{width:206px; height:30px;  margin-left:6px; line-height:30px; padding-top:5px; padding-bottom:5px;}
+.entirety .tab .seek .p2 .query{ width:102px; height:30px; background:#498ec9; border:0; font:500 14px 微软雅黑; color:#ffffff; position:absolute; top:39px; right:20px; }
+.entirety .tab .seek p span{font:500 12px 微软雅黑; color:#404040;}
 .entirety .tab .seek p span b{ color:#a8a8a8; margin-left:3px; margin-right:3px;}
-.entirety .tab .classify{ width:987px; height:40px; background:#eaf5fe; border-bottom:1px solid #bfbfbf;}
+.entirety .tab .classify{ width:987px; height:40px; background:#eaf5fe; border-bottom:1px solid #bfbfbf; position:relative;}
 .entirety .tab .classify span{font:bold 12px 微软雅黑; color:#424242;line-height:40px;}
 .entirety .tab .classify .dh{margin-left:9px;}
-.entirety .tab .classify .sj{margin-left:101px;}
-.entirety .tab .classify .s_j{margin-left:99px;}
-.entirety .tab .classify .s__j{margin-left:75px;}
-.entirety .tab .classify .mj{margin-left:101px;}
-.entirety .tab .classify .m_j{margin-left:88px;}
-.entirety .tab .classify .je{ margin-left:191px;}
-.entirety .tab .classify .j_e{ margin-left:200px;}
-.entirety .tab .classify .j__e{ margin-left:105px;}
-.entirety .tab .classify .ye{ margin-left:116px;}
-.entirety .tab .classify .yw{ margin-left:101px;}
-.entirety .tab .classify .y_w{ margin-left:34px;}
-.entirety .tab .classify .l_b{ margin-left:56px;}
-.entirety .tab .classify .b_z{ margin-left:64px;}
-.entirety .tab .classify .b__z{ margin-left:70px;}
-.entirety .tab .classify .cz{margin-left:128px;}
-.entirety .tab .classify .c_z{margin-left:230px;}
+.entirety .tab .classify .sj{position:absolute; top:0px; left:140px;}
+.entirety .tab .classify .s_j{position:absolute; top:0; left:139px;}
+.entirety .tab .classify .s__j{position:absolute; top:0; left:139px;}
+.entirety .tab .classify .mj{position:absolute; top:0; left:274px;}
+.entirety .tab .classify .m_j{position:absolute; top:0; left:284px;}
+.entirety .tab .classify .je{  position:absolute; top:0; left:498px;}
+.entirety .tab .classify .j_e{ position:absolute; top:0; left:515px;}
+.entirety .tab .classify .j__e{  position:absolute; top:0; left:300px;}
+.entirety .tab .classify .ye{ position:absolute; top:0; left:448px;}
+.entirety .tab .classify .yw{ position:absolute; left:666px;top:0;}
+.entirety .tab .classify .y_w{ position:absolute; left:641px;top:0;}
+.entirety .tab .classify .l_b{position:absolute; top:0; left:767px;}
+.entirety .tab .classify .b_z{  position:absolute; top:0; left:886px;}
+.entirety .tab .classify .b__z{position:absolute; top:0; left:840px;}
+.entirety .tab .classify .cz{ position:absolute; top:0; left:863px;}
+.entirety .tab .classify .c_z{position:absolute; top:0; left:713px;}
 .entirety .tab .content{ width:987px; height:53px; padding:0; line-height:53px; position:relative;}
 .entirety .tab .content span{font:500 12px 微软雅黑; color:#000000;}
-.entirety .tab .content .dh{margin-left:9px;}
-.entirety .tab .content .sj{margin-left:20px;}
-.entirety .tab .content .s_j{margin-left:16px;}
-.entirety .tab .content .s__j{margin-left:99px;}
-.entirety .tab .content .mj{margin-left:23px;}
-.entirety .tab .content .m_j{margin-left:36px;}
-.entirety .tab .content .je{ margin-left:71px;}
-.entirety .tab .content .j_e{ margin-left:80px;}
-.entirety .tab .content .j__e{ margin-left:50px;}
-.entirety .tab .content .ye{ margin-left:66px;}
-.entirety .tab .content .c_z{ margin-left:190px;}
+.entirety .tab .content .dh{position:absolute; top:19px; left:9px}
+.entirety .tab .content .sj{ position:absolute; top:19px; left:140px;}
+.entirety .tab .content .s_j{position:absolute; top:19px; left:139px;}
+.entirety .tab .content .s__j{position:absolute; top:19px; left:139px;}
+.entirety .tab .content .mj{ position:absolute; top:19px; left:274px;}
+.entirety .tab .content .m_j{position:absolute; top:19px; left:284px;}
+.entirety .tab .content .je{  position:absolute; top:19px; left:498px;}
+.entirety .tab .content .j_e{ position:absolute; top:19px; left:515px;}
+.entirety .tab .content .j__e{ position:absolute; top:19px; left:300px;}
+.entirety .tab .content .ye{ position:absolute; top:19px; left:448px;}
+.entirety .tab .content .c_z{position:absolute; top:19px; left:713px;}
 .entirety .tab .content .xm{position:absolute; right:295px;top:9px;}
 .entirety .tab .content .x_m{position:absolute; right:320px;top:9px;}
 .entirety .tab .content .phone{position:absolute; right:242px;top:27px;}
 .entirety .tab .content .p_phone{position:absolute; right:266px;top:27px;}
-.entirety .tab .content .l_b{ margin-left:176px;}
-.entirety .tab .content .b_z{ margin-left:77px;}
-.entirety .tab .content .b__z{ margin-left:94px;}
-.entirety .tab .content .fk{margin-left:291px;}
+.entirety .tab .content .l_b{position:absolute; top:19px; left:768px;}
+.entirety .tab .content .b_z{ position:absolute; top:19px; left:888px;}
+.entirety .tab .content .b__z{ position:absolute; top:19px; left:840px;}
+.entirety .tab .content .fk{ position:absolute; top:19px; left:863px;}
 .entirety .tab .content .fk a{ padding:5px 12.5px; background:#e4e2e2; border:1px solid #bbbbbb; color:#bbbbbb;}
-.entirety .tab .content .jf{margin-left:0px;}
+.entirety .tab .content .jf{position:absolute; top:19px; left:918px;}
 .entirety .tab .content .jf a{ padding:5px 12.5px; background:#e4e2e2; border:1px solid #bbbbbb; color:#bbbbbb;}
-.entirety .tab .below{ width:987px; margin-top:10px; border-top:1px solid #bebebe;}
-.entirety .tab .below .left{width:250px; height:27px; float:left; margin-top:12px;}
+.entirety .tab .below{ width:987px; margin-top:10px; border-top:1px solid #bebebe; position:relative;}
+.entirety .tab .below .left{width:250px; height:27px; float:left; margin-top:13px;}
 .entirety .tab .below .left .dq{padding:5.5px 11px; background:#498ec9;font:500 14px 微软雅黑; color:#ffffff; }
 .entirety .tab .below .left .qb{padding:5.5px 21px; background:#498ec9; font:500 14px 微软雅黑; color:#ffffff;}
-.entirety .tab .below .right{float:right;}
+.entirety .tab .below .right{float:right; padding-right:70px; margin-top:8px;}
 .entirety .tab .below .right span{font:500 12px 微软雅黑; color:#010101;}
-.entirety .tab .below .right span input{width:22px; height:17px; text-align:center; margin:0 5px;}
-.entirety .tab .below .right select{ width:31px; height:22px; border-color:#bebebe;}
-.entirety .tab .below .right a img{ width:20px; height:20px; border:1px solid #bebebe;}
+.entirety .tab .below .right span input{width:27px; height:19px; line-height:19px; text-align:center; margin:0 5px;}
+.entirety .tab .below .right select{ width:38px; height:25px; border-color:#bebebe; line-height:25px; padding-top:2px; padding-bottom:2px;}
+.entirety .tab .below .right a{ width:24px; height:24px; border:1px solid #bebebe; }
+.entirety .tab .below .right .le{position:absolute; top:8px; right:32px; background:url(../images/left_03.jpg) no-repeat;}
+.entirety .tab .below .right .ri{position:absolute; top:8px; right:0; background:url(../images/right_05.jpg) no-repeat;}
 .entirety .tab .copyright{font:500 12px 微软雅黑;text-align:center; color:#7c7c7c; padding-top:105px; padding-bottom:40px;}
 
+
+/*    付款       */
+.entirety .tl{ width:955px;margin:auto; height:30px; font:500 12px 微软雅黑;  line-height:30px; }
+.entirety .tl p{padding-left:15px;}
+.entirety .tl b{ padding:0 10px;}
+.entirety .headline{ width:955px;font:bold 14px 微软雅黑; height:40px; line-height:40px; margin:auto; background:#eaf5fe; color:#424242;}
+.entirety .headline span{padding-left:15px;}
+.entirety .information{width:953px; height:146px; margin:auto; background:#ccdfef; border:1px solid #bfbfbf;}
+.entirety .information .one{ font:bold 12px 微软雅黑; height:40px; line-height:40px;}
+.entirety .information .one span{color:#000000;}
+.entirety .information .one .mj{padding-left:22px;}
+.entirety .information .one .lx{padding-left:43px;}
+.entirety .information .one .phone{padding-left:51px;}
+.entirety .information .one .dh{padding-left:48px;}
+.entirety .information .two{width:928px; height:31px; background:#efefef; margin:auto; border-bottom:1px solid #e4e4e4; font:bold 12px 微软雅黑; line-height:31px;}
+.entirety .information .two span{color:#424242;}
+.entirety .information .two .dh{ padding-left:10px;}
+.entirety .information .two .pm{ padding-left:95px;}
+.entirety .information .two .gg{ padding-left:51px;}
+.entirety .information .two .cz{ padding-left:51px;}
+.entirety .information .two .jh{ padding-left:48px;}
+.entirety .information .two .dj{ padding-left:122px;}
+.entirety .information .two .dg{ padding-left:34px;}
+.entirety .information .two .je{ padding-left:66px;}
+.entirety .information .three{ width:928px; height:31px; background:#ffffff; margin:auto;font:500 12px 微软雅黑; position:relative;}
+.entirety .information .three span{color:#424242;}
+.entirety .information .three .dh{ position:absolute; top:8px; left:10px; }
+.entirety .information .three .pm{position:absolute; top:8px; left:143px;}
+.entirety .information .three .gg{position:absolute; top:8px; left:223px; }
+.entirety .information .three .cz{position:absolute; top:8px; left:300px; }
+.entirety .information .three .jh{position:absolute; top:8px; left:377px; }
+.entirety .information .three .dj{position:absolute; top:8px; left:541px; }
+.entirety .information .three .dg{position:absolute; top:8px; left:660px; }
+.entirety .information .three .je{position:absolute; top:8px; left:801px; }
+.entirety .information .four{ float:right;font:bold 12px 微软雅黑; line-height:40px; padding-right:13px;}
+.entirety .information .four em{ font-size:14px;color:#fe0000;}
+.entirety .option{ width:953px; height:50px; border:1px dashed #bfbfbf; margin:auto; margin-top:18px; position:relative;}
+.entirety .option .right{font-size:14px; top:0;right:15px; position:absolute;}
+.entirety .option span{font:500 12px 微软雅黑; color:#010101; line-height:50px;}
+.entirety .option .one{position:absolute;top:16px;left:20px;}
+.entirety .option .ye{padding-left:42px;}
+.entirety .option .two{position:absolute;top:16px;left:232px;}
+.entirety .option .wy{padding-left:50px;}
+.entirety .option span em{color:#ff0000;}
+.entirety .password{width:953px; margin:auto; height:40px; padding:20px 0 28px 0;}
+.entirety .password span{ font:bold 15px 微软雅黑; color:#404040; padding-left:22px;}
+.entirety .password input{ width:200px; height:31px; line-height:31px;}
+.entirety .password em{font:500 12px 微软雅黑; color:#adabab; margin-left:15px;}
+.entirety .password a{font:500 12px 微软雅黑; color:#023c6d;}
+.entirety .button{width:953px; margin:auto; height:38px;}
+.entirety .button .pay{width:150px; height:38px; background:#006cc8; border:0;font:500 18px 微软雅黑; color:#ffffff; margin-left:22px; }
+.entirety .copyright{font:500 12px 微软雅黑;text-align:center; color:#7c7c7c; padding-top:105px; padding-bottom:40px;}
+
+/*       转入 转出       */
+.entirety .deal{width:953px;margin:auto;  border:1px solid #bfbfbf;}
+.entirety .deal .sum{ font:500 15px 微软雅黑; color:#404040; padding:22px 0 31px 12px;}
+.entirety .deal .sum input{ width:200px; height:31px; line-height:31px;}
+.entirety .deal .sum span{font-size:13px; color:#000000; padding-left:16px;}
+.entirety .deal .sum em{ color:#ff0000;}
+.entirety .deal .bank{font:500 15px 微软雅黑; color:#404040; padding-left:12px;}
+.entirety .next{width:955px; margin:auto;}
+.entirety .next input{width:150px; height:38px; background:#006cc8; border:0; font:500 18px 微软雅黑; color:#ffffff; margin:52px 0 0 13px;}
