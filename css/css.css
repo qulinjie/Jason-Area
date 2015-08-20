@@ -140,7 +140,7 @@ a:hover { text-decoration: none;}
 /*  功能主页        */
 .entirety{ width:1349px; margin:auto; }
 .entirety .top{width:1349px; margin:auto; height:75px;  border-bottom:1px solid #dadada; background:#ffffff;}
-.entirety .top .logo{float:left; }
+.entirety .top .logo{float:left; margin-left:164px;}
 .entirety .top .nav{float:right;margin-top:40px; margin-right:189px;}
 .entirety .top .nav .discolor{border-bottom:3px solid #498ec9; color:#498ec9;}
 .entirety .top .nav a{font:500 14px 微软雅黑; color:#000000; margin-left:53px; padding-bottom:14px; }
@@ -313,3 +313,132 @@ a:hover { text-decoration: none;}
 .entirety .deal .bank{font:500 15px 微软雅黑; color:#404040; padding-left:12px;}
 .entirety .next{width:955px; margin:auto;}
 .entirety .next input{width:150px; height:38px; background:#006cc8; border:0; font:500 18px 微软雅黑; color:#ffffff; margin:52px 0 0 13px;}
+
+/*       对公账户       */
+.entirety .account{width:988px; margin:auto; padding-top:15px;}
+.entirety .account .left{ width:102px;height:355px; background:#f3f3f3; float:left; margin-right:10px;}
+.entirety .account .left ul{padding-top:20px;}
+.entirety .account .left ul .discolor{background:#ffffff; border-left:2px solid #008aff; color:#008aff;}
+.entirety .account .left ul li{font:500 12px 微软雅黑; height:44px; line-height:44px; text-align:center;}
+.entirety .account .left ul li a{color:#424242;display: block;width: 102px;height: 44px;}
+.entirety .account .right{float:left; }
+.entirety .account .right .add input{ width:97px; height:29px; background:#008aff; border:0; font:500 14px 微软雅黑; color:#ffffff;}
+.entirety .account .right .classify{width:874px; height:40px; border-bottom:1px solid #bfbfbf; background:#eaf5fe; margin-top:16px; position:relative;}
+.entirety .account .right .classify span{font: bold 12px 微软雅黑;color: #424242;line-height: 40px;}
+.entirety .account .right .classify .yh{position:absolute; left:16px;}
+.entirety .account .right .classify .zh{position:absolute; left:177px;}
+.entirety .account .right .classify .username{position:absolute; left:365px;}
+.entirety .account .right .classify .cz{position:absolute; left:730px;}
+.entirety .account .right .detail{width:874px; height:53px; position:relative;}
+.entirety .account .right .detail span{font: 500 12px 微软雅黑;color: #000000;line-height: 53px;}
+.entirety .account .right .detail .yh{position:absolute; left:16px;}
+.entirety .account .right .detail .zh{position:absolute; left:177px;}
+.entirety .account .right .detail .username{position:absolute; left:365px;}
+.entirety .account .right .detail .cz{position:absolute; left:730px;}
+.entirety .account .right .detail .cz .sc{ padding:6px 13.5px; background:#89b3d7; color:#ffffff;}
+.entirety .account .right .detail .cz .mr{ padding:6px 6.5px; background:#e4e2e2; color:#bbbbbb; margin-left:5px;}
+.entirety .account .right .detail .cz .sw{ padding:6px 6.5px; background:#89b3d7; color:#ffffff; margin-left:5px;}
+.entirety .below{ width:874px; border-top:1px solid #bebebe; position:relative;}
+.entirety .account .right .below .right{float:right; padding-right:70px; margin-top:8px;}
+.entirety .account .right .below .right span{font:500 12px 微软雅黑; color:#010101;}
+.entirety .account .right .below .right span input{width:27px; height:19px; line-height:19px; text-align:center; margin:0 5px;}
+.entirety .account .right .below .right select{ width:38px; height:25px; border-color:#bebebe; line-height:25px; padding-top:2px; padding-bottom:2px;}
+.entirety .account .right .below .right a{ width:24px; height:24px; border:1px solid #bebebe; }
+.entirety .account .right .below .right .le{position:absolute; top:8px; right:32px; background:url(../images/left_03.jpg) no-repeat;}
+.entirety .account .right .below .right .ri{position:absolute; top:8px; right:0; background:url(../images/right_05.jpg) no-repeat;}
+
+/*       授权码       */
+.entirety .account .right .add span{padding-left:365px;font: 500 12px 微软雅黑;color: #000000; }
+.entirety .account .right .add span select{ width:95px; height:29px; text-align:center; margin:0 10px; padding:5px ;}
+.entirety .account .right .classify .sq{position:absolute; left:16px;}
+.entirety .account .right .classify .fs{position:absolute; left:108px;}
+.entirety .account .right .classify .ky{position:absolute; left:190px;}
+.entirety .account .right .classify .ks{position:absolute; left:266px;}
+.entirety .account .right .classify .js{position:absolute; left:393px;}
+.entirety .account .right .classify .yy{position:absolute; left:530px;}
+.entirety .account .right .classify .remark{position:absolute; left:627px;}
+.entirety .account .right .classify .operation{position:absolute; left:800px;}
+.entirety .account .right .detail .sq{position:absolute; left:16px;}
+.entirety .account .right .detail .fs{position:absolute; left:108px;}
+.entirety .account .right .detail .ky{position:absolute; left:190px;}
+.entirety .account .right .detail .ks{position:absolute; left:266px;}
+.entirety .account .right .detail .js{position:absolute; left:393px;}
+.entirety .account .right .detail .yy{position:absolute; left:530px;}
+.entirety .account .right .detail .remark{position:absolute; left:627px;}
+.entirety .account .right .detail .operation{position:absolute; left:800px;}
+.entirety .account .right .detail .operation a{ padding:6px 13px; background:#89b3d7; color:#ffffff;}
+
+/*       授权码查看       */
+.entirety .account .right .classify .dh{position:absolute; left:8px;}
+.entirety .account .right .classify .s_j{position:absolute; left:132px;}
+.entirety .account .right .classify .m_j{position:absolute; left:253px;}
+.entirety .account .right .classify .j_e{position:absolute; left:452px;}
+.entirety .account .right .classify .y_w{position:absolute; left:561px;}
+.entirety .account .right .classify .l_b{position:absolute; left:687px;}
+.entirety .account .right .classify .b_z{position:absolute; left:789px;}
+.entirety .account .right .contents {width:874px; height:53px; padding:0; line-height:53px; position:relative;}
+.entirety .account .right .contents span{font:500 12px 微软雅黑; color:#424242;}
+.entirety .account .right .contents .dh{position:absolute; top:19px; left:8px;}
+.entirety .account .right .contents .s_j{position:absolute; top:19px; left:132px;}
+.entirety .account .right .contents .m_j{position:absolute; top:19px; left:253px;}
+.entirety .account .right .contents .j_e{position:absolute; top:19px; left:452px;}
+.entirety .account .right .contents .y_w{position:absolute; top:19px; left:561px;}
+.entirety .account .right .contents .l_b{position:absolute; top:19px; left:687px;}
+.entirety .account .right .contents .b_z{position:absolute; top:19px; left:789px;}
+.entirety .account .right .contents .x_m{position:absolute; right:286px;top:9px;}
+.entirety .account .right .contents .p_phone{position:absolute; right:233px;top:27px;}
+.entirety .account .right .information{width:872px; height:146px; margin:auto; background:#ccdfef; border:1px solid #bfbfbf;}
+.entirety .account .right .information .one{ font:bold 12px 微软雅黑; height:40px; line-height:40px;}
+.entirety .account .right .information .one span{color:#000000;}
+.entirety .account .right .information .one .mj{padding-left:22px;}
+.entirety .account .right .information .one .lx{padding-left:43px;}
+.entirety .account .right .information .one .phone{padding-left:51px;}
+.entirety .account .right .information .one .dh{padding-left:48px;}
+.entirety .account .right .information .two{width:858px; height:31px; background:#efefef; margin:auto; border-bottom:1px solid #e4e4e4; font:bold 12px 微软雅黑; line-height:31px;}
+.entirety .account .right .information .two span{color:#424242;}
+.entirety .account .right .information .two .dh{ padding-left:10px;}
+.entirety .account .right .information .two .pm{ padding-left:95px;}
+.entirety .account .right .information .two .gg{ padding-left:51px;}
+.entirety .account .right .information .two .cz{ padding-left:51px;}
+.entirety .account .right .information .two .jh{ padding-left:48px;}
+.entirety .account .right .information .two .dj{ padding-left:122px;}
+.entirety .account .right .information .two .dg{ padding-left:34px;}
+.entirety .account .right .information .two .je{ padding-left:44px;}
+.entirety .account .right .information .three{ width:858px; height:31px; background:#ffffff; margin:auto;font:500 12px 微软雅黑; position:relative;}
+.entirety .account .right .information .three span{color:#424242;}
+.entirety .account .right .information .three .dh{ position:absolute; top:8px; left:10px; }
+.entirety .account .right .information .three .pm{position:absolute; top:8px; left:143px;}
+.entirety .account .right .information .three .gg{position:absolute; top:8px; left:223px; }
+.entirety .account .right .information .three .cz{position:absolute; top:8px; left:300px; }
+.entirety .account .right .information .three .jh{position:absolute; top:8px; left:377px; }
+.entirety .account .right .information .three .dj{position:absolute; top:8px; left:541px; }
+.entirety .account .right .information .three .dg{position:absolute; top:8px; left:660px; }
+.entirety .account .right .information .three .je{position:absolute; top:8px; left:779px; }
+.entirety .account .right .information .four{ float:right;font:bold 12px 微软雅黑; line-height:40px; padding-right:13px;}
+.entirety .account .right .information .four em{ font-size:14px;color:#fe0000;}
+.entirety .account .right .below .left{width:250px; height:27px; float:left; margin-top:13px; background:#ffffff;}
+.entirety .account .right .below .left .dq{padding:5.5px 11px; background:#498ec9;font:500 14px 微软雅黑; color:#ffffff; }
+.entirety .account .right .below .left .qb{padding:5.5px 21px; background:#498ec9; font:500 14px 微软雅黑; color:#ffffff;}
+
+/*       重置登陆密码       */
+.entirety .account .right .reset{ width:872px; height:352px; border:1px solid #d7d7d7;}
+.entirety .account .right .reset form{ padding-top:11px;}
+.entirety .account .right .reset .service_l {width: 690px;font: 500 14px 微软雅黑;color: #010101; margin: 18px 0;text-align: right; position:relative;}
+.entirety .account .right .reset .service_l input {width: 225px;height: 37px; line-height:37px;border: 1px solid #ccc;margin-left: 20px;font-size: 14px;color: #010101;margin-right: 185px;padding-left: 10px;}
+.entirety .account .right .reset .service_l a{position:absolute; top:12px; left:520px;font: 500 12px 微软雅黑;color: #010101;}
+.entirety .account .right .reset .service_b {padding-top: 30px; padding-left:268px; }
+.entirety .account .right .reset .service_b input {width: 237px;height: 41px;font:500 16px 微软雅黑;color: #fff;border: 0;cursor: pointer;background:#008aff;}
+
+/*       提示重置支付密码       */
+.entirety .account .right .reset .tb{text-align:center; margin-top:29px; margin-bottom:28px;}
+.entirety .account .right .reset .ts{ text-align:center;font:500 18px 微软雅黑;color: #424242;}
+.entirety .account .right .reset .ts a{ color:#008aff;text-decoration:underline;}
+.entirety .account .right .class{width:874px; height:40px; border-bottom:1px solid #bfbfbf; background:#eaf5fe; position:relative;}
+.entirety .account .right .class span{font: bold 12px 微软雅黑;color: #424242;line-height: 40px;}
+.entirety .account .right .class .nr{position:absolute; left:16px;}
+.entirety .account .right .class .sj{position:absolute; left:515px;}
+.entirety .account .right .class .caozuo{position:absolute; left:795px;}
+.entirety .account .right .detail .nr{position:absolute; left:16px;}
+.entirety .account .right .detail .sj{position:absolute; left:515px;}
+.entirety .account .right .detail .caozuo{position:absolute; left:795px;}
+.entirety .account .right .detail .caozuo a{ padding:6px 13.5px; background:#89b3d7; color:#ffffff;}
