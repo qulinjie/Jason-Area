@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions targetNamespace="http://localhost:80/ddmg_pay/services/JTService" 
+					xmlns:apachesoap="http://xml.apache.org/xml-soap" 
+					xmlns:impl="http://localhost:80/ddmg_pay/services/JTService" 
+					xmlns:intf="http://localhost:80/ddmg_pay/services/JTService" 
+					xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" 
+					xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" 
+					xmlns:wsdlsoap="http://schemas.xmlsoap.org/wsdl/soap/" 
+					xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+
+   <wsdl:message name="requestRequest">
+      <wsdl:part name="xml" type="soapenc:string"></wsdl:part>
+   </wsdl:message>
+
+   <wsdl:message name="requestResponse">
+      <wsdl:part name="requestReturn" type="soapenc:string"></wsdl:part>
+   </wsdl:message>
+
+   <wsdl:portType name="JTService">
+      <wsdl:operation name="request" parameterOrder="xml">
+         <wsdl:input message="impl:requestRequest" name="requestRequest">
+       </wsdl:input>
+         <wsdl:output message="impl:requestResponse" name="requestResponse">
+       </wsdl:output>
+      </wsdl:operation>
+   </wsdl:portType>
+
+   <wsdl:binding name="JTServiceSoapBinding" type="impl:JTService">
+      <wsdlsoap:binding style="rpc" transport="http://schemas.xmlsoap.org/soap/http"/>
+      <wsdl:operation name="request">
+         <wsdlsoap:operation soapAction=""/>
+         <wsdl:input name="requestRequest">
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" 
+							namespace="http://service.framework.platform" use="encoded"/>
+			</wsdl:input>
+         <wsdl:output name="requestResponse">
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" 
+							namespace="http://localhost:80/ddmg_pay/services/JTService" use="encoded"/>
+         </wsdl:output>
+      </wsdl:operation>
+   </wsdl:binding>
+
+   <wsdl:service name="JTServiceService">
+      <wsdl:port binding="impl:JTServiceSoapBinding" name="JTService">
+         <wsdlsoap:address location="http://localhost:80/ddmg_pay/services/JTService.php"/>
+      </wsdl:port>
+   </wsdl:service>
+</wsdl:definitions>
