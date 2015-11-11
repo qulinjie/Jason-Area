@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<wsdl:definitions targetNamespace="http://localhost:80/ddmg_pay/services/JTService" 
+<wsdl:definitions targetNamespace="http://120.25.1.102:80/ddmg_pay/services/JTService" 
 					xmlns:apachesoap="http://xml.apache.org/xml-soap" 
-					xmlns:impl="http://localhost:80/ddmg_pay/services/JTService" 
-					xmlns:intf="http://localhost:80/ddmg_pay/services/JTService" 
+					xmlns:impl="http://120.25.1.102:80/ddmg_pay/services/JTService" 
+					xmlns:intf="http://120.25.1.102:80/ddmg_pay/services/JTService" 
 					xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" 
 					xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" 
 					xmlns:wsdlsoap="http://schemas.xmlsoap.org/wsdl/soap/" 
@@ -35,14 +35,14 @@
 			</wsdl:input>
          <wsdl:output name="requestResponse">
             <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" 
-							namespace="http://localhost:80/ddmg_pay/services/JTService" use="encoded"/>
+							namespace="http://120.25.1.102:80/ddmg_pay/services/JTService" use="encoded"/>
          </wsdl:output>
       </wsdl:operation>
    </wsdl:binding>
 
    <wsdl:service name="JTServiceService">
       <wsdl:port binding="impl:JTServiceSoapBinding" name="JTService">
-         <wsdlsoap:address location="http://localhost:80/ddmg_pay/services/JTService.php"/>
+         <wsdlsoap:address location="http://120.25.1.102:80/ddmg_pay/services/JTService.php"/>
       </wsdl:port>
    </wsdl:service>
 </wsdl:definitions>
