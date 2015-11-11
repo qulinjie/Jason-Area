@@ -26,11 +26,12 @@ class Callback
     
     public function request($param)
     {
+		date_default_timezone_set(PRC);
+		
         //$logFileName = 'K:/' . date('Y-m-d') . '.log';
 		$logFileName = '/alidata/www/ddmg_pay/log/' . date('Y-m-d') . '.log';
 		
         $myfile = @fopen($logFileName, "w");
-        date_default_timezone_set(PRC);
         fwrite($myfile, date('Y-m-d H:i:s',time()) . " request=##" . $param . "##\r\n");
         
         $result = "";
