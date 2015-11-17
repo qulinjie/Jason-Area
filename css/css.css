@@ -49,7 +49,8 @@ a:hover { text-decoration: none;}
 
 
 /*    大大付款主页       */
-.all{ width:100%; height:938px; background:url(../images/index.jpg) no-repeat;background-size: 100% 100%;-moz-background-size:100% 100%;  margin:auto; position:relative;}
+.all{ width:100%; height:938px;}
+.all .bj{width:100%; height:100%; background:url(../images/index.jpg) no-repeat;background-size: 100% 100%;-moz-background-size:100% 100%;  margin:auto; position:relative;}
 .all .t1{ width:100%; margin:auto; height:28px; background:#3d3d3d;}
 .all .t1 .top1{width:1200px; margin:auto; height:28px;}
 .all .t1 .top1 .left{ float:left;}
