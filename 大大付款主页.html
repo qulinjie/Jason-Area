@@ -57,5 +57,13 @@ jQuery(document).ready(function($) {
 	})
 
 })
-$('.all').css('height', $(window).height());
+$(document).ready(function(){  
+    //初始化高度  
+    $(".all").height($(window).height());  
+    //当文档窗口发生改变时 触发  
+    $(window).resize(function(){  
+        $(".all").height($(window).height());  
+    })  
+    })  
+<!--$('.all').css('height', $(window).height());-->
 </script>
