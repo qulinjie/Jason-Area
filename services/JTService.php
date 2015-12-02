@@ -347,10 +347,12 @@ session_redis::init();
 EC::load();
 
 
-
+/**
+ * 回调接口
+ */
 ini_set("soap.wsdl_cache_enabled", "0");
 include("../controller/ServicesController.php");
-//$Server=new SoapServer('pay_callback.wsdl');
-$Server=new SoapServer('pay_callback_dev.wsdl');
+$Server=new SoapServer('pay_callback.wsdl'); // locahost 80
+//$Server=new SoapServer('pay_callback_dev.wsdl'); // devlop 120.25.1.102:80
 $Server->setClass("ServicesController");
 $Server->handle();
