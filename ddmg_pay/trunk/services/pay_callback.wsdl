@@ -2,7 +2,6 @@
 <wsdl:definitions targetNamespace="http://localhost:80/ddmg_pay/services/JTService" 
 					xmlns:apachesoap="http://xml.apache.org/xml-soap" 
 					xmlns:impl="http://localhost:80/ddmg_pay/services/JTService" 
-					xmlns:intf="http://localhost:80/ddmg_pay/services/JTService" 
 					xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" 
 					xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" 
 					xmlns:wsdlsoap="http://schemas.xmlsoap.org/wsdl/soap/" 

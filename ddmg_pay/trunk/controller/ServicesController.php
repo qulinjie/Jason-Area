@@ -1,26 +1,30 @@
 <?php
-
+/**
+ * 长沙银行回调接口
+ * @author zhangkui
+ *
+ */
 class ServicesController extends Controller {
-    
+
     public function handle($params = array()) {
-        if(empty($params)){
-            Log::error ('AdminController . params is empty . ');
-            EC::fail (EC_MTD_NON);
-        }else {
-            switch ($params[0]){
+        if (empty($params)) {
+            Log::error('ServicesController . params is empty . ');
+            EC::fail(EC_MTD_NON);
+        } else {
+            switch ($params[0]) {
                 case 'login':
-                    //$this->login();
+                    // $this->login();
                     break;
-                default :
-                    Log::error ('page not found . ' . $params[0]);
-                    EC::fail (EC_MTD_NON);
+                default:
+                    Log::error('page not found . ' . $params[0]);
+                    EC::fail(EC_MTD_NON);
                     break;
             }
         }
     }
     
     public function request($param) {
-        date_default_timezone_set(PRC);
+        //date_default_timezone_set(PRC);
         self::info("request=##" . $param . "##" );
         self::info("client ip=##" . self::get_real_ip() . "##" );
         $result = self::buildSoapXml($param);
