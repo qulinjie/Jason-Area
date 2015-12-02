@@ -350,6 +350,7 @@ EC::load();
 
 ini_set("soap.wsdl_cache_enabled", "0");
 include("../controller/ServicesController.php");
-$Server=new SoapServer('pay_callback.wsdl');
+//$Server=new SoapServer('pay_callback.wsdl');
+$Server=new SoapServer('pay_callback_dev.wsdl');
 $Server->setClass("ServicesController");
 $Server->handle();
