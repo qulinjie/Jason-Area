@@ -26,7 +26,7 @@ $other_token = $encrypt->tokenCode('other:' . $session->get_id());
 	<meta name="author" content="">
 	<link rel="shortcut icon"
 		href="<?php echo Router::getBaseUrl();?>asset/ico/favicon.ico">
-	<title>DDMG，大大买钢</title>
+	<title>DDMG大大买钢支付系统</title>
 	<link href="<?php echo Router::getBaseUrl();?>css/messenger.css"
 		type="text/css" rel="stylesheet" />
 	<link
@@ -73,8 +73,7 @@ $other_token = $encrypt->tokenCode('other:' . $session->get_id());
 	<script src="http://libs.useso.com/js/bootstrap/3.1.1/js/bootstrap.min.js"></script>
 	<!-- <script src="http://libs.useso.com/js/bootstrap-switch/3.0.1/js/bootstrap-switch.min.js"></script> -->
 	<script src="<?php echo Router::getBaseUrl();?>js/bootstrap-switch-3.1.0.min.js"></script>
-	<script type="text/javascript"
-		src="<?php echo Router::getBaseUrl();?>js/prettify.js"></script>
+	<script type="text/javascript" src="<?php echo Router::getBaseUrl();?>js/prettify.js"></script>
 	<script src="<?php echo Router::getBaseUrl();?>js/prng4.js"></script>
 	<script src="<?php echo Router::getBaseUrl();?>js/rng.js"></script>
 	<script src="<?php echo Router::getBaseUrl();?>js/base64.js"></script>
@@ -93,7 +92,7 @@ $other_token = $encrypt->tokenCode('other:' . $session->get_id());
 </head>
 <body>
 
-	<input type="hidden" id="other-csrf" value="<?php echo $other_token;?>">
+<input type="hidden" id="other-csrf" value="<?php echo $other_token;?>">
 <div class="modal fade" id="confirm-admin-modal">
 	<div class="modal-dialog">
 		<div class="modal-content">
