@@ -96,7 +96,7 @@ class CurlModel
 		}
         $base_data = [ 'caller'=>'test', 'callee'=>'ddmg_server', 'eventid'=>rand()%10000, 'timestamp'=>time() ];
         $base_data['data'] = $data;
-        Log::notice("sendRequest data ================================>> request = ##" . json_encode($base_data) . "##" );
+        Log::notice("sendRequest data ================================>> interface = " . $interface . ",request = ##" . json_encode($base_data) . "##" );
 		$url = $this->getUrl( $interface );
         $ret = $this->postRequest( $url, $base_data );
         Log::notice("sendRequest data ================================>> response = ##" . json_encode($ret) . "##" );

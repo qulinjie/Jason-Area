@@ -37,8 +37,8 @@ $other_token = $encrypt->tokenCode('other:' . $session->get_id());
 	<link href="<?php echo Router::getBaseUrl();?>css/prettify.css"
 		type="text/css" rel="stylesheet" />
 	<!-- Custom styles for this template -->
-	<link href="<?php echo Router::getBaseUrl();?>css/custom.css"
-		rel="stylesheet">
+	<link href="<?php echo Router::getBaseUrl();?>css/custom.css" rel="stylesheet">
+	<link href="<?php echo Router::getBaseUrl();?>css/bootstrap-datetimepicker.min.css" rel="stylesheet" media="screen">
 	<!-- Just for debugging purposes. Don't actually copy this line! -->
 	<!--[if lt IE 9]><script src="<?php echo Router::getBaseUrl();?>js/ie8-responsive-file-warning.js"></script><![endif]-->
 	<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
@@ -76,8 +76,11 @@ $other_token = $encrypt->tokenCode('other:' . $session->get_id());
 	<script type="text/javascript">
 		var BASE_PATH="<?php echo Router::getBaseUrl();?>";
 	</script>
-	<script src="<?php echo Router::getBaseUrl();?>js/custom.js"></script>
-	<script src="<?php echo Router::getBaseUrl();?>js/login.js"></script>
+	<script type="text/javascript" src="<?php echo Router::getBaseUrl();?>js/bootstrap-datetimepicker.js" charset="UTF-8"></script>
+    <script type="text/javascript" src="<?php echo Router::getBaseUrl();?>js/locales/bootstrap-datetimepicker.zh-CN.js" charset="UTF-8"></script>
+	<script type="text/javascript" src="<?php echo Router::getBaseUrl();?>js/jquery.cascadingdropdown.min.js"></script>
+	<script type="text/javascript" src="<?php echo Router::getBaseUrl();?>js/custom.js"></script>
+	<script type="text/javascript" src="<?php echo Router::getBaseUrl();?>js/login.js"></script>
 </head>
 <body>
 
@@ -151,6 +154,7 @@ $other_token = $encrypt->tokenCode('other:' . $session->get_id());
 
 		<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
 		  <?php if($page_type == 'authorizationCode'){?>
+		        <script src="<?php echo Router::getBaseUrl();?>js/authorizationCode.js"></script>
 				<?php echo $authorizationCode_html; ?>
 		  <?php }?>
 		</div>
