@@ -29,13 +29,19 @@ class AuthorizationCodeController extends Controller {
     
     protected function searchList($isIndex = false) {
         $current_page = Request::post('page');
+        $code = Request::post('code');
         
+        Log::notice('searchList--------------------->>> page=' . $current_page);
         if(!$current_page) {
             $current_page = 1;
         }
         
         $code_model = $this->model('authorizationCode');
         $params  = array();
+        
+        if($code) {
+            $params['code'] = $code;
+        }
         
         $data_cnt = $code_model->searchCnt($params);
         if(EC_OK != $data_cnt['code']){
@@ -55,19 +61,23 @@ class AuthorizationCodeController extends Controller {
         } else if( 0 >= $current_page){
             $current_page = 1;
         }
+        
+        $params['current_page'] = $current_page;
+        $params['page_count'] = $page_cnt;
         $data = $code_model->searchList($params, $current_page, $page_cnt);
         if(EC_OK != $data['code']){
             Log::error("searchList failed . ");
             EC::fail($data['code']);
         }
         
+        Log::notice("=====================>>> current_page=" . $current_page . ',total_page=' . $total_page );
         $data_list = $data['data'];
-        $view_list_html = $this->render('authorizationCode_list', array('data_list' => $data_list, 'current_page' => $current_page, 'total_page' => $total_page), true);
+        $entity_list_html = $this->render('authorizationCode_list', array('data_list' => $data_list, 'current_page' => $current_page, 'total_page' => $total_page), true);
         if($isIndex) {
-            $view_html = $this->render('authorizationCode', array('view_list_html' => $view_list_html ), true);
+            $view_html = $this->render('authorizationCode', array('entity_list_html' => $entity_list_html ), true);
             $this->render('index', array('page_type' => 'authorizationCode', 'authorizationCode_html' => $view_html));
         } else {
-            EC::success(EC_OK, array('authorizationCode_list_html' => $view_list_html));
+            EC::success(EC_OK, array('entity_list_html' => $entity_list_html));
         }
     }
     

@@ -103,3 +103,27 @@ body {
   display: inline-block;
   border-radius: 50%;
 }
+
+#add-button-group {
+	padding-bottom: 30px;
+}
+
+.search-list-hint {
+	display:none;
+}
+
+#merchant-search-btn,#merchant-clear-btn
+{
+	width:120px;
+}
+
+
+.search-clear-btn {
+	width:120px;
+}
+
+.span-tips-red {
+	vertical-align:middle;
+	line-height:2.5;
+	color: red;
+}
