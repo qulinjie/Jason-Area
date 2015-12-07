@@ -1,15 +1,4 @@
 <?php 
-/**
- * main_html
- * page_type # order: show order page
- * 				#order_html
- * 			# item: show item page
- * 				#item_html
- * 			# tender: show tender page
- * 				#tender_html
- * 
- * 
- */
 $session = Controller::instance('session');
 $loginUser = $session->get( 'loginUser' );
 $encrypt = Controller::instance('encrypt');
@@ -114,6 +103,10 @@ $other_token = $encrypt->tokenCode('other:' . $session->get_id());
 		</div>
 	</div>
 </div>
+
+<input type="hidden" id="page_type_id" value="<?php echo $page_type ?>"/>
+<input type="hidden" id="controller_id"value="<?php echo doit::$controller ?>"/>
+
 <?php if ( $page_type=='login' ) { ?>
 
 		<link href="<?php echo Router::getBaseUrl();?>css/signin.css" type="text/css" rel="stylesheet" />
@@ -130,7 +123,7 @@ $other_token = $encrypt->tokenCode('other:' . $session->get_id());
 			<span class="icon-bar"></span>
 			<span class="icon-bar"></span>
 		  </button>
-		  <a class="navbar-brand" href="#">大大买钢-卖家管理中心</a>
+		  <a class="navbar-brand" href="#">大大买钢-支付系统</a>
 		</div>
 		<div id="navbar" class="navbar-collapse collapse">
 		  <ul class="nav navbar-nav navbar-right">
@@ -150,67 +143,17 @@ $other_token = $encrypt->tokenCode('other:' . $session->get_id());
 	  <div class="row">
 		<div class="col-sm-3 col-md-2 sidebar">
 		  <ul class="nav nav-sidebar">
-			<li <?php if(doit::$controller == 'Order'){?> class="active" <?php } ?>>
-				<a href="<?php echo Router::getBaseUrl();?>order">订单管理</a></li>
-			<li <?php if(doit::$controller == 'Item'){?> class="active" <?php } ?>>
-				<a href="<?php echo Router::getBaseUrl();?>item">商品管理</a></li>
-			 <!--<li <?php if(doit::$controller == 'Tender' || doit::$controller == 'Casttender'){?> class="active" <?php } ?>>
-				<a href="<?php echo Router::getBaseUrl();?>tender">投标管理</a></li>-->
-			<li><a href="#"></a></li>
+			<li <?php if(doit::$controller == 'AuthorizationCode'){?> class="active" <?php } ?>>
+				<a href="<?php echo Router::getBaseUrl();?>authorizationCode/getIndex">授权码管理</a>
+		    </li>
 		  </ul>
-
-<!--
-		  <ul class="nav nav-sidebar">
-			<li><a href="">Nav item</a></li>
-			<li><a href="">Nav item again</a></li>
-			<li><a href="">One more nav</a></li>
-			<li><a href="">Another nav item</a></li>
-			<li><a href="">More navigation</a></li>
-		  </ul>
-
-		  <ul class="nav nav-sidebar">
-			<li><a href="">Nav item again</a></li>
-			<li><a href="">One more nav</a></li>
-			<li><a href="">Another nav item</a></li>
-		  </ul>
--->
-
 		</div>
 
 		<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
-		  <?php if($page_type == 'orderList'){?>
-				<?php echo $orderList_html;?>
-		  <?php } else if($page_type == 'orderDetail'){ ?>
-				<?php echo $orderDetail_html;?>
-		  <?php } else if($page_type == 'orderAudit'){ ?>
-				<?php echo $orderAudit_html;?>
-		  <?php } else if($page_type == 'orderAdd'){ ?>
-				<?php echo $orderAdd_html;?>
-		  <?php } else if($page_type == 'orderEdit'){ ?>
-				<?php echo $orderEdit_html;?>
-		  <?php } else if($page_type == 'unlinePay'){ ?>
-				<?php echo $unlinePay_html;?>
-
-
-		  <?php } else if( $page_type == 'erpItemList' ){?>
-				<?php echo $erpItemList_html; ?>
-
-
-		  <?php } else if( $page_type == 'item' ){?>
-				<?php echo $item_html; ?>
-		  <?php } else if( $page_type == 'itemList' ){?>
-				<?php echo $itemList_html; ?>
-		  <?php } else if( $page_type == 'itemAdd' ){?>
-				<?php echo $itemAdd_html ?>
-		  <?php } else if( $page_type == 'importRes' ){?>
-				<?php echo $importResult_html ?>
-		  <?php } else if( $page_type == 'itemEdit' ){?>
-				<?php echo $itemEdit_html ?>
-		  <?php } else if( $page_type == 'tenderList' ){?>
-				<?php echo $tenderList_html; ?>
+		  <?php if($page_type == 'authorizationCode'){?>
+				<?php echo $authorizationCode_html; ?>
 		  <?php }?>
 		</div>
-
 
 	  </div>
 	</div>

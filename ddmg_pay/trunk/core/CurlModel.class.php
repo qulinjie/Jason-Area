@@ -96,8 +96,10 @@ class CurlModel
 		}
         $base_data = [ 'caller'=>'test', 'callee'=>'ddmg_server', 'eventid'=>rand()%10000, 'timestamp'=>time() ];
         $base_data['data'] = $data;
+        Log::notice("sendRequest data ================================>> request = ##" . json_encode($base_data) . "##" );
 		$url = $this->getUrl( $interface );
         $ret = $this->postRequest( $url, $base_data );
+        Log::notice("sendRequest data ================================>> response = ##" . json_encode($ret) . "##" );
         return $ret;
     }
     
@@ -114,7 +116,7 @@ class CurlModel
 
 	protected function getUrl( $interface )
 	{
-		return 'http://localhost/ddmg_server/' . $interface;
+		return 'http://localhost/ddmg_payapi/' . $interface;
 	}
 
 	protected function getCURLCookieInfoFromLocalFile( $cookieFile )
