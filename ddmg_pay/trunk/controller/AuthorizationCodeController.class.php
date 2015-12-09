@@ -9,7 +9,7 @@ class AuthorizationCodeController extends Controller {
     public function handle($params = array()) {
         Log::notice('AuthorizationCodeController  ==== >>> params=' . json_encode($params));
         if (empty($params)) {
-            Log::error('AuthorizationCodeController . params is empty . ');
+            Log::error('Controller . params is empty . ');
             EC::fail(EC_MTD_NON);
         } else {
             switch ($params[0]) {
@@ -307,7 +307,7 @@ class AuthorizationCodeController extends Controller {
             Log::notice('code is overdue . code=' . $authCode);
             EC::success(EC_OK,"overdue");
         } else if(AuthorizationCodeModel::$_status_enabled == $code_data['status']) {
-            if(self::validataionCodeActive($code_data)){
+            if($code_model->validataionCodeActive($code_data)){
                 Log::notice('code is check OK . code=' . $authCode);
                 EC::success(EC_OK,"true");
             } else {
@@ -319,36 +319,6 @@ class AuthorizationCodeController extends Controller {
         EC::success(EC_OK,"false");
     }
     
-    public function validataionCodeActive($code_data){
-        if(empty($code_data)) {
-            Log::error("validataionCodeActive params is empty . ");
-            return false;
-        }
-        try{
-            $type = $code_data['type'];
-            if( AuthorizationCodeModel::$_type_count == $type ){ // 按次数
-                if( $code_data['used_count'] < $code_data['active_count'] ){ // 已使用次数 < 可用次数
-                    return true;
-                }
-                Log::notice("AuthorizationCode had overdue-count . code=" . $code_data['code'] . ',id=' . $code_data['id']  );
-                return false;
-            } else if( AuthorizationCodeModel::$_type_time == $type ){ // 按时间段
-                $time_start = strtotime($code_data['time_start']);
-                $time_end = strtotime($code_data['time_end']);
-                $curr_time = time();
-                if( $time_start <= $curr_time && $curr_time <= $time_end ) { // 有效时间-开始 <= 当前时间  <= 有效时间-结束
-                    return true;
-                }
-                Log::notice("AuthorizationCode had overdue-time . code=" . $code_data['code'] . ',id=' . $code_data['id']  );
-                return false;
-            }
-        } catch (Exception $e) {
-            Log::error("validataionCodeActive err . msg=" . $e->getMessage() );
-            return false;
-        }
-        Log::error("validataionCodeActive . record status is exception . code=" . $code_data['code'] . ",id=" . $code_data['id']  );
-        return false;
-    }
     
     public static function getCurrentUserId(){
         $session = Controller::instance('session');
