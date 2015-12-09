@@ -279,6 +279,13 @@ class AuthorizationCodeController extends BaseController {
     private function checkCode(){
         $authCode = Request::post('code');
         
+        if(empty($authCode)){
+            $post_data = self::getPostDataJson();
+            if(!empty($post_data)) {
+                $authCode = $post_data['data']['code'];
+            }
+        }
+        
         if(!$authCode){
             Log::error('checkCode params error!');
             EC::fail(EC_PAR_ERR);

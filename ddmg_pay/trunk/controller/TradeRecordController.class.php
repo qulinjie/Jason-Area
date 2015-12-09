@@ -31,7 +31,7 @@ class TradeRecordController extends BaseController {
             EC::fail(EC_PAR_ERR);
         }
         // request 数据
-        $request_data = $post_data;
+        $request_data = $post_data['data'];
         
         $code = $request_data['code']; // 授权码
         $seller_id = $request_data['seller_id']; // 卖家ID
