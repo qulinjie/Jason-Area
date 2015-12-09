@@ -45,8 +45,8 @@
 					<th>有效开始时间</th>
 					<th>有效结束时间</th>
 					<th>已使用次数</th>
-					<th>添加时间</th>
-					<th>停用时间</th>
+<!-- 					<th>添加时间</th> -->
+<!-- 					<th>停用时间</th> -->
 					<th>状态</th>
 					<th>备注</th>
 					<th>操作</th>
@@ -57,24 +57,35 @@
 			<tr>
 				<td style="display:none"><?php echo $item['id'];?><input type="hidden" value="<?php echo $item['status'];?>"></td>
 				<td><?php echo $item['code'];?></td>
-				<td><?php echo $item['type'];?></td>
+				<td><?php if($item['type']==AuthorizationCodeModel::$_type_count){ echo "按次数"; } else { echo "按时间"; } ?></td>
 				<td><?php echo $item['active_count'];?></td>
-				<td><?php echo $item['time_start'];?></td>
-				<td><?php echo $item['time_end'];?></td>
+				<td><?php echo (0 < strtotime($item['time_start']))? $item['time_start'] : '-';?></td>
+				<td><?php echo (0 < strtotime($item['time_end']))? $item['time_end'] : '-';?></td>
 				<td><?php echo $item['used_count'];?></td>
-				<td><?php echo $item['add_timestamp'];?></td>
-				<td><?php echo (0 < strtotime($item['disenabled_timestamp']))? $item['disenabled_timestamp'] : '-';?></td>
-				<td><?php if($item['status']==1){ echo "启用"; } else if($item['status']==2) { echo "停用"; } else { echo "失效"; }?></td>
+<!-- 				<td><?php echo $item['add_timestamp'];?></td> -->
+<!-- 				<td><?php echo (0 < strtotime($item['disenabled_timestamp']))? $item['disenabled_timestamp'] : '-';?></td> -->
+				<td><?php if($item['status']==AuthorizationCodeModel::$_status_enabled){ echo "启用"; } 
+            				else if($item['status']==AuthorizationCodeModel::$_status_disabled) { echo "停用"; } 
+            				else { echo "失效"; } ?>
+				</td>
 				<td><?php echo $item['comment'];?></td>
 				<td>
 					<div class="btn-group" role="group">
-					  <a id="entity-infoUpd-btn" href="#" data-toggle="modal" data-keyboard="false" data-backdrop="static">修改</a>
-					  <a id="entity-enabledStatus-btn" href="#" data-toggle="modal" data-keyboard="false" data-backdrop="static">
-					       <?php if($item['enabled_status']==1){?>停用<?php } else {?>启用<?php }?>
-					  </a>
-					  <a id="entity-resetPwd-btn" href="#" data-toggle="modal" data-keyboard="false" data-backdrop="static">重置密码</a>
-					  <a id="entity-infoDisplay-btn" href="#" data-toggle="modal" data-keyboard="false" data-backdrop="static">更多信息</a>
-					  <a id="entity-delete-btn" href="#" data-toggle="modal" data-keyboard="false" data-backdrop="static">删除</a>
+    					<?php if( 0 < $item['used_count'] ){?>
+    					    <a id="entity-infoDisplay-btn" href="#" data-toggle="modal" data-keyboard="false" data-backdrop="static">查看</a>
+    					<?php }?>
+					<!-- 
+					  <?php if( 0 == $item['used_count'] ){?>
+					       <a id="entity-delete-btn" href="#" data-toggle="modal" data-keyboard="false" data-backdrop="static">删除</a>
+					  <?php } else {?>
+					       <a id="entity-infoDisplay-btn" href="#" data-toggle="modal" data-keyboard="false" data-backdrop="static">查看</a>
+					  <?php }?>
+					  <?php if( $item['status'] != AuthorizationCodeModel::$_status_overdue ){?>
+    					   <a id="entity-changeStatus-btn" href="#" data-toggle="modal" data-keyboard="false" data-backdrop="static">
+    					       <?php if($item['status']==AuthorizationCodeModel::$_status_enabled){ echo "停用"; } else { echo "启用"; }?>
+    					   </a>
+					  <?php }?>
+					   -->
 					</div>
 				</td>
 			</tr>

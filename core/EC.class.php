@@ -45,6 +45,12 @@ define('EC_ADD_FAI', 121);
 define('EC_VER_NCH', 122);
 define('EC_SIG_ARD', 123);
 
+
+define('EC_RED_EXP', 201);
+define('EC_RED_EMP', 202);
+define('EC_PAR_ERR', 203);
+
+
 class EC extends Base {
 
 	public static $_errMsg = array(
@@ -91,6 +97,10 @@ class EC extends Base {
 			EC_ADD_FAI		=>	'insert row failure',
 			EC_VER_NCH		=>	'this is the highest versions',
 			EC_SIG_ARD		=>	'you haved sign today,can not sign again',
+	    
+	        EC_RED_EXP      =>  '当前记录，状态异常，请刷新页面', 
+	        EC_RED_EMP      =>  '当前记录异常，请刷新页面',
+	        EC_PAR_ERR      =>  '提交的参数错误',
 	);
 	public static function load(){
 		return true;
