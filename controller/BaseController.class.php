@@ -171,4 +171,35 @@ abstract class BaseController extends Controller
 	  die( json_encode( ['code'=>$code, 'msg'=>$msg, 'data'=>$data]) );
 	}
 
+	public function getPostDataJson(){
+	    //获取POST数据
+	    $post_data_1 = file_get_contents("php://input");
+	    $post_data_2 = $GLOBALS['HTTP_RAW_POST_DATA'];
+	    $post_data = $post_data_1 == '' ? $post_data_2 : $post_data_1;
+	    Log::notice("getPostDataJson====================>>>PostDataJson=##" . json_encode($post_data) . "##"); // toStirng
+	    return self::objectToArray(json_decode($post_data)); // toJson
+	}
+	
+	public function objectToArray($array){
+	    if(is_object($array))
+	    {
+	        $array = (array)$array;
+	    }
+	    if(is_array($array))
+	    {
+	        foreach($array as $key=>$value)
+	        {
+	            $array[$key] = self::objectToArray($value);
+	        }
+	    }
+	    return $array;
+	}
+	
+	public function getCurrentUserId(){
+	    $session = Controller::instance('session');
+	    $user_id = $session->get('loginUser')['id'];
+	    return "1000"; // TODO for test .
+	    return $user_id;
+	}
+	
 }

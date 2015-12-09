@@ -4,7 +4,7 @@
  * @author zhangkui
  *
  */
-class AuthorizationCodeController extends Controller {
+class AuthorizationCodeController extends BaseController {
 
     public function handle($params = array()) {
         Log::notice('AuthorizationCodeController  ==== >>> params=' . json_encode($params));
@@ -51,7 +51,7 @@ class AuthorizationCodeController extends Controller {
         $status = Request::post('status');
         
         $code_model = $this->model('authorizationCode');
-        $user_id = AuthorizationCodeController::getCurrentUserId();
+        $user_id = self::getCurrentUserId();
         
         $params  = array();
         foreach ([ 'user_id', 'code', 'time1', 'time2', 'type', 'status'] as $val){
@@ -106,7 +106,7 @@ class AuthorizationCodeController extends Controller {
         }
     
         $code_model = $this->model('authorizationCode');
-        $user_id = AuthorizationCodeController::getCurrentUserId();
+        $user_id = self::getCurrentUserId();
     
         $params = array();
         $params['id'] = $id;
@@ -157,7 +157,7 @@ class AuthorizationCodeController extends Controller {
         }
     
         $code_model = $this->model('authorizationCode');
-        $user_id = AuthorizationCodeController::getCurrentUserId();
+        $user_id = self::getCurrentUserId();
     
         $params = array();
         $params['id'] = $id;
@@ -212,7 +212,7 @@ class AuthorizationCodeController extends Controller {
         }
         
         $code_model = $this->model('authorizationCode');
-        $user_id = AuthorizationCodeController::getCurrentUserId();
+        $user_id = self::getCurrentUserId();
     
         $data_old = $code_model->getInfo(array('code' => $code));
         if(EC_OK != $data_old['code']){
@@ -317,14 +317,6 @@ class AuthorizationCodeController extends Controller {
         }
         Log::error('checkCode . code status is exception . code=' . $authCode . ',status=' . $code_data['status'] );
         EC::success(EC_OK,"false");
-    }
-    
-    
-    public static function getCurrentUserId(){
-        $session = Controller::instance('session');
-        $user_id = $session->get('loginUser')['id'];
-        return "1000";
-        return $user_id;
     }
     
 }

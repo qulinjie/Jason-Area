@@ -77,4 +77,5 @@ class AuthorizationCodeModel extends CurlModel {
         Log::error("validataionCodeActive . record status is exception . code=" . $code_data['code'] . ",id=" . $code_data['id']  );
         return false;
     }
+    
 }

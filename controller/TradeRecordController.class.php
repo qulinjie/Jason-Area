@@ -1,5 +1,10 @@
 <?php
-class TradeRecordController extends Controller {
+/**
+ * 交易记录
+ * @author zhangkui
+ *
+ */
+class TradeRecordController extends BaseController {
 
     public function handle($params = array()) {
         Log::notice('TradeRecordController  ==== >>> params=' . json_encode($params));
@@ -8,18 +13,6 @@ class TradeRecordController extends Controller {
             EC::fail(EC_MTD_NON);
         } else {
             switch ($params[0]) {
-                case 'getIndex':
-                    $this->searchList(true);
-                    break;
-                case 'searchList':
-                    $this->searchList();
-                    break;
-                case 'changeStatus':
-                    $this->changeStatus();
-                    break;
-                case 'delete':
-                    $this->delete();
-                    break;
                 case 'create':  // 不需要 登录
                     $this->create();
                     break;
@@ -32,58 +25,70 @@ class TradeRecordController extends Controller {
     }
     
     private function create(){
-        EC::success(EC_OK);
-        $code = Request::post('code');
-        $type = Request::post('type');
-        $active_count = Request::post('active_count');
-        $time_start = Request::post('time_start');
-        $time_end = Request::post('time_end');
-        $comment = Request::post('comment');
+        $post_data = self::getPostDataJson();
+        if(empty($post_data)) {
+            Log::error('post_data params error!');
+            EC::fail(EC_PAR_ERR);
+        }
+        // request 数据
+        $request_data = $post_data;
+        
+        $code = $request_data['code']; // 授权码
+        $seller_id = $request_data['seller_id']; // 卖家ID
+        $seller_name = $request_data['company']; // 卖家(公司)名称
+        $seller_conn_name = $request_data['seller_name']; // 联系人
+        $seller_tel = $request_data['tel']; // 联系人电话
+        $seller_comp_phone = $request_data['seller_comp_phone']; // 公司电话
+        $order_no = $request_data['order_num']; // 订单号
+        $order_goods_name = $request_data['product_name']; // 品名
+        $order_goods_size = $request_data['size_name']; // 规格
+        $order_goods_type = $request_data['material_name']; // 材质
+        $order_goods_price = $request_data['price']; // 单价（元/ 吨）
+        $order_goods_count = $request_data['ton']; // 订购量（吨）
+        $order_delivery_addr = $request_data['delivery_address']; // 交货地
+        $order_sum_amount = $request_data['amount']; // 订单金额（元）
     
-        if(!$code || !$type){
+        if(!$code || !$seller_name || !$order_no || !$order_sum_amount ){
             Log::error('create params error!');
             EC::fail(EC_PAR_ERR);
         }
-    
+        
         $code_model = $this->model('authorizationCode');
-        $user_id = AuthorizationCodeController::getCurrentUserId();
-    
-        $data_old = $code_model->getInfo(array('code' => $code));
-        if(EC_OK != $data_old['code']){
+        $data_code = $code_model->getInfo(array('code' => $code));
+        if(EC_OK != $data_code['code']){
             Log::error('getInfo Fail!');
-            EC::fail($data_old['code']);
+            EC::fail($data_code['code']);
         }
-        $data_obj = $data_old['data'];
-        if(!empty($data_obj)) {
-            Log::error('getInfo code is exists ! id=' . $data_obj['id']);
-            EC::fail(EC_RED_EMP);
+        $code_obj = $data_code['data'][0];
+        if(empty($code_obj)) {
+            Log::error('getInfo code is not exists ! id=' . $code_obj['id']);
+            EC::fail(EC_CODE_ERR);
+        }
+        if( AuthorizationCodeModel::$_is_delete_true == $code_obj['is_delete'] 
+            || !AuthorizationCodeModel::$_status_enabled == $code_obj['status'] 
+            || !$code_model->validataionCodeActive($code_obj) 
+            ){
+            Log::error('code validation failed ! id=' . $code_obj['id'] . ',code=' . $code_obj['code'] );
+            EC::fail(EC_CODE_ERR);
         }
     
         $params = array();
-        $params['user_id'] = $user_id;
-        $params['code'] = $code;
-        $params['type'] = $type;
-        $params['comment'] = $comment;
-    
-        if(AuthorizationCodeModel::$_type_count == $type){
-            $params['active_count'] = $active_count;
-            $params['time_start'] = AuthorizationCodeModel::$_empyt_time;
-            $params['time_end'] = AuthorizationCodeModel::$_empyt_time;
-        } else if(AuthorizationCodeModel::$_type_time == $type){
-            $params['active_count'] = 0;
-            $params['time_start'] = $time_start;
-            $params['time_end'] = $time_end;
-        } else {
-            Log::error('create params error! type=' . $type);
-            EC::fail(EC_PAR_ERR);
+        $params['user_id'] = $code_obj['user_id']; // 授权码 所属的 用户ID
+        $params['order_status'] = TradeRecordModel::$_status_waiting; // 订单交易状态 1-待付款
+        $params['pay_timestamp'] = TradeRecordModel::$_empyt_time; // 操作（付款/拒付）时间
+        foreach ([ 'code', 'seller_id', 'seller_name', 'seller_conn_name', 'seller_tel', 'seller_comp_phone',
+                    'order_no', 'order_goods_name', 'order_goods_size', 'order_goods_type', 'order_goods_price', 'order_goods_count',
+                    'order_delivery_addr', 'order_sum_amount' ] as $val ){
+            if($$val) $params[$val] = $$val;
         }
     
         if(empty($params)){
             Log::error('create params is empty!');
             EC::fail(EC_PAR_BAD);
         }
-    
-        $data = $code_model->create($params);
+        
+        $tradeRecord_model = $this->model('tradeRecord');
+        $data = $tradeRecord_model->create($params);
         if(EC_OK != $data['code']){
             Log::error('create Fail!');
             EC::fail($data['code']);
