@@ -94,7 +94,7 @@ class CurlModel
 		if ( !$interface ) {
 			return false;
 		}
-        $base_data = [ 'caller'=>'test', 'callee'=>'ddmg_server', 'eventid'=>rand()%10000, 'timestamp'=>time() ];
+        $base_data = [ 'caller'=>'test', 'callee'=>'ddmg_payapi', 'eventid'=>rand()%10000, 'timestamp'=>time() ];
         $base_data['data'] = $data;
         Log::notice("sendRequest data ================================>> interface = " . $interface . ",request = ##" . json_encode($base_data) . "##" );
 		$url = $this->getUrl( $interface );
@@ -116,7 +116,12 @@ class CurlModel
 
 	protected function getUrl( $interface )
 	{
-		return 'http://localhost/ddmg_payapi/' . $interface;
+		$config = Controller::getConfig('conf');
+		if(!isset($config['ddmg_payapi_url']) || !$config['ddmg_payapi_url']){
+			Log::error('config ddmg_payapi_url is not exists or is empty');
+			EC::fail(EC_DAT_NON);
+		}
+		return $config['ddmg_payapi_url'].$interface;
 	}
 
 	protected function getCURLCookieInfoFromLocalFile( $cookieFile )
@@ -169,6 +174,7 @@ class CurlModel
 		if ( !$key ) {
 			return false;
 		}
+
 		return self::$_redis->get( $key ) ;
 	}
 
