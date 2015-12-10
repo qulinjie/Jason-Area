@@ -67,22 +67,31 @@ function search_entity(page){
 	$("#entity-search-btn").attr('disabled', 'disabled');
 	$("#search-entity-hint").html('').fadeOut();
 	
-    var code = $("#entity-search-code").val();
+    var order_no = $("#entity-search-order_no").val();
     var time1 = $("#entity-search-time1").val();
 	var time2 = $("#entity-search-time2").val();
-	var type = $("#entity-search-type").val();
-	var status = $("#entity-search-status").val();
+	var order_status = $("#entity-search-order_status").val();
+	var order_time1 = $("#entity-search-order_time1").val();
+	var order_time2 = $("#entity-search-order_time2").val();
+	var seller_name = $("#entity-search-seller_name").val();
+	var seller_conn_name = $("#entity-search-seller_conn_name").val();
+	var order_sum_amount1 = $("#entity-search-order_sum_amount1").val();
+	var order_sum_amount2 = $("#entity-search-order_sum_amount2").val();
 	
-	if(-1 == type) { type =""; }
-	if(-1 == status) { status =""; }
+	if(-1 == order_status) { order_status =""; }
 	
     //查找
-    $.post(BASE_PATH + 'authorizationCode/searchList', {
-	    	'code':code, 
+    $.post(BASE_PATH + 'tradeRecord/searchList', {
+	    	'order_no':order_no, 
 	    	'time1':time1,
 	    	'time2':time2,
-	    	'type':type,
-	    	'status':status,
+	    	'order_status':order_status,
+	    	'order_time1':order_time1,
+	    	'order_time2':order_time2,
+	    	'seller_name':seller_name,
+	    	'seller_conn_name':seller_conn_name,
+	    	'order_sum_amount1':order_sum_amount1,
+	    	'order_sum_amount2':order_sum_amount2,
 	        'page':page
         },
         function(result){
@@ -99,15 +108,20 @@ function search_entity(page){
 }
 
 function search_clearFields(){
-	$("#entity-search-code").val("");
+	$("#entity-search-order_no").val("");
 	$("#entity-search-time1").val("");
 	$("#entity-search-time2").val("");
-	$("#entity-search-type").val("-1");
-	$("#entity-search-status").val("-1");
+	$("#entity-search-order_status").val("-1");
+	$("#entity-search-order_time1").val("");
+	$("#entity-search-order_time2").val("");
+	$("#entity-search-seller_name").val("");
+	$("#entity-search-seller_conn_name").val("");
+	$("#entity-search-order_sum_amount1").val("");
+	$("#entity-search-order_sum_amount2").val("");
 }
 
 
-/**************start--停用/启用****************/
+/**************start--拒付****************/
 $(document).on('click', '#entity-changeStatus-btn', function(event){
 	var id =  $(this).parent().parent().parent().children().first().text();
 	var status = $(this).parent().parent().parent().children().children().first().val(); // "status" value
@@ -119,7 +133,7 @@ $(document).on('click', '#entity-changeStatus-btn', function(event){
 	$('#confirm-modal-body').html('是否'+txt+'!');
 	$('#btn-confirm-entity').unbind("click");
 	$('#btn-confirm-entity').on('click', {'id':id,'status':status},function(event){
-		$.post(BASE_PATH + 'authorizationCode/changeStatus', {'id':event.data.id, 'status':event.data.status },
+		$.post(BASE_PATH + 'tradeRecord/changeStatus', {'id':event.data.id, 'status':event.data.status },
 		        function(result){
 		            if(result.code != 0) {
 		                $("#confirm-entity-hint").html(result.msg + '(' + result.code + ')').fadeIn();
@@ -138,7 +152,7 @@ $(document).on('click', '#entity-changeStatus-btn', function(event){
 	});
 	
 });
-/**************end--停用/启用****************/
+/**************end--拒付****************/
 
 
 /**************start--删除****************/
@@ -152,7 +166,7 @@ $(document).on('click', '#entity-delete-btn', function(event){
 	$('#confirm-modal-body').html('是否'+txt+'!');
 	$('#btn-confirm-entity').unbind("click");
 	$('#btn-confirm-entity').on('click', {'id':id},function(event){
-		$.post(BASE_PATH + 'authorizationCode/delete', {'id':event.data.id},
+		$.post(BASE_PATH + 'tradeRecord/delete', {'id':event.data.id},
 		        function(result){
 		            if(result.code != 0) {
 		                $("#confirm-entity-hint").html(result.msg + '(' + result.code + ')').fadeIn();
@@ -173,7 +187,7 @@ $(document).on('click', '#entity-delete-btn', function(event){
 });
 /**************end--删除****************/
 
-/**************start--增加****************/
+/**************start--付款****************/
 function add_entity(){
 	$("#btn-add-entity").attr('disabled', 'disabled');
     $("#add-entity-hint").html('').fadeOut();
@@ -307,54 +321,42 @@ function change_type(){
 	}
 }
 
-/**************end--增加****************/
-
+/**************end--付款****************/
 
 /**************start--查看****************/
 $(document).on('click', '#entity-infoDisplay-btn', function(event){
 	var id =  $(this).parent().parent().parent().children().first().text();
-	var code =  $(this).parent().parent().parent().children().first().next().text();
-	$('#info-entity-modal').modal('show');
-	$.post(BASE_PATH + 'authorizationCode/getInfo', {
-			'id':id,
-			'code':code
+	$('#add-entity-modal').modal('show');
+	$.post(BASE_PATH + 'tradeRecord/info', {
+			'id':id
         },
         function(result){
             if(result.code != 0) {
-                $("#info-entity-hint").html(result.msg + '(' + result.code + ')').fadeIn();
+                $("#add-entity-hint").html(result.msg + '(' + result.code + ')').fadeIn();
             }else {
-            	fillInEntityValue(result.data);
+            	//$("#entity-list").html(result.data.entity_list_html);
             }
+            $("#entity-search-btn").removeAttr('disabled');
         },
         'json'
     );
 
 });
 
-function fillInEntityValue(data){
-	$("#info-entity-hint").html('').hide();
-	$("#info-entity-list").html(data.entity_list_html);
-	$("#search-head-div").html('').hide();
-	$("#entity-pager-ul").html('').hide();
-	$("#th-operation-id").html('').hide();
-	$("td[name='td-operation-name']").each(function(i,e){
-		$(e).html('').hide();
-	});
-	var height_px = $("#info-entity-list").css("height");
-	height = height_px.substring(0,height_px.length-2);
-	if( 500 < Number(height) ){
-		$("#info-entity-list").css("height","500px").css("overflow-y","scroll");
-	} else {
-		$("#info-entity-list").css("height","")
-	}
-}
 /**************end--查看****************/
-
 
 
 
 prettyPrint();
 });
+
+function kk(obj){
+	var tt = '';
+	jQuery.each(obj, function(i, val) {  
+	    tt = tt + " | " + i + "=" + val;  
+	});
+	alert(tt);
+}
 
 function showDetailInfo(o,id){
 	var info = $('#info_tr_'+id);
@@ -365,10 +367,3 @@ function showDetailInfo(o,id){
 	}
 }
 
-function kk(obj){
-	var tt = '';
-	jQuery.each(obj, function(i, val) {  
-	    tt = tt + " \r\n " + i + "=" + val;  
-	});
-	alert(tt);
-}
