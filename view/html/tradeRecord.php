@@ -1,26 +1,8 @@
 <?php 
 /**
- * authorizationCode.php
+ * tradeRecord.php
  */
 ?>
-
-<div class="modal fade" id="info-entity-modal">
-	<div class="modal-dialog" style="width: 1000px;">
-		<div class="modal-content">
-			<div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-					<span aria-hidden="true">&times;</span>
-				</button>
-				<h4 class="modal-title">查看</h4>
-			</div>
-			<div class="modal-body" id="info-entity-list"></div>
-			<div class="alert alert-danger" id="info-entity-hint"></div>
-			<div class="modal-footer">
-				<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-			</div>
-		</div>
-	</div>
-</div>
 
 <div class="modal fade" id="add-entity-modal">
 	<div class="modal-dialog" style="width: 700px;">
@@ -30,9 +12,8 @@
 					aria-label="Close">
 					<span aria-hidden="true">&times;</span>
 				</button>
-				<h4 class="modal-title" id="info_entity_title">新增</h4>
+				<h4 class="modal-title" id="info_entity_title">付款</h4>
 			</div>
-			
 			<div class="modal-body">
 				<form class="form-horizontal" id="entity-form">
 				    <input type="hidden" class="form-control" id="info-entity-id" value=""></input>
@@ -89,18 +70,15 @@
 </div>
 <!-- /.modal -->
 
-<h1 class="page-header">授权码管理</h1>
-<div id="add-button-group">
-	<a id="add-entity-new" class="btn btn-primary" href="#" data-toggle="modal"	data-keyboard="false" data-backdrop="static">新增</a>
-</div>
+<h1 class="page-header">付款管理</h1>
 
 <div class="panel panel-primary">
   <div class="panel-heading">查找</div>
   <div class="panel-body">
     <div class="form-inline">
 	  <div class="form-group">
-	    <label for="entity-search-code">授权码</label>
-	    <input type="text" class="form-control" id="entity-search-code" placeholder="授权码">
+	    <label for="entity-search-order_no">订单号</label>
+	    <input type="text" class="form-control" id="entity-search-order_no" placeholder="订单号">
 	  </div>
 	  <!-- 
 	  <div class="form-group">
@@ -111,20 +89,32 @@
 	  </div>
 	   -->
 	  <div class="form-group">
-	    <label for="entity-search-type">使用方式</label>
-	    <select class="form-control" id="entity-search-type">
-	      <option value="-1">全部</option>
-          <option value="1">按次数</option>
-          <option value="2">按时间</option>
-        </select>
+	    <label for="entity-search-order_time">时间</label>
+	    <input type="text" class="form-control form_datetime" id="entity-search-order_time1" placeholder="时间">
+	    -
+	    <input type="text" class="form-control form_datetime" id="entity-search-order_time2" placeholder="时间">
 	  </div>
 	  <div class="form-group">
-	    <label for="entity-search-status">状态</label>
-	    <select class="form-control" id="entity-search-status">
+	    <label for="entity-search-seller_name">卖家</label>
+	    <input type="text" class="form-control" id="entity-search-seller_name" placeholder="卖家">
+	  </div>
+	  <div class="form-group">
+	    <label for="entity-search-seller_conn_name">业务员</label>
+	    <input type="text" class="form-control" id="entity-search-seller_conn_name" placeholder="业务员">
+	  </div>
+	  <div class="form-group">
+	    <label for="entity-search-order_sum_amount">金额</label>
+	    <input type="text" class="form-control" id="entity-search-order_sum_amount1" placeholder="金额">
+	    -
+	    <input type="text" class="form-control" id="entity-search-order_sum_amount2" placeholder="金额">
+	  </div>
+	  <div class="form-group">
+	    <label for="entity-search-order_status">状态</label>
+	    <select class="form-control" id="entity-search-order_status">
 	      <option value="-1">全部</option>
-          <option value="1">启用</option>
-          <option value="2">停用</option>
-          <option value="3">失效</option>
+          <option value="1">待付</option>
+          <option value="2">已付</option>
+          <option value="3">拒付</option>
         </select>
 	  </div>
 	  <button type="button" class="btn btn-primary" id="entity-search-btn">查询</button>

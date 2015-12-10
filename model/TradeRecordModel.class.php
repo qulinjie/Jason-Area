@@ -13,6 +13,22 @@ class TradeRecordModel extends CurlModel {
     
     public static $_empyt_time = '0000-00-00 00:00:00';
     
+    public function searchCnt($params = array()){
+        return self::sendRequest('tradeRecord/searchCnt', $params);
+    }
+    
+    public function searchList($params = array()){
+        return self::sendRequest('tradeRecord/searchList', $params);
+    }
+    
+    public function update($params = array()){
+        return self::sendRequest('tradeRecord/update', $params);
+    }
+    
+    public function getInfo($params = array()){
+        return self::sendRequest('tradeRecord/getInfo', $params);
+    }
+    
     public function create($params = array()){
         return self::sendRequest('tradeRecord/create', $params);
     }

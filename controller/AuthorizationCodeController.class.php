@@ -19,6 +19,9 @@ class AuthorizationCodeController extends BaseController {
                 case 'searchList':
                     $this->searchList();
                     break;
+                case 'getInfo':
+                    $this->getInfo();
+                    break;
                 case 'changeStatus':
                     $this->changeStatus();
                     break;
@@ -95,6 +98,28 @@ class AuthorizationCodeController extends BaseController {
         }
     }
  
+    protected function getInfo() {
+        $code = Request::post('code');
+    
+        $tradeRecord_model = $this->model('tradeRecord');
+        $user_id = self::getCurrentUserId();
+    
+        $params  = array();
+        foreach ([ 'user_id', 'code' ] as $val){
+            if($$val) $params[$val] = $$val;
+        }
+    
+        $data = $tradeRecord_model->searchList($params);
+        if(EC_OK != $data['code']){
+            Log::error("searchList failed . ");
+            EC::fail($data['code']);
+        }
+    
+        $data_list = $data['data'];
+        $entity_list_html = $this->render('tradeRecord_list', array('data_list' => $data_list), true);
+        EC::success(EC_OK, array('entity_list_html' => $entity_list_html));
+    }
+    
     private function changeStatus(){
         $id = Request::post('id');
         $status = Request::post('status');

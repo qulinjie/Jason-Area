@@ -146,6 +146,9 @@ $other_token = $encrypt->tokenCode('other:' . $session->get_id());
 	  <div class="row">
 		<div class="col-sm-3 col-md-2 sidebar">
 		  <ul class="nav nav-sidebar">
+		    <li <?php if(doit::$controller == 'TradeRecord'){?> class="active" <?php } ?>>
+				<a href="<?php echo Router::getBaseUrl();?>tradeRecord/getIndex">我的大大付款</a>
+		    </li>
 			<li <?php if(doit::$controller == 'AuthorizationCode'){?> class="active" <?php } ?>>
 				<a href="<?php echo Router::getBaseUrl();?>authorizationCode/getIndex">授权码管理</a>
 		    </li>
@@ -156,6 +159,9 @@ $other_token = $encrypt->tokenCode('other:' . $session->get_id());
 		  <?php if($page_type == 'authorizationCode'){?>
 		        <script src="<?php echo Router::getBaseUrl();?>js/authorizationCode.js"></script>
 				<?php echo $authorizationCode_html; ?>
+		  <?php } else if($page_type == 'tradeRecord'){?>
+		        <script src="<?php echo Router::getBaseUrl();?>js/tradeRecord.js"></script>
+				<?php echo $tradeRecord_html; ?>
 		  <?php }?>
 		</div>
 
