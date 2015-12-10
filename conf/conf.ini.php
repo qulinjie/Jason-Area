@@ -1,10 +1,6 @@
 <?php
 return array(
-		
-		'ddmg_server_url'	=>	'http://127.0.0.1/ddmg_payapi/trunk/',
-		'ddmg_server_timeout'=>	'',
-
-	    'ddmg_payapi_url'     => 'http://127.0.0.1/ddmg_payapi/trunk/',
+	    'ddmg_payapi_url'     => 'http://127.0.0.1/ddmg_payapi/',
 		'ddmg_payapi_timeout' => '',
 
 		'attachment_file_path'    =>  'attachmentFile/',
