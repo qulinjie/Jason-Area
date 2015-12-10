@@ -84,14 +84,18 @@ abstract class BaseModel
 	}
 
 	/**
-	 * @brief:  获取接口URL
+	 * @brief:
 	 * @param:  $interface
-	 * @return:  
+	 * @return:
 	 */
 	protected  function getUrl( $interface='' )
 	{
-		return 'http://120.25.1.102/ddmg_server/'.$interface; // mark
-		//return 'http://ddmg.com/'.$interface; // mark
+		$config = Controller::getConfig('conf');
+		if(!isset($config['ddmg_payapi_url']) || !$config['ddmg_payapi_url']){
+			Log::error('config ddmg_payapi_url is not exists or is empty');
+			EC::fail(EC_DAT_NON);
+		}
+		return $config['ddmg_payapi_url'].$interface;
 	}
 
 	/**

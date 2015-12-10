@@ -130,9 +130,9 @@ $other_token = $encrypt->tokenCode('other:' . $session->get_id());
 		</div>
 		<div id="navbar" class="navbar-collapse collapse">
 		  <ul class="nav navbar-nav navbar-right">
-			<li><a href="javascript:;" id="">欢迎: <?= $loginUser['name'] ?>( <?= $loginUser['tel'] ?> )</a></li>
+			<li><a href="javascript:;" id="">欢迎: <?php echo UserController::getLoginUser()['nicename']; ?>( <?php echo  UserController::getLoginUser()['account']; ?> )</a></li>
 			<li><a href="#" id="seller-chg-pwd-btn">修改密码</a></li>
-			<li><a href="#" id="amdin-loginOut-btn">退出</a></li>
+			<li><a href="#" id="logoutBtn">退出</a></li>
 		  </ul>
 		  <!-- <form class="navbar-form navbar-right">
 			<input type="text" class="form-control" placeholder="Search...">
