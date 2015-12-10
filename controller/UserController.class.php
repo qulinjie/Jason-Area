@@ -28,11 +28,13 @@ class UserController extends BaseController
 
     private function login()
     {
+        self::isLogin()&&$this->redirect(Router::getBaseUrl());
         $this->render('login');
     }
 
     private function doLogin()
     {
+        self::isLogin()&&EC::success(EC_OK);
         $response = $this->model('user')->login(['tel' => $this->post('account'), 'pwd' => $this->post('password')]);
         $response['code'] != EC_OK && EC::fail($response['code']);
         $this->setLoginSession($response['data']);
@@ -56,7 +58,8 @@ class UserController extends BaseController
 
     public static function isLogin()
     {
-        return Session::is_set('loginUser');
+        $session = self::instance('session');
+        return $session::is_set('loginUser');
     }
 
     public static function getLoginUser()
