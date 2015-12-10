@@ -43,7 +43,7 @@
     </div>
 </div>
 
-<script> var baseUrl = "<?php echo Router::getBaseUrl();?>";</script>
+<script> var BASE_PATH = "<?php echo Router::getBaseUrl();?>";</script>
 <script src="<?php echo Router::getBaseUrl()?>js/jquery.js"></script>
 <script src="<?php echo Router::getBaseUrl();?>js/prng4.js"></script>
 <script src="<?php echo Router::getBaseUrl();?>js/rng.js"></script>
