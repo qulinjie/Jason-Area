@@ -188,59 +188,40 @@ $(document).on('click', '#entity-delete-btn', function(event){
 /**************end--删除****************/
 
 /**************start--付款****************/
-function add_entity(){
-	$("#btn-add-entity").attr('disabled', 'disabled');
-    $("#add-entity-hint").html('').fadeOut();
+function add_pay(){
+	$("#btn-add-pay").attr('disabled', 'disabled');
+    $("#info-pay-hint").html('').fadeOut();
     
-    var code = $("#add-entity-code").val();
-    var type = $("input[name='add-entity-type-rdo'][type='radio']:checked").val();
-    var active_count = $("#add-entity-active_count").val();
-    var time_start = $("#add-entity-time_start").val();
-	var time_end = $("#add-entity-time_end").val();
-	var comment = $("#add-entity-comment").val();
+    var id = $("#info-pay-id").val();
+    var pwd = $("#add-pay-pwd").val();
     
     var hint_html = '';
-    if( 1 == type ){ // 按次数
-    	if('' == active_count || 0 >= active_count){
-        	hint_html += (hint_html == '' ? '' : '<BR>') + '请填写 正确的可用次数！' ;
-        }
-    } else if( 2 == type ){ // 按时间
-    	if('' == time_start ){
-        	hint_html += (hint_html == '' ? '' : '<BR>') + '请填写 有效开始时间 ！' ;
-        }
-    	if('' == time_end ){
-        	hint_html += (hint_html == '' ? '' : '<BR>') + '请填写 有效结束时间！' ;
-        }
-    } else {
-    	hint_html += (hint_html == '' ? '' : '<BR>') + '请填写 正确的使用方式！' ;
+    if( !pwd || '' == pwd ){
+    	hint_html += (hint_html == '' ? '' : '<BR>') + '请填写支付密码！' ;
     }
     
     if(hint_html != ''){
-        $("#add-entity-hint").html(hint_html).fadeIn();
-        $("#btn-add-entity").removeAttr('disabled');
+        $("#info-pay-hint").html(hint_html).fadeIn();
+        $("#btn-add-pay").removeAttr('disabled');
         return 0;
     }
     
     $("#btn-add-entity").html("添加中...");
-    $.post(BASE_PATH + 'authorizationCode/create', {
-        	'code':code, 
-        	'type':type,
-        	'active_count':active_count,
-	        'time_start':time_start,
-	        'time_end':time_end,
-	        'comment':comment
+    $.post(BASE_PATH + 'tradeRecord/pay', {
+        	'id':id, 
+        	'pwd':pwd
         },
         function(result){
             if(result.code != 0) {
-                $("#add-entity-hint").html(result.msg + '(' + result.code + ')').fadeIn();
-                $("#btn-add-entity").removeAttr('disabled');
-                $("#btn-add-entity").html("确定");
+                $("#info-pay-hint").html(result.msg + '(' + result.code + ')').fadeIn();
+                $("#btn-add-pay").removeAttr('disabled');
+                $("#btn-add-pay").html("确定");
             }else {
-                $("#add-entity-hint").html(result.msg + ', 关闭...').fadeIn();
+                $("#info-pay-hint").html(result.msg + ', 关闭...').fadeIn();
                 setTimeout(function(){
-                    $("#add-entity-modal").modal('hide');
-                    $("#btn-add-entity").removeAttr('disabled');
-                    $("#btn-add-entity").html("确定");
+                    $("#info-pay-modal").modal('hide');
+                    $("#btn-add-pay").removeAttr('disabled');
+                    $("#btn-add-pay").html("确定");
                     $('#entity-clear-btn').click();
                 }, 1000);
             }
@@ -249,102 +230,38 @@ function add_entity(){
     );
 }
 
-$(document).on('click', '#add-entity-new', function(event){
-	$('#add-entity-modal').modal('show');
-	$('#add-entity-modal').modal({keyboard: false});
+$(document).on('click', '#add-pay-new', function(event){
+	$('#info-pay-modal').modal('show');
+	$('#info-pay-modal').modal({keyboard: false});
 		
-	$('#btn-add-entity').show();
-	$('#btn-add-entity').unbind("click");
+	$('#btn-add-pay').show();
+	$('#btn-add-pay').unbind("click");
 
-	var title = $('#add-entity-new').text();
-	$('#info_entity_title').html(title);
+	$("#info-pay-hint").html('').fadeOut();
 	
-	$("#add-entity-hint").html('').fadeOut();
-	
-	clear_entity_field();
-	
-	getAuthorizationCode();
-	
-	$("#btn-add-entity").removeAttr('disabled');
-    $("#btn-add-entity").html("确定");
+	$("#btn-add-pay").removeAttr('disabled');
+    $("#btn-add-pay").html("确定");
     
-	$('#btn-add-entity').on('click',function(event){
-		add_entity();
+	$('#btn-add-pay').on('click',function(event){
+		add_pay();
 	});
 	
-	$('#add-entity-type-count').on('click',function(event){
-		change_type()
-	});
-	$('#add-entity-type-time').on('click',function(event){
-		change_type()
-	});
-});
-
-function clear_entity_field(){
-	$('#info-entity-id').val('');
-	
-	$('#info-entity-code').html('');
-	$('#add-entity-code').val('');
-	$('#add-entity-active_count').val('');
-	$('#add-entity-time_start').val('');
-	$('#add-entity-time_end').val('');
-	$('#add-entity-comment').val('');
-}
-
-function getAuthorizationCode(){
-	$.post(BASE_PATH + 'authorizationCode/getCode', {},
+	var id =  $(this).parent().parent().parent().children().first().text();
+	$.post(BASE_PATH + 'tradeRecord/getInfo', {'id':id},
 	    function(result){
 	        if(result.code != 0) {
-	            $("#add-entity-hint").html(result.msg + '(' + result.code + ')' + ',请刷新页面').fadeIn();
-	        }else {
-	        	var code = result.data;
-	        	$('#info-entity-code').html(code);
-	        	$('#add-entity-code').val(code);
+	            $("#add-pay-hint").html(result.msg + '(' + result.code + ')' + ',请刷新页面').fadeIn();
+	        } else {
+	        	$('#info-pay-trade').html(result.data.tradeRecord_pay);
 	        }
 	    },
 	    'json'
 	);
-}
-
-function change_type(){
-	var type = $("input[name='add-entity-type-rdo'][type='radio']:checked").val();
-	if( 1== type){
-		$('#div-active-count').css('display', 'block');
-		
-		$("#div-time-start").css('display', 'none');
-		$("#div-time-end").css('display', 'none');
-	} else {
-		$('#div-active-count').css('display', 'none');
-		
-		$("#div-time-start").css('display', 'block');
-		$("#div-time-end").css('display', 'block');
-	}
-}
-
-/**************end--付款****************/
-
-/**************start--查看****************/
-$(document).on('click', '#entity-infoDisplay-btn', function(event){
-	var id =  $(this).parent().parent().parent().children().first().text();
-	$('#add-entity-modal').modal('show');
-	$.post(BASE_PATH + 'tradeRecord/info', {
-			'id':id
-        },
-        function(result){
-            if(result.code != 0) {
-                $("#add-entity-hint").html(result.msg + '(' + result.code + ')').fadeIn();
-            }else {
-            	//$("#entity-list").html(result.data.entity_list_html);
-            }
-            $("#entity-search-btn").removeAttr('disabled');
-        },
-        'json'
-    );
-
+	
 });
 
-/**************end--查看****************/
 
+/**************end--付款****************/
 
 
 prettyPrint();

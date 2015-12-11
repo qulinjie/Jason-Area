@@ -4,12 +4,33 @@
  */
 ?>
 
+<div class="modal fade" id="info-pay-modal">
+	<div class="modal-dialog" style="width: 1000px;">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+				<h4 class="modal-title">付款</h4>
+			</div>
+			<div class="modal-body" id="info-pay-trade"></div>
+			<div class="modal-body">
+			             支付密码：<input type="text" class="form-control" id="add-pay-pwd" value="" style="width: 150px;display: inline;"/>
+			</div>
+			<div class="alert alert-danger" id="info-pay-hint"></div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+				<button type="button" class="btn btn-primary" id="btn-add-pay">确定</button>
+			</div>
+		</div>
+	</div>
+</div>
+
 <div class="modal fade" id="add-entity-modal">
 	<div class="modal-dialog" style="width: 700px;">
 		<div class="modal-content">
 			<div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal"
-					aria-label="Close">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 					<span aria-hidden="true">&times;</span>
 				</button>
 				<h4 class="modal-title" id="info_entity_title">付款</h4>
@@ -70,7 +91,7 @@
 </div>
 <!-- /.modal -->
 
-<h1 class="page-header">付款管理</h1>
+<h1 class="page-header">我的大大付款</h1>
 
 <div class="panel panel-primary">
   <div class="panel-heading">查找</div>
