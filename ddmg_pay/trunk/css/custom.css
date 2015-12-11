@@ -127,3 +127,7 @@ body {
 	line-height:2.5;
 	color: red;
 }
+
+.form-group {
+	margin-top: 5px;
+}
