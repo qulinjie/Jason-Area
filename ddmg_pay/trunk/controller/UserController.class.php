@@ -34,7 +34,6 @@ class UserController extends BaseController
 
     private function doLogin()
     {
-        self::isLogin()&&EC::success(EC_OK);
         $response = $this->model('user')->login(['tel' => $this->post('account'), 'pwd' => $this->post('password')]);
         $response['code'] != EC_OK && EC::fail($response['code']);
         EC::success(EC_OK);
