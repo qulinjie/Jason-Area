@@ -36,15 +36,21 @@ function csrf_empty(){
     location.href = BASE_PATH + '404.php';
 }
 
-function do_encrypt(pwd) {
-	var rsa = new RSAKey();
-	rsa.setPublic('00a7aaa1eca51b089bd3259c68847699eec770f91bd8eb56a60fee097e3ae86d64ac61a750a242e2b198192217961d586bad03305d03485677893ebdb4d20ee26655c21a92b6f4fcc910c5b83560f8d58ed06fee2d2c249385bff034a0b344263bb288e3164afdf4776564bd4ff7a1ffe69d6df729bff83cdfe7388f21d6b8f421', '10001');
-	var res = rsa.encrypt(pwd);
-	if(res) {
-		return hex2b64(res);
-	}else return '';
+function cancelEscFnKey(){
+	$('.modal-dialog input').each(function(i,e){
+		$(e).bind('keyup',function(event){
+			var keycode = (event.keyCode ? event.keyCode : event.which);
+			if(27 == keycode) {
+				return false;
+			}
+		});
+	});
 }
 
+
+$(function() {
+	cancelEscFnKey();
+});
 
 /*************************** global setting end ***************************************/
 /**************************************************************************************/

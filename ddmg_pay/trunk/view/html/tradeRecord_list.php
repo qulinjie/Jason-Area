@@ -70,7 +70,7 @@
 				<td name="td-operation-name">
 					<div class="btn-group" role="group">
     					<?php if( $item['order_status'] == TradeRecordModel::$_status_waiting ){?>
-    					   <a id="add-entity-new" class="btn btn-primary" href="#" data-toggle="modal"	data-keyboard="false" data-backdrop="static">付款</a>
+    					   <a id="add-pay-new" class="btn btn-primary" href="#" data-toggle="modal"	data-keyboard="false" data-backdrop="static">付款</a>
     					   <a id="entity-changeStatus-btn" class="btn btn-primary" href="#" data-toggle="modal" data-keyboard="false" data-backdrop="static" style="margin-left: 5px;">拒付</a>
 					    <?php } else { echo '-'; }?>
 					</div>
@@ -114,7 +114,7 @@
 			                 </td>
 			             </tr>
 			             <tr>
-			                 <td colspan="4" style="text-align: right;font-weight: bold;">合计：<span style="color:red;"><?php echo $item['order_sum_amount'];?></span>&nbsp;&nbsp;元 &nbsp;&nbsp;</td>
+			                 <td colspan="4" style="text-align: right;font-weight: bold;">合计：<span style="color:red;"><?php echo $item['order_sum_amount'];?></span>&nbsp;元 &nbsp;&nbsp;</td>
 			             </tr>
 			         </table>
 			     </td>

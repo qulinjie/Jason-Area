@@ -19,6 +19,9 @@ class TradeRecordController extends BaseController {
                 case 'searchList':
                     $this->searchList();
                     break;
+                case 'getInfo':
+                    $this->getInfo();
+                    break;
                 case 'changeStatus':
                     $this->changeStatus();
                     break;
@@ -27,6 +30,9 @@ class TradeRecordController extends BaseController {
                     break;
                 case 'create':  // 不需要 登录
                     $this->create();
+                    break;
+                case 'pay':
+                    $this->pay();
                     break;
                 default:
                     Log::error('page not found . ' . $params[0]);
@@ -196,6 +202,28 @@ class TradeRecordController extends BaseController {
         EC::success(EC_OK);
     }    
     
+    protected function getInfo() {
+        $id = Request::post('id');
+    
+        $tradeRecord_model = $this->model('tradeRecord');
+        $user_id = self::getCurrentUserId();
+    
+        $params  = array();
+        foreach ([ 'user_id', 'id' ] as $val){
+            if($$val) $params[$val] = $$val;
+        }
+    
+        $data = $tradeRecord_model->searchList($params);
+        if(EC_OK != $data['code']){
+            Log::error("searchList failed . ");
+            EC::fail($data['code']);
+        }
+    
+        $data_info = $data['data'][0];
+        $entity_list_html = $this->render('tradePay', array('item' => $data_info), true);
+        EC::success(EC_OK, array('tradeRecord_pay' => $entity_list_html));
+    }
+    
     private function create(){
         $post_data = self::getPostDataJson();
         if(empty($post_data)) {
@@ -269,6 +297,19 @@ class TradeRecordController extends BaseController {
             EC::fail($data['code']);
         }
         EC::success(EC_OK);
+    }
+    
+    private function pay(){
+        $id = Request::post('id');
+        $pwd = Request::post('pwd');
+    
+        if( !$id || !pwd ){
+            Log::error('checkCode params error!');
+            EC::fail(EC_PAR_ERR);
+        }
+        $tradeRecord_model = $this->model('tradeRecord');
+        
+        EC::success(EC_OK,"test");
     }
     
 }

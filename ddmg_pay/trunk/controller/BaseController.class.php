@@ -198,7 +198,6 @@ abstract class BaseController extends Controller
 	public function getCurrentUserId(){
 	    $session = Controller::instance('session');
 	    $user_id = $session->get('loginUser')['id'];
-	    return "1000"; // TODO for test .
 	    return $user_id;
 	}
 	
