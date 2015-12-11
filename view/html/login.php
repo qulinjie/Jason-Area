@@ -10,7 +10,7 @@
     <div class="container">
         <img src="<?php echo Router::getBaseUrl()?>asset/img/logo.jpg"/>
         <ul class="nav navbar-nav navbar-right">
-            <li><a href="#">返回首页</a></li>
+            <li><a href="<?php Router::getBaseUrl()?>register/firstStep">注册</a></li>
         </ul>
     </div>
 </nav>
@@ -18,6 +18,7 @@
     <div class="row" style="padding-top: 30px;">
         <div class="col-lg-offset-1 col-lg-10">
             <form id="loginForm"  class="form-horizontal">
+                <input type="hidden" id="loginCsrf" name="loginCsrf" value="<?php echo UserController::getLoginToken();?>"/>
                 <div class="form-group">
                     <label for="account" class="col-lg-offset-1 col-lg-2 control-label">帐号</label>
                     <div class="col-lg-4">
@@ -35,7 +36,7 @@
                 <div class="form-group">
                     <div class="col-lg-offset-3 col-lg-4">
                         <input type="button" id="loginBtn" class="btn btn-primary col-lg-4" value="登录"/>
-                        <input type="reset"  class="btn btn-primary col-lg-4" value="重置"/>
+                        <a href="javascript:void(0);"  class="col-lg-offset-1 btn col-lg-4">忘记密码？</a>
                     </div>
                 </div>
             </form>
@@ -50,6 +51,6 @@
 <script src="<?php echo Router::getBaseUrl();?>js/base64.js"></script>
 <script src="<?php echo Router::getBaseUrl();?>js/jsbn.js"></script>
 <script src="<?php echo Router::getBaseUrl();?>js/rsa.js"></script>
-<script src="<?php echo Router::getBaseUrl()?>js/login.js"></script>
+<script src="<?php echo Router::getBaseUrl()?>js/custom.js"></script>
 </body>
 </html>
