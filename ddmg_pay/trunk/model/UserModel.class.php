@@ -61,4 +61,20 @@ class UserModel extends CurlModel
     {
         return self::sendRequest('user/update_company_auth_info',$params);
     }
+
+    /**
+     * @return array
+     */
+    public function isLogin()
+    {
+        return self::sendRequest('user/is_login');
+    }
+
+    /**
+     * @return array
+     */
+    public function getLoginUser()
+    {
+        return self::sendRequest('user/get_login_user');
+    }
 }

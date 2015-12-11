@@ -37,7 +37,6 @@ class UserController extends BaseController
         self::isLogin()&&EC::success(EC_OK);
         $response = $this->model('user')->login(['tel' => $this->post('account'), 'pwd' => $this->post('password')]);
         $response['code'] != EC_OK && EC::fail($response['code']);
-        $this->setLoginSession($response['data']);
         EC::success(EC_OK);
     }
 
@@ -45,26 +44,32 @@ class UserController extends BaseController
     {
         $response = $this->model('user')->logout();
         $response['code'] != EC_OK && EC::fail($response['code']);
-        $this->setLoginSession();
         EC::success(EC_OK);
-    }
-
-    private function setLoginSession($userInfo = array())
-    {
-        $session = self::instance('session');
-        $session->clear();
-        $userInfo && $session->set('loginUser', $userInfo);
     }
 
     public static function isLogin()
     {
-        $session = self::instance('session');
-        return $session::is_set('loginUser');
+        $response = self::model('user')->isLogin();
+        return $response['code'] == EC_OK && $response['data']['isLogin'];
     }
 
     public static function getLoginUser()
     {
+        $response = self::model('user')->getLoginUser();
+        return $response['code'] == EC_OK ? $response['data']['loginUser'] : [];
+    }
+
+    public static function getLoginToken()
+    {
         $session = self::instance('session');
-        return $session->get('loginUser');
+        $encrypt = self::instance('encrypt');
+        return $encrypt->tokenCode('login:' . $session->get_id());
+    }
+
+    public static function getOtherToken()
+    {
+        $session = self::instance('session');
+        $encrypt = self::instance('encrypt');
+        return $encrypt->tokenCode('other:' . $session->get_id());
     }
 }
