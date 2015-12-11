@@ -45,50 +45,6 @@ class AuthorizationCodeController extends BaseController {
         }
     }
     
-    private function pay(){
-        $id = Request::post('id');
-        $pwd = Request::post('pwd');
-    
-        if( !$id || !pwd ){
-            Log::error('checkCode params error!');
-            EC::fail(EC_PAR_ERR);
-        }
-    
-        $code_model = $this->model('authorizationCode');
-        $data_authCode = $code_model->getInfo(array('code' => $authCode));
-        if(EC_OK != $data_authCode['code'] ){
-            Log::error('getInfo failed . code=' . $authCode);
-            EC::fail($data_authCode['code']);
-        }
-        if ( empty($data_authCode['data']) ){
-            Log::notice('getauthCode sucessed . record is empty . code=' . $authCode);
-            EC::success(EC_OK,"false");
-        }
-    
-        $code_data = $data_authCode['data'][0];
-        if(AuthorizationCodeModel::$_is_delete_true == $code_data['is_delete']) {
-            Log::notice('code is delete . code=' . $authCode);
-            EC::success(EC_OK,"delete");
-        }
-        if(AuthorizationCodeModel::$_status_disabled == $code_data['status']) {
-            Log::notice('code is disabled . code=' . $authCode);
-            EC::success(EC_OK,"disabled");
-        } else if(AuthorizationCodeModel::$_status_overdue == $code_data['status']) {
-            Log::notice('code is overdue . code=' . $authCode);
-            EC::success(EC_OK,"overdue");
-        } else if(AuthorizationCodeModel::$_status_enabled == $code_data['status']) {
-            if($code_model->validataionCodeActive($code_data)){
-                Log::notice('code is check OK . code=' . $authCode);
-                EC::success(EC_OK,"true");
-            } else {
-                Log::notice('code had overdue . code=' . $authCode);
-                EC::success(EC_OK,"overdue");
-            }
-        }
-        Log::error('checkCode . code status is exception . code=' . $authCode . ',status=' . $code_data['status'] );
-        EC::success(EC_OK,"false");
-    }
-    
     protected function searchList($isIndex = false) {
         $current_page = Request::post('page');
         $code = Request::post('code');

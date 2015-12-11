@@ -58,7 +58,7 @@
 				<td style="display:none"><?php echo $item['id'];?><input type="hidden" value="<?php echo $item['status'];?>"></td>
 				<td><?php echo $item['code'];?></td>
 				<td><?php if($item['type']==AuthorizationCodeModel::$_type_count){ echo "按次数"; } else { echo "按时间"; } ?></td>
-				<td><?php echo $item['active_count'];?></td>
+				<td><?php if($item['type']==AuthorizationCodeModel::$_type_count){ echo $item['active_count']; } else { echo "-"; } ?></td>
 				<td><?php echo (0 < strtotime($item['time_start']))? $item['time_start'] : '-';?></td>
 				<td><?php echo (0 < strtotime($item['time_end']))? $item['time_end'] : '-';?></td>
 				<td><?php echo $item['used_count'];?></td>
