@@ -307,8 +307,57 @@ class TradeRecordController extends BaseController {
             Log::error('checkCode params error!');
             EC::fail(EC_PAR_ERR);
         }
-        $tradeRecord_model = $this->model('tradeRecord');
         
+        // TODO 
+        /**
+         * 验证密码
+         */
+        
+        $tradeRecord_model = $this->model('tradeRecord');
+        $user_id = self::getCurrentUserId();
+        
+        $params = array();
+        $params['id'] = $id;
+        $params['user_id'] = $user_id;
+        
+        if(empty($params)){
+            Log::error('update params is empty!');
+            EC::fail(EC_PAR_BAD);
+        }
+        
+        /**
+         * 验证 订单 状态 
+         */
+        $data_old = $tradeRecord_model->getInfo($params);
+        if(EC_OK != $data_old['code']){
+            Log::error('getInfo Fail!');
+            EC::fail($data_old['code']);
+        }
+        $data_obj = $data_old['data'][0];
+        if(empty($data_obj)) {
+            Log::error('getInfo empty !');
+            EC::fail(EC_RED_EMP);
+        }
+        if( TradeRecordModel::$_is_delete_true == $data_obj['is_delete'] ) {
+            Log::error('record had delete . is_delete=' . $data_obj['is_delete']);
+            EC::fail(EC_RED_EXP);
+        }
+        if( TradeRecordModel::$_status_waiting != $data_obj['order_status'] ) {
+            Log::error('record status is exception . status=' . $data_obj['order_status']);
+            EC::fail(EC_RED_EXP);
+        }
+        
+        $params['order_status'] = TradeRecordModel::$_status_paid;
+        $params['disenabled_timestamp'] = date('Y-m-d H:i:s',time());
+        
+        /**
+         * 支付 
+         */
+        $data = $tradeRecord_model->pay($params);
+        if(EC_OK != $data['code']){
+            Log::error('update-pay Fail!');
+            EC::fail($data['code']);
+        }
         EC::success(EC_OK,"test");
     }
     

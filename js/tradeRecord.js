@@ -188,48 +188,6 @@ $(document).on('click', '#entity-delete-btn', function(event){
 /**************end--删除****************/
 
 /**************start--付款****************/
-function add_pay(){
-	$("#btn-add-pay").attr('disabled', 'disabled');
-    $("#info-pay-hint").html('').fadeOut();
-    
-    var id = $("#info-pay-id").val();
-    var pwd = $("#add-pay-pwd").val();
-    
-    var hint_html = '';
-    if( !pwd || '' == pwd ){
-    	hint_html += (hint_html == '' ? '' : '<BR>') + '请填写支付密码！' ;
-    }
-    
-    if(hint_html != ''){
-        $("#info-pay-hint").html(hint_html).fadeIn();
-        $("#btn-add-pay").removeAttr('disabled');
-        return 0;
-    }
-    
-    $("#btn-add-pay").html("正在付款...");
-    $.post(BASE_PATH + 'tradeRecord/pay', {
-        	'id':id, 
-        	'pwd':pwd
-        },
-        function(result){
-            if(result.code != 0) {
-                $("#info-pay-hint").html(result.msg + '(' + result.code + ')').fadeIn();
-                $("#btn-add-pay").removeAttr('disabled');
-                $("#btn-add-pay").html("确定支付");
-            }else {
-                $("#info-pay-hint").html(result.msg + ', 关闭...').fadeIn();
-                setTimeout(function(){
-                    $("#info-pay-modal").modal('hide');
-                    $("#btn-add-pay").removeAttr('disabled');
-                    $("#btn-add-pay").html("确定支付");
-                    $('#entity-clear-btn').click();
-                }, 1000);
-            }
-        },
-        'json'
-    );
-    
-}
 
 $(document).on('click', '#add-pay-new', function(event){
 	stopPropagation = true;
@@ -265,6 +223,48 @@ $(document).on('click', '#add-pay-new', function(event){
 	
 });
 
+function add_pay(){
+	$("#btn-add-pay").attr('disabled', 'disabled');
+    $("#info-pay-hint").html('').fadeOut();
+    
+    var id = $("#info-pay-id").val();
+    var pwd = $("#add-pay-pwd").val();
+    
+    var hint_html = '';
+    if( !pwd || '' == pwd ){
+    	hint_html += (hint_html == '' ? '' : '<BR>') + '请填写支付密码！' ;
+    }
+    
+    if(hint_html != ''){
+        $("#info-pay-hint").html(hint_html).fadeIn();
+        $("#btn-add-pay").removeAttr('disabled');
+        return 0;
+    }
+    
+    $("#btn-add-pay").html("正在付款...");
+    $.post(BASE_PATH + 'tradeRecord/pay', {
+        	'id':id, 
+        	'pwd':pwd
+        },
+        function(result){
+            if(result.code != 0) {
+                $("#info-pay-hint").html(result.msg + '(' + result.code + ')').fadeIn();
+                $("#btn-add-pay").removeAttr('disabled');
+                $("#btn-add-pay").html("确定支付");
+            }else {
+                $("#info-pay-hint").html(result.msg + ', 关闭...').fadeIn();
+                setTimeout(function(){
+                    $("#info-pay-modal").modal('hide');
+                    $("#btn-add-pay").removeAttr('disabled');
+                    $("#btn-add-pay").html("确定支付");
+                    $('#entity-clear-btn').click();
+                }, 500);
+            }
+        },
+        'json'
+    );
+    
+}
 
 /**************end--付款****************/
 

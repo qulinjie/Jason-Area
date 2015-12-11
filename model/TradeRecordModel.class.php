@@ -33,4 +33,8 @@ class TradeRecordModel extends CurlModel {
         return self::sendRequest('tradeRecord/create', $params);
     }
     
+    public function pay($params = array()){
+        return self::sendRequest('tradeRecord/pay', $params);
+    }
+    
 }
