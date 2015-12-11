@@ -30,7 +30,8 @@
 <div class="alert alert-info" role="alert"><p class="text-center">无记录</p></div>
 <?php }else{?>
 <input type="hidden" class="form-control" id="info-pay-id" value="<?php echo $item['id'];?>"></input>
-<table style="width: 100%;">
+
+<table style="width: 100%;background: #CCDFEF none repeat scroll 0% 0%;border: 1px solid #BFBFBF;line-height: 35px;">
  <tr style="font-weight: bold;">
      <td>&nbsp;&nbsp;&nbsp;&nbsp;卖家：<?php echo $item['seller_name'];?></td>
      <td>联系人：<?php echo $item['seller_conn_name'];?></td>
@@ -66,7 +67,21 @@
      </td>
  </tr>
  <tr>
-     <td colspan="4" style="text-align: right;font-weight: bold;">合计：<span style="color:red;"><?php echo $item['order_sum_amount'];?></span>&nbsp;元 &nbsp;&nbsp;</td>
+     <td colspan="4" style="text-align: right;font-weight: bold;">
+        <span style="margin-right: 15px;">合计：<span style="color:red;"><?php echo $item['order_sum_amount'];?></span>&nbsp;元 </span>
+     </td>
  </tr>
 </table>
+
+<br/>
+<div style="border: 1px dashed #BFBFBF;line-height: 55px;height: 60px;">
+    <span style="float:left;margin-left: 15px;">
+        <input name="pay_type" value="1" checked="checked" type="radio"/>大大付款 余额：<font color="red">100000.00</font> 元
+        &nbsp;&nbsp;&nbsp;&nbsp;
+        <input name="pay_type" value="2" type="radio"/>网银支付
+    </span>
+    <span style="float:right;margin-right: 15px;">
+                          付款金额：<font color="red"><?php echo $item['order_sum_amount'];?></font> 元
+    </span>
+</div>
 <?php }?>

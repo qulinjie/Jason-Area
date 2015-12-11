@@ -123,6 +123,7 @@ function search_clearFields(){
 
 /**************start--拒付****************/
 $(document).on('click', '#entity-changeStatus-btn', function(event){
+	stopPropagation = true;
 	var id =  $(this).parent().parent().parent().children().first().text();
 	var status = $(this).parent().parent().parent().children().children().first().val(); // "status" value
 	var txt = $(this).text();
@@ -150,7 +151,6 @@ $(document).on('click', '#entity-changeStatus-btn', function(event){
 		        'json'
 		    );
 	});
-	
 });
 /**************end--拒付****************/
 
@@ -206,7 +206,7 @@ function add_pay(){
         return 0;
     }
     
-    $("#btn-add-entity").html("添加中...");
+    $("#btn-add-pay").html("正在付款...");
     $.post(BASE_PATH + 'tradeRecord/pay', {
         	'id':id, 
         	'pwd':pwd
@@ -215,36 +215,41 @@ function add_pay(){
             if(result.code != 0) {
                 $("#info-pay-hint").html(result.msg + '(' + result.code + ')').fadeIn();
                 $("#btn-add-pay").removeAttr('disabled');
-                $("#btn-add-pay").html("确定");
+                $("#btn-add-pay").html("确定支付");
             }else {
                 $("#info-pay-hint").html(result.msg + ', 关闭...').fadeIn();
                 setTimeout(function(){
                     $("#info-pay-modal").modal('hide');
                     $("#btn-add-pay").removeAttr('disabled');
-                    $("#btn-add-pay").html("确定");
+                    $("#btn-add-pay").html("确定支付");
                     $('#entity-clear-btn').click();
                 }, 1000);
             }
         },
         'json'
     );
+    
 }
 
 $(document).on('click', '#add-pay-new', function(event){
+	stopPropagation = true;
+	
+	$("#add-pay-pwd").val('');
+	$("#info-pay-hint").html('').hide();
 	$('#info-pay-modal').modal('show');
 	$('#info-pay-modal').modal({keyboard: false});
-		
+	
 	$('#btn-add-pay').show();
 	$('#btn-add-pay').unbind("click");
 
-	$("#info-pay-hint").html('').fadeOut();
-	
 	$("#btn-add-pay").removeAttr('disabled');
-    $("#btn-add-pay").html("确定");
+    $("#btn-add-pay").html("确定支付");
     
 	$('#btn-add-pay').on('click',function(event){
 		add_pay();
 	});
+	
+	$('#info-pay-trade').html("<div style='width:100%;text-align:center;'><img alt='正在加载数据...' src='" + BASE_PATH + "view/images/tips_loading.gif'/></div>");
 	
 	var id =  $(this).parent().parent().parent().children().first().text();
 	$.post(BASE_PATH + 'tradeRecord/getInfo', {'id':id},
@@ -263,6 +268,9 @@ $(document).on('click', '#add-pay-new', function(event){
 
 /**************end--付款****************/
 
+$("td[name='td-operation-name']").each(function(i,e){
+	$(e).unbind("click");
+});
 
 prettyPrint();
 });
@@ -282,5 +290,16 @@ function showDetailInfo(o,id){
 	} else {
 		info.hide();
 	}
+}
+
+var stopPropagation = false;
+function showDetailInfo_delay(o,id){
+	setTimeout(function(){ 
+		if(stopPropagation){
+			stopPropagation = false;
+		} else {
+			showDetailInfo(o,id);
+		}
+	}, 100);
 }
 

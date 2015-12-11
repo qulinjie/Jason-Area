@@ -53,7 +53,7 @@
 			</thead>
 			<tbody>
 <?php foreach ($data_list as $item){?>
-			<tr onclick="showDetailInfo(this,<?php echo $item['id'];?>);">
+			<tr onclick="showDetailInfo_delay(this,<?php echo $item['id'];?>);">
 				<td style="display:none"><?php echo $item['id'];?><input type="hidden" value="<?php echo $item['order_status'];?>"></td>
 				<td><?php echo $item['order_no'];?></td>
 				<td><?php echo $item['order_timestamp'];?></td>
@@ -114,7 +114,9 @@
 			                 </td>
 			             </tr>
 			             <tr>
-			                 <td colspan="4" style="text-align: right;font-weight: bold;">合计：<span style="color:red;"><?php echo $item['order_sum_amount'];?></span>&nbsp;元 &nbsp;&nbsp;</td>
+			                 <td colspan="4" style="text-align: right;font-weight: bold;">
+			                     <span style="margin-right: 15px;">合计：<span style="color:red;"><?php echo $item['order_sum_amount'];?></span>&nbsp;元 </span>
+			                 </td>
 			             </tr>
 			         </table>
 			     </td>

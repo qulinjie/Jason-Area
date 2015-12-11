@@ -314,7 +314,11 @@ function change_type(){
 $(document).on('click', '#entity-infoDisplay-btn', function(event){
 	var id =  $(this).parent().parent().parent().children().first().text();
 	var code =  $(this).parent().parent().parent().children().first().next().text();
+	
+	$("#info-entity-hint").html('').hide();
 	$('#info-entity-modal').modal('show');
+	$('#info-entity-list').html("<div style='width:100%;text-align:center;'><img alt='正在加载数据...' src='" + BASE_PATH + "view/images/tips_loading.gif'/></div>");
+	
 	$.post(BASE_PATH + 'authorizationCode/getInfo', {
 			'id':id,
 			'code':code
@@ -332,7 +336,6 @@ $(document).on('click', '#entity-infoDisplay-btn', function(event){
 });
 
 function fillInEntityValue(data){
-	$("#info-entity-hint").html('').hide();
 	$("#info-entity-list").html(data.entity_list_html);
 	$("#search-head-div").html('').hide();
 	$("#entity-pager-ul").html('').hide();
