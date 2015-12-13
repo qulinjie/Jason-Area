@@ -120,6 +120,60 @@ function search_clearFields(){
 	$("#entity-search-order_sum_amount2").val("");
 }
 
+/**************start--导出数据****************/
+
+$(document).on('click', '#entity-export-page-btn', function(event){
+	export_data(1);
+});
+
+function export_data(export_type){
+	var page = $("#entity-current-page").html();
+	
+	$("#search-entity-hint").html('').fadeOut();
+	
+    var order_no = $("#entity-search-order_no").val();
+    var time1 = $("#entity-search-time1").val();
+	var time2 = $("#entity-search-time2").val();
+	var order_status = $("#entity-search-order_status").val();
+	var order_time1 = $("#entity-search-order_time1").val();
+	var order_time2 = $("#entity-search-order_time2").val();
+	var seller_name = $("#entity-search-seller_name").val();
+	var seller_conn_name = $("#entity-search-seller_conn_name").val();
+	var order_sum_amount1 = $("#entity-search-order_sum_amount1").val();
+	var order_sum_amount2 = $("#entity-search-order_sum_amount2").val();
+	
+	if(-1 == order_status) { order_status =""; }
+	
+    $.download(BASE_PATH + 'tradeRecord/exportData', {
+    	'order_no':order_no, 
+    	'time1':time1,
+    	'time2':time2,
+    	'order_status':order_status,
+    	'order_time1':order_time1,
+    	'order_time2':order_time2,
+    	'seller_name':seller_name,
+    	'seller_conn_name':seller_conn_name,
+    	'order_sum_amount1':order_sum_amount1,
+    	'order_sum_amount2':order_sum_amount2,
+        'page':page,
+        'export_type':export_type
+    },'post');
+    
+}
+
+jQuery.download = function(url, data, method){
+    if( url && data ){ 
+        data = typeof data == 'string' ? data : jQuery.param(data);
+        var inputs = '';
+        jQuery.each(data.split('&'), function(){ 
+            var pair = this.split('=');
+            inputs+='<input type="hidden" name="'+ pair[0] +'" value="'+ pair[1] +'" />'; 
+        });        
+        jQuery('<form action="'+ url +'" method="'+ (method||'post') +'">'+inputs+'</form>').appendTo('body').submit().remove();
+    };
+};
+
+/**************end--导出数据****************/
 
 /**************start--拒付****************/
 $(document).on('click', '#entity-changeStatus-btn', function(event){

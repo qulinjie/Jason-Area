@@ -59,16 +59,16 @@
                  <td><?php echo $item['order_goods_size'];?></td>
                  <td><?php echo $item['order_goods_type'];?></td>
                  <td><?php echo $item['order_delivery_addr'];?></td>
-                 <td><?php echo $item['order_goods_price'];?></td>
+                 <td><?php echo number_format($item['order_goods_price'],2);?></td>
                  <td><?php echo $item['order_goods_count'];?></td>
-                 <td><?php echo $item['order_sum_amount'];?></td>
+                 <td><?php echo number_format($item['order_sum_amount'],2);?></td>
               </tr>
          </table>
      </td>
  </tr>
  <tr>
      <td colspan="4" style="text-align: right;font-weight: bold;">
-        <span style="margin-right: 15px;">合计：<span style="color:red;"><?php echo $item['order_sum_amount'];?></span>&nbsp;元 </span>
+        <span style="margin-right: 15px;">合计：<span style="color:red;"><?php echo number_format($item['order_sum_amount'],2);?></span>&nbsp;元 </span>
      </td>
  </tr>
 </table>
@@ -76,12 +76,12 @@
 <br/>
 <div style="border: 1px dashed #BFBFBF;line-height: 55px;height: 60px;">
     <span style="float:left;margin-left: 15px;">
-        <input name="pay_type" value="1" checked="checked" type="radio"/>大大付款 余额：<font color="red">100000.00</font> 元
+        <input name="pay_type" value="1" checked="checked" type="radio"/>大大付款 余额：<font color="red">100,000.00</font> 元
         &nbsp;&nbsp;&nbsp;&nbsp;
         <input name="pay_type" value="2" type="radio"/>网银支付
     </span>
     <span style="float:right;margin-right: 15px;">
-                          付款金额：<font color="red"><?php echo $item['order_sum_amount'];?></font> 元
+                          付款金额：<font color="red"><?php echo number_format($item['order_sum_amount'],2);?></font> 元
     </span>
 </div>
 <?php }?>

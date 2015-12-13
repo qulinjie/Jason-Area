@@ -58,7 +58,7 @@
 				<td><?php echo $item['order_no'];?></td>
 				<td><?php echo $item['order_timestamp'];?></td>
 				<td><?php echo $item['seller_name'];?></td>
-				<td><?php echo $item['order_sum_amount'];?></td>
+				<td><?php echo number_format($item['order_sum_amount'],2);?></td>
 				<td><?php echo $item['seller_conn_name'] . '&nbsp;' . $item['seller_tel']; ?></td>
 <!-- 				<td><?php echo $item['add_timestamp'];?></td> -->
 <!-- 				<td><?php echo (0 < strtotime($item['pay_timestamp']))? $item['pay_timestamp'] : '-';?></td> -->
@@ -106,16 +106,16 @@
 			                             <td><?php echo $item['order_goods_size'];?></td>
 			                             <td><?php echo $item['order_goods_type'];?></td>
 			                             <td><?php echo $item['order_delivery_addr'];?></td>
-			                             <td><?php echo $item['order_goods_price'];?></td>
+			                             <td><?php echo number_format($item['order_goods_price'],2);?></td>
 			                             <td><?php echo $item['order_goods_count'];?></td>
-			                             <td><?php echo $item['order_sum_amount'];?></td>
+			                             <td><?php echo number_format($item['order_sum_amount'],2);?></td>
 			                          </tr>
 			                     </table>
 			                 </td>
 			             </tr>
 			             <tr>
 			                 <td colspan="4" style="text-align: right;font-weight: bold;">
-			                     <span style="margin-right: 15px;">合计：<span style="color:red;"><?php echo $item['order_sum_amount'];?></span>&nbsp;元 </span>
+			                     <span style="margin-right: 15px;">合计：<span style="color:red;"><?php echo number_format($item['order_sum_amount'],2);?></span>&nbsp;元 </span>
 			                 </td>
 			             </tr>
 			         </table>
