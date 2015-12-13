@@ -54,6 +54,11 @@ define('EC_ADD_REC', 205);
 define('EC_UPD_REC', 206);
 
 define('EC_CODE_ERR', 301);
+define('EC_TOKEN_ERR',302);
+define('EC_TOKEN_EXP',303);
+
+define('EC_UPL_FILE_NON',401);
+define('EC_UPL_FILE_TYPE_ERR',402);
 
 class EC extends Base {
 
@@ -110,6 +115,11 @@ class EC extends Base {
     	    EC_UPD_REC		=>	'修改记录错误',
 	    
 	        EC_CODE_ERR      =>  '授权码验证失败',
+			EC_TOKEN_ERR     =>  '禁止非法访问',
+			EC_TOKEN_EXP     =>  'token过期，请刷新页面',
+
+			EC_UPL_FILE_NON       => '上传文件不存在',
+			EC_UPL_FILE_TYPE_ERR  => '上传文件类型错误',
 	    
 	);
 	public static function load(){

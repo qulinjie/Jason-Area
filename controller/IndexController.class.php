@@ -6,9 +6,12 @@ class IndexController extends Controller
 		$this->display('index');
 	}
 
-	public function init(  )
+	public function init()
 	{
-// 		PassportController::checkLogin();
+		if(!UserController::isLogin()){
+			Log::error('not login ('.json_encode(doit::$params).')');
+			$this->redirect($this->getBaseUrl().'user/login');
+		}
+		return true;
 	}
-
 }
