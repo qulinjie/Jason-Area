@@ -22,7 +22,6 @@
 <body>
 <input type="hidden" id="token"   value="<?php echo UserController::getToken();?>">
 <input type="hidden" id="isLogin" value="<?php echo UserController::isLogin();?>"/>
-<?php var_dump(UserController::isLogin());exit;?>
 
 <div class="modal fade" id="confirm-admin-modal">
 	<div class="modal-dialog">
