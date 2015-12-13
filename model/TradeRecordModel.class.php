@@ -11,6 +11,10 @@ class TradeRecordModel extends CurlModel {
     public static $_status_paid = 2;
     public static $_status_refuse = 3;
     
+    // 导出数据 1-当前页 2-全部
+    public static $_export_type_page = 1;
+    public static $_export_type_all = 2;
+    
     public static $_empyt_time = '0000-00-00 00:00:00';
     
     public function searchCnt($params = array()){

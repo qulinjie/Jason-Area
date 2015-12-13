@@ -34,6 +34,9 @@ class TradeRecordController extends BaseController {
                 case 'pay':
                     $this->pay();
                     break;
+                case 'exportData':
+                    $this->exportData();
+                    break;
                 default:
                     Log::error('page not found . ' . $params[0]);
                     EC::fail(EC_MTD_NON);
@@ -49,7 +52,7 @@ class TradeRecordController extends BaseController {
         $time1 = Request::post('time1');
         $time2 = Request::post('time2');
         $type = Request::post('type');
-        $status = Request::post('status');
+        $order_status = Request::post('order_status');
         $order_time1 = Request::post('order_time1');
         $order_time2 = Request::post('order_time2');
         $seller_name = Request::post('seller_name');
@@ -61,7 +64,7 @@ class TradeRecordController extends BaseController {
         $user_id = self::getCurrentUserId();
     
         $params  = array();
-        foreach ([ 'order_no', 'user_id', 'code', 'time1', 'time2', 'type', 'status',
+        foreach ([ 'order_no', 'user_id', 'code', 'time1', 'time2', 'type', 'order_status',
                     'order_time1', 'order_time2', 'seller_name', 'seller_conn_name', 'order_sum_amount1', 'order_sum_amount2' ] as $val){
             if($$val) $params[$val] = $$val;
         }
@@ -101,6 +104,81 @@ class TradeRecordController extends BaseController {
         } else {
             EC::success(EC_OK, array('entity_list_html' => $entity_list_html));
         }
+    }
+    
+    protected function exportData() {
+        $export_type = Request::post('export_type'); // 导出数据 1-当前页 2-全部
+        $current_page = Request::post('page');
+        $order_no = Request::post('order_no');
+        $code = Request::post('code');
+        $time1 = Request::post('time1');
+        $time2 = Request::post('time2');
+        $type = Request::post('type');
+        $order_status = Request::post('order_status');
+        $order_time1 = Request::post('order_time1');
+        $order_time2 = Request::post('order_time2');
+        $seller_name = Request::post('seller_name');
+        $seller_conn_name = Request::post('seller_conn_name');
+        $order_sum_amount1 = Request::post('order_sum_amount1');
+        $order_sum_amount2 = Request::post('order_sum_amount2');
+    
+        if(!$export_type){
+            Log::error('export params error!');
+            EC::fail(EC_PAR_ERR);
+        }
+        
+        $tradeRecord_model = $this->model('tradeRecord');
+        $user_id = self::getCurrentUserId();
+    
+        $params  = array();
+        foreach ([ 'order_no', 'user_id', 'code', 'time1', 'time2', 'type', 'order_status',
+            'order_time1', 'order_time2', 'seller_name', 'seller_conn_name', 'order_sum_amount1', 'order_sum_amount2' ] as $val){
+            if($$val) $params[$val] = $$val;
+        }
+    
+        $current_page = 1;
+        $page_cnt = 1;
+        if(TradeRecordModel::$_export_type_page == $export_type) {
+            $data_cnt = $tradeRecord_model->searchCnt($params);
+            if(EC_OK != $data_cnt['code']){
+                Log::error("searchCnt failed . ");
+                EC::fail($data_cnt['code']);
+            }
+        
+            $cnt = $data_cnt['data'];
+        
+            $conf = $this->getConfig('conf');
+            $page_cnt = $conf['page_count_default'];
+        
+            $total_page = ($cnt % $page_cnt) ? (integer)($cnt / $page_cnt) + 1 : $cnt / $page_cnt;
+        
+            if(!$current_page || 0 >= $current_page) {
+                $current_page = 1;
+            } if($current_page > $total_page) {
+                $current_page = $total_page;
+            }
+        
+            $params['current_page'] = $current_page;
+            $params['page_count'] = $page_cnt;
+        }
+        $data = $tradeRecord_model->searchList($params);
+        if(EC_OK != $data['code']){
+            Log::error("searchList failed . ");
+            EC::fail($data['code']);
+        }
+    
+        $data_list = $data['data'];
+        
+        $excel_name = "我的大大付款_" . date('Ymd_His',time());
+        $excel = $this->instance('excel');
+        $excel->setMenu(array('序号', '订单号'));
+        $content = array();
+        foreach ( $data_list as $key=>$rows ){
+            $content[$key] = array(($key+1+($current_page-1)*$page_cnt), $rows['order_no']);
+        }
+        $excel->setData($content);
+        $excel->download($excel_name);
+        exit(0);
     }
     
     private function changeStatus(){
