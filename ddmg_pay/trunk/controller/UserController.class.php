@@ -46,29 +46,75 @@ class UserController extends BaseController
         EC::success(EC_OK);
     }
 
+    /**
+     * @return bool
+     */
     public static function isLogin()
     {
         $response = self::model('user')->isLogin();
         return $response['code'] == EC_OK && $response['data']['isLogin'];
     }
 
+    /**
+     * @return array
+     */
     public static function getLoginUser()
     {
         $response = self::model('user')->getLoginUser();
         return $response['code'] == EC_OK ? $response['data']['loginUser'] : [];
     }
 
-    public static function getLoginToken()
+    /**
+     * @return string
+     */
+    public static function getToken()
     {
         $session = self::instance('session');
         $encrypt = self::instance('encrypt');
-        return $encrypt->tokenCode('login:' . $session->get_id());
+        $session->set('_token',$encrypt->randCode(16));
+        return $encrypt->tokenCode($session->get('_token'),$session::getTimeout());
     }
 
-    public static function getOtherToken()
+    /**
+     * @param null $token
+     */
+    public static function checkToken($token = null)
     {
         $session = self::instance('session');
         $encrypt = self::instance('encrypt');
-        return $encrypt->tokenCode('other:' . $session->get_id());
+        if(!$_token = $session->get('_token')){
+            Log::error('token expire ('.json_encode(doit::$params).')');
+            EC::fail(EC_TOKEN_EXP);
+        }else if(!$encrypt::tokenValidate($_token,$token,$session::getTimeout())){
+            Log::error('token error ('.json_encode(doit::$params).')');
+            EC::fail(EC_TOKEN_ERR);
+        }
+    }
+
+    public static function filter()
+    {
+        return [
+            'token' => ['doLogin','logout'], //需要token验证
+            'login' => ['logout']            //需要登录验证
+        ];
+    }
+
+    /**
+     * 验证不通过，则调用EC::fail
+     */
+    public function init()
+    {
+        foreach(self::filter() as $key => $actList){
+            if(in_array(doit::$params[0],$actList)){
+                switch($key) {
+                    case 'token':
+                        self::checkToken($this->post('token'));//默认 post
+                        break;
+                    case 'login':
+                        !self::isLogin() && EC::fail(EC_NOT_LOGIN);
+                        break;
+                }
+            }
+        }
     }
 }

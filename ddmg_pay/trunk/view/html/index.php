@@ -20,8 +20,10 @@
 	<script src="<?php echo Router::getBaseUrl();?>js/jquery-1.11.3.min.js"></script>
 </head>
 <body>
-<input type="hidden" id="otherCsrf"    value="<?php echo UserController::getOtherToken();?>">
-<input type="hidden" id="isLogin"       value="<?php echo UserController::isLogin();?>"/>
+<input type="hidden" id="token"   value="<?php echo UserController::getToken();?>">
+<input type="hidden" id="isLogin" value="<?php echo UserController::isLogin();?>"/>
+<?php var_dump(UserController::isLogin());exit;?>
+
 <div class="modal fade" id="confirm-admin-modal">
 	<div class="modal-dialog">
 		<div class="modal-content">

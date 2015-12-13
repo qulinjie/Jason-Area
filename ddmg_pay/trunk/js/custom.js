@@ -12,11 +12,12 @@ $(function () {
             return '';
         }
     }
-
     $('#logoutBtn').click(function () {
-        $.post(BASE_PATH + 'user/logout', {}, function (result) {
+        $.post(BASE_PATH + 'user/logout', {'token':$('#token').val()}, function (result) {
             if (result.code == 0) {
                 window.location.href = BASE_PATH + 'user/login';
+            }else{
+                alert(result.msg+'('+result.code+')');
             }
         }, 'json');
     });
@@ -81,7 +82,8 @@ $(function () {
             $(this).text('登录中...');
             $.post(BASE_PATH + 'user/doLogin', {
                     'account': account,
-                    'password': hex2b64(do_encrypt(pwd))
+                    'password': hex2b64(do_encrypt(pwd)),
+                    'token':$('#token').val()
                 },
                 function (result) {
                     if (result.code != 0) {
