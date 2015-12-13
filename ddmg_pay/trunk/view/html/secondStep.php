@@ -10,8 +10,7 @@
     <div class="container">
         <img src="<?php echo Router::getBaseUrl()?>asset/img/logo.jpg"/>
         <ul class="nav navbar-nav navbar-right">
-            <li><a href="#">我有账号</a></li>
-            <li><a href="#">返回首页</a></li>
+            <li><a href="<?php echo Router::getBaseUrl()?>user/login">返回首页</a></li>
         </ul>
     </div>
 </nav>
