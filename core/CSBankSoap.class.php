@@ -26,7 +26,7 @@ class CSBankSoap
 		    Log::error("getSoapClient failed ." );
 		    return false;
 		}
-		Log::notice( 'CSBankSoap===============>>sendQuery request=##' . var_export( $SendString, true ) . "##");
+		Log::notice( 'CSBankSoap===============>>sendQuery request=##' . $SendString . "##");
 		$resXMLString = $client->__soapCall( 'request', $SendString );
 		Log::notice( 'CSBankSoap===============>>sendQuery response=##' . var_export( $resXMLString, true ) . "##");
 		return $this->fetchArrayResult( $resXMLString, $fetchAll );
