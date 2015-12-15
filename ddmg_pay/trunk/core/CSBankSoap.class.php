@@ -107,7 +107,7 @@ class CSBankSoap
 	private function constructHeader( $ServiceCode, $bodyXmlString, $RequestType='0', $Encrypt='1' )
 	{
 		$header = [];
-		$header['ProductId'] = '';
+// 		$header['ProductId'] = '';
 		$header['ServiceCode'] = $ServiceCode;			// 服务编码
 		$header['ChannelId'] = '607';					// 渠道号
 		$header['ExternalReference'] = $this->getExternalReference(); // 渠道流水号
