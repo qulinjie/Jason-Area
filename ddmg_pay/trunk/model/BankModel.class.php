@@ -91,9 +91,11 @@ class BankModel extends CSBankSoap
 	{
 		$ServiceCode = 'FMSCUST0003'; // 查询市场的基本信息
 		if ( !$MCH_NO || !$SIT_NO ) {
+		    LOG::notice("getCustomerInfo . MCH_NO=" . $MCH_NO . ',SIT_NO=' . $SIT_NO);
 			return false;
 		}
 		$requestParms = [ 'MCH_NO'=> $MCH_NO, 'SIT_NO'=>$SIT_NO ];
+		LOG::notice("getCustomerInfo . requestParms=" . json_encode($requestParms) );
 		return $this-> sendQuery( $ServiceCode, $requestParms, $fetchAll=false );
 		return $this-> sendQuery( $ServiceCode, $requestParms, $fetchAll=true );
 	}
