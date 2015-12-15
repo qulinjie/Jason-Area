@@ -326,6 +326,21 @@ $("td[name='td-operation-name']").each(function(i,e){
 	$(e).unbind("click");
 });
 
+
+
+$(document).on('click', '#for-test-btn', function(event){
+	$.post(BASE_PATH + 'bcsCustomer/loadInfo', {},
+	        function(result){
+	            if(result.code != 0) {
+	                $("#search-list-hint").html(result.msg + '(' + result.code + ')').fadeIn();
+	            }else {
+	            	$("#search-entity-hint").html(result.msg + ', 关闭...').fadeIn();
+	            }
+	        },
+	        'json'
+	    );
+});
+
 prettyPrint();
 });
 
