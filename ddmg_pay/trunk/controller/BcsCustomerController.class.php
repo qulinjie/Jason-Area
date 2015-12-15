@@ -350,13 +350,15 @@ class BcsCustomerController extends BaseController {
         $mch_no = '198209';
         $sit_no = $info_data['SIT_NO'];
         
+        Log::notice('loadInfo ==== >>> SIT_NO=' . json_encode($info_data['SIT_NO']) );
+        
         $bcs_data = $bcsBank_model->getCustomerInfo( $mch_no, $sit_no );
         Log::notice('loadInfo ==== >>> bcs_data=' . json_encode($bcs_data) );
         if(EC_OK != $bcs_data['code']){
             Log::error("getCustomerInfo failed . ");
             EC::fail($bcs_data['code']);
         }
-        $bcs_data = $bcs_data['data'][0];
+        $bcs_data = $bcs_data['data'];
         
         $params['ACCOUNT_NO'] = $bcs_data['ACCOUNT_NO']; // 客户虚拟账号
         $params['SIT_NO'] = $bcs_data['SIT_NO']; // 客户席位号
