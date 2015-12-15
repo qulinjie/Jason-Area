@@ -356,7 +356,7 @@ class BcsCustomerController extends BaseController {
             Log::error("getCustomerInfo failed . ");
             EC::fail($bcs_data['code']);
         }
-        $bcs_data = $bcs_data['data'];
+        $bcs_data = $bcs_data['data'][0];
         
         $params['ACCOUNT_NO'] = $bcs_data['ACCOUNT_NO']; // 客户虚拟账号
         $params['SIT_NO'] = $bcs_data['SIT_NO']; // 客户席位号
