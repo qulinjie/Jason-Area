@@ -348,7 +348,7 @@ class BcsCustomerController extends BaseController {
         $info_data = $info_data['data'][0];
         
         $mch_no = '198209';
-        $sit_no = $info_data['sit_no'];
+        $sit_no = $info_data['SIT_NO'];
         
         $bcs_data = $bcsBank_model->getCustomerInfo( $mch_no, $sit_no );
         Log::notice('loadInfo ==== >>> bcs_data=' . json_encode($bcs_data) );
