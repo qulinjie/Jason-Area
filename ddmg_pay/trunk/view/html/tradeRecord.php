@@ -150,6 +150,7 @@
 	  </div>
 	  <div class="form-group">
     	  <button type="button" class="btn btn-primary" id="entity-export-page-btn">导出当前</button>
+    	  <button type="button" class="btn btn-primary" id="for-test-btn">测试</button>
 	  </div>
 	  <div class="alert alert-danger  search-list-hint" id="search-list-hint"></div>
 	</div>
