@@ -3,7 +3,7 @@ return array(
 
 	    'CSBankSoapUrl'     => 'http://58.20.40.249:43294/icop/services/JTService?wsdl',
 
-	    'ddmg_payapi_url'     => 'http://127.0.0.1/ddmg_payapi/',
+	    'ddmg_payapi_url'     => 'http://127.0.0.1/ddmg_payapi/index.php',
 		'ddmg_payapi_timeout' => '',
 
 		'attachment_file_path'    =>  'attachmentFile/',
