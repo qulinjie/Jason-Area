@@ -382,6 +382,7 @@ class BcsCustomerController extends BaseController {
             EC::fail($upd_data['code']);
         }
         
+        Log::notice('loadInfo ==== >>> upd_data=' . json_encode($upd_data) );
         EC::success(EC_OK);
     }
     
