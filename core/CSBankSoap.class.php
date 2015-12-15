@@ -20,6 +20,7 @@ class CSBankSoap
 	 */
 	protected function sendQuery( $ServiceCode, $requestParms, $fetchAll=false )
 	{
+	    Log::error( 'CSBacnk  SendQuery  requestParms: ======= '.var_export( $requestParms, true ) );
 		$SendString = $this->getSendString( $ServiceCode, $requestParms );
 		$client = $this-> getSoapClient();
 		Log::error( 'CSBacnk  SendQuery  SendString: ======= '.var_export( $SendString, true ) );
