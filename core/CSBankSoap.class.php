@@ -20,12 +20,15 @@ class CSBankSoap
 	 */
 	protected function sendQuery( $ServiceCode, $requestParms, $fetchAll=false )
 	{
-	    Log::error( 'CSBacnk  SendQuery  requestParms: ======= '.var_export( $requestParms, true ) );
+	    Log::notice( 'CSBankSoap===============>>sendQuery-str requestParms=##'.var_export( $requestParms, true ) . "##");
 		$SendString = $this->getSendString( $ServiceCode, $requestParms );
 		$client = $this-> getSoapClient();
-		Log::error( 'CSBacnk  SendQuery  SendString: ======= '.var_export( $SendString, true ) );
+		if(null == $client || empty($client)) {
+		    Log::error("getSoapClient failed ." );
+		    return false;
+		}
 		$resXMLString = $client->__soapCall( 'request', $SendString );
-		Log::error( 'CSBacnk  respond result XMLString : ======= '.var_export( $resXMLString, true ) );
+		Log::notice( 'CSBankSoap===============>>sendQuery XMLString=##'.var_export( $resXMLString, true ) . "##");
 		return $this->fetchArrayResult( $resXMLString, $fetchAll );
 	}
 
