@@ -76,5 +76,10 @@ return array(
 		'token_life_time' => 86400,
 		'xpp_droped_token_session_key' => 'xpp_droped_token_session_key',
 		'xpp_processing_token_session_key' => 'xpp_processing_token_session_key',
+    
+        // BCS-str
+        'MCH_NO' => 198209,
+        // BCS-end
+    
 );
 ?>

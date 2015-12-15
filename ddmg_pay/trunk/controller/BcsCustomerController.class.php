@@ -334,7 +334,10 @@ class BcsCustomerController extends BaseController {
     protected function loadInfo() {
         $bcsBank_model = $this->model('bank');
         $bcsCustomer_model = $this->model('bcsCustomer');
+        $conf = $this->getConfig('conf');
+        
         $user_id = self::getCurrentUserId();
+        $mch_no = $conf['MCH_NO'];
         
         $params  = array();
         $params['user_id'] = $user_id;
@@ -344,14 +347,11 @@ class BcsCustomerController extends BaseController {
             Log::error("getInfo failed . ");
             EC::fail($info_data['code']);
         }
-        Log::notice('loadInfo ==== >>> info_data=' . json_encode($info_data) );
         $info_data = $info_data['data'][0];
-        
-        $mch_no = '198209';
         $sit_no = $info_data['SIT_NO'];
         
         $bcs_data = $bcsBank_model->getCustomerInfo( $mch_no, $sit_no );
-        Log::notice('loadInfo ==== >>> bcs_data=' . json_encode($bcs_data) );
+        Log::notice('loadInfo ==== >>> getCustomerInfo response=##' . json_encode($bcs_data) . '##');
         if(false == $bcs_data || !empty($bcs_data['code'])){
             Log::error("getCustomerInfo failed . ");
             EC::fail($bcs_data['code']);
