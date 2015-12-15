@@ -26,8 +26,9 @@ class CSBankSoap
 		    Log::error("getSoapClient failed ." );
 		    return false;
 		}
+		Log::notice( 'CSBankSoap===============>>sendQuery request=##' . var_export( $SendString, true ) . "##");
 		$resXMLString = $client->__soapCall( 'request', $SendString );
-		Log::notice( 'CSBankSoap===============>>sendQuery XMLString=##'.var_export( $resXMLString, true ) . "##");
+		Log::notice( 'CSBankSoap===============>>sendQuery response=##' . var_export( $resXMLString, true ) . "##");
 		return $this->fetchArrayResult( $resXMLString, $fetchAll );
 	}
 
@@ -126,7 +127,7 @@ class CSBankSoap
 		$header['RequestType'] = $RequestType; // 请求类型 0：正常 1：测试 2：重发
 		$header['Encrypt'] = $Encrypt;		// 加密标志 0:明文 1:密文
 		$header['SignData'] = $this->CreateSignData( $bodyXmlString ); // 签名数据
-		var_dump($header['SignData']);
+// 		var_dump($header['SignData']);
 		return  $this->arrayToXml( ['Header'=>$header] );
 	}
 
