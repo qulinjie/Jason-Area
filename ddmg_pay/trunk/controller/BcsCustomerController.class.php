@@ -376,7 +376,7 @@ class BcsCustomerController extends BaseController {
         $params['SIGNED_DATE'] = $bcs_data['SIGNED_DATE']; // 开户日期
         $params['ACT_TIME'] = $bcs_data['ACT_TIME']; // 签约时间（时间格式：YYYY-MM-DD HH24:MI:SS）
         
-        $upd_data = $bcsBank_model->update($params);
+        $upd_data = $bcsCustomer_model->update($params);
         if(EC_OK != $upd_data['code']){
             Log::error("update failed . ");
             EC::fail($upd_data['code']);
