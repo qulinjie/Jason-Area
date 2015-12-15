@@ -104,7 +104,7 @@ class CSBankSoap
 	 * @param: 0 $Encrypt 请求类型 0：正常 1：测试 2：重发
 	 * @return:  
 	 */
-	private function constructHeader( $ServiceCode, $bodyXmlString, $RequestType='0', $Encrypt='1' )
+	private function constructHeader( $ServiceCode, $bodyXmlString, $RequestType='0', $Encrypt='0' )
 	{
 		$header = [];
 // 		$header['ProductId'] = '';
