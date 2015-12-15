@@ -329,10 +329,8 @@ $("td[name='td-operation-name']").each(function(i,e){
 
 
 $(document).on('click', '#for-test-btn', function(event){
-	Messenger().post('sending ... !!!');
 	$.post(BASE_PATH + 'bcsCustomer/loadInfo', {},
 	        function(result){
-				Messenger().post(result.msg + '(' + result.code + ')');
 	            if(result.code != 0) {
 	                $("#search-list-hint").html(result.msg + '(' + result.code + ')').fadeIn();
 	            }else {
