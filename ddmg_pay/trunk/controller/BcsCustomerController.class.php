@@ -352,9 +352,9 @@ class BcsCustomerController extends BaseController {
         
         $bcs_data = $bcsBank_model->getCustomerInfo( $mch_no, $sit_no );
         Log::notice('loadInfo ==== >>> bcs_data=' . json_encode($bcs_data) );
-        if(!empty($bcs_data['ReturnCode'])){
+        if(EC_OK != $bcs_data['code']){
             Log::error("getCustomerInfo failed . ");
-            EC::fail($bcs_data['ReturnCode']);
+            EC::fail($bcs_data['code']);
         }
         $bcs_data = $bcs_data['data'];
         
