@@ -78,7 +78,7 @@ class CSBankSoap
 	private function getSoapClient()
 	{
 		if ( !self::$client ) {
-			$soapApiUrl = 'http://162.16.1.137:43294/icop/services/JTService?wsdl';
+			$soapApiUrl = 'http://58.20.40.249:43294/icop/services/JTService?wsdl';
 			self::$client = new SoapClient( $soapApiUrl );
 		}
 		return self::$client;
