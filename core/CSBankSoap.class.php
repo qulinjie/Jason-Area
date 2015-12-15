@@ -9,7 +9,6 @@
 
 class CSBankSoap
 {
-	protected $innerWebWsdlUrl = 'http://162.16.1.137:43294/icop/services/JTService?wsdl';
 
 	protected static $client;
 
@@ -23,7 +22,7 @@ class CSBankSoap
 	    Log::notice( 'CSBankSoap===============>>sendQuery-str requestParms=##'.var_export( $requestParms, true ) . "##");
 		$SendString = $this->getSendString( $ServiceCode, $requestParms );
 		$client = $this-> getSoapClient();
-		if(null == $client || empty($client)) {
+		if( !$client ) {
 		    Log::error("getSoapClient failed ." );
 		    return false;
 		}
@@ -81,8 +80,17 @@ class CSBankSoap
 	private function getSoapClient()
 	{
 		if ( !self::$client ) {
-			$soapApiUrl = 'http://58.20.40.249:43294/icop/services/JTService?wsdl';
-			self::$client = new SoapClient( $soapApiUrl );
+			$config = Controller::getConfig('conf');
+			if( !$config['CSBankSoapUrl'] ) {
+				Log::error('conf/conf.ini.php  not  have "CSBankSoapUrl" ');
+				return false;
+			}
+			try {
+				self::$client = new SoapClient( $config['CSBankSoapUrl'] );
+			} catch ( Exception $e ) {
+				Log::error( 'SOAP-ERROR: '. var_export( $e->getMessage(), true ) );
+				return false;
+			}
 		}
 		return self::$client;
 	}
