@@ -22,9 +22,9 @@ class CSBankSoap
 	{
 		$SendString = $this->getSendString( $ServiceCode, $requestParms );
 		$client = $this-> getSoapClient();
-		//file_put_contents('1.txt', $SendString);
+		Log::error( 'CSBacnk  SendQuery  SendString: ======= '.var_export( $SendString, true ) );
 		$resXMLString = $client->__soapCall( 'request', $SendString );
-		//file_put_contents('2.txt', $resXMLString);
+		Log::error( 'CSBacnk  respond result XMLString : ======= '.var_export( $resXMLString, true ) );
 		return $this->fetchArrayResult( $resXMLString, $fetchAll );
 	}
 
