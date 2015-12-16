@@ -339,14 +339,24 @@ class BcsCustomerController extends BaseController {
         $params  = array();
         $params['user_id'] = $user_id;
         
+        /**
+         * 查询 注册信息 
+         */
         $info_data = $bcsRegister_model->getInfo($params);
         if(EC_OK != $info_data['code']){
             Log::error("getInfo failed . ");
             EC::fail($info_data['code']);
         }
         $info_data = $info_data['data'][0];
+        if(empty($info_data)){
+            Log::error("getInfo failed . obj is empty .");
+            EC::fail($info_data['code']);
+        }
         $sit_no = $info_data['SIT_NO'];
         
+        /**
+         * 调用接口，查询 客户信息 
+         */
         $bcs_data = $bcsBank_model->getCustomerInfo( $mch_no, $sit_no );
         Log::notice('loadInfo ==== >>> getCustomerInfo response=##' . json_encode($bcs_data) . '##');
         if(false == $bcs_data || !empty($bcs_data['code'])){
@@ -378,6 +388,9 @@ class BcsCustomerController extends BaseController {
             EC::fail($bcs_data['code']);
         }
         
+        /**
+         * 更新 客户信息
+         */
         $upd_data = $bcsCustomer_model->update($params);
         if(EC_OK != $upd_data['code']){
             Log::error("update failed . ");

@@ -1,6 +1,5 @@
 <?php
 /**
- * 客户信息
  * @author zhangkui
  *
  */

@@ -1,7 +1,7 @@
 <?php 
 /**
  * 客户信息
- * bcsCustomerInfo.hp.php
+ * bcsCustomerInfo.php
  */
 ?>
 
