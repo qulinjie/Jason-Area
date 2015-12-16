@@ -58,7 +58,7 @@ class BcsMarketController extends BaseController {
         /**
          * 调用接口，查询 市场信息
         */
-        $bcs_data = $bcsBank_model->getMarketInfo( $mch_no );
+        $bcs_data = $bcsBank_model->getMarketBasicInfo( $mch_no );
         Log::notice('loadInfo ==== >>> getMarketInfo response=##' . json_encode($bcs_data) . '##');
         if(false == $bcs_data || !empty($bcs_data['code'])){
             Log::error("getMarketInfo failed . ");
