@@ -79,6 +79,9 @@
 			<li <?php if(doit::$controller == 'AuthorizationCode'){?> class="active" <?php } ?>>
 				<a href="<?php echo Router::getBaseUrl();?>authorizationCode/getIndex">授权码管理</a>
 		    </li>
+		    <li <?php if(doit::$controller == 'BcsCustomer'){?> class="active" <?php } ?>>
+				<a href="<?php echo Router::getBaseUrl();?>bcsCustomer/getInfo">账户信息</a>
+		    </li>
 		  </ul>
 		</div>
 		<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
@@ -88,6 +91,9 @@
 		  <?php } else if($page_type == 'tradeRecord'){?>
 		        <script src="<?php echo Router::getBaseUrl();?>js/tradeRecord.js"></script>
 				<?php echo $tradeRecord_html; ?>
+		  <?php } else if($page_type == 'bcsCustomer'){?>
+		        <script src="<?php echo Router::getBaseUrl();?>js/bcsCustomerInfo.js"></script>
+			    <?php echo $bcsCustomer_html; ?>
 		  <?php }?>
 		</div>
 	  </div>
