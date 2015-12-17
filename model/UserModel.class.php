@@ -77,4 +77,10 @@ class UserModel extends CurlModel
     {
         return self::sendRequest('user/get_login_user');
     }
+    
+    public function getUserBasicInfo()
+    {
+        return self::sendRequest('user/getUserBasicInfo');
+    }
+    
 }
