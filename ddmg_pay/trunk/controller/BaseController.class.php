@@ -203,5 +203,35 @@ abstract class BaseController extends Controller
 	    }
 	    return $user_id;
 	}
-	
+
+
+	/**
+	 * @return array['code','filePath','fileName']
+	 */
+	public static function uploadFile()
+	{
+		$type = ['image/png','image/jpg','image/jpeg'];
+		$res  = ['code' => EC_OK, 'filePath' => '', 'fileName' => ''];
+		try{
+			if($_FILES['file']['error']){
+				$res['code'] = EC_OTH;
+				return $res;
+			}else if (!$_FILES['file']['name']) {
+				$res['code'] = EC_UPL_FILE_NON;
+				return $res;
+			}else if(!in_array($_FILES['file']['type'],$type)){
+				$res['code'] = EC_UPL_FILE_TYPE_ERR;
+				return $res;
+			}
+
+			$uploadFileDir   = self::getConfig('conf')['attachment_file_path'];
+			$res['fileName'] = $_FILES['file']['name'];
+			$res['filePath'] = $uploadFileDir . 'F_' . date('YmdHis', time()) . '_' . rand(1, 9999);
+			move_uploaded_file($_FILES['file']['tmp_name'], $res['filePath']);
+		}catch (Exception $e){
+			Log::error('uploadFile error msg ('.$e->getMessage().')');
+			EC::fail(EC_OTH);
+		}
+		return $res;
+	}
 }

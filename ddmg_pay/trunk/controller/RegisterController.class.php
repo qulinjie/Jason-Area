@@ -54,7 +54,7 @@ class RegisterController extends BaseController
             'code'=> $this->post('code')
         ]);
 
-        $response ['code'] != EC_OK && EC::fail($response['code']);
+        $response ['code'] !== EC_OK && EC::fail($response['code']);
         $session = self::instance('session');
         $session->set('certification_id', $response['data']['certification_id']);
         EC::success(EC_OK);
@@ -69,20 +69,20 @@ class RegisterController extends BaseController
 
     private function doSecondStep()
     {
-        $uploadFile = $this->upload();
-        if($uploadFile['code']){
-            Log::error('doSecondStep upload file is fail mag('.$uploadFile['code'].')');
+        $uploadFile = self::uploadFile();
+        if($uploadFile['code'] !== EC_OK){
+            Log::error('doSecondStep upload file is fail msg('.$uploadFile['code'].')');
             EC::fail($uploadFile['code']);
         }
 
         $response = $this->model('user')->updatePersonalAuth(array(
             'id'       => $this->post('id'),
             'realName' =>  $this->post('name'),
-            'fileName' => $uploadFile['name'],
-            'filePath' => $uploadFile['path']
+            'fileName' => $uploadFile['fileName'],
+            'filePath' => $uploadFile['filePath']
         ));
 
-        $response['code'] != EC_OK && EC::fail($response['code']);
+        $response['code'] !== EC_OK && EC::fail($response['code']);
 
         //再刷一次，防止session过期
         $session = self::instance('session');
@@ -99,9 +99,9 @@ class RegisterController extends BaseController
 
     private function doThirdStep()
     {
-        $uploadFile = $this->upload();
-        if($uploadFile['code']){
-            Log::error('doThirdStep upload file is fail mag('.$uploadFile['code'].')');
+        $uploadFile = self::uploadFile();
+        if($uploadFile['code'] !== EC_OK){
+            Log::error('doThirdStep upload file is fail msg('.$uploadFile['code'].')');
             EC::fail($uploadFile['code']);
         }
 
@@ -110,11 +110,11 @@ class RegisterController extends BaseController
             'legalPerson' => $this->post('legalPerson'),
             'companyName' => $this->post('companyName'),
             'license'     => $this->post('license'),
-            'fileName'    => $uploadFile['name'],
-            'filePath'    => $uploadFile['path']
+            'fileName'    => $uploadFile['fileName'],
+            'filePath'    => $uploadFile['filePath']
         ));
 
-        $response['code'] != EC_OK && EC::fail($response['code']);
+        $response['code'] !== EC_OK && EC::fail($response['code']);
         EC::success(EC_OK);
     }
 
@@ -123,42 +123,10 @@ class RegisterController extends BaseController
         $this->render('fourthStep');
     }
 
-    private function upload()
-    {
-        $type = ['image/png','image/jpg','image/jpeg'];
-        $res = ['code' => 0, 'path' => '', 'name' => ''];
-        try{
-            if($_FILES['file']['error']){
-                $res['code'] = EC_OTH;
-                return $res;
-            }else if (!$_FILES['file']['name']) {
-                $res['code'] = EC_UPL_FILE_NON;
-                return $res;
-            }else if(!in_array($_FILES['file']['type'],$type)){
-                $res['code'] = EC_UPL_FILE_TYPE_ERR;
-                return $res;
-            }
-
-            $res['name'] = $_FILES['file']['name'];
-            $res['path'] = self::getAttachmentFilePath() . 'F_' . date('YmdHis', time()) . '_' . rand(999, 9999);
-            move_uploaded_file($_FILES['file']['tmp_name'], $res['path']);
-        }catch (Exception $e){
-            Log::error('upload error msg ('.$e->getMessage().')');
-            EC::fail(EC_OTH);
-        }
-
-        return $res;
-    }
-
-    private function getAttachmentFilePath()
-    {
-        return self::getConfig('conf')['attachment_file_path'];
-    }
-
     private function sendCmsCode()
     {
         $response = $this->model('user')->sendCmsCode(['tel' => $this->post('tel'), 'type' => 1]);
-        $response ['code'] != EC_OK && EC::fail($response['code']);
+        $response ['code'] !== EC_OK && EC::fail($response['code']);
         EC::success(EC_OK);
     }
 

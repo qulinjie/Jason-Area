@@ -279,7 +279,7 @@ class pincode extends Base {
         $code = strtolower($code);
 
         //start session
-        session_start();
+        //session_start();
 
         if(isset($_SESSION[$this->sessionName]) && (strtolower($_SESSION[$this->sessionName]) == $code)){
         	//invalidate pincode
@@ -412,7 +412,8 @@ class pincode extends Base {
 
         //当有headers内容输出时.
         if (headers_sent()) {
-            Controller::halt('headers already sent');
+            EC::fail(EC_OTH);
+            //Controller::halt('headers already sent');
         }
 
         //显示图片,根据背景图片的格式显示相应格式的图片.
@@ -440,5 +441,6 @@ class pincode extends Base {
         }
 
         imagedestroy($this->image);
+        exit;
     }
 }

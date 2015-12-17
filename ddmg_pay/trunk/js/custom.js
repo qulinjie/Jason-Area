@@ -12,10 +12,11 @@ $(function () {
             return '';
         }
     }
+
     $('#logoutBtn').click(function () {
         $.post(BASE_PATH + 'user/logout', {'token':$('#token').val()}, function (result) {
             if (result.code == 0) {
-                window.location.href = BASE_PATH + 'user/login';
+                window.location.href = BASE_PATH;
             }else{
                 alert(result.msg+'('+result.code+')');
             }
@@ -43,54 +44,119 @@ $(function () {
         } else {
             window.location.href = BASE_PATH + 'user/login';
         }
+        $('#pwdBtn').click(function () {
+            $('#oldPwd').val('');
+            $('#newPwd').val('');
+            $('#newPwd2').val('');
+            $('#updatePasswordModal').modal();
+            $('#updatePasswordErrorMsg').hide();
+        });
+        $('#updatePasswordBtnSave').click(function(){
+            var oldPwd  = $('#oldPwd').val();
+            var newPwd  = $('#newPwd').val();
+            var newPwd2 = $('#newPwd2').val();
+            var data    ={};
+            var msg     = '';
+
+            if(!oldPwd){
+                msg += '请输入旧密码<br/>';
+            }
+            if(!newPwd){
+                msg += '请输入新密码<br/>';
+            }
+
+            if(newPwd != newPwd2){
+                msg += '两次输入密码不一样<br/>';
+            }
+
+            if(msg){
+                $('#updatePasswordErrorMsg').html(msg).show();
+                return false;
+            }
+
+            data.token  = $('#token').val();
+            data.oldPwd = hex2b64(do_encrypt(oldPwd));
+            data.newPwd = hex2b64(do_encrypt(newPwd));
+            $.post(BASE_PATH+'user/setPassword',data,function(res){
+                if(res.code == 0){
+                    alert('密码修改成功，需要重新登录');
+                    $('#logoutBtn').click();
+                }else{
+                    $('#updatePasswordErrorMsg').text(res.msg+'('+res.code+')').show();
+                }
+            },'json');
+        });
         prettyPrint();
         /**********************************index end*********************************************/
     } else {
         /**********************************login start*********************************************/
-        $('#password,#account').on('keydown', function (event) {
+        $('#loginModalBtn').click(function(){
+            $('#loginModal').modal();
+            $('#getPinCode').click();
+        });
+
+        function centerModals() {
+            $('#loginModal').each(function(i) {
+                var $clone = $(this).clone().css('display', 'block').appendTo('body'); var top = Math.round(($clone.height() - $clone.find('.modal-content').height()) / 3);
+                top = top > 0 ? top : 0;
+                $clone.remove();
+                $(this).find('.modal-content').css("margin-top", top);
+            });
+        }
+        $('#loginModal').on('show.bs.modal', centerModals);
+        $(window).on('resize', centerModals);
+
+        $('#password,#account,#pinCode').on('keydown', function (event) {
             if (event.which == 13) {
                 $('#loginBtn').click();
             }
         }).change(function () {
-            $(this).parent().parent().find('span').text('');
+            $('#errorMsg').html('');
         });
         $('#loginBtn').click(function () {
-            var accountMcg = '';
-            var pwdMcg = '';
+            var msg     = '';
             var account = $('#account').val();
-            var pwd = $('#password').val();
+            var pwd     = $('#password').val();
+            var pinCode = $('#pinCode').val();
 
             $(this).attr('disabled', 'disabled');
 
             if (account == '') {
-                accountMcg = '请输入账号';
+                msg += '请输入账号<br/>';
             } else if (!/^[0-9]{11}$/.test(account)) {
-                accountMcg = '请输入正确的账号';
+                msg += '请输入正确的账号<br/>';
             }
 
             if (pwd == '') {
-                pwdMcg = '请输入密码';
+                msg += '请输入密码<br/>';
             }
 
-            if (accountMcg != '' || pwdMcg != '') {
+            if (pinCode == '') {
+                msg += '请输入验证码<br/>';
+            } else if (!/^[A-Za-z0-9]{4}$/.test(pinCode)) {
+                msg += '请输入正确的验证码<br/>';
+            }
+
+            if (msg) {
                 $(this).removeAttr('disabled');
-                $('#account').parent().parent().find('span').text(accountMcg);
-                $('#password').parent().parent().find('span').text(pwdMcg);
+                $('#errorMsg').html(msg);
                 return false;
             }
 
-            $(this).text('登录中...');
+            $('#errorMsg').text('登录中...');
             $.post(BASE_PATH + 'user/doLogin', {
                     'account': account,
                     'password': hex2b64(do_encrypt(pwd)),
-                    'token':$('#token').val()
+                    'token':$('#token').val(),
+                    'pinCode':pinCode
                 },
                 function (result) {
                     if (result.code != 0) {
-                        alert(result.msg + '(' + result.code + ')');
+                        $('#errorMsg').html(result.msg + '(' + result.code + ')');
                         $("#loginBtn").removeAttr('disabled').html('登录');
+                        $('#getPinCode').click();
                     } else {
-                        $("#loginBtn").html(result.msg).fadeIn();
+                        $("#errorMsg").html(result.msg);
                         setTimeout(function () {
                             window.location.href = BASE_PATH;
                         }, 500);

@@ -77,10 +77,26 @@ class UserModel extends CurlModel
     {
         return self::sendRequest('user/get_login_user');
     }
+
+
+    /**
+     * @param array $params
+     * @return array
+     */
+    public function addFindPassword($params = array())
+    {
+        return self::sendRequest('user/find_password',$params);
+    }
+
+    public function setPassword($params = array())
+    {
+        return self::sendRequest('user/set_password',$params);
+    }
+
     
     public function getUserBasicInfo()
     {
         return self::sendRequest('user/getUserBasicInfo');
     }
-    
+
 }

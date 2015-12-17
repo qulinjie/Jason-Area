@@ -6,7 +6,7 @@ class UserController extends BaseController
     public function handle($params = array())
     {
         if (!$params) {
-            Log::error('Login params is empty');
+            Log::error('UserController params is empty');
             EC::fail(EC_MTD_NON);
         }
 
@@ -19,6 +19,24 @@ class UserController extends BaseController
                 break;
             case 'logout':
                 $this->logout();
+                break;
+            case 'getPinCode':
+                $this->getPinCode();
+                break;
+            case 'findPassword':
+                $this->findPassword();
+                break;
+            case 'doFindPassword':
+                $this->doFindPassword();
+                break;
+            case 'findPasswordMsg':
+                $this->findPasswordMsg();
+                break;
+            case 'setPassword':
+                $this->setPassword();
+                break;
+            case 'sendCmsCode':
+                $this->sendCmsCode();
                 break;
             default:
                 Log::error('this method is not exists ' . $params[0]);
@@ -34,17 +52,77 @@ class UserController extends BaseController
 
     private function doLogin()
     {
+        $pinCode = self::instance('pincode');
+        !$pinCode->check($this->post('pinCode')) && EC::fail(EC_PINCODE_ERR);
+
         $response = $this->model('user')->login(['tel' => $this->post('account'), 'pwd' => $this->post('password')]);
-        $response['code'] != EC_OK && EC::fail($response['code']);
+        $response['code'] !== EC_OK && EC::fail($response['code']);
         EC::success(EC_OK);
     }
 
     private function logout()
     {
         $response = $this->model('user')->logout();
-        $response['code'] != EC_OK && EC::fail($response['code']);
+        $response['code'] !== EC_OK && EC::fail($response['code']);
         EC::success(EC_OK);
     }
+
+    private function getPinCode()
+    {
+        $pinCode = self::instance('pincode');
+        $pinCode->setImageSize(70,34);
+        $pinCode->show();
+    }
+
+    private function findPassword()
+    {
+        $this->render('findPassword');
+    }
+
+    private function doFindPassword()
+    {
+        $uploadFile = self::uploadFile();
+        if($uploadFile['code'] !== EC_OK){
+            Log::error('doThirdStep upload file is fail msg('.$uploadFile['code'].')');
+            EC::fail($uploadFile['code']);
+        }
+
+        $response = $this->model('user')->addFindPassword(array(
+            'account'       => $this->post('account'),
+            'name'          => $this->post('name'),
+            'tel'           => $this->post('tel'),
+            'code'          => $this->post('code'),
+            'auth_filename' => $uploadFile['fileName'],
+            'auth_filepath' => $uploadFile['filePath']
+        ));
+
+        $response['code'] !== EC_OK && EC::fail($response['code']);
+        EC::success(EC_OK);
+    }
+
+    private function findPasswordMsg()
+    {
+        $this->render('findPasswordMsg');
+    }
+
+    private function setPassword()
+    {
+        $response = $this->model('user')->setPassword(array(
+            'oldPwd' => $this->post('oldPwd'),
+            'newPwd' => $this->post('newPwd')
+        ));
+
+        $response['code'] !== EC_OK && EC::fail($response['code']);
+        EC::success(EC_OK);
+    }
+
+    private function sendCmsCode()
+    {
+        $response = $this->model('user')->sendCmsCode(['tel' => $this->post('tel'), 'type' => 2]);
+        $response ['code'] !== EC_OK && EC::fail($response['code']);
+        EC::success(EC_OK);
+    }
+
 
     /**
      * @return bool
@@ -52,7 +130,7 @@ class UserController extends BaseController
     public static function isLogin()
     {
         $response = self::model('user')->isLogin();
-        return $response['code'] == EC_OK && $response['data']['isLogin'];
+        return $response['code'] === EC_OK && $response['data']['isLogin'];
     }
 
     /**
@@ -61,7 +139,7 @@ class UserController extends BaseController
     public static function getLoginUser()
     {
         $response = self::model('user')->getLoginUser();
-        return $response['code'] == EC_OK ? $response['data']['loginUser'] : [];
+        return $response['code'] === EC_OK ? $response['data']['loginUser'] : [];
     }
 
     /**
@@ -94,8 +172,8 @@ class UserController extends BaseController
     public static function filter()
     {
         return [
-            'token' => ['doLogin','logout'], //需要token验证
-            'login' => ['logout']            //需要登录验证
+            'token' => ['doLogin','doFindPassword','sendCmsCode','setPassword'], //需要token验证
+            'login' => ['logout','setPassword']            //需要登录验证
         ];
     }
 

@@ -36,7 +36,7 @@
                 <div class="form-group">
                     <div class="col-lg-offset-3 col-lg-4">
                         <input type="button" id="loginBtn" class="btn btn-primary col-lg-4" value="登录"/>
-                        <a href="javascript:void(0);"  class="col-lg-offset-1 btn col-lg-4">忘记密码？</a>
+                        <a href="<?php echo Router::getBaseUrl()?>user/findPassword"  class="col-lg-offset-1 btn col-lg-4">忘记密码？</a>
                     </div>
                 </div>
             </form>

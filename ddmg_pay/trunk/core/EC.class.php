@@ -56,6 +56,7 @@ define('EC_UPD_REC', 206);
 define('EC_CODE_ERR', 301);
 define('EC_TOKEN_ERR',302);
 define('EC_TOKEN_EXP',303);
+define('EC_PINCODE_ERR',304);
 
 define('EC_UPL_FILE_NON',401);
 define('EC_UPL_FILE_TYPE_ERR',402);
@@ -89,7 +90,7 @@ class EC extends Base {
 			EC_CHK_OUT      =>  'sms code expired',
 			EC_NOT_VFY		=>	'the telphone number is not verified',
 			EC_VFY_EPR		=>	'the verification is expired',
-			EC_USR_EST		=>	'the use already exists',
+			EC_USR_EST		=>	'手机号码已被注册',
 			EC_PWD_DEC		=>	'decode password fail',
 			EC_ARD_LGN		=>	'a user login already, please logout before login another user',
 			EC_USR_ADD		=>	'add user information fail',
@@ -117,6 +118,7 @@ class EC extends Base {
 	        EC_CODE_ERR      =>  '授权码验证失败',
 			EC_TOKEN_ERR     =>  '禁止非法访问',
 			EC_TOKEN_EXP     =>  'token过期，请刷新页面',
+			EC_PINCODE_ERR   =>  '验证码输入错误',
 
 			EC_UPL_FILE_NON       => '上传文件不存在',
 			EC_UPL_FILE_TYPE_ERR  => '上传文件类型错误',
