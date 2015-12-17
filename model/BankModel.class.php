@@ -179,7 +179,7 @@ class BankModel extends CSBankSoap
 		$mustFields = ['MCH_NO', 'CTRT_NO', 'BUYER_SIT_NO', 'SELLER_SIT_NO', 'FUNC_CODE', 'TX_AMT', 'SVC_AMT', 'BVC_AMT', 'CURR_COD', 'MCH_TRANS_NO', 'ORGNO', 'TICKET_NUM'];
 		foreach ( $mustFields as $v )
 		{
-			if ( '0'!==strval($params[$v]) && !$params[$v] ) {
+			if ( !$params[$v] ) { // '0'!==strval($params[$v]) && 
 				Log::error(' no have $params['.$v.'] ');
 				return false;
 			}
