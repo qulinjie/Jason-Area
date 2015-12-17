@@ -59,7 +59,7 @@ class BcsMarketController extends BaseController {
          * 调用接口，查询 市场信息
         */
         $bcs_data = $bcsBank_model->getMarketBasicInfo( $mch_no );
-        Log::notice('loadInfo ==== >>> getMarketInfo response=##' . json_encode($bcs_data) . '##');
+        Log::notice('loadInfo ==== >>> getMarketBasicInfo response=##' . json_encode($bcs_data) . '##');
         if(false == $bcs_data || !empty($bcs_data['code'])){
             Log::error("getMarketInfo failed . ");
             EC::fail($bcs_data['code']);
@@ -73,8 +73,8 @@ class BcsMarketController extends BaseController {
         $params['MCH_CREATEDATE'] = $bcs_data['MCH_CREATEDATE']; // 商户创建日期
         $params['MCH_ACCOUNT_NO'] = $bcs_data['MCH_ACCOUNT_NO']; // 商户资总账号
     
-        if(empty($params['MCH_NO'])) {
-            Log::error("getCustomerInfo failed [MCH_NO] is empty . ");
+        if(empty($params['MCH_NO']) || empty($params['MCH_NAME'])) {
+            Log::error("getCustomerInfo failed [MCH_NO，MCH_NAME] is empty . ");
             EC::fail($bcs_data['code']);
         }
     
