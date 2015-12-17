@@ -84,10 +84,8 @@ abstract class Router {
      * @return string     根目录的URL. 注:URL以反斜杠("/")结尾
      */
     public static function getBaseUrl() {
-
         //处理URL中的//或\\情况,即:出现/或\重复的现象
         $url = str_replace(array('\\', '//'), '/', dirname($_SERVER['SCRIPT_NAME']));
-
         return (substr($url, -1) == '/') ? $url : $url . '/';
     }
     

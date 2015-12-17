@@ -10,7 +10,7 @@
     <div class="container">
         <img src="<?php echo Router::getBaseUrl()?>asset/img/logo.jpg"/>
         <ul class="nav navbar-nav navbar-right">
-            <li><a href="<?php echo Router::getBaseUrl()?>user/login">返回首页</a></li>
+            <li><a href="<?php echo Router::getBaseUrl()?>">返回首页</a></li>
         </ul>
     </div>
 </nav>
@@ -37,7 +37,7 @@
                         <input type="text" class="form-control" id="code" name="code" placeholder="验证码"/>
                     </div>
                     <div class="col-lg-2">
-                        <input type="button" id="sendCode" value="点击获取验证码" class="btn btn-default"/>
+                        <input type="button" id="sendCode" value="获取短信验证码" class="btn btn-default" style="background-color: rgb(73,142,201);color: #FFF;"/>
                     </div>
                     <div class="col-lg-2"><span class="text-danger"></span></div>
                 </div>
@@ -57,17 +57,13 @@
                 </div>
                 <div class="form-group">
                     <div class="col-lg-offset-3 col-lg-4">
-                        <div class="checkbox">
-                            <label>
-                                <input type="checkbox" id="agree" name="agree"/> 我同意《大大支付服务协议》
-                            </label>
-                        </div>
+                        <input type="checkbox" id="agree" name="agree"/> 我同意《大大支付服务协议》
                     </div>
                     <div class="col-lg-2"><span class="text-danger"></span></div>
                 </div>
                 <div class="form-group">
                     <div class="col-lg-offset-3 col-lg-4">
-                        <input type="button" id="firstStepBtnSave" class="btn btn-primary col-lg-4" value="下一步"/>
+                        <input type="button" id="firstStepBtnSave" class="btn btn-primary col-lg-4" value="下一步" style="background-color: rgb(0,139,254);"/>
                     </div>
                 </div>
             </form>
@@ -77,11 +73,11 @@
 
 <script> var BASE_PATH = "<?php echo Router::getBaseUrl();?>";</script>
 <script src="<?php echo Router::getBaseUrl()?>js/jquery.js"></script>
-<script src="<?php echo Router::getBaseUrl()?>js/register.js"></script>
 <script src="<?php echo Router::getBaseUrl();?>js/prng4.js"></script>
 <script src="<?php echo Router::getBaseUrl();?>js/rng.js"></script>
 <script src="<?php echo Router::getBaseUrl();?>js/base64.js"></script>
 <script src="<?php echo Router::getBaseUrl();?>js/jsbn.js"></script>
 <script src="<?php echo Router::getBaseUrl();?>js/rsa.js"></script>
+<script src="<?php echo Router::getBaseUrl()?>js/register.js"></script>
 </body>
 </html>

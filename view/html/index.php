@@ -115,7 +115,7 @@
 			</div>
 		</div>
 	</div>
-<div class="modal fade" id="upd-seller-pwd-modal">
+<div class="modal fade" id="updatePasswordModal">
 	<div class="modal-dialog">
 		<div class="modal-content">
 			<div class="modal-header">
@@ -128,29 +128,29 @@
 			<div class="modal-body">
 				<form class="form-horizontal">
 				 <div class="form-group">
-				    <label for="seller-old-pwd" class="col-sm-2 control-label">旧密码</label>
+				    <label for="oldPwd" class="col-sm-2 control-label">旧密码</label>
 				    <div class="col-sm-8">
-				      <input type="password" class="form-control" id="seller-old-pwd" placeholder="旧密码">
+				      <input type="password" class="form-control" id="oldPwd" placeholder="旧密码">
 				    </div>
 				  </div>
 				  <div class="form-group">
-				    <label for="seller-new-pwd" class="col-sm-2 control-label">新密码</label>
+				    <label for="newPwd" class="col-sm-2 control-label">新密码</label>
 				    <div class="col-sm-8">
-				      <input type="password" class="form-control" id="seller-new-pwd" placeholder="新密码">
+				      <input type="password" class="form-control" id="newPwd" placeholder="新密码">
 				    </div>
 				  </div>
 				  <div class="form-group">
-				    <label for="seller-new-pwd2" class="col-sm-2 control-label">确认密码</label>
+				    <label for="newPwd2" class="col-sm-2 control-label">确认密码</label>
 				    <div class="col-sm-8">
-				      <input type="password" class="form-control" id="seller-new-pwd2" placeholder="确认密码">
+				      <input type="password" class="form-control" id="newPwd2" placeholder="确认密码">
 				    </div>
 				  </div>
-				  <div class="alert alert-danger" id="upd-seller-hint"></div>
+				  <div class="alert alert-danger" id="updatePasswordErrorMsg"></div>
 				</form>
 			</div>
 			<div class="modal-footer">
-				<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-				<button type="button" class="btn btn-primary" id="btn-seller-upd-pwd">确定</button>
+				<button type="button"  class="btn btn-default" data-dismiss="modal">取消</button>
+				<button type="button" class="btn btn-primary" id="updatePasswordBtnSave">确定</button>
 			</div>
 		</div>
 		<!-- /.modal-content -->
