@@ -374,7 +374,7 @@ class TradeRecordController extends BaseController {
             Log::error('create Fail!');
             EC::fail($data['code']);
         }
-        EC::success(EC_OK);
+        EC::success(EC_OK,$data['data']);
     }
     
     private function pay(){
@@ -479,7 +479,7 @@ class TradeRecordController extends BaseController {
         $params_trade['BVC_AMT'] = BcsTradeModel::$_BVC_AMT_0; // 卖方佣金金额
         $params_trade['CURR_COD'] = BcsTradeModel::$_CURR_COD_RMB; // 币别
         $params_trade['MCH_TRANS_NO'] = $mch_trans_no; // 商户交易流水号
-        $params_trade['ORGNO'] = ''; // 银票机构编号
+        $params_trade['ORGNO'] = '0'; // 银票机构编号
         $params_trade['TICKET_NUM'] = BcsTradeModel::$_TICKET_NUM_0; // 使用票据数
         
         $params['bcs_trade'] = $params_trade;
@@ -508,7 +508,7 @@ class TradeRecordController extends BaseController {
         $bcs_data = $bcsBank_model->notFrozenSpotsTradePay($params_trade);
         Log::notice('loadInfo ==== >>> notFrozenSpotsTradePay response=##' . json_encode($bcs_data) . '##');
         if(false == $bcs_data || !empty($bcs_data['code'])){
-            Log::error("getCustomerInfo failed . ");
+            Log::error("notFrozenSpotsTradePay failed . ");
             EC::fail($bcs_data['code']);
         }
         $bcs_data = $bcs_data['data'];
