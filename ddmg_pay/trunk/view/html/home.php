@@ -5,7 +5,7 @@
     <title>大大付款主页</title>
     <link rel="stylesheet" href="<?php echo Router::getBaseUrl();?>css/bootstrap.min.css" type="text/css">
 </head>
-<body style="background-image: url(<?php echo Router::getBaseUrl();?>asset/img/home.jpg);background-size:cover;">
+<body style="background-image: url(<?php echo Router::getBaseUrl();?>asset/img/home.jpg);background-size:percentage;background-repeat:no-repeat;background-position:center;">
     <nav class="navbar navbar-default navbar-fixed-top">
         <div class="container">
             <img src="<?php echo Router::getBaseUrl();?>asset/img/logo.jpg"/>
