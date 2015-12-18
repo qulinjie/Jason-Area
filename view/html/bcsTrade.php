@@ -1,6 +1,6 @@
 <?php 
 /**
- * tradeRecord.php
+ * bcsTrade.php
  */
 ?>
 
@@ -97,51 +97,43 @@
 </div>
 <!-- /.modal -->
 
-<h1 class="page-header">我的大大付款</h1>
+<h1 class="page-header">交易流水</h1>
 
 <div class="panel panel-primary">
   <div class="panel-heading">查找</div>
   <div class="panel-body">
     <div class="form-inline">
+      <div class="form-group">
+	    <label for="entity-search-FMS_TRANS_NO">交易流水号</label>
+	    <input type="text" class="form-control" id="entity-search-FMS_TRANS_NO" placeholder="交易流水号">
+	  </div>
 	  <div class="form-group">
 	    <label for="entity-search-order_no">订单号</label>
 	    <input type="text" class="form-control" id="entity-search-order_no" placeholder="订单号">
 	  </div>
-	  <!-- 
 	  <div class="form-group">
-	    <label for="entity-search-time">添加时间</label>
-	    <input type="text" class="form-control form_datetime" id="entity-search-time1" placeholder="添加时间">
+	    <label for="entity-search-seller_name">收款方</label>
+	    <input type="text" class="form-control" id="entity-search-seller_name" placeholder="收款方">
+	  </div>
+	  <div class="form-group">
+	    <label for="entity-search-time">付款时间</label>
+	    <input type="text" class="form-control form_datetime" id="entity-search-time1" placeholder="付款时间">
 	    -
-	    <input type="text" class="form-control form_datetime" id="entity-search-time2" placeholder="添加时间">
+	    <input type="text" class="form-control form_datetime" id="entity-search-time2" placeholder="付款时间">
 	  </div>
-	   -->
 	  <div class="form-group">
-	    <label for="entity-search-order_time">时间</label>
-	    <input type="text" class="form-control form_datetime" id="entity-search-order_time1" placeholder="时间">
+	    <label for="entity-search-amount">付款金额</label>
+	    <input type="text" class="form-control" id="entity-search-amount1" placeholder="付款金额">
 	    -
-	    <input type="text" class="form-control form_datetime" id="entity-search-order_time2" placeholder="时间">
+	    <input type="text" class="form-control" id="entity-search-amount2" placeholder="付款金额">
 	  </div>
 	  <div class="form-group">
-	    <label for="entity-search-seller_name">卖家</label>
-	    <input type="text" class="form-control" id="entity-search-seller_name" placeholder="卖家">
-	  </div>
-	  <div class="form-group">
-	    <label for="entity-search-seller_conn_name">业务员</label>
-	    <input type="text" class="form-control" id="entity-search-seller_conn_name" placeholder="业务员">
-	  </div>
-	  <div class="form-group">
-	    <label for="entity-search-order_sum_amount">金额</label>
-	    <input type="text" class="form-control" id="entity-search-order_sum_amount1" placeholder="金额">
-	    -
-	    <input type="text" class="form-control" id="entity-search-order_sum_amount2" placeholder="金额">
-	  </div>
-	  <div class="form-group">
-	    <label for="entity-search-order_status">状态</label>
-	    <select class="form-control" id="entity-search-order_status">
+	    <label for="entity-search-status">付款状态</label>
+	    <select class="form-control" id="entity-search-status">
 	      <option value="-1">全部</option>
-          <option value="1">待付</option>
-          <option value="2">已付</option>
-          <option value="3">拒付</option>
+          <option value="1">成功</option>
+          <option value="2">失败</option>
+          <option value="3">未知</option>
         </select>
 	  </div>
 	  <div class="form-group">

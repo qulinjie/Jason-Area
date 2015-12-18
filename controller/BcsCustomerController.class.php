@@ -37,6 +37,9 @@ class BcsCustomerController extends BaseController {
                 case 'exportData':
                     $this->exportData();
                     break;
+                case 'transfer':
+                    $this->transfer();
+                    break;
                 default:
                     Log::error('page not found . ' . $params[0]);
                     EC::fail(EC_MTD_NON);
@@ -136,8 +139,6 @@ class BcsCustomerController extends BaseController {
             if($$val) $params[$val] = $$val;
         }
     
-        $current_page = 1;
-        $page_cnt = 1;
         if(BcsCustomerModel::$_export_type_page == $export_type) {
             $data_cnt = $bcsCustomer_model->searchCnt($params);
             if(EC_OK != $data_cnt['code']){
@@ -334,7 +335,7 @@ class BcsCustomerController extends BaseController {
         $conf = $this->getConfig('conf');
         
         $user_id = self::getCurrentUserId();
-        $mch_no = $conf['MCH_NO'];
+        $mch_no = $conf['MCH_NO']; // 商户编号
         
         $params  = array();
         $params['user_id'] = $user_id;
@@ -352,7 +353,7 @@ class BcsCustomerController extends BaseController {
             Log::error("getInfo failed . obj is empty .");
             EC::fail($info_data['code']);
         }
-        $sit_no = $info_data['SIT_NO'];
+        $sit_no = $info_data['SIT_NO']; // 席位号
         
         /**
          * 调用接口，查询 客户信息 
@@ -397,6 +398,96 @@ class BcsCustomerController extends BaseController {
             EC::fail($upd_data['code']);
         }
         
+        Log::notice('loadInfo ==== >>> upd_data=' . json_encode($upd_data) );
+        EC::success(EC_OK);
+    }
+    
+    protected function transfer() {
+        $amount = Request::post('amount');
+        $pwd = Request::post('pwd');
+        $inOut = Request::post('inOut');
+        
+        if(!$amount || !$pwd || $inOut){
+            Log::error('changeStatus params error!');
+            EC::fail(EC_PAR_ERR);
+        }
+        
+        $bcsBank_model = $this->model('bank');
+        $bcsCustomer_model = $this->model('bcsCustomer');
+        $bcsRegister_model = $this->model('bcsRegister');
+        $conf = $this->getConfig('conf');
+    
+        
+        /**
+         * 验证 密码 
+         */
+        // TODO 
+        
+        $user_id = self::getCurrentUserId();
+        $mch_no = $conf['MCH_NO']; // 商户编号
+    
+        $params  = array();
+        $params['user_id'] = $user_id;
+    
+        
+        /**
+         * 查询 注册信息
+         */
+        $info_data = $bcsRegister_model->getInfo($params);
+        if(EC_OK != $info_data['code']){
+            Log::error("getInfo failed . ");
+            EC::fail($info_data['code']);
+        }
+        $info_data = $info_data['data'][0];
+        if(empty($info_data)){
+            Log::error("getInfo failed . obj is empty .");
+            EC::fail($info_data['code']);
+        }
+        $sit_no = $info_data['SIT_NO']; // 席位号
+    
+        /**
+         * 调用接口，查询 客户信息
+        */
+        $bcs_data = $bcsBank_model->getCustomerInfo( $mch_no, $sit_no );
+        Log::notice('loadInfo ==== >>> getCustomerInfo response=##' . json_encode($bcs_data) . '##');
+        if(false == $bcs_data || !empty($bcs_data['code'])){
+            Log::error("getCustomerInfo failed . ");
+            EC::fail($bcs_data['code']);
+        }
+        $bcs_data = $bcs_data['data'];
+    
+        $params['ACCOUNT_NO'] = $bcs_data['ACCOUNT_NO']; // 客户虚拟账号
+        $params['SIT_NO'] = $bcs_data['SIT_NO']; // 客户席位号
+        $params['MBR_STS'] = $bcs_data['MBR_STS']; // 客户状态 1-已注册；2-已签约；3-已注销
+        $params['MBR_CERT_TYPE'] = $bcs_data['MBR_CERT_TYPE']; // 会员证件类型
+        $params['MBR_CERT_NO'] = $bcs_data['MBR_CERT_NO']; // 会员证件号码
+        $params['MBR_NAME'] = $bcs_data['MBR_NAME']; // 会员名称
+        $params['MBR_SPE_ACCT_NO'] = $bcs_data['MBR_SPE_ACCT_NO']; // 会员指定账号（客户结算账号）
+        $params['MBR_SPE_ACCT_NAME'] = $bcs_data['MBR_SPE_ACCT_NAME']; // 会员指定户名
+        $params['MBR_BANK_NAME'] = $bcs_data['MBR_BANK_NAME']; // 行名
+        $params['MBR_BANK_NO'] = $bcs_data['MBR_BANK_NO']; // 行号
+        $params['MBR_ADDR'] = $bcs_data['MBR_ADDR']; // 会员联系地址
+        $params['MBR_TELENO'] = $bcs_data['MBR_TELENO']; // 电话
+        $params['MBR_PHONE'] = $bcs_data['MBR_PHONE']; // 手机号
+        $params['ACCT_BAL'] = $bcs_data['ACCT_BAL']; // 余额
+        $params['AVL_BAL'] = $bcs_data['ACCOUNT_NO']; // 可用余额
+        $params['SIGNED_DATE'] = $bcs_data['SIGNED_DATE']; // 开户日期
+        $params['ACT_TIME'] = $bcs_data['ACT_TIME']; // 签约时间（时间格式：YYYY-MM-DD HH24:MI:SS）
+    
+        if(empty($params['ACCOUNT_NO'])) {
+            Log::error("getCustomerInfo failed [ACCOUNT_NO] is empty . ");
+            EC::fail($bcs_data['code']);
+        }
+    
+        /**
+         * 更新 客户信息
+         */
+        $upd_data = $bcsCustomer_model->update($params);
+        if(EC_OK != $upd_data['code']){
+            Log::error("update failed . ");
+            EC::fail($upd_data['code']);
+        }
+    
         Log::notice('loadInfo ==== >>> upd_data=' . json_encode($upd_data) );
         EC::success(EC_OK);
     }

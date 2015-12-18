@@ -126,6 +126,10 @@ $(document).on('click', '#entity-export-page-btn', function(event){
 	export_data(1);
 });
 
+$(document).on('click', '#entity-export-all-btn', function(event){
+	export_data(2);
+});
+
 function export_data(export_type){
 	var page = $("#entity-current-page").html();
 	

@@ -14,6 +14,89 @@ $(document).on('click', '#for-loadCustInfo-btn', function(event){
 	    );
 });
 
+/**************start--出金/入金****************/
+function add_entity(inOut){
+	$("#btn-add-entity").attr('disabled', 'disabled');
+    $("#add-entity-hint").html('').fadeOut();
+    
+    var amount = $("#add-entity-amount").val();
+    var pwd = $("#add-entity-pwd").val();
+    
+    var hint_html = '';
+	if('' == pwd ){
+    	hint_html += (hint_html == '' ? '' : '<BR>') + '请填写 密码！' ;
+    }
+    
+    if(hint_html != ''){
+        $("#add-entity-hint").html(hint_html).fadeIn();
+        $("#btn-add-entity").removeAttr('disabled');
+        return 0;
+    }
+    
+    $("#btn-add-entity").html("转账中...");
+    $.post(BASE_PATH + 'bcsCustomer/transfer', {
+        	'amount':amount, 
+        	'pwd':pwd,
+        	'inOut':inOut
+        },
+        function(result){
+            if(result.code != 0) {
+                $("#add-entity-hint").html(result.msg + '(' + result.code + ')').fadeIn();
+                $("#btn-add-entity").removeAttr('disabled');
+                $("#btn-add-entity").html("确定");
+            }else {
+                $("#add-entity-hint").html(result.msg + ', 关闭...').fadeIn();
+                setTimeout(function(){
+                    $("#add-entity-modal").modal('hide');
+                    $("#btn-add-entity").removeAttr('disabled');
+                    $("#btn-add-entity").html("确定");
+                    window.location.reload(); // 刷新页面
+                }, 1000);
+            }
+        },
+        'json'
+    );
+}
+
+$(document).on('click', '#add-transferIn-new', function(event){
+	transfer(1);
+});
+
+$(document).on('click', '#add-transferOut-new', function(event){
+	transfer(2);
+});
+
+function transfer(inOut){
+	$('#add-entity-modal').modal('show');
+	$('#add-entity-modal').modal({keyboard: false});
+		
+	$('#btn-add-entity').show();
+	$('#btn-add-entity').unbind("click");
+
+	var title = $('#add-transferIn-new').text();
+	$('#info_entity_title').html(title);
+	
+	$("#add-entity-hint").html('').fadeOut();
+	
+	clear_entity_field();
+	
+	$("#btn-add-entity").removeAttr('disabled');
+    $("#btn-add-entity").html("确定");
+    
+	$('#btn-add-entity').on('click',function(event){
+		add_entity(inOut);
+	});
+}
+
+function clear_entity_field(){
+	$('#info-entity-id').val('');
+	
+	$('#info-entity-amount').html('');
+	$('#add-entity-pwd').val('');
+}
+
+/**************end--出金/入金****************/
+
 prettyPrint();
 });
 

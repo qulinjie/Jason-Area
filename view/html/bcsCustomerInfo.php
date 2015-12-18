@@ -4,6 +4,41 @@
  * bcsCustomerInfo.php
  */
 ?>
+<div class="modal fade" id="add-entity-modal">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+				<h4 class="modal-title" id="info_entity_title"></h4>
+			</div>
+			
+			<div class="modal-body">
+				<form class="form-horizontal" id="entity-form">
+				  <input type="hidden" class="form-control" id="info-entity-id" value=""></input>
+				  <div class="form-group">
+				    <label for="add-entity-amount" class="col-sm-2 control-label">金额</label>
+				    <div class="col-sm-6">
+				      <input class="form-control" id="add-entity-amount" placeholder="金额"></input>
+				    </div>
+				 </div>
+				 <div class="form-group">
+				    <label for="add-entity-pwd" class="col-sm-2 control-label">支付密码</label>
+				    <div class="col-sm-6">
+				      <input class="form-control" id="add-entity-pwd" placeholder="支付密码"></input>
+				    </div>
+				 </div>
+				  <div class="alert alert-danger" id="add-entity-hint"></div>
+				</form>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+				<button type="button" class="btn btn-primary" id="btn-add-entity">确定</button>
+			</div>
+		</div>
+	</div>
+</div>
 
 <h1 class="page-header">账户信息</h1>
 
@@ -17,6 +52,9 @@
 	       <span style="vertical-align:middle;line-height:2.5;">
 	           <?php echo $item['ACCT_BAL'];?>
 	       </span>
+	       &nbsp;&nbsp;
+	       <a id="add-transferIn-new" class="btn btn-primary" href="#" data-toggle="modal" data-keyboard="false" data-backdrop="static">充值</a>
+	       <a id="add-transferOut-new" class="btn btn-primary" href="#" data-toggle="modal" data-keyboard="false" data-backdrop="static">转出</a>
 	    </div>
 	    <label class="col-sm-2 control-label">可用余额:</label>
 	    <div class="col-sm-3">
