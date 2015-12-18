@@ -86,6 +86,39 @@ $(function () {
                 }
             },'json');
         });
+        $('#password,#rePassword').change(function(){
+            $('#setPayPasswordMsg').hide().text('');
+        });
+        $('#setPayPassword').click(function(){
+            var password   = $('#password').val();
+            var rePassword = $('#rePassword').val();
+            var data = {};
+            if(!password){
+                $('#setPayPasswordMsg').text('请输入支付密码').show();
+                return false;
+            }
+            if(!rePassword){
+                $('#setPayPasswordMsg').text('请输入确认支付密码').show();
+                return false;
+            }
+
+            if(rePassword != password){
+                $('#setPayPasswordMsg').text('两次输入密码不一致').show();
+                return false;
+            }
+            data.password   = hex2b64(do_encrypt(rePassword));
+            data.token = $('#token').val();
+
+            $(this).attr('disabled','disabled');
+            $('#setPayPasswordMsg').text('保存中...');
+            $.post(BASE_PATH+'user/doSetPayPassword',data,function(res){
+                var msg = res.code == 0 ? '保存成功' : res.msg+'('+res.code+')';
+                $('#password').val('');
+                $('#rePassword').val('');
+                $('#setPayPassword').removeAttr('disabled','disabled');
+                $('#setPayPasswordMsg').text(msg).show().hide(3000);
+            });
+        });
         prettyPrint();
         /**********************************index end*********************************************/
     } else {
@@ -156,7 +189,7 @@ $(function () {
                         $("#loginBtn").removeAttr('disabled').html('登录');
                         $('#getPinCode').click();
                     } else {
-                        $("#errorMsg").html(result.msg);
+                        $("#errorMsg").html('登录成功');
                         setTimeout(function () {
                             window.location.href = BASE_PATH;
                         }, 500);

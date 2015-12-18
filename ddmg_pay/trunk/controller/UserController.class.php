@@ -38,6 +38,15 @@ class UserController extends BaseController
             case 'sendCmsCode':
                 $this->sendCmsCode();
                 break;
+            case 'unSetPayPassword':
+                $this->unSetPayPassword();
+                break;
+            case 'setPayPassword':
+                $this->setPayPassword();
+                break;
+            case 'doSetPayPassword':
+                $this->doSetPayPassword();
+                break;
             default:
                 Log::error('this method is not exists ' . $params[0]);
                 EC::fail(EC_MTD_NON);
@@ -123,7 +132,24 @@ class UserController extends BaseController
         EC::success(EC_OK);
     }
 
+    private function unSetPayPassword()
+    {
+        $payPassword_html = $this->render('unSetPayPassword',[],true);
+        $this->render('index',['page_type' => 'User','payPassword_html'=>$payPassword_html]);
+    }
 
+    private function setPayPassword()
+    {
+        $payPassword_html = $this->render('setPayPassword',[],true);
+        $this->render('index',['page_type' => 'User','payPassword_html'=>$payPassword_html]);
+    }
+
+    private function doSetPayPassword()
+    {
+        $response = $this->model('user')->setPayPassword(['payPassword' => $this->post('password')]);
+        $response['code'] !== EC_OK && EC::fail($response['code']);
+        EC::success(EC_OK);
+    }
     /**
      * @return bool
      */
@@ -160,20 +186,27 @@ class UserController extends BaseController
     {
         $session = self::instance('session');
         $encrypt = self::instance('encrypt');
-        if(!$_token = $session->get('_token')){
+        if(!$encrypt::tokenValidate($session->get('_token'),$token,$session::getTimeout())){
             Log::error('token expire ('.json_encode(doit::$params).')');
             EC::fail(EC_TOKEN_EXP);
-        }else if(!$encrypt::tokenValidate($_token,$token,$session::getTimeout())){
-            Log::error('token error ('.json_encode(doit::$params).')');
-            EC::fail(EC_TOKEN_ERR);
         }
+    }
+
+    /**
+     * @return bool
+     */
+    public static function isSetPayPassword()
+    {
+        $response = self::model('user')->isSetPayPassword();
+        $response['code'] !== EC_OK && EC::fail($response['code']);
+        return $response['data']['isSet'];
     }
 
     public static function filter()
     {
         return [
-            'token' => ['doLogin','doFindPassword','sendCmsCode','setPassword'], //需要token验证
-            'login' => ['logout','setPassword']            //需要登录验证
+            'token' => ['doLogin','doFindPassword','sendCmsCode','setPassword','doSetPayPassword'], //需要token验证
+            'login' => ['logout','setPassword','doSetPayPassword']            //需要登录验证
         ];
     }
 

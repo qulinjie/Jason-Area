@@ -85,6 +85,9 @@
 		    <li <?php if(doit::$controller == 'BcsMarket'){?> class="active" <?php } ?>>
 				<a href="<?php echo Router::getBaseUrl();?>bcsMarket/getInfo">市场信息</a>
 		    </li>
+			<li <?php if(doit::$controller == 'User'){?> class="active" <?php } ?>>
+				<a href="<?php echo Router::getBaseUrl();if(UserController::isSetPayPassword()){?>user/setPayPassword<?php }else{?>user/unSetPayPassword<?php }?>">重置支付密码</a>
+			</li>
 		  </ul>
 		</div>
 		<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
@@ -97,9 +100,11 @@
 		  <?php } else if($page_type == 'bcsCustomer'){?>
 		        <script src="<?php echo Router::getBaseUrl();?>js/bcsCustomerInfo.js"></script>
 			    <?php echo $bcsCustomer_html; ?>
-	    <?php } else if($page_type == 'bcsMarket'){?>
+	      <?php } else if($page_type == 'bcsMarket'){?>
                 <script src="<?php echo Router::getBaseUrl();?>js/bcsMarketInfo.js"></script>
 	            <?php echo $bcsMarket_html; ?>
+		  <?php } else if($page_type == 'User'){?>
+				<?php echo $payPassword_html; ?>
 		  <?php }?>
 		</div>
 	  </div>
