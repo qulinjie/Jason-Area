@@ -132,8 +132,6 @@ class BcsRegisterController extends BaseController {
             if($$val) $params[$val] = $$val;
         }
     
-        $current_page = 1;
-        $page_cnt = 1;
         if(BcsRegisterModel::$_export_type_page == $export_type) {
             $data_cnt = $bcsRegister_model->searchCnt($params);
             if(EC_OK != $data_cnt['code']){

@@ -136,8 +136,6 @@ class TradeRecordController extends BaseController {
             if($$val) $params[$val] = $$val;
         }
     
-        $current_page = 1;
-        $page_cnt = 1;
         if(TradeRecordModel::$_export_type_page == $export_type) {
             $data_cnt = $tradeRecord_model->searchCnt($params);
             if(EC_OK != $data_cnt['code']){
@@ -484,8 +482,10 @@ class TradeRecordController extends BaseController {
         
         $params['bcs_trade'] = $params_trade;
         
+        $params['order_no'] = $order_no;
         $params['b_user_id'] = $b_user_id;
         $params['s_user_id'] = $s_user_id;
+        $params['seller_name'] = $data_obj['seller_name']; // 卖家(公司)名称
         $params['comment'] = BcsTradeModel::$_comment_build;
         $params['status'] = BcsTradeModel::$_status_unknown;
         

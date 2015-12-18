@@ -76,6 +76,9 @@
 		    <li <?php if(doit::$controller == 'TradeRecord'){?> class="active" <?php } ?>>
 				<a href="<?php echo Router::getBaseUrl();?>tradeRecord/getIndex">我的大大付款</a>
 		    </li>
+		    <li <?php if(doit::$controller == 'BcsTrade'){?> class="active" <?php } ?>>
+				<a href="<?php echo Router::getBaseUrl();?>bcsTrade/getIndex">交易流水</a>
+		    </li>
 			<li <?php if(doit::$controller == 'AuthorizationCode'){?> class="active" <?php } ?>>
 				<a href="<?php echo Router::getBaseUrl();?>authorizationCode/getIndex">授权码管理</a>
 		    </li>
@@ -94,6 +97,9 @@
 		  <?php if($page_type == 'authorizationCode'){?>
 		        <script src="<?php echo Router::getBaseUrl();?>js/authorizationCode.js"></script>
 				<?php echo $authorizationCode_html; ?>
+		  <?php } else if($page_type == 'bcsTrade'){?>
+                <script src="<?php echo Router::getBaseUrl();?>js/bcsTrade.js"></script>
+	            <?php echo $bcsTrade_html; ?>
 		  <?php } else if($page_type == 'tradeRecord'){?>
 		        <script src="<?php echo Router::getBaseUrl();?>js/tradeRecord.js"></script>
 				<?php echo $tradeRecord_html; ?>

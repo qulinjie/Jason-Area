@@ -46,25 +46,21 @@ class BcsTradeController extends BaseController {
     
     protected function searchList($isIndex = false) {
         $current_page = Request::post('page');
-        $order_no = Request::post('order_no');
-        $code = Request::post('code');
+        $seller_name = Request::post('seller_name');
         $time1 = Request::post('time1');
         $time2 = Request::post('time2');
-        $type = Request::post('type');
-        $order_status = Request::post('order_status');
-        $order_time1 = Request::post('order_time1');
-        $order_time2 = Request::post('order_time2');
-        $seller_name = Request::post('seller_name');
-        $seller_conn_name = Request::post('seller_conn_name');
-        $order_sum_amount1 = Request::post('order_sum_amount1');
-        $order_sum_amount2 = Request::post('order_sum_amount2');
-    
+        $order_no = Request::post('order_no');
+        $status = Request::post('status');
+        $amount1 = Request::post('amount1');
+        $amount2 = Request::post('amount2');
+        $FMS_TRANS_NO = Request::post('FMS_TRANS_NO');
+        
         $bcsTrade_model = $this->model('bcsTrade');
-        $user_id = self::getCurrentUserId();
+        $b_user_id = self::getCurrentUserId();
     
         $params  = array();
-        foreach ([ 'order_no', 'user_id', 'code', 'time1', 'time2', 'type', 'order_status',
-                    'order_time1', 'order_time2', 'seller_name', 'seller_conn_name', 'order_sum_amount1', 'order_sum_amount2' ] as $val){
+        foreach ([ 'b_user_id', 'seller_name', 'time1', 'time2', 'order_no', 'status',
+                    'FMS_TRANS_NO', 'seller_name', 'amount1', 'amount2' ] as $val){
             if($$val) $params[$val] = $$val;
         }
     
@@ -135,8 +131,6 @@ class BcsTradeController extends BaseController {
             if($$val) $params[$val] = $$val;
         }
     
-        $current_page = 1;
-        $page_cnt = 1;
         if(BcsTradeModel::$_export_type_page == $export_type) {
             $data_cnt = $bcsTrade_model->searchCnt($params);
             if(EC_OK != $data_cnt['code']){
