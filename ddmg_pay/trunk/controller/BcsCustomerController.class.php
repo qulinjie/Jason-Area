@@ -468,7 +468,7 @@ class BcsCustomerController extends BaseController {
          */
         $mch_trans_no = 'D' . date('Ymd',time()) . 'T' . date('His',time()) . 'R' . rand(100,999) . 'U' . $user_id;; // 交易流水，需保证唯一性
         $curr_cod = BcsTransferModel::$_CURR_COD_RMB; // 币别 目前只支持：01-人民币
-        $trans_amt = settype($amount,"double");
+        $trans_amt = floatval($amount);
         
         $params['transfer_type'] = $inOut; // 客户出入金
         $params['MCH_NO'] = $mch_no; // 商户编号
