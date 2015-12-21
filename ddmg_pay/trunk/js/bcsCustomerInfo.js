@@ -59,21 +59,20 @@ function add_entity(inOut){
 }
 
 $(document).on('click', '#add-transferIn-new', function(event){
-	transfer(1);
+	transfer(1,$(this).text() );
 });
 
 $(document).on('click', '#add-transferOut-new', function(event){
-	transfer(2);
+	transfer(2,$(this).text() );
 });
 
-function transfer(inOut){
+function transfer(inOut,title){
 	$('#add-entity-modal').modal('show');
 	$('#add-entity-modal').modal({keyboard: false});
 		
 	$('#btn-add-entity').show();
 	$('#btn-add-entity').unbind("click");
 
-	var title = $('#add-transferIn-new').text();
 	$('#info_entity_title').html(title);
 	
 	$("#add-entity-hint").html('').fadeOut();
