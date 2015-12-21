@@ -23,6 +23,9 @@ function add_entity(inOut){
     var pwd = $("#add-entity-pwd").val();
     
     var hint_html = '';
+	if('' == amount || isNaN(amount) || 0 >= amount){
+    	hint_html += (hint_html == '' ? '' : '<BR>') + '请填写 正确的金额！' ;
+    }
 	if('' == pwd ){
     	hint_html += (hint_html == '' ? '' : '<BR>') + '请填写 密码！' ;
     }
@@ -90,7 +93,7 @@ function transfer(inOut,title){
 function clear_entity_field(){
 	$('#info-entity-id').val('');
 	
-	$('#info-entity-amount').html('');
+	$('#add-entity-amount').val('');
 	$('#add-entity-pwd').val('');
 }
 

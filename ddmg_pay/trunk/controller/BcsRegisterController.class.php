@@ -24,9 +24,6 @@ class BcsRegisterController extends BaseController {
                 case 'changeStatus':
                     $this->changeStatus();
                     break;
-                case 'delete':
-                    $this->delete();
-                    break;
                 case 'create':
                     $this->create();
                     break;

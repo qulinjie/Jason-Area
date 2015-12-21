@@ -26,7 +26,7 @@
 				 <div class="form-group">
 				    <label for="add-entity-pwd" class="col-sm-2 control-label">支付密码</label>
 				    <div class="col-sm-6">
-				      <input class="form-control" id="add-entity-pwd" placeholder="支付密码"></input>
+				      <input type="password" class="form-control" id="add-entity-pwd" placeholder="支付密码"></input>
 				    </div>
 				 </div>
 				  <div class="alert alert-danger" id="add-entity-hint"></div>
