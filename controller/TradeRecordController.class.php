@@ -527,7 +527,7 @@ class TradeRecordController extends BaseController {
         unset($params['bcs_trade']);
         
         /**
-         * 修改 交易付款
+         * 更新 交易付款
          */
         $data = $bcsTrade_model->update($params);
         if(EC_OK != $data['code']){

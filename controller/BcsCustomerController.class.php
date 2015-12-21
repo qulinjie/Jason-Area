@@ -407,14 +407,31 @@ class BcsCustomerController extends BaseController {
         $pwd = Request::post('pwd');
         $inOut = Request::post('inOut');
         
-        if(!$amount || !$pwd || $inOut){
-            Log::error('changeStatus params error!');
+        if(!$amount || !$pwd || !$inOut){
+            Log::error('transfer params error!');
             EC::fail(EC_PAR_ERR);
         }
+        
+        if(BcsTransferModel::$_transfer_type_out != $inOut && BcsTransferModel::$_transfer_type_in != $inOut) {
+            Log::error('transfer params error! inOut=' . $inOut);
+            EC::fail(EC_PAR_ERR);
+        }
+        
+        if( !is_numeric($amount) ){
+            Log::error('transfer params error! amount=' . $amount);
+            EC::fail(EC_PAR_ERR);
+        }
+        
+        if( 5 < settype($amount,"double") ){
+            Log::error('transfer params error! [for test] amount=' . $amount);
+            EC::fail(EC_PAR_ERR);
+        }
+        
         
         $bcsBank_model = $this->model('bank');
         $bcsCustomer_model = $this->model('bcsCustomer');
         $bcsRegister_model = $this->model('bcsRegister');
+        $bcsTransfer_model = $this->model('bcsTransfer');
         $conf = $this->getConfig('conf');
     
         
@@ -444,50 +461,98 @@ class BcsCustomerController extends BaseController {
             EC::fail($info_data['code']);
         }
         $sit_no = $info_data['SIT_NO']; // 席位号
-    
+        
+        
+        /**
+         * 增加 客户出入金 记录
+         */
+        $mch_trans_no = 'D' . date('Ymd',time()) . 'T' . date('His',time()) . 'R' . rand(100,999) . 'U' . $user_id;; // 交易流水，需保证唯一性
+        $curr_cod = BcsTransferModel::$_CURR_COD_RMB; // 币别 目前只支持：01-人民币
+        $trans_amt = settype($amount,"double");
+        
+        $params['transfer_type'] = $inOut; // 客户出入金
+        $params['MCH_NO'] = $mch_no; // 商户编号
+        $params['SIT_NO'] = $sit_no; // 席位号
+        $params['MCH_TRANS_NO'] = $mch_trans_no; // 商户交易流水号
+        $params['CURR_COD'] = $curr_cod; // 币别 目前只支持：01-人民币
+        $params['TRANS_AMT'] = $trans_amt; // 交易金额 单位:元
+        
+        $params['comment'] = BcsTransferModel::$_comment_build;
+        $params['status'] = BcsTransferModel::$_status_unknown;
+        
+        $data = $bcsTransfer_model->create($params);
+        if(EC_OK != $data['code']){
+            Log::error('create-transfer Fail!');
+            EC::fail($data['code']);
+        }
+        $bcs_transfer_id = $data['data'];
+        $params['id'] = $bcs_transfer_id;
+        Log::notice('create-transfer success . id=' . $bcs_transfer_id );
+        
         /**
          * 调用接口，查询 客户信息
-        */
-        $bcs_data = $bcsBank_model->getCustomerInfo( $mch_no, $sit_no );
-        Log::notice('loadInfo ==== >>> getCustomerInfo response=##' . json_encode($bcs_data) . '##');
-        if(false == $bcs_data || !empty($bcs_data['code'])){
-            Log::error("getCustomerInfo failed . ");
-            EC::fail($bcs_data['code']);
-        }
-        $bcs_data = $bcs_data['data'];
+         */
+        // 客户入金
+        if(BcsTransferModel::$_transfer_type_in == $inOut) {
+            $bcs_data = $bcsBank_model->customerInflow( $mch_no, $sit_no, $mch_trans_no, $curr_cod, $trans_amt );
+            Log::notice('loadInfo ==== >>> customerInflow response=##' . json_encode($bcs_data) . '##');
+            if(false == $bcs_data || !empty($bcs_data['code'])){
+                Log::error("customerInflow failed . ");
+                EC::fail($bcs_data['code']);
+            }
+            
+            $bcs_data = $bcs_data['data'];
+            
+            $params['MCH_TRANS_NO'] = $bcs_data['MCH_TRANS_NO']; // 商户交易流水号
+            $params['FMS_TRANS_NO'] = $bcs_data['FMS_TRANS_NO']; // 资金监管系统交易流水号
+            $params['TRANS_STS'] = $bcs_data['TRANS_STS']; // 交易状态 1:交易成功；2：交易失败；3：处理中
+            $params['TRANS_AMT'] = $bcs_data['TRANS_AMT']; // 交易金额 单位:元
+            $params['TRANS_TIME'] = $bcs_data['TRANS_TIME']; // 交易完成时间 时间格式：YYYY-MM-DD HH24:MI:SS
+            
+            $params['comment'] = BcsTransferModel::$_comment_success;
+            $params['status'] = BcsTransferModel::$_status_success;
+            $params['transfer_type'] = BcsTransferModel::$_transfer_type_in; // 入金
+        } 
+        // 客户出金
+        else if(BcsTransferModel::$_transfer_type_out == $inOut) {
+            $trans_fee = 0; // 手续费
+            
+            $bcs_data = $bcsBank_model->customerOutflow( $mch_no, $sit_no, $mch_trans_no, $curr_cod, $trans_amt, $trans_fee );
+            Log::notice('loadInfo ==== >>> customerOutflow response=##' . json_encode($bcs_data) . '##');
+            if(false == $bcs_data || !empty($bcs_data['code'])){
+                Log::error("customerOutflow failed . ");
+                EC::fail($bcs_data['code']);
+            }
+            
+            $bcs_data = $bcs_data['data'];
+            
+            $params['MCH_TRANS_NO'] = $bcs_data['MCH_TRANS_NO']; // 商户交易流水号
+            $params['FMS_TRANS_NO'] = $bcs_data['FMS_TRANS_NO']; // 资金监管系统交易流水号
+            $params['TRANS_STS'] = $bcs_data['TRANS_STS']; // 交易状态 1:交易成功；2：交易失败；3：处理中
+            $params['TRANS_AMT'] = $bcs_data['TRANS_AMT']; // 交易金额 单位:元
+            $params['TOTALAMT'] = $bcs_data['TOTALAMT']; // 手续费金额 单位：元（保留两位小数）
+            $params['TRANS_TIME'] = $bcs_data['TRANS_TIME']; // 交易完成时间 时间格式：YYYY-MM-DD HH24:MI:SS
+            
+            $params['comment'] = BcsTransferModel::$_comment_success;
+            $params['status'] = BcsTransferModel::$_status_success;
+            $params['transfer_type'] = BcsTransferModel::$_transfer_type_out; // 出金
+        } 
     
-        $params['ACCOUNT_NO'] = $bcs_data['ACCOUNT_NO']; // 客户虚拟账号
-        $params['SIT_NO'] = $bcs_data['SIT_NO']; // 客户席位号
-        $params['MBR_STS'] = $bcs_data['MBR_STS']; // 客户状态 1-已注册；2-已签约；3-已注销
-        $params['MBR_CERT_TYPE'] = $bcs_data['MBR_CERT_TYPE']; // 会员证件类型
-        $params['MBR_CERT_NO'] = $bcs_data['MBR_CERT_NO']; // 会员证件号码
-        $params['MBR_NAME'] = $bcs_data['MBR_NAME']; // 会员名称
-        $params['MBR_SPE_ACCT_NO'] = $bcs_data['MBR_SPE_ACCT_NO']; // 会员指定账号（客户结算账号）
-        $params['MBR_SPE_ACCT_NAME'] = $bcs_data['MBR_SPE_ACCT_NAME']; // 会员指定户名
-        $params['MBR_BANK_NAME'] = $bcs_data['MBR_BANK_NAME']; // 行名
-        $params['MBR_BANK_NO'] = $bcs_data['MBR_BANK_NO']; // 行号
-        $params['MBR_ADDR'] = $bcs_data['MBR_ADDR']; // 会员联系地址
-        $params['MBR_TELENO'] = $bcs_data['MBR_TELENO']; // 电话
-        $params['MBR_PHONE'] = $bcs_data['MBR_PHONE']; // 手机号
-        $params['ACCT_BAL'] = $bcs_data['ACCT_BAL']; // 余额
-        $params['AVL_BAL'] = $bcs_data['ACCOUNT_NO']; // 可用余额
-        $params['SIGNED_DATE'] = $bcs_data['SIGNED_DATE']; // 开户日期
-        $params['ACT_TIME'] = $bcs_data['ACT_TIME']; // 签约时间（时间格式：YYYY-MM-DD HH24:MI:SS）
-    
-        if(empty($params['ACCOUNT_NO'])) {
-            Log::error("getCustomerInfo failed [ACCOUNT_NO] is empty . ");
+        if(empty($params['FMS_TRANS_NO'])) {
+            Log::error("getCustomerInfo failed [FMS_TRANS_NO] is empty . ");
             EC::fail($bcs_data['code']);
         }
     
         /**
-         * 更新 客户信息
+         * 更新 客户出入金 记录
          */
-        $upd_data = $bcsCustomer_model->update($params);
+        $upd_data = $bcsTransfer_model->update($params);
         if(EC_OK != $upd_data['code']){
             Log::error("update failed . ");
             EC::fail($upd_data['code']);
         }
-    
+        Log::notice('update-transfer success . id=' . $params['id'] );
+        
         Log::notice('loadInfo ==== >>> upd_data=' . json_encode($upd_data) );
         EC::success(EC_OK);
     }

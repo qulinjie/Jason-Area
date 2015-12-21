@@ -53,7 +53,7 @@
 	           <?php echo $item['ACCT_BAL'];?>
 	       </span>
 	       &nbsp;&nbsp;
-	       <a id="add-transferIn-new" class="btn btn-primary" href="#" data-toggle="modal" data-keyboard="false" data-backdrop="static">充值</a>
+	       <a id="add-transferIn-new" class="btn btn-primary" href="#" data-toggle="modal" data-keyboard="false" data-backdrop="static">转入</a>
 	       <a id="add-transferOut-new" class="btn btn-primary" href="#" data-toggle="modal" data-keyboard="false" data-backdrop="static">转出</a>
 	    </div>
 	    <label class="col-sm-2 control-label">可用余额:</label>
