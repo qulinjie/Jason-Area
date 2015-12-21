@@ -132,7 +132,7 @@ class BankModel extends CSBankSoap
 	public function customerOutflow( $MCH_NO, $SIT_NO, $MCH_TRANS_NO, $CURR_COD, $TRANS_AMT, $TRANS_FEE )
 	{
 		$ServiceCode = 'FMSPAY0002'; // 查询市场的详细信息
-		if ( !$MCH_NO || !$SIT_NO || !$MCH_TRANS_NO || !$CURR_COD || !$TRANS_AMT || !$TRANS_FEE ) {
+		if ( !$MCH_NO || !$SIT_NO || !$MCH_TRANS_NO || !$CURR_COD || !$TRANS_AMT || 0 == strlen(strval($TRANS_FEE))) {
 			return false;
 		}
 		$requestParms = ['MCH_NO'=> $MCH_NO, 'SIT_NO'=>$SIT_NO, 'MCH_TRANS_NO'=>$MCH_TRANS_NO, 'CURR_COD' => $CURR_COD, 'TRANS_AMT'=>$TRANS_AMT, 'TRANS_FEE'=>$TRANS_FEE ];
@@ -152,7 +152,7 @@ class BankModel extends CSBankSoap
 	public function customerInflow( $MCH_NO, $SIT_NO, $MCH_TRANS_NO, $CURR_COD, $TRANS_AMT )
 	{
 		$ServiceCode = 'FMSPAY0012'; // 查询市场的详细信息
-		if ( !$MCH_NO || !$SIT_NO || !$MCH_TRANS_NO || !$CURR_COD || !$TRANS_AMT ) {
+		if ( !$MCH_NO || !$SIT_NO || !$MCH_TRANS_NO || !$CURR_COD || 0 == strlen(strval($TRANS_AMT)) ) {
 			return false;
 		}
 		$requestParms = ['MCH_NO'=> $MCH_NO, 'SIT_NO'=>$SIT_NO, 'MCH_TRANS_NO'=>$MCH_TRANS_NO, 'CURR_COD' => $CURR_COD, 'TRANS_AMT'=>$TRANS_AMT ];
