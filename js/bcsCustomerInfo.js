@@ -59,11 +59,11 @@ function add_entity(inOut){
 }
 
 $(document).on('click', '#add-transferIn-new', function(event){
-	transfer(1,$(this).text() );
+	transfer(2,$(this).text() );
 });
 
 $(document).on('click', '#add-transferOut-new', function(event){
-	transfer(2,$(this).text() );
+	transfer(1,$(this).text() );
 });
 
 function transfer(inOut,title){
