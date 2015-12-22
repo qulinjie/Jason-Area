@@ -14,6 +14,21 @@ $(document).on('click', '#for-loadMarketInfo-btn', function(event){
 	    );
 });
 
+$(document).on('click', '#for-loadMarketChildAccount-btn', function(event){
+	$(this).text('更新中...');
+	$.post(BASE_PATH + 'bcsMarket/loadChildAccount', {},
+	        function(result){
+	            if(result.code != 0) {
+	            	alert(result.msg + '(' + result.code + ')');
+	            }else {
+	            	alert(result.msg);
+	            }
+	        },
+	        'json'
+	    );
+});
+
+
 prettyPrint();
 });
 
