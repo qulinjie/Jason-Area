@@ -112,7 +112,7 @@ class BcsMarketController extends BaseController {
             Log::error("getMarketInfo-loadChildAccount failed . ");
             EC::fail($bcs_data['code']);
         }
-        $bcs_data = $bcs_data['Body']['Response'];
+        $bcs_data = $bcs_data['data']['respList'];
     
         if(empty($bcs_data)) {
             Log::error("getMarketInfo-loadChildAccount failed [Response] is empty . ");
@@ -127,8 +127,6 @@ class BcsMarketController extends BaseController {
             Log::error("delete failed . ");
             EC::fail($data['code']);
         }
-        
-        $bcs_data = $bcs_data['data']['respList'];
         
         /**
          * 增加 市场子账号信息
