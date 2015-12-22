@@ -253,7 +253,7 @@ class BcsRegisterController extends BaseController {
 
     private function doCreate(){
         $params = [
-            'MCH_NO'               => '198209',
+            'MCH_NO'               => 198209,
             'CUST_CERT_TYPE'       => $this->post('certType'),
             'CUST_CERT_NO'         => $this->post('certNo'),
             'SIT_NO'               => 'DDMG00008',
@@ -270,7 +270,7 @@ class BcsRegisterController extends BaseController {
         ];
         
         $bcsRegister_model = $this->model('bank');
-        $data = $bcsRegister_model->registerCustomer($params);
+        $data = $bcsRegister_model->getMarketBasicInfo(198209);
         Log::error('SoapData=>>>>>>>>>>>>>>>>'.json_encode($data));
 
         if(EC_OK != $data['code']){
