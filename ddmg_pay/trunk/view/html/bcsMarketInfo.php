@@ -53,7 +53,14 @@
 	       </span>
 	    </div>
 	  </div>
-	  
+	  <div class="form-group">
+	    <label class="col-sm-2 control-label">商户资总账户名称:</label>
+	    <div class="col-sm-3">
+	       <span style="vertical-align:middle;line-height:2.5;">
+	           <?php echo $item['MCH_ACCOUNT_NAME'];?>
+	       </span>
+	    </div>
+	  </div>
 	  <button type="button" class="btn btn-primary" id="for-loadMarketInfo-btn">更新市场信息（测试）</button>
 	  
 	</div>
