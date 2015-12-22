@@ -17,7 +17,7 @@ class CSBankSoap
 	 * @brief:  发送信息
 	 * @return:  
 	 */
-	public function sendQuery( $ServiceCode, $requestParms, $fetchAll=false )
+	protected function sendQuery( $ServiceCode, $requestParms, $fetchAll=false )
 	{
 	    Log::notice( 'CSBankSoap===============>>sendQuery-str requestParms=##' . var_export( $requestParms, true ) . "##");
 		$SendString = $this->getSendString( $ServiceCode, $requestParms );
