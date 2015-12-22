@@ -34,9 +34,9 @@ class TestController extends BaseController
 
 
 		/* ===================== 测试获取商户信息 */
-		$res = $BankModel->getMarketInfo( 198209 ); // 测试获取商户信息
+		/*$res = $BankModel->getMarketInfo( 198209 ); // 测试获取商户信息
 		var_dump($res);
-		return '';
+		return '';*/
 
 
 
@@ -48,7 +48,7 @@ class TestController extends BaseController
 		return '';
 		 */
 
-		/* ================================= 用户注册通知
+		/* ================================= 用户注册通知 */
 		$requestParms = []; 
 		$requestParms['MCH_NO'] = '198209';					// 商户编号
 		$requestParms['CUST_CERT_TYPE'] = '21';			// 客户证件类型
@@ -64,7 +64,7 @@ class TestController extends BaseController
 	$requestParms['IS_PERSON'] = '0';				// 是否个人
 		$res = $BankModel->registerCustomer($requestParms);
 		var_dump($res);
-		 */
+
 
 
 
