@@ -135,13 +135,13 @@ class UserController extends BaseController
     private function unSetPayPassword()
     {
         $payPassword_html = $this->render('unSetPayPassword',[],true);
-        $this->render('index',['page_type' => 'User','payPassword_html'=>$payPassword_html]);
+        $this->render('index',['page_type' => 'user','payPassword_html'=>$payPassword_html]);
     }
 
     private function setPayPassword()
     {
         $payPassword_html = $this->render('setPayPassword',[],true);
-        $this->render('index',['page_type' => 'User','payPassword_html'=>$payPassword_html]);
+        $this->render('index',['page_type' => 'user','payPassword_html'=>$payPassword_html]);
     }
 
     private function doSetPayPassword()
