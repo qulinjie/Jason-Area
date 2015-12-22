@@ -74,6 +74,7 @@ class BankModel extends CSBankSoap
 	{
 		$ServiceCode = 'FMSCUST0002'; // 查询市场的基本信息
 		if ( !$MCH_NO ) {
+		    LOG::notice("getCustomerInfo . MCH_NO=" . $MCH_NO );
 			return false;
 		}
 		$requestParms = ['MCH_NO'=> $MCH_NO ];
@@ -102,7 +103,7 @@ class BankModel extends CSBankSoap
 
 
 	/**
-	 * @brief:  查询市场的详细信息
+	 * @brief:  查询市场的详细信息 （查询市场子账号信息）
 	 * @param:  $MCH_NO
 	 * @return:  
 	 */
@@ -110,6 +111,7 @@ class BankModel extends CSBankSoap
 	{
 		$ServiceCode = 'FMSCUST0007'; // 查询市场的详细信息
 		if ( !$MCH_NO ) {
+		    LOG::notice("getCustomerInfo . MCH_NO=" . $MCH_NO );
 			return false;
 		}
 		$requestParms = ['MCH_NO'=> $MCH_NO ];
