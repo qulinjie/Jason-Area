@@ -8,8 +8,8 @@ $(document).on('click', '#for-loadMarketInfo-btn', function(event){
 	            	alert(result.msg + '(' + result.code + ')');
 	            }else {
 	            	alert(result.msg);
-	            	location.reload();
 	            }
+	            location.replace(location);
 	        },
 	        'json'
 	    );
@@ -23,8 +23,8 @@ $(document).on('click', '#for-loadMarketChildAccount-btn', function(event){
 	            	alert(result.msg + '(' + result.code + ')');
 	            }else {
 	            	alert(result.msg);
-	            	location.reload();
 	            }
+	            location.replace(location);
 	        },
 	        'json'
 	    );
