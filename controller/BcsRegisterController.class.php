@@ -268,9 +268,25 @@ class BcsRegisterController extends BaseController {
             'CUST_ADDR'            => $this->post('custAddress'),
             'RMRK'                 => $this->post('custMark')
         ];
-        
+
+        $requestParms = [];
+        $requestParms['MCH_NO'] = '198209';					// 商户编号
+        $requestParms['CUST_CERT_TYPE'] = '21';			// 客户证件类型
+        $requestParms['CUST_CERT_NO'] = '9800008107';				// 客户证件号码
+        $requestParms['SIT_NO'] = 'DDMG00007';					// 席位号
+        $requestParms['CUST_NAME'] = '湖南省领导人才资源开发中心';				// 客户名称
+        $requestParms['CUST_ACCT_NAME'] = '湖南省领导人才资源开发中心';			// 客户账户名
+        $requestParms['CUST_SPE_ACCT_NO'] = '800052170901011';			// 客户结算账户
+        $requestParms['CUST_SPE_ACCT_BKTYPE'] = '0';	// 客户结算账户行别  0-长沙银行；1-非长沙银行
+        //$requestParms['CUST_SPE_ACCT_BKID'] = '6214836558162364';	// 客户结算账户行号
+        //$requestParms['CUST_SPE_ACCT_BKNAME'] = '招商银行';	// 客户结算账户行名
+        $requestParms['ENABLE_ECDS'] = '1';				// 是否开通电票
+        $requestParms['IS_PERSON'] = '0';				// 是否个人
+
+
         $bcsRegister_model = $this->model('bank');
-        $data = $bcsRegister_model->registerCustomer($params);
+        $data = $bcsRegister_model->registerCustomer($requestParms);
+        var_dump($data);exit;
         if(EC_OK != $data['code']){
             Log::error('create Fail!');
             EC::fail($data['code']);
