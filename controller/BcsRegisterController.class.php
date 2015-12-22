@@ -268,14 +268,9 @@ class BcsRegisterController extends BaseController {
             'CUST_ADDR'            => $this->post('custAddress'),
             'RMRK'                 => $this->post('custMark')
         ];
-
-        $bankSoap = self::instance('CSBankSoap');
-        $result = $bankSoap->sendQuery( 'FMSCUST0002', $params );
-        var_dump($result);
-        exit;
         
-        $bcsRegister_model = $this->model('bcsRegister');
-        $data = $bcsRegister_model->create($params);
+        $bcsRegister_model = $this->model('bank');
+        $data = $bcsRegister_model->registerCustomer($params);
         if(EC_OK != $data['code']){
             Log::error('create Fail!');
             EC::fail($data['code']);
