@@ -94,6 +94,9 @@
 			<li <?php if(doit::$controller == 'User'){?> class="active" <?php } ?>>
 				<a href="<?php echo Router::getBaseUrl();if(UserController::isSetPayPassword()){?>user/setPayPassword<?php }else{?>user/unSetPayPassword<?php }?>">重置支付密码</a>
 			</li>
+			<li <?php if(doit::$controller == 'BcsRegister'){?> class="active" <?php } ?>>
+				  <a href="<?php echo Router::getBaseUrl();?>bcsRegister/create">绑定银行卡</a>
+			</li>
 			<li <?php if(doit::$controller == 'Message'){?> class="active" <?php } ?>>
 				  <a href="<?php echo Router::getBaseUrl();?>message/getIndex">消息提醒</a>
 			</li>
@@ -120,6 +123,9 @@
 		  <?php }else if($page_type == 'message'){?>
 			    <script src="<?php echo Router::getBaseUrl();?>js/sysMessage.js"></script>
 			    <div id="message-list"><?php echo $message_html;?></div>
+		  <?php	}else if($page_type == 'bcsRegister'){?>
+				<script src="<?php echo Router::getBaseUrl();?>js/bcsRegister.js"></script>
+				<?php echo $bcsRegister_html;?>
 		  <?php }?>
 		</div>
 	  </div>

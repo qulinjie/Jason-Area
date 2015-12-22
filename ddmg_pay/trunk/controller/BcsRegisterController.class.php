@@ -27,6 +27,9 @@ class BcsRegisterController extends BaseController {
                 case 'create':
                     $this->create();
                     break;
+                case 'doCreate':
+                    $this->doCreate();
+                    break;
                 case 'exportData':
                     $this->exportData();
                     break;
@@ -242,72 +245,34 @@ class BcsRegisterController extends BaseController {
         $view_html = $this->render('bcsRegisterInfo', array('item' => $data_info), true);
         $this->render('index', array('page_type' => 'bcsRegister', 'bcsRegister_html' => $view_html));
     }
-    
+
     private function create(){
-        $post_data = self::getPostDataJson();
-        if(empty($post_data)) {
-            Log::error('post_data params error!');
-            EC::fail(EC_PAR_ERR);
-        }
-        // request 数据
-        $request_data = $post_data['data'];
-        
-        $code = $request_data['code']; // 授权码
-        $seller_id = $request_data['seller_id']; // 卖家ID
-        $seller_name = $request_data['company']; // 卖家(公司)名称
-        $seller_conn_name = $request_data['seller_name']; // 联系人
-        $seller_tel = $request_data['tel']; // 联系人电话
-        $seller_comp_phone = $request_data['seller_comp_phone']; // 公司电话
-        $order_no = $request_data['order_num']; // 订单号
-        $order_timestamp = $request_data['order_timestamp']; // 订单时间/日期
-        $order_goods_name = $request_data['product_name']; // 品名
-        $order_goods_size = $request_data['size_name']; // 规格
-        $order_goods_type = $request_data['material_name']; // 材质
-        $order_goods_price = $request_data['price']; // 单价（元/ 吨）
-        $order_goods_count = $request_data['ton']; // 订购量（吨）
-        $order_delivery_addr = $request_data['delivery_address']; // 交货地
-        $order_sum_amount = $request_data['amount']; // 订单金额（元）
-    
-        if(!$code || !$seller_name || !$order_no || !$order_sum_amount ){
-            Log::error('create params error!');
-            EC::fail(EC_PAR_ERR);
-        }
-        
-        $code_model = $this->model('authorizationCode');
-        $data_code = $code_model->getInfo(array('code' => $code));
-        if(EC_OK != $data_code['code']){
-            Log::error('getInfo Fail!');
-            EC::fail($data_code['code']);
-        }
-        $code_obj = $data_code['data'][0];
-        if(empty($code_obj)) {
-            Log::error('getInfo code is not exists ! id=' . $code_obj['id']);
-            EC::fail(EC_CODE_ERR);
-        }
-        if( AuthorizationCodeModel::$_is_delete_true == $code_obj['is_delete'] 
-            || !AuthorizationCodeModel::$_status_enabled == $code_obj['status'] 
-            || !$code_model->validataionCodeActive($code_obj) 
-            ){
-            Log::error('code validation failed ! id=' . $code_obj['id'] . ',code=' . $code_obj['code'] );
-            EC::fail(EC_CODE_ERR);
-        }
-    
-        $params = array();
-        $params['user_id'] = $code_obj['user_id']; // 授权码 所属用户ID
-        $params['code_id'] = $code_obj['id']; // 授权码 ID
-        $params['code_used_count'] = $code_obj['used_count']; // 授权码 已经使用次数
-        $params['order_status'] = BcsRegisterModel::$_status_waiting; // 订单交易状态 1-待付款
-        $params['pay_timestamp'] = BcsRegisterModel::$_empyt_time; // 操作（付款/拒付）时间
-        foreach ([ 'code', 'seller_id', 'seller_name', 'seller_conn_name', 'seller_tel', 'seller_comp_phone',
-                    'order_no', 'order_timestamp', 'order_goods_name', 'order_goods_size', 'order_goods_type', 'order_goods_price', 'order_goods_count',
-                    'order_delivery_addr', 'order_sum_amount' ] as $val ){
-            if($$val) $params[$val] = $$val;
-        }
-    
-        if(empty($params)){
-            Log::error('create params is empty!');
-            EC::fail(EC_PAR_BAD);
-        }
+        $bcsRegister_html = $this->render('bcsRegister',[],true);
+        $this->render('index',['page_type'=>'bcsRegister','bcsRegister_html'=>$bcsRegister_html]);
+    }
+
+    private function doCreate(){
+        $params = [
+            'MCH_NO'               => '198209',
+            'CUST_CERT_TYPE'       => $this->post('certType'),
+            'CUST_CERT_NO'         => $this->post('certNo'),
+            'SIT_NO'               => 'DDMG00008',
+            'CUST_NAME'            => $this->post('custName'),
+            'CUST_ACCT_NAME'       => $this->post('custAcctName'),
+            'CUST_SPE_ACCT_NO'     => $this->post('custSpeAcctNo'),
+            'CUST_SPE_ACCT_BKTYPE' => $this->post('custAcctBkType'),
+            'ENABLE_ECDS'          => $this->post('enableEcds'),
+            'IS_PERSON'            => $this->post('isPerson'),
+            'CUST_PHONE_NUM'       => $this->post('custPhoneNum'),
+            'CUST_TELE_NUM'        => $this->post('custTeleNum'),
+            'CUST_ADDR'            => $this->post('custAddress'),
+            'RMRK'                 => $this->post('custMark')
+        ];
+
+        $bankSoap = self::instance('CSBankSoap');
+        $result = $bankSoap->sendQuery( 'FMSCUST0002', $params );
+        var_dump($result);
+        exit;
         
         $bcsRegister_model = $this->model('bcsRegister');
         $data = $bcsRegister_model->create($params);
