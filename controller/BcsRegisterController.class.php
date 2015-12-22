@@ -271,6 +271,8 @@ class BcsRegisterController extends BaseController {
         
         $bcsRegister_model = $this->model('bank');
         $data = $bcsRegister_model->registerCustomer($params);
+        Log::error('SoapData=>>>>>>>>>>>>>>>>'.json_encode($data));
+
         if(EC_OK != $data['code']){
             Log::error('create Fail!');
             EC::fail($data['code']);
