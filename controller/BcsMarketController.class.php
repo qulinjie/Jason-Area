@@ -72,6 +72,7 @@ class BcsMarketController extends BaseController {
         $params['MCH_ADDRES'] = $bcs_data['MCH_ADDRES']; // 商户地址
         $params['MCH_CREATEDATE'] = $bcs_data['MCH_CREATEDATE']; // 商户创建日期
         $params['MCH_ACCOUNT_NO'] = $bcs_data['MCH_ACCOUNT_NO']; // 商户资总账号
+        $params['MCH_ACCOUNT_NAME'] = $bcs_data['MCH_ACCOUNT_NAME']; // 商户资总账户名称
     
         if(empty($params['MCH_NO']) || empty($params['MCH_NAME'])) {
             Log::error("getCustomerInfo failed [MCH_NO，MCH_NAME] is empty . ");
