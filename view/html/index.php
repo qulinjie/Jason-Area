@@ -9,6 +9,9 @@
 	<link rel="shortcut icon"
 		href="<?php echo Router::getBaseUrl();?>asset/ico/favicon.ico">
 	<title>DDMG大大买钢支付系统</title>
+	<link href="<?php echo Router::getBaseUrl();?>css/messenger.css" type="text/css" rel="stylesheet" />
+	<link href="<?php echo Router::getBaseUrl();?>css/messenger-theme-flat.css" type="text/css" rel="stylesheet" />
+	<link href="<?php echo Router::getBaseUrl();?>css/messenger-theme-future.css" type="text/css" rel="stylesheet" />
 	<link href="http://libs.useso.com/js/bootstrap/3.1.1/css/bootstrap.min.css"	rel="stylesheet">
 	<link href="<?php echo Router::getBaseUrl();?>css/bootstrap-theme.min.css" type="text/css" rel="stylesheet" />
 	<link href="<?php echo Router::getBaseUrl();?>css/bootstrap-switch-3.1.0.min.css" type="text/css" rel="stylesheet" />
@@ -91,6 +94,9 @@
 			<li <?php if(doit::$controller == 'User'){?> class="active" <?php } ?>>
 				<a href="<?php echo Router::getBaseUrl();if(UserController::isSetPayPassword()){?>user/setPayPassword<?php }else{?>user/unSetPayPassword<?php }?>">重置支付密码</a>
 			</li>
+			<li <?php if(doit::$controller == 'Message'){?> class="active" <?php } ?>>
+				  <a href="<?php echo Router::getBaseUrl();?>message/getIndex">消息提醒</a>
+			</li>
 		  </ul>
 		</div>
 		<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
@@ -109,8 +115,11 @@
 	      <?php } else if($page_type == 'bcsMarket'){?>
                 <script src="<?php echo Router::getBaseUrl();?>js/bcsMarketInfo.js"></script>
 	            <?php echo $bcsMarket_html; ?>
-		  <?php } else if($page_type == 'User'){?>
+		  <?php } else if($page_type == 'user'){?>
 				<?php echo $payPassword_html; ?>
+		  <?php }else if($page_type == 'message'){?>
+			    <script src="<?php echo Router::getBaseUrl();?>js/sysMessage.js"></script>
+			    <div id="message-list"><?php echo $message_html;?></div>
 		  <?php }?>
 		</div>
 	  </div>
@@ -194,6 +203,8 @@
 <script src="<?php echo Router::getBaseUrl();?>js/jsbn.js"></script>
 <script src="<?php echo Router::getBaseUrl();?>js/rsa.js"></script>
 <script type="text/javascript" src="<?php echo Router::getBaseUrl();?>js/custom.js"></script>
+<script type="text/javascript" src="<?php echo Router::getBaseUrl();?>js/messenger.min.js"></script>
+<script type="text/javascript" src="<?php echo Router::getBaseUrl();?>js/messenger-theme-future.js"></script>
 </body>
 </html>
 
