@@ -62,8 +62,6 @@ class BankModel extends CSBankSoap
 		$requestParms['IS_PERSON'] = '';				// 是否个人
 		 */
 
-		Log::notice('registerParams >>>>>>>>>>>>>>>>>'.var_export($requestParms,true));
-
 		return $this-> sendQuery( $ServiceCode, $requestParms, $fetchAll=false );
 	}
 
