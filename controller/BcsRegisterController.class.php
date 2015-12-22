@@ -270,7 +270,7 @@ class BcsRegisterController extends BaseController {
         ];
         
         $bcsRegister_model = $this->model('bank');
-        $data = $bcsRegister_model->getMarketBasicInfo(198209);
+        $data = $bcsRegister_model->registerCustomer($params);
         Log::error('SoapData=>>>>>>>>>>>>>>>>'.json_encode($data));
 
         if(EC_OK != $data['code']){
