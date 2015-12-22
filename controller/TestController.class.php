@@ -33,11 +33,11 @@ class TestController extends BaseController
 		$BankModel = $this->model( 'Bank' );
 
 
-		/* ===================== 测试获取商户信息
+		/* ===================== 测试获取商户信息 */
 		$res = $BankModel->getMarketInfo( 198209 ); // 测试获取商户信息
 		var_dump($res);
 		return '';
-		 */
+
 
 
 
