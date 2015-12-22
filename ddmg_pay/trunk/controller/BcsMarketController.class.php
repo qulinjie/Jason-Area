@@ -64,7 +64,7 @@ class BcsMarketController extends BaseController {
             Log::error("getMarketInfo failed . ");
             EC::fail($bcs_data['code']);
         }
-        $bcs_data = $bcs_data['data'];
+        $bcs_data = $bcs_data['Body']['Response'];
         
         $params['MCH_NO'] = $bcs_data['MCH_NO']; // 商户编号
         $params['MCH_NAME'] = $bcs_data['MCH_NAME']; // 商户名称
