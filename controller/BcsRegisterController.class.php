@@ -305,16 +305,16 @@ class BcsRegisterController extends BaseController {
 		$requestParms['CUST_CERT_TYPE'] = '21';			// 客户证件类型
 		$requestParms['CUST_CERT_NO'] = '9800008102';				// 客户证件号码
 		$requestParms['SIT_NO'] = 'DDMG00009';					// 席位号
-		$requestParms['CUST_NAME'] = '湖南省领导人才资源开发中心';				// 客户名称
-		$requestParms['CUST_ACCT_NAME'] = '湖南省领导人才资源开发中心';			// 客户账户名
+		$requestParms['CUST_NAME'] = 'hunna_name';				// 客户名称 湖南省领导人才资源开发中心
+		$requestParms['CUST_ACCT_NAME'] = 'hunna_name';			// 客户账户名 湖南省领导人才资源开发中心
 		$requestParms['CUST_SPE_ACCT_NO'] = '800052170901011';			// 客户结算账户
 		$requestParms['CUST_SPE_ACCT_BKTYPE'] = '0';	// 客户结算账户行别
 		$requestParms['CUST_SPE_ACCT_BKID'] = '';	// 客户结算账户行号
 		$requestParms['CUST_SPE_ACCT_BKNAME'] = '';	// 客户结算账户行名
         $requestParms['CUST_PHONE_NUM'] = '13265431549';			// 客户手机号码
         $requestParms['CUST_TELE_NUM'] = '13265431549';			// 客户电话号码
-        $requestParms['CUST_ADDR'] = '广东深圳南山区';				// 客户地址
-        $requestParms['RMRK'] = '大汉测试09';						// 备注
+        $requestParms['CUST_ADDR'] = 'guandong';				// 客户地址
+        $requestParms['RMRK'] = 'test09';						// 备注
 		$requestParms['ENABLE_ECDS'] = '1';				// 是否开通电票
 		$requestParms['IS_PERSON'] = '0';				// 是否个人
         
