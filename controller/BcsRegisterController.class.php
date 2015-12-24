@@ -306,7 +306,7 @@ class BcsRegisterController extends BaseController {
 		$requestParms['CUST_CERT_NO'] = '9800008102';				// 客户证件号码
 		$requestParms['SIT_NO'] = 'DDMG00010';					// 席位号
 		$requestParms['CUST_NAME'] = 'HuNanDDMG';				// 客户名称 湖南省领导人才资源开发中心
-		$requestParms['CUST_ACCT_NAME'] = '\u6e56\u5357\u7701\u9886\u5bfc\u4eba\u624d\u8d44\u6e90\u5f00\u53d1\u4e2d\u5fc3';			// 客户账户名 湖南省领导人才资源开发中心
+		$requestParms['CUST_ACCT_NAME'] = '\u6e56\u5357\u7701\u9886';			// 客户账户名 湖南省领导人才资源开发中心
 		$requestParms['CUST_SPE_ACCT_NO'] = '800052170901011';			// 客户结算账户
 		$requestParms['CUST_SPE_ACCT_BKTYPE'] = '0';	// 客户结算账户行别
 		$requestParms['CUST_SPE_ACCT_BKID'] = '';	// 客户结算账户行号
