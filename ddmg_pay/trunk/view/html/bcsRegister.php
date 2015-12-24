@@ -91,9 +91,6 @@
                 </div>
             </div>
             <div class="alert alert-danger  search-list-hint" id="setPayPasswordMsg"></div>
-            
-            <button type="button" class="btn btn-primary" id="for-registerAccount-btn">注册账户（测试）</button>
-            
         </form>
     </div>
 </div>
