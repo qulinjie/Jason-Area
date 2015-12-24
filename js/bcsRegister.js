@@ -15,7 +15,7 @@ $(function(){
     	            }else {
     	            	alert(result.msg);
     	            }
-    	            location.replace(location);
+    	            window.location.replace(window.location);
     	        },
     	        'json'
     	    );
