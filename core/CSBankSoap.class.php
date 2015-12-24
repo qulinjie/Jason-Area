@@ -70,7 +70,7 @@ class CSBankSoap
 	{
 		$bodyXmlString = $this-> constructBody( $requestParms );
 		$headerXmlString = $this-> constructHeader( $ServiceCode, $bodyXmlString );
-		return [urlencode("<Service>{$headerXmlString}{$bodyXmlString}</Service>")];
+		return ["<Service>{$headerXmlString}{$bodyXmlString}</Service>"];
 	}
 
 
@@ -203,7 +203,7 @@ class CSBankSoap
 				if ( is_array( $v ) ) {
 					$xml .= $this-> arrayToXml( $v );
 				} else {
-					$xml .= "{$v}";
+					$xml .= urlencode($v);
 				}
 				$xml .= "</{$k}>";
 			}
