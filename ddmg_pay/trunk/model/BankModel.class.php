@@ -15,6 +15,7 @@ class BankModel extends CSBankSoap
 		$ServiceCode = 'FMSCUST0001'; // 客户注册通知 
 
 		if ( !$registerData || !is_array( $registerData ) ) {
+		    Log::error("param registerData is illegal .");
 			return false;
 		}
 
