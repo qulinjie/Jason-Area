@@ -70,7 +70,7 @@ class CSBankSoap
 	{
 		$bodyXmlString = $this-> constructBody( $requestParms );
 		$headerXmlString = $this-> constructHeader( $ServiceCode, $bodyXmlString );
-		return ["<Service>{$headerXmlString}{$bodyXmlString}</Service>"];
+		return [utf8_encode("<Service>{$headerXmlString}{$bodyXmlString}</Service>")];
 	}
 
 
