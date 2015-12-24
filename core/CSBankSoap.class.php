@@ -203,7 +203,7 @@ class CSBankSoap
 				if ( is_array( $v ) ) {
 					$xml .= $this-> arrayToXml( $v );
 				} else {
-					$xml .= utf8_encode($v);
+					$xml .= iconv('UTF-8','gb2312',$v);
 				}
 				$xml .= "</{$k}>";
 			}
