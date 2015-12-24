@@ -279,9 +279,8 @@ class BcsRegisterController extends BaseController {
         }
 
         $data = $this->model('bank')->registerCustomer($params);
-        var_dump($data);exit;
-
-        if($data['code'] !==''){
+        Log::error("bank register return data >>>>>".json_encode($data));
+        if($data['code'] !==0){
             Log::error('create Fail!');
             EC::fail($data['code']);
         }
