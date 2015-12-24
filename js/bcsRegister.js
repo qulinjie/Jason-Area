@@ -1,14 +1,7 @@
 $(function(){
-    $('#bcsRegisterSaveBtn').click(function(){
-        $.post(BASE_PATH+'bcsRegister/doCreate',$('#bcsRegister').serialize(),function(res){
-
-        },'json');
-    });
-    
-    
-    $(document).on('click', '#for-registerAccount-btn', function(event){
+    $(document).on('click', '#bcsRegisterSaveBtn', function(event){
     	$(this).text('更新中...');
-    	$.post(BASE_PATH + 'bcsRegister/registerAccount', {},
+    	$.post(BASE_PATH + 'bcsRegister/registerAccount', $('#bcsRegister').serialize(),
     	        function(result){
     	            if(result.code != 0) {
     	            	alert(result.msg + '(' + result.code + ')');

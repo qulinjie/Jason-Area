@@ -27,9 +27,6 @@ class BcsRegisterController extends BaseController {
                 case 'create':
                     $this->create();
                     break;
-                case 'doCreate':
-                    $this->doCreate();
-                    break;
                 case 'exportData':
                     $this->exportData();
                     break;
@@ -253,82 +250,42 @@ class BcsRegisterController extends BaseController {
         $bcsRegister_html = $this->render('bcsRegister',[],true);
         $this->render('index',['page_type'=>'bcsRegister','bcsRegister_html'=>$bcsRegister_html]);
     }
-
-    private function doCreate(){
+    
+    private function registerAccount(){
         $params = [
-            'MCH_NO'               => 198209,
-            'CUST_CERT_TYPE'       => $this->post('certType'),
-            'CUST_CERT_NO'         => $this->post('certNo'),
-            'SIT_NO'               => 'DDMG00008',
-            'CUST_NAME'            => $this->post('custName'),
-            'CUST_ACCT_NAME'       => $this->post('custAcctName'),
-            'CUST_SPE_ACCT_NO'     => $this->post('custSpeAcctNo'),
-            'CUST_SPE_ACCT_BKTYPE' => $this->post('custAcctBkType'),
-            'ENABLE_ECDS'          => $this->post('enableEcds'),
-            'IS_PERSON'            => $this->post('isPerson'),
-            'CUST_PHONE_NUM'       => $this->post('custPhoneNum'),
-            'CUST_TELE_NUM'        => $this->post('custTeleNum'),
-            'CUST_ADDR'            => $this->post('custAddress'),
-            'RMRK'                 => $this->post('custMark')
+            'MCH_NO'               => self::getConfig('conf')['MCH_NO'],// 商户编号
+            'SIT_NO'               => $this->model('id')->getSitNo(),   // 席位号
+            'CUST_CERT_TYPE'       => $this->post('certType'),          // 客户证件类型
+            'CUST_CERT_NO'         => $this->post('certNo'),            // 客户证件号码
+            'CUST_NAME'            => $this->post('custName'),          // 客户名称
+            'CUST_ACCT_NAME'       => $this->post('custAcctName'),      // 客户账户名
+            'CUST_SPE_ACCT_NO'     => $this->post('custSpeAcctNo'),     // 客户结算账户
+            'CUST_SPE_ACCT_BKTYPE' => $this->post('custAcctBkType'),    // 客户结算账户行别
+            'CUST_SPE_ACCT_BKID'   => '',	                            // 客户结算账户行号
+            'CUST_SPE_ACCT_BKNAME' => '',	                            // 客户结算账户行名
+            'ENABLE_ECDS'          => $this->post('enableEcds'),        // 是否开通电票
+            'IS_PERSON'            => $this->post('isPerson'),          // 是否个人
+            'CUST_PHONE_NUM'       => $this->post('custPhoneNum'),      // 客户手机号码
+            'CUST_TELE_NUM'        => $this->post('custTeleNum'),       // 客户电话号码
+            'CUST_ADDR'            => $this->post('custAddress'),       // 客户地址
+            'RMRK'                 => $this->post('custMark')           // 备注
         ];
 
-        $requestParms = [];
-        $requestParms['MCH_NO'] = '198209';					// 商户编号
-        $requestParms['CUST_CERT_TYPE'] = '21';			// 客户证件类型
-        $requestParms['CUST_CERT_NO'] = '9800008107';				// 客户证件号码
-        $requestParms['SIT_NO'] = 'DDMG00007';					// 席位号
-        $requestParms['CUST_NAME'] = '湖南省领导人才资源开发中心';				// 客户名称
-        $requestParms['CUST_ACCT_NAME'] = '湖南省领导人才资源开发中心';			// 客户账户名
-        $requestParms['CUST_SPE_ACCT_NO'] = '800052170901011';			// 客户结算账户
-        $requestParms['CUST_SPE_ACCT_BKTYPE'] = '0';	// 客户结算账户行别  0-长沙银行；1-非长沙银行
-        //$requestParms['CUST_SPE_ACCT_BKID'] = '6214836558162364';	// 客户结算账户行号
-        //$requestParms['CUST_SPE_ACCT_BKNAME'] = '招商银行';	// 客户结算账户行名
-        $requestParms['ENABLE_ECDS'] = '1';				// 是否开通电票
-        $requestParms['IS_PERSON'] = '0';				// 是否个人
+        //先写数据库
+        $response = $this->model('bcsRegister')->create($params);
+        if($response['code'] !== EC_OK){
+            Log::error('registerAccount insert db error code '.$response['code']);
+            EC::fail($response['code']);
+        }
 
-
-        $bcsRegister_model = $this->model('bank');
-        $data = $bcsRegister_model->registerCustomer($requestParms);
-        var_dump($data);exit;
-        if(EC_OK != $data['code']){
+        $data = $this->model('bank')->registerCustomer($params);
+        if($data['code'] !==''){
             Log::error('create Fail!');
             EC::fail($data['code']);
         }
         EC::success(EC_OK);
     }
-    
-    private function registerAccount(){
-        $bcsBank_model = $this->model('bank');
-        
-        $requestParms = array();
-        $requestParms['MCH_NO'] = '198209';					// 商户编号
-		$requestParms['CUST_CERT_TYPE'] = '21';			// 客户证件类型
-		$requestParms['CUST_CERT_NO'] = '9800008102';				// 客户证件号码
-		$requestParms['SIT_NO'] = 'DDMG00010';					// 席位号
-		$requestParms['CUST_NAME'] = 'HuNanDDMG';				// 客户名称 湖南省领导人才资源开发中心
-		$requestParms['CUST_ACCT_NAME'] = self::yang_gbk2utf8('湖南省领导人才资源开发中心');			// 客户账户名 湖南省领导人才资源开发中心
-		$requestParms['CUST_SPE_ACCT_NO'] = '800052170901011';			// 客户结算账户
-		$requestParms['CUST_SPE_ACCT_BKTYPE'] = '0';	// 客户结算账户行别
-		$requestParms['CUST_SPE_ACCT_BKID'] = '';	// 客户结算账户行号
-		$requestParms['CUST_SPE_ACCT_BKNAME'] = '';	// 客户结算账户行名
-        $requestParms['CUST_PHONE_NUM'] = '13265431549';			// 客户手机号码
-        $requestParms['CUST_TELE_NUM'] = '13265431549';			// 客户电话号码
-        $requestParms['CUST_ADDR'] = 'guandong';				// 客户地址
-        $requestParms['RMRK'] = 'test09';						// 备注
-		$requestParms['ENABLE_ECDS'] = '1';				// 是否开通电票
-		$requestParms['IS_PERSON'] = '0';				// 是否个人
-        
-        $bcs_data = $bcsBank_model->registerCustomer( $requestParms );
-        Log::notice('loadInfo ==== >>> registerCustomer response=##' . json_encode($bcs_data) . '##');
-        if(false == $bcs_data || !empty($bcs_data['code'])){
-            Log::error("registerCustomer failed . ");
-            EC::fail($bcs_data['code']);
-        }
-        $bcs_data = $bcs_data['data'];
-        
-        EC::success(EC_OK);
-    }
-    
+
     private function yang_gbk2utf8($str){
         $charset = mb_detect_encoding($str,array('UTF-8','GBK','GB2312'));
         $charset = strtolower($charset);
