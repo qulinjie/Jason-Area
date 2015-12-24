@@ -300,7 +300,7 @@ class BcsRegisterController extends BaseController {
     private function registerAccount(){
         $bcsBank_model = $this->model('bank');
         
-        $registerData = array();
+        $requestParms = array();
         $requestParms['MCH_NO'] = '198209';					// 商户编号
 		$requestParms['CUST_CERT_TYPE'] = '21';			// 客户证件类型
 		$requestParms['CUST_CERT_NO'] = '9800008102';				// 客户证件号码
@@ -318,7 +318,7 @@ class BcsRegisterController extends BaseController {
 		$requestParms['ENABLE_ECDS'] = '1';				// 是否开通电票
 		$requestParms['IS_PERSON'] = '0';				// 是否个人
         
-        $bcs_data = $bcsBank_model->registerCustomer( $registerData );
+        $bcs_data = $bcsBank_model->registerCustomer( $requestParms );
         Log::notice('loadInfo ==== >>> registerCustomer response=##' . json_encode($bcs_data) . '##');
         if(false == $bcs_data || !empty($bcs_data['code'])){
             Log::error("registerCustomer failed . ");
