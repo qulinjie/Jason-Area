@@ -306,7 +306,7 @@ class BcsRegisterController extends BaseController {
 		$requestParms['CUST_CERT_NO'] = '9800008102';				// 客户证件号码
 		$requestParms['SIT_NO'] = 'DDMG00010';					// 席位号
 		$requestParms['CUST_NAME'] = 'HuNanDDMG';				// 客户名称 湖南省领导人才资源开发中心
-		$requestParms['CUST_ACCT_NAME'] = 'HuNanDDMG';			// 客户账户名 湖南省领导人才资源开发中心
+		$requestParms['CUST_ACCT_NAME'] = self::yang_gbk2utf8('湖南省领导人才资源开发中心');			// 客户账户名 湖南省领导人才资源开发中心
 		$requestParms['CUST_SPE_ACCT_NO'] = '800052170901011';			// 客户结算账户
 		$requestParms['CUST_SPE_ACCT_BKTYPE'] = '0';	// 客户结算账户行别
 		$requestParms['CUST_SPE_ACCT_BKID'] = '';	// 客户结算账户行号
@@ -329,4 +329,15 @@ class BcsRegisterController extends BaseController {
         EC::success(EC_OK);
     }
     
+    private function yang_gbk2utf8($str){
+        $charset = mb_detect_encoding($str,array('UTF-8','GBK','GB2312'));
+        $charset = strtolower($charset);
+        if('cp936' == $charset){
+            $charset='GBK';
+        }
+        if("utf-8" != $charset){
+            $str = iconv($charset,"UTF-8//IGNORE",$str);
+        }
+        return $str;
+    }
 }
