@@ -20,7 +20,6 @@ class CSBankSoap
 	protected function sendQuery( $ServiceCode, $requestParms, $fetchAll=false )
 	{
 	    Log::bcsNotice( 'CSBankSoap===============>>sendQuery-str requestParms=##' . var_export( $requestParms, true ) . "##");
-	    Log::notice( 'CSBankSoap===============>>sendQuery-str requestParms=##' . var_export( $requestParms, true ) . "##");
 		$SendString = $this->getSendString( $ServiceCode, $requestParms );
 		$client = $this-> getSoapClient();
 		if( !$client ) {
@@ -28,10 +27,8 @@ class CSBankSoap
 		    return false;
 		}
 		Log::bcsNotice( 'CSBankSoap===============>>sendQuery request=##' . var_export( $SendString, true ) . "##");
-		Log::notice( 'CSBankSoap===============>>sendQuery request=##' . var_export( $SendString, true ) . "##");
 		$resXMLString = $client->__soapCall( 'request', $SendString );
 		Log::bcsNotice( 'CSBankSoap===============>>sendQuery response=##' . var_export( $resXMLString, true ) . "##");
-		Log::notice( 'CSBankSoap===============>>sendQuery response=##' . var_export( $resXMLString, true ) . "##");
 		return $this->fetchArrayResult( $resXMLString, $fetchAll );
 	}
 
