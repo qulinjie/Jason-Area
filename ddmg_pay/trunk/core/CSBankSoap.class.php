@@ -19,16 +19,16 @@ class CSBankSoap
 	 */
 	protected function sendQuery( $ServiceCode, $requestParms, $fetchAll=false )
 	{
-	    Log::notice( 'CSBankSoap===============>>sendQuery-str requestParms=##' . var_export( $requestParms, true ) . "##");
+	    Log::bcsNotice( 'CSBankSoap===============>>sendQuery-str requestParms=##' . var_export( $requestParms, true ) . "##");
 		$SendString = $this->getSendString( $ServiceCode, $requestParms );
 		$client = $this-> getSoapClient();
 		if( !$client ) {
-		    Log::error("getSoapClient failed ." );
+		    Log::bcsError("getSoapClient failed ." );
 		    return false;
 		}
-		Log::notice( 'CSBankSoap===============>>sendQuery request=##' . var_export( $SendString, true ) . "##");
+		Log::bcsNotice( 'CSBankSoap===============>>sendQuery request=##' . var_export( $SendString, true ) . "##");
 		$resXMLString = $client->__soapCall( 'request', $SendString );
-		Log::notice( 'CSBankSoap===============>>sendQuery response=##' . var_export( $resXMLString, true ) . "##");
+		Log::bcsNotice( 'CSBankSoap===============>>sendQuery response=##' . var_export( $resXMLString, true ) . "##");
 		return $this->fetchArrayResult( $resXMLString, $fetchAll );
 	}
 
@@ -83,13 +83,13 @@ class CSBankSoap
 		if ( !self::$client ) {
 			$config = Controller::getConfig('conf');
 			if( !$config['CSBankSoapUrl'] ) {
-				Log::error('conf/conf.ini.php  not  have "CSBankSoapUrl" ');
+				Log::bcsError('conf/conf.ini.php  not  have "CSBankSoapUrl" ');
 				return false;
 			}
 			try {
 				self::$client = new SoapClient( $config['CSBankSoapUrl'] );
 			} catch ( Exception $e ) {
-				Log::error( 'SOAP-ERROR: '. var_export( $e->getMessage(), true ) );
+				Log::bcsError( 'SOAP-ERROR: '. var_export( $e->getMessage(), true ) );
 				return false;
 			}
 		}
