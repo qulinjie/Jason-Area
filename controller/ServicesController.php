@@ -22,15 +22,47 @@ class ServicesController extends Controller {
             }
         }
     }
-    
+
+    protected function checkSign()
+    {
+
+    }
+
+    protected function response()
+    {
+        $responseXML=<<<EOF
+<Service>
+    <Header>
+        <ServiceCode>FMSCUST0001</ServiceCode>
+        <ChannelId>607</ChannelId>
+        <ExternalReference>370000201408210006698</ExternalReference>
+        <RequestTime>20151110110925</RequestTime>
+        <TradeDate>20151110</TradeDate>
+        <Version>1.0</Version>
+        <TermType>00000</TermType>
+        <TermNo>0000000000</TermNo>
+        <RequestType>0</RequestType>
+        <Encrypt>0</Encrypt>
+        <SignData></SignData>
+        <RequestIp>127.0.0.1</RequestIp>
+        <SEQNO>370000201408210006698</SEQNO>
+        <Response>
+            <ReturnCode>00000000</ReturnCode>
+            <ReturnMessage></ReturnMessage>
+        </Response>
+    </Header>
+        <Body>
+            <Response>
+                <IS_SUCCESS>通知成功</IS_SUCCESS>
+            </Response>
+        </Body>
+    </Service>
+
+EOF;
+    }
+
     public function request($param) {
         Log::notice('client ip=##' . self::get_real_ip() . '##' );
-       /* if(!$requestData = file_get_contents('php://input')){
-            //无数据
-            Log::error('Bank callback request data is empty');
-            return $this->buildSoapXml('request data is empty');
-        }*/
-
         if(!$reqXml  = simplexml_load_string($param)){
             //非XML数据
             Log::error('Bank callback request data not is XML');
@@ -94,9 +126,4 @@ class ServicesController extends Controller {
         }
         return ($ip ? $ip : $_SERVER['REMOTE_ADDR']);
     }
-    
-    public function info($param) {
-        Log::notice($param);
-    }
-    
 }
