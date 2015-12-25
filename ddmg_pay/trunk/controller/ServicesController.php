@@ -62,7 +62,7 @@ EOF;
     }
 
     public function request($param) {
-        Log::notice('client ip=##' . $this->get_real_ip() . '##' );
+        Log::notice('client ip=##' . self::get_real_ip() . '##' );
         if(!$reqXml  = simplexml_load_string($param)){
             //非XML数据
             Log::error('Bank callback request data not is XML');
@@ -97,7 +97,7 @@ EOF;
     
     public function buildSoapXml($param='') {
         $body = '<Body><Response><IS_SUCCESS>通知成功</IS_SUCCESS></Response></Body>';
-        $requestIp = '<RequestIp>' . $this->get_real_ip() .'</RequestIp>';
+        $requestIp = '<RequestIp>' . self::get_real_ip() .'</RequestIp>';
         $seqno = '<SEQNO></SEQNO>';
         if ( preg_match('/<ExternalReference>(.*)<\/ExternalReference>/', $param, $rs) ) {
             $seqno = '<SEQNO>' . $rs[1] . '</SEQNO>';
@@ -109,7 +109,7 @@ EOF;
         return $result;
     }
     
-    public function get_real_ip() {
+    static function get_real_ip() {
         $ip=false;
         if(!empty($_SERVER['HTTP_CLIENT_IP'])){
             $ip = $_SERVER['HTTP_CLIENT_IP'];
