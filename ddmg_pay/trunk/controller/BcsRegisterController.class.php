@@ -284,7 +284,7 @@ class BcsRegisterController extends BaseController {
         $CSBankSoapUrl = $conf['CSBankSoapUrl'];
         $params = array();
         $params['wsdlUrl'] = strval($CSBankSoapUrl);
-        $params['xml'] = strval($data);
+        $params['xml'] = strval($data[0]);
         Log::notice('params==createByJava--------------------->>' . var_export($params, true));
         $data = $this->model('bcsRegister')->createByJava($params);
         
