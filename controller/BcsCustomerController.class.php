@@ -40,6 +40,9 @@ class BcsCustomerController extends BaseController {
                 case 'transfer':
                     $this->transfer();
                     break;
+                case 'inflow': //出入金交易明细
+                    $this->inflow();
+                    break;
                 default:
                     Log::error('page not found . ' . $params[0]);
                     EC::fail(EC_MTD_NON);
@@ -556,5 +559,11 @@ class BcsCustomerController extends BaseController {
         Log::notice('loadInfo ==== >>> upd_data=' . json_encode($upd_data) );
         EC::success(EC_OK);
     }
-    
+
+    private function inflow(){
+        $params   = ['MCH_NO' => $this->getConfig('conf')['MCH_NO']];
+        $bcs_data = $this->model('bank')->customerInflowQuery($params);
+        var_dump($bcs_data);
+        exit;
+    }
 }
