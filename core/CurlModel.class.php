@@ -110,6 +110,7 @@ class CurlModel
         }
 //         $base_data = [ 'caller'=>'test', 'callee'=>'ddmg_payapi', 'eventid'=>rand()%10000, 'timestamp'=>time() ];
 //         $base_data['data'] = $data;
+        $base_data = $data;
         Log::notice("sendRequest data ================================>> interface = " . $interface . ",request = ##" . json_encode($base_data) . "##" );
         $url = $this->getUrlJava( $interface );
         $ret = $this->postRequest( $url, $base_data );
