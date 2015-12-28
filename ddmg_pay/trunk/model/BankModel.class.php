@@ -235,21 +235,20 @@ class BankModel extends CSBankSoap
 	{
 		$ServiceCode = 'FMSPAY0003'; 
 
-		if ( !$params || !is_array( $params ) ) {
+		if ( !$params || !is_array( $params ) || !isset($params['MCH_NO'])) {
+			Log::bcsError('params error');
 			return false;
 		}
 
 		$requestParms = [];
 
-		// 必填字段
-		$mustFields = ['MCH_NO', 'SIT_NO', 'START_DATE', 'END_DATE', 'FMS_TRANS_NO', 'MCH_TRANS_NO', 'PAGE_NUMBER', 'PAGE_SIZE' ];
-		foreach ( $mustFields as $v )
+		// 过滤字段
+		$filterFields = ['MCH_NO', 'SIT_NO', 'START_DATE', 'END_DATE', 'FMS_TRANS_NO', 'MCH_TRANS_NO', 'PAGE_NUMBER', 'PAGE_SIZE' ];
+		foreach ( $filterFields as $v )
 		{
-			if ( '0'!==strval($params[$v]) && !$params[$v] ) {
-				Log::error(' no have $params['.$v.'] ');
-				return false;
+			if(isset($params[$v]) && $params[$v]){
+				$requestParms[$v] = $params[$v];
 			}
-			$requestParms[$v] = $params[$v];
 		}
 
 		return $this-> sendQuery( $ServiceCode, $requestParms, $fetchAll=false );
