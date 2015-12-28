@@ -561,7 +561,7 @@ class BcsCustomerController extends BaseController {
     }
 
     private function inflow(){
-        $params   = ['MCH_NO' => $this->getConfig('conf')['MCH_NO']];
+        $params   = ['MCH_NO' => $this->getConfig('conf')['MCH_NO'],'PAGE_NUMBER' => 1];
         $bcs_data = $this->model('bank')->customerInflowQuery($params);
         var_dump($bcs_data);
         exit;
