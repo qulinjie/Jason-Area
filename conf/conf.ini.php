@@ -2,7 +2,7 @@
 return array(
 
 	    'CSBankSoapUrl'     => 'http://58.20.40.249:43294/icop/services/JTService?wsdl',
-
+        'ddmg_java_url'	        =>	'http://120.25.1.102:8081/erpinterface/',
 	    'ddmg_payapi_url'     => 'http://127.0.0.1/ddmg_payapi/index.php/',
 		'ddmg_payapi_timeout' => '',
 
