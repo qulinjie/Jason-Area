@@ -243,7 +243,7 @@ class BankModel extends CSBankSoap
 		//必填字段
 		foreach(['MCH_NO','SIT_NO','PAGE_NUMBER','PAGE_SIZE'] as $v){
 			if (!isset($params[$v]) || !$requestParms[$v] = $params[$v]) {
-				Log::bcsError('params required field miss');
+				Log::bcsError('customerInflowQuery params required field miss');
 				return false;
 			}
 		}
@@ -284,7 +284,7 @@ class BankModel extends CSBankSoap
 		//必填字段
 		foreach($requiredFiled as $v){
 			if(!isset($params[$v]) || !$requestParms[$v] = $params[$v]){
-				Log::bcsError('params required field miss');
+				Log::bcsError('customerIncomePayQuery params required field miss');
 				return false;
 			}
 		}
@@ -298,10 +298,14 @@ class BankModel extends CSBankSoap
 
 	/**
 	 * 交易状态查询
+	 * @param $OLD_TRANS_NO
+	 * @param $FUNC_CODE
+	 * @return array|bool
 	 */
-	public function transactionStatusQuery()
+	public function transactionStatusQuery($OLD_TRANS_NO,$FUNC_CODE = '0')
 	{
-
+		$ServiceCode = 'FMSTRAN0010';
+		return $this->sendQuery($ServiceCode, ['OLD_TRANS_NO' => $OLD_TRANS_NO,'FUNC_CODE' => $FUNC_CODE], $fetchAll=false);
 	}
 
 /********************************  现货交易  ************************************/

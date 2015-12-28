@@ -36,6 +36,9 @@ class BcsTradeController extends BaseController {
                 case 'exportData':
                     $this->exportData();
                     break;
+                case 'getTradeStatus':
+                    $this->getTradeStatus();
+                    break;
                 default:
                     Log::error('page not found . ' . $params[0]);
                     EC::fail(EC_MTD_NON);
@@ -393,5 +396,9 @@ class BcsTradeController extends BaseController {
         Log::notice('loadInfo ==== >>> upd_data=' . json_encode($upd_data) );
         EC::success(EC_OK);
     }
-    
+
+    private function getTradeStatus(){
+        $bcs_data = $this->model('bank')->transactionStatusQuery('T201511121447255933');
+        var_dump($bcs_data);exit;
+    }
 }
