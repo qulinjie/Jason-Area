@@ -229,7 +229,7 @@ class CSBankSoap
 		// 用私钥密码，解码读取.pfx私钥证书，获取私钥
 		openssl_pkcs12_read( file_get_contents($privateKeyFilePath), $certs, $privKeyPassword);
 		$prikeyid = $certs['pkey']; //私钥  
-		$data = iconv("utf8","gbk",$data); // 将字符串string  编码由utf8转变成gbk； add by 2015-12-28 
+		$data = iconv("UTF-8","GBK",$data); // 将字符串string  编码由utf8转变成gbk； add by 2015-12-28 
 		openssl_sign($data, $signMsg, $prikeyid, OPENSSL_ALGO_SHA1); // 私钥加密
 		return  strtoupper(bin2hex($signMsg)); // 转大写( 必须 )
 	}
