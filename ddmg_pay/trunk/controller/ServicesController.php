@@ -6,110 +6,46 @@
  */
 class ServicesController extends Controller {
 
-    public function handle($params = array()) {
-        if (empty($params)) {
-            Log::error('ServicesController . params is empty . ');
-            EC::fail(EC_MTD_NON);
-        } else {
-            switch ($params[0]) {
-                case 'login':
-                    // $this->login();
-                    break;
-                default:
-                    Log::error('page not found . ' . $params[0]);
-                    EC::fail(EC_MTD_NON);
-                    break;
-            }
-        }
-    }
-
-    protected function checkSign()
+    public function handle($params = array())
     {
-
+        Log::bcsError('403 forbidden' . $params[0]);
     }
 
-    protected function response()
+    public function request($xml)
     {
-        $responseXML=<<<EOF
-<Service>
-    <Header>
-        <ServiceCode>FMSCUST0001</ServiceCode>
-        <ChannelId>607</ChannelId>
-        <ExternalReference>370000201408210006698</ExternalReference>
-        <RequestTime>20151110110925</RequestTime>
-        <TradeDate>20151110</TradeDate>
-        <Version>1.0</Version>
-        <TermType>00000</TermType>
-        <TermNo>0000000000</TermNo>
-        <RequestType>0</RequestType>
-        <Encrypt>0</Encrypt>
-        <SignData></SignData>
-        <RequestIp>127.0.0.1</RequestIp>
-        <SEQNO>370000201408210006698</SEQNO>
-        <Response>
-            <ReturnCode>00000000</ReturnCode>
-            <ReturnMessage></ReturnMessage>
-        </Response>
-    </Header>
-        <Body>
-            <Response>
-                <IS_SUCCESS>通知成功</IS_SUCCESS>
-            </Response>
-        </Body>
-    </Service>
-
-EOF;
-    }
-
-    public function request($param) {
-        Log::notice('client ip=##' . self::get_real_ip() . '##' );
-        if(!$reqXml  = simplexml_load_string($param)){
-            //非XML数据
-            Log::error('Bank callback request data not is XML');
-            Log::error('Bank callback request data ##' . $param . '##' );
-            return $this->buildSoapXml('Bank callback request data not is XML');
+        Log::bcsNotice('Bank callback request data ' . var_export($xml ,true));
+        if(!$this->checkSignData($xml)){
+            Log::bcsError('validate signData error');
+            return $this->response($xml,'00000001','验证签名失败','通知失败');
         }
+
+        preg_match('/<Body>(.*)<\/Body>/is', $xml , $body);
+        $reqData = json_decode(json_encode($body[1]),true);
 
         $keys    = array('MCH_NO','SIT_NO','ACT_TIME','ACCOUNT_NO');
-        $reqData = (array) $reqXml->Body->Request;
         foreach($keys as $key){
-            //缺少数据
-            if(!isset($reqData[$key])|| !$reqData[$key]){
-                Log::error('Bank callback request data miss');
-                return $this->buildSoapXml('Bank callback request data miss');
+            if(!isset($reqData[$key]) || !$reqData[$key]){
+                Log::bcsError('Bank callback request data miss');
+                return $this->response($xml,'00000002','数据错误','通知失败');
             }
         }
 
         $response = $this->model('bcsRegister')->update(array(
-            'MCH_NO' => $reqData['MCH_NO'],
-            'SIT_NO' => $reqData['SIT_NO'],
-            'ACT_TIME' => $reqData['ACT_TIME'],
+            'MCH_NO'     => $reqData['MCH_NO'],
+            'SIT_NO'     => $reqData['SIT_NO'],
+            'ACT_TIME'   => $reqData['ACT_TIME'],
             'ACCOUNT_NO' => $reqData['ACCOUNT_NO']
         ));
 
         if($response['code'] !== EC_OK){
-            Log::error('bank callback error msg('.$response['code'].')');
-            return $this->buildSoapXml($response['msg']);
+            Log::bcsError('bank callback error msg('.$response['code'].')');
+            return $this->response($xml,'00000003','请求异常','通知失败');
         }
 
-        return self::buildSoapXml('success');
+        return $this->response($xml,'00000000');
     }
     
-    public function buildSoapXml($param='') {
-        $body = '<Body><Response><IS_SUCCESS>通知成功</IS_SUCCESS></Response></Body>';
-        $requestIp = '<RequestIp>' . self::get_real_ip() .'</RequestIp>';
-        $seqno = '<SEQNO></SEQNO>';
-        if ( preg_match('/<ExternalReference>(.*)<\/ExternalReference>/', $param, $rs) ) {
-            $seqno = '<SEQNO>' . $rs[1] . '</SEQNO>';
-        }
-        $headerResponse = '<Response><ReturnCode>00000000</ReturnCode><ReturnMessage></ReturnMessage></Response>';
-        $addXml = $requestIp . $seqno . $headerResponse ;
-        $result = preg_replace('/<\/Header>/is', $addXml . '</Header>', $param);
-        $result = preg_replace('/<Body>(.*)<\/Body>/is', $body , $result);
-        return $result;
-    }
-    
-    static function get_real_ip() {
+    protected function getRealIp() {
         $ip=false;
         if(!empty($_SERVER['HTTP_CLIENT_IP'])){
             $ip = $_SERVER['HTTP_CLIENT_IP'];
@@ -125,5 +61,43 @@ EOF;
             }
         }
         return ($ip ? $ip : $_SERVER['REMOTE_ADDR']);
+    }
+
+    protected function checkSignData($xml)
+    {
+        if(preg_match('/<SignData>(.*)<\/SignData>/is', $xml , $sign) != 1){
+            return false;
+        }
+
+        if(preg_match('/<Body>(.*)<\/Body>/is', $xml , $body) != 1){
+            return false;
+        }
+        $sign = hex2bin($sign[1]);
+        $data = '<Body>'.$body[1].'</Body>';
+        return 1 == openssl_verify($data,$sign,file_get_contents('./security/008.08.cer'),OPENSSL_ALGO_SHA1);
+    }
+    protected function signData($data)
+    {
+        openssl_pkcs12_read( file_get_contents('./security/008.08.pfx'), $certs, '952789');
+        openssl_sign($data, $signMsg, $certs['pkey'], OPENSSL_ALGO_SHA1); // 私钥加密
+        return  strtoupper(bin2hex($signMsg)); // 转大写( 必须 )
+    }
+
+    protected function response($reqXml,$code = '00000000',$msg ='',$title = '')
+    {
+        $seqno = '';
+        if ( preg_match('/<ExternalReference>(.*)<\/ExternalReference>/', $reqXml, $rs) ) {
+            $seqno = $rs[1];
+        }
+
+        $addXml = '<RequestIp>' . $this->getRealIp() .'</RequestIp>';
+        $addXml.= '<SEQNO>'.$seqno.'</SEQNO>';
+        $addXml.= '<Response><ReturnCode>'.$code.'</ReturnCode><ReturnMessage>'.$msg.'</ReturnMessage></Response>';
+
+        $resXml = preg_replace('/<\/Header>/is', $addXml . '</Header>', $reqXml);
+        $resXml = preg_replace('/<Body>(.*)<\/Body>/is', '<Body><Response><IS_SUCCESS>'.$title.'</IS_SUCCESS></Response></Body>' , $resXml);
+        $resXml = preg_replace('/<SignData>(.*)<\/SignData>/is', '<SignData>'.$this->signData('<Body><Response><IS_SUCCESS>'.$title.'</IS_SUCCESS></Response></Body>') . '</SignData>', $reqXml);
+
+        return $resXml;
     }
 }
