@@ -66,10 +66,12 @@ class ServicesController extends Controller {
     protected function checkSignData($xml)
     {
         if(preg_match('/<SignData>(.*)<\/SignData>/is', $xml , $sign) != 1){
+            Log::bcsNotice('preg_match SignData error');
             return false;
         }
 
         if(preg_match('/<Body>(.*)<\/Body>/is', $xml , $body) != 1){
+            Log::bcsNotice('preg_match Body error');
             return false;
         }
         $sign = hex2bin($sign[1]);
