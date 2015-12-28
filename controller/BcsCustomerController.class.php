@@ -577,13 +577,12 @@ class BcsCustomerController extends BaseController {
 
     private function getIncomePay(){
         $params   = [
-            'FUNC_CODE' => '1',
             'MCH_NO' => $this->getConfig('conf')['MCH_NO'],
             'SIT_NO' => 'DDMG00001',
             //'PAGE_NUMBER' => 1,
             //'PAGE_SIZE' => 50
         ];
-        $bcs_data = $this->model('bank')->customerIncomePayQuery($params);
+        $bcs_data = $this->model('bank')->customerIncomePayQuery('1',$params);
         var_dump($bcs_data);
         exit;
     }
