@@ -20,7 +20,7 @@ class ServicesController extends Controller {
         }
 
         preg_match('/<Body>(.*)<\/Body>/is', $xml , $body);
-        $reqData = json_decode(json_encode($body[1]),true);
+        $reqData = json_decode(json_encode(simplexml_load_string($body[1])),true);
 
         $keys    = array('MCH_NO','SIT_NO','ACT_TIME','ACCOUNT_NO');
         foreach($keys as $key){
@@ -74,13 +74,14 @@ class ServicesController extends Controller {
             Log::bcsNotice('preg_match Body error');
             return false;
         }
+
         $sign = hex2bin($sign[1]);
         $data = '<Body>'.$body[1].'</Body>';
-        return 1 == openssl_verify($data,$sign,file_get_contents('./security/008.08.cer'),OPENSSL_ALGO_SHA1);
+        return 1 == openssl_verify($data,$sign,file_get_contents('../security/008.08.cer'),OPENSSL_ALGO_SHA1);
     }
     protected function signData($data)
     {
-        openssl_pkcs12_read( file_get_contents('./security/008.08.pfx'), $certs, '952789');
+        openssl_pkcs12_read( file_get_contents('../security/008.08.pfx'), $certs, '952789');
         openssl_sign($data, $signMsg, $certs['pkey'], OPENSSL_ALGO_SHA1); // 私钥加密
         return  strtoupper(bin2hex($signMsg)); // 转大写( 必须 )
     }
