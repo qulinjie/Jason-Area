@@ -96,7 +96,7 @@ class ServicesController extends Controller {
 
         $resXml = preg_replace('/<\/Header>/is', $addXml . '</Header>', $reqXml);
         $resXml = preg_replace('/<Body>(.*)<\/Body>/is', '<Body><Response><IS_SUCCESS>'.$title.'</IS_SUCCESS></Response></Body>' , $resXml);
-        $resXml = preg_replace('/<SignData>(.*)<\/SignData>/is', '<SignData>'.$this->signData('<Body><Response><IS_SUCCESS>'.$title.'</IS_SUCCESS></Response></Body>') . '</SignData>', $reqXml);
+        $resXml = preg_replace('/<SignData>(.*)<\/SignData>/is', '<SignData>'.$this->signData('<Body><Response><IS_SUCCESS>'.$title.'</IS_SUCCESS></Response></Body>') . '</SignData>', $resXml);
 
         return $resXml;
     }
