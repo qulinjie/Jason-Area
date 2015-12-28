@@ -268,13 +268,13 @@ class BankModel extends CSBankSoap
 		$ServiceCode = 'FMSTRAN0009';
 		switch($FUNC_CODE){
 			case 1:
-				$requiredFiled = ['FUNC_CODE','MCH_NO','SIT_NO'];
+				$requiredFiled = ['FUNC_CODE','MCH_NO','SIT_NO','PAGE_NUMBER','PAGE_SIZE'];
 				break;
 			case 2:
-				$requiredFiled = ['FUNC_CODE','MCH_NO','MBR_CERT_TYPE','MBR_CERT_NO'];
+				$requiredFiled = ['FUNC_CODE','MCH_NO','MBR_CERT_TYPE','MBR_CERT_NO','PAGE_NUMBER','PAGE_SIZE'];
 				break;
 			case 3:
-				$requiredFiled = ['FUNC_CODE','MBR_SERVICE_NO'];
+				$requiredFiled = ['FUNC_CODE','MBR_SERVICE_NO','PAGE_NUMBER','PAGE_SIZE'];
 				break;
 			default:
 				Log::bcsError('FUNC_CODE error');
