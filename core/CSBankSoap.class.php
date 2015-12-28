@@ -21,6 +21,11 @@ class CSBankSoap
 	{
 	    Log::bcsNotice( 'CSBankSoap===============>>sendQuery-str requestParms=##' . var_export( $requestParms, true ) . "##");
 		$SendString = $this->getSendString( $ServiceCode, $requestParms );
+		// 临时解决方案 str add by 2015-12-28
+		if('FMSCUST0001' == $ServiceCode) {
+		    return $SendString;
+		}
+		// 临时解决方案 end
 		$client = $this-> getSoapClient();
 		if( !$client ) {
 		    Log::bcsError("getSoapClient failed ." );
