@@ -256,6 +256,53 @@ class BankModel extends CSBankSoap
 		return $this-> sendQuery( $ServiceCode, $requestParms, $fetchAll=false );
 	}
 
+	/**
+	 * 客户收付款明细查询
+	 * @param $FUNC_CODE
+	 * @param $params
+	 * @return array|bool
+	 */
+	public function customerIncomePayQuery($FUNC_CODE,$params)
+	{
+		$requestParms  = [];
+		$ServiceCode = 'FMSTRAN0009';
+		switch($FUNC_CODE){
+			case 1:
+				$requiredFiled = ['FUNC_CODE','MCH_NO','SIT_NO'];
+				break;
+			case 2:
+				$requiredFiled = ['FUNC_CODE','MCH_NO','MBR_CERT_TYPE','MBR_CERT_NO'];
+				break;
+			case 3:
+				$requiredFiled = ['FUNC_CODE','MBR_SERVICE_NO'];
+				break;
+			default:
+				Log::bcsError('FUNC_CODE error');
+				return false;
+		}
+		//必填字段
+		foreach($requiredFiled as $v){
+			if(!isset($params[$v]) || !$requestParms[$v] = $params[$v]){
+				Log::bcsError('params required field miss');
+				return false;
+			}
+		}
+		//非必填字段
+		foreach(['CTRT_NO','START_DATE','END_DATE','PAGE_NUMBER','PAGE_SIZE'] as $v){
+			isset($params[$v]) && $params[$v] && $requestParms[$v] = $params[$v];
+		}
+
+		return $this->sendQuery($ServiceCode, $requestParms, $fetchAll=false);
+	}
+
+	/**
+	 * 交易状态查询
+	 */
+	public function transactionStatusQuery()
+	{
+
+	}
+
 /********************************  现货交易  ************************************/
 
 /********************************  日终批量交易  ************************************/

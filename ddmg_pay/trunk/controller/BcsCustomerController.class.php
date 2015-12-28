@@ -40,8 +40,11 @@ class BcsCustomerController extends BaseController {
                 case 'transfer':
                     $this->transfer();
                     break;
-                case 'inflow': //出入金交易明细
-                    $this->inflow();
+                case 'getInflow': //出入金交易明细
+                    $this->getInflow();
+                    break;
+                case 'getIncomePay': //客户收付款明细查询
+                    $this->getIncomePay();
                     break;
                 default:
                     Log::error('page not found . ' . $params[0]);
@@ -560,7 +563,7 @@ class BcsCustomerController extends BaseController {
         EC::success(EC_OK);
     }
 
-    private function inflow(){
+    private function getInflow(){
         $params   = [
             'MCH_NO' => $this->getConfig('conf')['MCH_NO'],
             'SIT_NO' => 'DDMG00001',
@@ -568,6 +571,19 @@ class BcsCustomerController extends BaseController {
             'PAGE_SIZE' => 50
         ];
         $bcs_data = $this->model('bank')->customerInflowQuery($params);
+        var_dump($bcs_data);
+        exit;
+    }
+
+    private function getIncomePay(){
+        $params   = [
+            'FUNC_CODE' => '1',
+            'MCH_NO' => $this->getConfig('conf')['MCH_NO'],
+            'SIT_NO' => 'DDMG00001',
+            //'PAGE_NUMBER' => 1,
+            //'PAGE_SIZE' => 50
+        ];
+        $bcs_data = $this->model('bank')->customerIncomePayQuery($params);
         var_dump($bcs_data);
         exit;
     }
