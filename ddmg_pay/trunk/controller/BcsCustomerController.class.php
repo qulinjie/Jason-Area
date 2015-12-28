@@ -563,6 +563,7 @@ class BcsCustomerController extends BaseController {
     private function inflow(){
         $params   = [
             'MCH_NO' => $this->getConfig('conf')['MCH_NO'],
+            'SIT_NO' => 'DDMG00001',
             'PAGE_NUMBER' => 1,
             'PAGE_SIZE' => 50
         ];
