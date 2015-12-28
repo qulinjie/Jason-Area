@@ -398,7 +398,7 @@ class BcsTradeController extends BaseController {
     }
 
     private function getTradeStatus(){
-        $bcs_data = $this->model('bank')->transactionStatusQuery('D20151218T145237R705U1000');
+        $bcs_data = $this->model('bank')->transactionStatusQuery('T201511121447255933');
         var_dump($bcs_data);exit;
     }
 }
