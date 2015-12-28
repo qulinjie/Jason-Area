@@ -86,7 +86,7 @@ class ServicesController extends Controller {
         return  strtoupper(bin2hex($signMsg)); // 转大写( 必须 )
     }
 
-    protected function response($reqXml,$code = '00000000',$msg ='',$title = '')
+    protected function response($reqXml,$code = '00000000',$msg ='',$title = '通知成功')
     {
         $seqno = '';
         if ( preg_match('/<ExternalReference>(.*)<\/ExternalReference>/', $reqXml, $rs) ) {
