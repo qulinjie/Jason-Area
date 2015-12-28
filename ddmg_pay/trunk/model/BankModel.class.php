@@ -233,22 +233,24 @@ class BankModel extends CSBankSoap
 	 */
 	public function customerInflowQuery( $params )
 	{
-		$ServiceCode = 'FMSPAY0003'; 
-
-		if ( !$params || !is_array( $params ) || !isset($params['MCH_NO'])) {
-			Log::bcsError('params error');
+		$ServiceCode = 'FMSPAY0003';
+		if ( !$params || !is_array( $params )) {
+			Log::bcsError('params type or value error');
 			return false;
 		}
 
 		$requestParms = [];
-
-		// 过滤字段
-		$filterFields = ['MCH_NO', 'SIT_NO', 'START_DATE', 'END_DATE', 'FMS_TRANS_NO', 'MCH_TRANS_NO', 'PAGE_NUMBER', 'PAGE_SIZE' ];
-		foreach ( $filterFields as $v )
-		{
-			if(isset($params[$v]) && $params[$v]){
-				$requestParms[$v] = $params[$v];
+		//必填字段
+		foreach(['MCH_NO','SIT_NO','PAGE_NUMBER','PAGE_SIZE'] as $v){
+			if (!isset($params[$v]) || !$requestParms[$v] = $params[$v]) {
+				Log::bcsError('params required field miss');
+				return false;
 			}
+		}
+
+		// 非必填字段
+		foreach ( ['START_DATE', 'END_DATE', 'FMS_TRANS_NO', 'MCH_TRANS_NO'] as $v ){
+			isset($params[$v]) && $params[$v] && $requestParms[$v] = $params[$v];
 		}
 
 		return $this-> sendQuery( $ServiceCode, $requestParms, $fetchAll=false );
