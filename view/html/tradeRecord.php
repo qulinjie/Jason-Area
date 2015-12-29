@@ -32,89 +32,25 @@
 	</div>
 </div>
 
-<div class="modal fade" id="add-entity-modal">
-	<div class="modal-dialog" style="width: 700px;">
-		<div class="modal-content">
-			<div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-					<span aria-hidden="true">&times;</span>
-				</button>
-				<h4 class="modal-title" id="info_entity_title">付款</h4>
-			</div>
-			<div class="modal-body">
-				<form class="form-horizontal" id="entity-form">
-				    <input type="hidden" class="form-control" id="info-entity-id" value=""></input>
-				  <div class="form-group">
-				    <label for="add-entity-code" class="col-sm-2 control-label">授权码</label>
-				    <div class="col-sm-6">
-				        <span id="info-entity-code" style="vertical-align:middle;line-height:2.5;">DDMG0099</span>
-				        <input type="hidden" class="form-control" id="add-entity-code" value=""></input>
-				    </div>
-				  </div>
-				  <div class="form-group">
-				    <label for="add-entity-type" class="col-sm-2 control-label">使用方式</label>
-				    <div class="col-sm-1" style="padding-right: 0px;padding-left: 0px;"><input type="radio" class="form-control" id="add-entity-type-count" name="add-entity-type-rdo" value="1" checked="checked"/></div>
-				    <div class="col-sm-2" style="vertical-align:middle;line-height:2.8;padding-left: 0px;">按次数</div>
-				    <div class="col-sm-1" style="padding-right: 0px;padding-left: 0px;"><input type="radio" class="form-control" id="add-entity-type-time" name="add-entity-type-rdo" value="2"/></div>
-				    <div class="col-sm-2" style="vertical-align:middle;line-height:2.8;padding-left: 0px;">按时间</div>
-				  </div>
-				  <div class="form-group" id="div-active-count">
-				    <label for="add-entity-active_count" class="col-sm-2 control-label">可用次数</label>
-				    <div class="col-sm-6">
-				      <input class="form-control" id="add-entity-active_count" placeholder="可用次数"
-				            onkeyup="value=value.replace(/[^\d]/g,'')" onbeforepaste="clipboardData.setData('text',clipboardData.getData('text').replace(/[^\d]/g,''))"></input>
-				    </div>
-				  </div>
-				  <div class="form-group" id="div-time-start" style="display: none;">
-				    <label for="add-entity-time_start" class="col-sm-2 control-label">有效开始时间</label>
-				    <div class="col-sm-6">
-				      <input class="form-control form_datetime" id="add-entity-time_start" placeholder="有效开始时间"></input>
-				    </div>
-				  </div>
-				  <div class="form-group" id="div-time-end" style="display: none;">
-				    <label for="add-entity-time_end" class="col-sm-2 control-label">有效结束时间</label>
-				    <div class="col-sm-6">
-				      <input class="form-control form_datetime" id="add-entity-time_end" placeholder="有效结束时间"></input>
-				    </div>
-				 </div>
-				  <div class="form-group">
-				    <label for="add-entity-comment" class="col-sm-2 control-label">备注</label>
-				    <div class="col-sm-6">
-				      <input class="form-control" id="add-entity-comment" placeholder="备注"></input>
-				    </div>
-				 </div>
-				  <div class="alert alert-danger" id="add-entity-hint"></div>
-				</form>
-			</div>
-			<div class="modal-footer">
-				<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-				<button type="button" class="btn btn-primary" id="btn-add-entity">确定</button>
-			</div>
-		</div>
-		<!-- /.modal-content -->
-	</div>
-	<!-- /.modal-dialog -->
-</div>
-<!-- /.modal -->
-
-<h1 class="page-header">我的大大付款</h1>
-
+<ul  class="tabs" id="tabs">
+	<li><a href="">代付款</a></li>
+    <li><a href="">付款明细</a></li>
+    <li style="margin-right:0"><a href="">资金查询</a></li>
+</ul>
+<!--
 <div class="panel panel-primary">
-  <div class="panel-heading">查找</div>
   <div class="panel-body">
     <div class="form-inline">
 	  <div class="form-group">
 	    <label for="entity-search-order_no">订单号</label>
 	    <input type="text" class="form-control" id="entity-search-order_no" placeholder="订单号">
 	  </div>
-	  <!-- 
 	  <div class="form-group">
 	    <label for="entity-search-time">添加时间</label>
 	    <input type="text" class="form-control form_datetime" id="entity-search-time1" placeholder="添加时间">
 	    -
 	    <input type="text" class="form-control form_datetime" id="entity-search-time2" placeholder="添加时间">
 	  </div>
-	   -->
 	  <div class="form-group">
 	    <label for="entity-search-order_time">时间</label>
 	    <input type="text" class="form-control form_datetime" id="entity-search-order_time1" placeholder="时间">
@@ -156,6 +92,22 @@
 	</div>
   </div>
 </div>
+-->
+
+<div class="seek"> 
+    <p class="p1">
+        <span class="dh">单号<input type="text" id="entity-search-order_no"/></span>
+        <span class="sj">时间<input style=" margin-left:6px;" type="text" class="form_datetime" id="entity-search-order_time1"/><b>—</b><input type="text" class="form_datetime" id="entity-search-order_time2"/></span>
+        <span class="mj">卖家<input type="text" id="entity-search-seller_name"/></span>
+    </p>
+    <p class="p2"> 
+        <span class="yw">业务员<input type="text" id="entity-search-seller_conn_name"/></span>
+        <span class="je">金额<input style=" margin-left:6px;" type="text" id="entity-search-order_sum_amount1"/><b>—</b><input type="text" id="entity-search-order_sum_amount2"/></span>
+        <input class="query"  type="button" value="查询" id="entity-search-btn"/>
+    </p>
+    <div class="alert alert-danger  search-list-hint" id="search-list-hint"></div>    
+</div>
+
 
 <div  id="entity-list">
 <?php echo $entity_list_html; ?>
