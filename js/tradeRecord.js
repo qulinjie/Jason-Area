@@ -361,13 +361,12 @@ jQuery.jqtab = function(tabtit,tab_conbox,shijian) {
 //		$(tab_conbox).children().eq(activeindex).show().siblings().hide();
 		return false;
 	});
-
+	$("#tabs").find("a").css("text-decoration","none");
 };
 
 $.jqtab("#tabs","#tab_conbox","click");
 
 function renderTableEvent() {
-	
 	$(".panel-body").find("div[class='content']:odd").css("background","#f3f3f3");
 	
 	$(".panel-body").find(".odd").each(function(i,e){

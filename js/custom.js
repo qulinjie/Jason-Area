@@ -1,4 +1,7 @@
 $(function () {
+	$(document).on('click', 'a[href=#]', function(e){
+		e.preventDefault();
+	});
     /*************************** global start ******************************/
     function do_encrypt(pwd) {
         var public_key = "00a037b186d9dc36e8d9738df7080016686b9e1791f3b2e7c506c16f44087af150b9b18dc6fb6810f29811f29dffc60169c0bc43c90e005f77a8a39e43a1a7edcca2f4bf430f0eb8fabee9360c02c084ae9b7b7a939915142f160fb032cf70d16c08506d83537929f725315333b306031f2c0bd02b0b75ab2fd81577c8d98b497f";
