@@ -10,7 +10,7 @@ class IndexController extends Controller
     public function init()
     {
         if(UserController::isLogin()){
-            $this->redirect($this->getBaseUrl().'authorizationCode/getIndex');
+            $this->redirect($this->getBaseUrl().'tradeRecord/getIndex');
         }
     }
 }

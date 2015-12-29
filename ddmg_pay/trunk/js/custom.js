@@ -23,7 +23,7 @@ $(function () {
         }, 'json');
     });
     /**********************************global end*********************************************/
-
+    
     if ($('#isLogin').length) {
         /**********************************index start*********************************************/
        $(".form_datetime").datetimepicker({
@@ -38,7 +38,7 @@ $(function () {
             showMeridian: 0
         });
         if ($("#isLogin").val()) {
-            if (!$("#menuList").find('.active').length) {
+            if ($("#menuList") && 0 < $("#menuList").length && !$("#menuList").find('.active').length) {
                 window.location.href = $('#menuList li:eq(0)').find('a').attr('href');
             }
         } else {
