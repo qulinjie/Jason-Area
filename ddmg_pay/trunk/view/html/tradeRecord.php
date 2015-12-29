@@ -32,10 +32,10 @@
 	</div>
 </div>
 
-<ul  class="tabs" id="tabs">
-	<li><a href="">代付款</a></li>
-    <li><a href="">付款明细</a></li>
-    <li style="margin-right:0"><a href="">资金查询</a></li>
+<ul  class="tabs" id="tabs" style="border: 1px solid #E4E4E4;">
+	<li style="border-bottom: 1px solid #E4E4E4;"><a href="#">代付款</a></li>
+    <li style="border-bottom: 1px solid #E4E4E4;"><a href="#">付款明细</a></li>
+    <li style="margin-right:0; border-bottom: 1px solid #E4E4E4;"><a href="#">资金查询</a></li>
 </ul>
 <!--
 <div class="panel panel-primary">

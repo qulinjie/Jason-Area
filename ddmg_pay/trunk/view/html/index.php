@@ -92,7 +92,7 @@
             <?php echo $tradeRecord_html; ?>
         </ul>
     </div>
-    <div class="bottom">
+    <div class="bottom" style="margin-top: 10px;">
     	<div class="bq">湖南大汉电子商务有限公司 版权所有</div>
     </div>
 </div> <!-- end class="entirety" -->
