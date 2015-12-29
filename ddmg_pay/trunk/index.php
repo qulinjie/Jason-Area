@@ -128,7 +128,12 @@ if (!defined('ENTRY_SCRIPT_NAME')) {
     define('ENTRY_SCRIPT_NAME', 'index.php');
 }
 
-
+/**
+ * 定义POST请求方式
+ */
+if (!defined('IS_POST')) {
+    define('IS_POST', $_SERVER['REQUEST_METHOD'] == 'POST');
+}
 
 /**
  * 加载路由网址分析文件

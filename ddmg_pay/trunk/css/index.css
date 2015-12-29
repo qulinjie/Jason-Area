@@ -141,7 +141,12 @@ a:hover { text-decoration: none;}
 
 /*    注册账号1        */
 .entirety .zc{ width:1198px; height:358px; margin:auto; border:1px solid #d7d7d7; margin-top:15px;background:#ffffff;}
-.entirety .zc form{margin-top:32px;}
+.entirety .zc form{margin-top:32px; position:relative;}
+.entirety .zc form b{font:500 12px 微软雅黑; color:#999999;}
+.entirety .zc form .zh{position:absolute; left:786px;top:12px; }
+.entirety .zc form .mm{position:absolute; left:786px;top:110px; }
+.entirety .zc form .qr{position:absolute; left:786px;top:158px; }
+.entirety .zc form .tb{position:absolute; left:786px;top:63px; }
 .entirety .zc .service_l {width: 954px;font: 500 14px 微软雅黑;color: #010101; margin: 8px 0;text-align: right;}
 .entirety .zc .service_l input {width: 225px;height: 37px; line-height:37px;border: 1px solid #ccc;margin-left: 20px;font-size: 14px;color: #010101;margin-right: 185px;padding-left: 10px;}
 .entirety .zc .service_x {font: 500 14px 微软雅黑;color: #010101;margin: 8px 0;padding-left:470px; position:relative;}
