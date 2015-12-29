@@ -79,7 +79,7 @@ class UserController extends BaseController
     private function getPinCode()
     {
         $pinCode = self::instance('pincode');
-        $pinCode->setImageSize(70,34);
+        $pinCode->setImageSize(71,41);
         $pinCode->show();
     }
 

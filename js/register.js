@@ -11,7 +11,7 @@
             return '';
         }
     }
-    function checkForm(selector) {
+    function checkForm(selector) {return false;
         var msg    = '';
         var span   = '';
         var isErr  = false;
@@ -29,18 +29,16 @@
 
         };
         var conMsg = {
-            'tel':         {'required': '请输入手机号码',   'reg': '请输入正确的手机号码'},
-            'code':        {'required': '请输入短信验证码', 'reg': '请输入正确的验证码'},
+            'tel':         {'required': '请输入手机号码',     'reg': '请输入正确的手机号码'},
+            'code':        {'required': '请输入短信验证码',    'reg': '请输入正确的验证码'},
             'password':    {'required': '请输入密码'},
-            'rePassword':  {'required': '请再次输入密码',  'equalTo': '两次输入密码不一致'},
-            'file':        {'required': '请选择上传文件',  'reg': '只支持png、jpg、jpeg文件'},
+            'rePassword':  {'required': '请再次输入密码',      'equalTo': '两次输入密码不一致'},
+            'file':        {'required': '请选择上传文件',       'reg': '只支持png、jpg、扫描件格式'},
             'agree':       {'isChecked':'是否同意《大大支付服务协议》'},
-            'name':        {'required': '请输入办理人姓名', 'reg': '由汉字或字母组成且不能超过20个字符'},
-            'legalPerson': {'required': '请输入法人姓名', 'reg': '由汉字或字母组成且不能超过20个字符'},
-            'companyName': {'required': '请输入公司全称', 'reg':'由汉字或字母组成且不能超过30个字符'},
-            'license':     {'required': '请输入营业执照注册号', 'reg': '由数字或字母组成且不能超过30个字符'}
-
-
+            'name':        {'required': '请输入办理人姓名',     'reg': '由汉字或字母组成且不能超过20个字符'},
+            'legalPerson': {'required': '请输入法人姓名',       'reg': '由汉字或字母组成且不能超过20个字符'},
+            'companyName': {'required': '请输入公司全称',       'reg':'由汉字或字母组成且不能超过30个字符'},
+            'license':     {'required': '请输入营业执照注册号',  'reg': '由数字或字母组成且不能超过30个字符'}
         };
         if (selector == undefined) {
             selector = ':text,:file,:password,:checkbox';
@@ -111,9 +109,11 @@
                 clearInterval(timer);
                 obj.removeAttr('disabled').val('获取短信验证码');
                 $('#tel').parent().parent().children(':last-child').find('span').text(res.msg);
+                alert(res.msg);
             } else{
                 clearInterval(timer);
-                obj.removeAttr('disabled').val('发送异常，请稍后再试');
+                obj.removeAttr('disabled').val('获取短信验证码');
+                alert(res.msg);
             }
         }, 'json');
     });
