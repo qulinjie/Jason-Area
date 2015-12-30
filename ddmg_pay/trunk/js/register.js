@@ -152,7 +152,7 @@ $(function () {
             contentType: false
         }).done(function (result) {
             if(result.code == 0){
-                window.location.href = BASE_PATH+'register/finished';
+                window.location.href = BASE_PATH+'register/finish';
             }else{
                 $('#enterpriseBtnSave').removeAttr('disabled');
                 alert(data.msg+'('+data.code+')');

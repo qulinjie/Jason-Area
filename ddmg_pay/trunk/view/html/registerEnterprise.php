@@ -32,7 +32,8 @@
             <b class="tb" id="companyNameMsg"></b>
             <p class="service_l">营业执照注册号<input type="text" name="license" id="license"/></p>
             <b class="mm" id="licenseMsg"></b>
-            <p class="service_c" style="margin-top:15px; padding-left:429px;">营业执照附件<span class="fj"><a href="javascript:void(0);">选择附件</a></span><span class="xz"><a href="javascript:void(0);">下载模板</a></span><span>支持jpg、png、扫描件格式</span><input class="select" type="file" id="file" name="file"></p>
+            <p class="service_c" style="margin-top:15px; padding-left:429px;">营业执照附件<span class="fj"><a href="javascript:void(0);">选择附件</a></span><span class="xz"><a href="javascript:void(0);">下载模板</a></span><input class="select" type="file" id="file" name="file"></p>
+            <b class="gs" id="fileMsg"></b>
             <b class="qr" id="fileMsg"></b>
             <p class="service_y" style="padding-top:48px;"><input class="next" type="button" id="enterpriseBtnSave" value="提交"><input class="last_step" type="button" value="上一步"></p>
         </form>
