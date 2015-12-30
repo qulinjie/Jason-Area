@@ -164,6 +164,7 @@ a:hover { text-decoration: none;}
 .entirety .zc .service_c a {margin-left: 10px;padding: 0;width: 105px;height: 41px;background: #f2f2f2;font:500 14px 微软雅黑;margin-top: 0;text-align: center;line-height: 41px;color: #999999;text-decoration: none;display: inline-block;}
 .entirety .zc .service_c .fj a{margin-left:20px; width:88px; height:25px; line-height:25px;}
 .entirety .zc .service_c .xz a{width:88px; height:25px; line-height:25px; margin-right:10px; margin-left:5px;}
+.entirety .zc .service_c .select{ position:absolute; left:513px; width:76px; height:23px;filter:alpha(opacity=100); -moz-opacity:0.01; opacity:0.01;}
 .entirety .zc .ts{ font: 500 14px 微软雅黑; margin-top:35px; height:54px; line-height:41px; text-align:center;color: #010101; background:url(../view/images/tb_08.png) no-repeat; background-position:448px 0; padding-left:102px;}
 .entirety .zc .service_y {text-align: center;padding-top: 34px; padding-left:113px;}
 .entirety .zc .service_y input {width: 118px;height: 40px;font:500 16px 微软雅黑;color: #fff;border: 0;cursor: pointer; margin-right:5px;}
