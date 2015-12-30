@@ -17,8 +17,8 @@ class RegisterController extends BaseController
             case 'enterprise'://填写企业信息
                 $this->enterprise();
                 break;
-            case 'finished'://注册完成
-                $this->finished();
+            case 'finish'://注册完成
+                $this->finish();
                 break;
             case 'sendCmsCode': //发送短信
                 $this->sendCmsCode();
@@ -119,9 +119,9 @@ class RegisterController extends BaseController
         $this->render('registerEnterprise', array('id' => $session->get('register_cert_id')));
     }
 
-    private function finished()
+    private function finish()
     {
-        $this->render('registerFinished');
+        $this->render('registerFinish');
     }
 
     private function sendCmsCode()

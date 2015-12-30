@@ -102,7 +102,10 @@ a:hover { text-decoration: none;}
 .entirety .bz{width:1200px; height:75px; text-align:center; margin:auto; padding-top:25px; }
 .entirety .bz .img{ width:863px; height:51px; margin:auto; background:url(../view/images/tb.png) no-repeat;}
 .entirety .bd{ width:1198px; height:360px; border:1px solid #dadada; margin:auto; margin-top:15px; background:#ffffff; position:relative;}
-.entirety .bd form{margin-top:90px;}
+.entirety .bd form{margin-top:90px; position:relative;}
+.entirety .bd form b{font:500 12px 微软雅黑; color:#999999;}
+.entirety .bd form .zh{position:absolute; left:786px;top:12px; }
+.entirety .bd form .tt{position:absolute; left:786px;top:85px; }
 .entirety .bd .service_l {width:933px;font: 500 14px 微软雅黑;color: #010101;margin: 30px 0;text-align: right;}
 .entirety .bd .service_l input {width: 225px;height: 37px; line-height:37px;border: 1px solid #ccc;margin-left: 20px;font-size: 14px;color: #010101;margin-right: 185px;padding-left: 10px;}
 .entirety .bd .service_x {font: 500 14px 微软雅黑;color: #010101;margin:30px 0;padding-left:449px; position:relative;}
@@ -115,7 +118,10 @@ a:hover { text-decoration: none;}
 
 /*    找回密码2        */
 .entirety .bc{ width:1198px; height:483px; border:1px solid #dadada; margin:auto; margin-top:15px; background:#ffffff; position:relative;}
-.entirety .bc form{margin-top:90px;}
+.entirety .bc form{margin-top:90px; position:relative;}
+.entirety .bc form b{font:500 12px 微软雅黑; color:#999999;}
+.entirety .bc form .ts{position:absolute; left:786px;top:63px; }
+.entirety .bc form .xm{position:absolute; left:786px;top:133px; }
 .entirety .bc .service_l {width:933px;font: 500 14px 微软雅黑;color: #010101;margin: 8px 0;text-align: right;}
 .entirety .bc .service_l input {width: 225px;height: 37px; line-height:37px;border: 1px solid #ccc;margin-left: 20px;font-size: 14px;color: #010101;margin-right: 185px;padding-left: 10px;}
 .entirety .bc .service_x {font: 500 14px 微软雅黑;color: #010101;margin:30px 0;padding-left:422px; position:relative;}
@@ -125,12 +131,15 @@ a:hover { text-decoration: none;}
 .entirety .bc .service_b input {width: 110px;height: 40px;font:500 16px 微软雅黑;color: #fff;border: 0;cursor: pointer;background:#15b6b4;border-radius: 5px 5px 5px 5px;}
 .entirety .bc .service_p{ font: 500 14px 微软雅黑;color: #010101;margin: 17px 0; padding-left:435px;}
 .entirety .bc .service_p span{margin-right:20px;}
+.entirety .bc .service_x .select{ position:absolute; left:492px; width:93px; height:40px;filter:alpha(opacity=100); -moz-opacity:0.01; opacity:0.01;}
 .entirety .bc .service_x .fj{margin-left:10px;}
 .entirety .bc .service_x a {margin-left: 10px;padding: 0;width: 105px;height: 41px;background: #f2f2f2;font:500 14px 微软雅黑;margin-top: 0;text-align: center;line-height: 41px;color: #999999;text-decoration: none;display: inline-block;}
 
 /*    找回密码3        */
 .entirety .bd .service_p{ font: 500 14px 微软雅黑;color: #010101;margin: 30px 0; padding-left:435px;}
 .entirety .bd .service_p span{margin-right:20px;}
+.entirety .bd form .mm{position:absolute; left:786px;top:60px; }
+.entirety .bd form .mms{position:absolute; left:786px;top:133px; }
 
 /*     找回密码4 成功         */
 .entirety .bd .tb{width:64px; height:54px; float:left; margin-left:493px; margin-top:58px; background:url(../view/images/tb.png) no-repeat;}
@@ -147,6 +156,8 @@ a:hover { text-decoration: none;}
 .entirety .zc form .mm{position:absolute; left:786px;top:110px; }
 .entirety .zc form .qr{position:absolute; left:786px;top:158px; }
 .entirety .zc form .tb{position:absolute; left:786px;top:63px; }
+.entirety .zc form .gs{position:absolute; left:786px;top:158px; }
+.entirety .zc form .gs2{position:absolute; left:786px;top:63px; }
 .entirety .zc .service_l {width: 954px;font: 500 14px 微软雅黑;color: #010101; margin: 8px 0;text-align: right;}
 .entirety .zc .service_l input {width: 225px;height: 37px; line-height:37px;border: 1px solid #ccc;margin-left: 20px;font-size: 14px;color: #010101;margin-right: 185px;padding-left: 10px;}
 .entirety .zc .service_x {font: 500 14px 微软雅黑;color: #010101;margin: 8px 0;padding-left:470px; position:relative;}
@@ -173,7 +184,7 @@ a:hover { text-decoration: none;}
 
 /*   注册账号4           */
 .entirety .zc .z1{ width:426px; height:55px; margin-left:384px; margin-top:72px;}
-.entirety .zc .z1 .left{width:65px; height:55px; background:url(../view/images/tb.png) no-repeat; background-position:-433px -593px; float:left;}
+.entirety .zc .z1 .left{width:65px; height:55px; background:url(../view/images/tb.png) no-repeat; background-position:-433px -593px; float:left;} 
 .entirety .zc .z1 .right{float:left; margin-left:15px;}
 .entirety .zc .z1 .right p{ font:500 16px 微软雅黑; margin-bottom:5px;color:#232323}
 .entirety .zc .z2 { margin-left:338px; margin-top:25px;}
@@ -208,7 +219,7 @@ a:hover { text-decoration: none;}
 .entirety .t3 .nav{width:1200px; height:40px; margin:auto;}
 .entirety .t3 .nav ul .color{background:#0d9a98;}
 .entirety .t3 .nav ul li{float:left; line-height:40px; }
-.entirety .t3 .nav ul li a{ font:500 14px 微软雅黑;color:#ffffff;padding:10px 20px; display:block;}
+.entirety .t3 .nav ul li a{ font:500 14px 微软雅黑;color:#ffffff;padding:10px 20px; display:block}
 .entirety .t3 .navs{width:1200px; margin:auto; height:36px; background:#f4f4f4;}
 .entirety .t3 .navs ul li{float:left; line-height:36px;}
 .entirety .t3 .navs ul li a{font:500 12px 微软雅黑; color:#999999; padding:0 20px;}

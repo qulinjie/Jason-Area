@@ -29,11 +29,8 @@
             <input type="hidden" id="token" name="token" value="<?php echo UserController::getToken();?>"/>
         	<p class="service_l">办理人姓名<input type="text" name="name"  id="name"/></p>
             <b class="zh" id="nameMsg"></b>
-            <!--<p class="service_l">手机号码<input type="text"  name="phone" /></p>
-            <p class="service_c" style="padding-left:471px;">验证码<input style="width:108px;" name="CheckCode" type="text" id="CheckCode" value=""><span id="codenum"><a href="">重发验证码</a></span></p> 
-            -->
-            <p class="service_c" style="margin-top:15px;">办理授权书<span class="fj"><a href="javascript:void(0);">选择附件</a></span><span class="xz"><a href="javascript:void(0);">下载模板</a></span><span>支持jpg、png、扫描件格式</span><input class="select" type="file" id="file" name="file"></p>
-            <b class="tb" id="fileMsg"></b>
+            <p class="service_c" style="margin-top:15px;">办理授权书<span class="fj"><a href="">选择附件</a></span><span class="xz"><a href="">下载模板</a></span><input class="select" type="file" id="file" name="file"></p>
+            <b class="gs2" id="fileMsg"></b>
             <p class="service_y"><input class="next" type="button" id="personBtnSave" value="下一步"><input class="last_step" type="button" value="上一步"></p>
         </form>
     </div>
