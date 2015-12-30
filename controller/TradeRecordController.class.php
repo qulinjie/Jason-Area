@@ -99,8 +99,23 @@ class TradeRecordController extends BaseController {
         $data_list = $data['data'];
         $entity_list_html = $this->render('tradeRecord_list', array('data_list' => $data_list, 'current_page' => $current_page, 'total_page' => $total_page), true);
         if($isIndex) {
+            
+            $bcsCustomer_model = $this->model('bcsCustomer');
+            $user_id = self::getCurrentUserId();
+            
+            $params  = array();
+            $params['user_id'] = $user_id;
+            
+            $data = $bcsCustomer_model->getInfo($params);
+            if(EC_OK != $data['code']){
+                Log::error("getInfo failed . ");
+                EC::fail($data['code']);
+            }
+            
+            $data_info = $data['data'][0];
+            
             $view_html = $this->render('tradeRecord', array('entity_list_html' => $entity_list_html ), true);
-            $this->render('index', array('page_type' => 'tradeRecord', 'tradeRecord_html' => $view_html));
+            $this->render('index', array('page_type' => 'tradeRecord', 'tradeRecord_html' => $view_html, 'bcsCustomerInfo' => $data_info) );
         } else {
             EC::success(EC_OK, array('entity_list_html' => $entity_list_html));
         }
