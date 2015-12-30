@@ -19,7 +19,7 @@
 	<link href="<?php echo Router::getBaseUrl();?>css/custom.css" rel="stylesheet">
 	<link href="<?php echo Router::getBaseUrl();?>css/bootstrap-datetimepicker.min.css" rel="stylesheet" media="screen">
 	<link href="<?php echo Router::getBaseUrl();?>css/index.css" type="text/css" rel="stylesheet" />
-	<script src="<?php echo Router::getBaseUrl();?>js/jquery-1.11.3.min.js"></script>
+	<script type="text/javascript" src="<?php echo Router::getBaseUrl();?>js/jquery-1.11.3.min.js"></script>
 </head>
 <body>
 <input type="hidden" id="token"   value="<?php echo UserController::getToken();?>">
@@ -248,18 +248,18 @@
 ================================================== -->
 <!-- Placed at the end of the document so the pages load faster -->
 <!--<script src="http://libs.useso.com/js/jquery/2.1.1/jquery.min.js"></script>-->
-<script src="http://libs.useso.com/js/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="http://libs.useso.com/js/bootstrap/3.1.1/js/bootstrap.min.js"></script>
 <!-- <script src="http://libs.useso.com/js/bootstrap-switch/3.0.1/js/bootstrap-switch.min.js"></script> -->
-<script src="<?php echo Router::getBaseUrl();?>js/bootstrap-switch-3.1.0.min.js"></script>
+<script type="text/javascript" src="<?php echo Router::getBaseUrl();?>js/bootstrap-switch-3.1.0.min.js"></script>
 <script type="text/javascript" src="<?php echo Router::getBaseUrl();?>js/prettify.js"></script>
-<script type="text/javascript">var BASE_PATH="<?php echo Router::getBaseUrl();?>";</script>
+<script type="text/javascript">var BASE_PATH="<?php echo Router::getBaseUrl();?>";$(document).scrollTop(1);</script>
 <script type="text/javascript" src="<?php echo Router::getBaseUrl();?>js/bootstrap-datetimepicker.js" charset="UTF-8"></script>
 <script type="text/javascript" src="<?php echo Router::getBaseUrl();?>js/locales/bootstrap-datetimepicker.zh-CN.js" charset="UTF-8"></script>
-<script src="<?php echo Router::getBaseUrl();?>js/prng4.js"></script>
-<script src="<?php echo Router::getBaseUrl();?>js/rng.js"></script>
-<script src="<?php echo Router::getBaseUrl();?>js/base64.js"></script>
-<script src="<?php echo Router::getBaseUrl();?>js/jsbn.js"></script>
-<script src="<?php echo Router::getBaseUrl();?>js/rsa.js"></script>
+<script type="text/javascript" src="<?php echo Router::getBaseUrl();?>js/prng4.js"></script>
+<script type="text/javascript" src="<?php echo Router::getBaseUrl();?>js/rng.js"></script>
+<script type="text/javascript" src="<?php echo Router::getBaseUrl();?>js/base64.js"></script>
+<script type="text/javascript" src="<?php echo Router::getBaseUrl();?>js/jsbn.js"></script>
+<script type="text/javascript" src="<?php echo Router::getBaseUrl();?>js/rsa.js"></script>
 <script type="text/javascript" src="<?php echo Router::getBaseUrl();?>js/custom.js"></script>
 <script type="text/javascript" src="<?php echo Router::getBaseUrl();?>js/messenger.min.js"></script>
 <script type="text/javascript" src="<?php echo Router::getBaseUrl();?>js/messenger-theme-future.js"></script>
