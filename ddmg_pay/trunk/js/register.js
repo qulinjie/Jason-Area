@@ -5,16 +5,12 @@
         var rsa = new RSAKey();
         rsa.setPublic(public_key, public_length);
         var res = rsa.encrypt(pwd);
-        if(res) {
-            return res;
-        }else {
-            return '';
-        }
+        return res ? res: '';
     }
-    function checkForm(selector) {return false;
-        var msg    = '';
-        var span   = '';
-        var isErr  = false;
+    function checkForm(selector) {
+        var msg  = '';
+        var elem = '';
+        var error = false;
         var config = {
             'tel':         {'required': true, 'reg': /^[0-9]{11}$/},
             'code':        {'required': true, 'reg': /^[0-9]{6}$/},
@@ -40,43 +36,33 @@
             'companyName': {'required': '请输入公司全称',       'reg':'由汉字或字母组成且不能超过30个字符'},
             'license':     {'required': '请输入营业执照注册号',  'reg': '由数字或字母组成且不能超过30个字符'}
         };
-        if (selector == undefined) {
-            selector = ':text,:file,:password,:checkbox';
-        }
+        if (selector == undefined) {selector = ':text,:file,:password,:checkbox';}
         $('form  ' + selector).each(function () {
             if (config[$(this).attr('id')] != undefined) {
                 var rules = config[$(this).attr('id')];
                 for (var key in rules) {
                     switch (key) {
                         case 'required':
-                            msg = rules[key] == true && !$(this).val()? conMsg[$(this).attr('id')]['required'] : '';
+                            msg = rules[key]&&!$(this).val()? conMsg[$(this).attr('id')]['required'] : '';
                             break;
                         case 'reg':
                             msg = !rules[key].test($(this).val()) ? conMsg[$(this).attr('id')]['reg'] : '';
                             break;
                         case 'equalTo':
-                            msg = $(rules[key]).val() != $(this).val() ? conMsg[$(this).attr('id')]['equalTo'] : '';
+                            msg = $(rules[key]).val()!=$(this).val() ? conMsg[$(this).attr('id')]['equalTo'] : '';
                             break;
                         case 'isChecked':
-                            console.log($(this).is(':checked'));
-                            msg = rules[key] && !$(this).is(':checked')? conMsg[$(this).attr('id')]['isChecked'] : '';
+                            msg = rules[key]&&!$(this).is(':checked')? conMsg[$(this).attr('id')]['isChecked'] : '';
                     }
-                    span = $(this).parent().parent().children(':last-child').find('span');
-                    if (msg){
-                        isErr = true;
-                        $(this).focus();
-                    }
-                    if ((!span.text()&& msg) || (span.text()&& !msg)) {
-                        span.text(msg);
-                    }
+                    if (msg){error = true;}
+                    elem = $('#'+$(this).attr('id')+'Msg');
+                    ((!elem.text()&& msg) || (elem.text()&&!msg)) && elem.text(msg);
                 }
             }
         });
-        return isErr;
+        return error;
     }
-    $('form :text,:password,:file,:checkbox').blur(function () {
-        checkForm('#' + $(this).attr('id'));
-    });
+    $('form :text,:password,:file,:checkbox').blur(function () {checkForm('#' + $(this).attr('id'));});
     $('#sendCode').click(function(){
         var obj      = $(this);
         var index    = -1;
@@ -108,8 +94,7 @@
             } else if(res.code == 106){
                 clearInterval(timer);
                 obj.removeAttr('disabled').val('获取短信验证码');
-                $('#tel').parent().parent().children(':last-child').find('span').text(res.msg);
-                alert(res.msg);
+                $('#telMsg').text(res.msg);
             } else{
                 clearInterval(timer);
                 obj.removeAttr('disabled').val('获取短信验证码');
@@ -117,7 +102,7 @@
             }
         }, 'json');
     });
-    $('#firstStepBtnSave').click(function () {
+    $('#accountBtnSave').click(function () {
         var postData = {};
         if (checkForm()) return false;
         postData.tel   = $('#tel').val();
@@ -125,47 +110,51 @@
         postData.token = $('#token').val();
         postData.pwd   = hex2b64(do_encrypt($('#password').val()));
         $(this).attr('disabled', 'disabled');
-        $.post(BASE_PATH + 'register/doFirstStep', postData, function (res) {
+        $.post(BASE_PATH + 'register/account', postData, function (res) {
             if (res.code == 0) {
-                window.location.href = BASE_PATH + 'register/secondStep';
+                window.location.href = BASE_PATH + 'register/person';
             } else {
-                $('#firstStepBtnSave').removeAttr('disabled');
+                $('#accountBtnSave').removeAttr('disabled');
                 alert(res.msg + '(' + res.code + ')');
             }
         }, 'json');
     });
-    $('#secondStepBtnSave').click(function () {
+    $('#personBtnSave').click(function () {
         if (checkForm()) return false;
+        $(this).attr('disabled', 'disabled');
         $.ajax({
-            url: BASE_PATH + 'register/doSecondStep',
+            url: BASE_PATH + 'register/person',
             type: 'POST',
-            data: new FormData($('#secondStepForm')[0]),
+            data: new FormData($('#personForm')[0]),
             dataType: 'JSON',
             cache: false,
             processData: false,
             contentType: false
         }).done(function (result) {
             if(result.code == 0){
-                window.location.href = BASE_PATH+'register/thirdStep';
+                window.location.href = BASE_PATH+'register/enterprise';
             }else{
+                $('#personBtnSave').removeAttr('disabled');
                 alert(data.msg+'('+data.code+')');
             }
         });
     });
-    $('#thirdStepBtnSave').click(function () {
+    $('#enterpriseBtnSave').click(function () {
         if (checkForm()) return false;
+        $(this).attr('disabled', 'disabled');
         $.ajax({
-            url: BASE_PATH + 'register/doThirdStep',
+            url: BASE_PATH + 'register/enterprise',
             type: 'POST',
-            data: new FormData($('#thirdStepForm')[0]),
+            data: new FormData($('#enterpriseForm')[0]),
             dataType: 'JSON',
             cache: false,
             processData: false,
             contentType: false
         }).done(function (result) {
             if(result.code == 0){
-                window.location.href = BASE_PATH+'register/fourthStep';
+                window.location.href = BASE_PATH+'register/finished';
             }else{
+                $('#enterpriseBtnSave').removeAttr('disabled');
                 alert(data.msg+'('+data.code+')');
             }
         });
