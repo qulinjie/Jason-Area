@@ -27,11 +27,6 @@
 	</div>
 </div>
 
-<?php if(empty($data_list)){?>
-<div class="alert alert-info" role="alert"><p class="text-center">
-	无记录
-</p></div>
-<?php }else{?>
 <div class="panel panel-default">
   <div class="panel-body" style="padding: 1px;">
   
@@ -41,9 +36,16 @@
             <span class="mj">卖家</span>
             <span class="je">金额（元）</span>
             <span class="yw">业务员信息</span>
-            <span class="cz">操作</span>
+            <span class="cz"><span id="order-status-show">操作</span></span>
        </div>
-<?php foreach ($data_list as $item){?>       
+    <?php if(empty($data_list)){?>
+    <div class="alert alert-info" role="alert"><p class="text-center">
+    	无记录
+    </p></div>
+    <?php }else{?>
+    <span id="span-trade-order-list">
+    <?php foreach ($data_list as $item){?>       
+       
        <div class="content">
             <span style="display:none"><?php echo $item['id'];?><input type="hidden" value="<?php echo $item['order_status'];?>"></span>
             <span class="odd"><?php echo $item['order_no'];?></span>
@@ -52,8 +54,15 @@
             <span class="je"><?php echo number_format($item['order_sum_amount'],2);?></span>
             <span class="xm"><?php echo $item['seller_conn_name']; ?></span>
             <span class="phone"><?php echo $item['seller_tel']; ?></span>
-            <span class="fk"><span><a id="add-pay-new" href="#" data-toggle="modal"	data-keyboard="false" data-backdrop="static">付款</a></span></span>
-            <span class="jf"><span><a id="entity-changeStatus-btn" href="#" data-toggle="modal" data-keyboard="false" data-backdrop="static" style="margin-left: 5px;">拒付</a></span></span>
+            <?php if($item['order_status']==TradeRecordModel::$_status_waiting){ ?>
+                <span class="fk"><span><a id="add-pay-new" href="#" data-toggle="modal"	data-keyboard="false" data-backdrop="static">付款</a></span></span>
+                <span class="jf"><span><a id="entity-changeStatus-btn" href="#" data-toggle="modal" data-keyboard="false" data-backdrop="static" style="margin-left: 5px;">拒付</a></span></span>
+            <?php }else if($item['order_status']==TradeRecordModel::$_status_paid) { ?>
+                <span class="fk">已付</span>
+            <?php } else if($item['order_status']==TradeRecordModel::$_status_refuse) { ?>
+                <span class="fk">拒付</span>
+            <?php } ?>
+            
        </div>
        <div class="information" style="width:1198px;">
             <div class="one">
@@ -84,7 +93,8 @@
             </div>
             <div class="four">合计：<em><?php echo number_format($item['order_sum_amount'],2);?></em>元</div>
       </div>
- <?php }?>
+    <?php }?>
+    </span>
   </div>
 </div>
 

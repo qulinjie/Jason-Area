@@ -33,9 +33,9 @@
 </div>
 
 <ul  class="tabs" id="tabs" style="border: 1px solid #E4E4E4;">
-	<li style="border-bottom: 1px solid #E4E4E4;"><a href="#">代付款</a></li>
-    <li style="border-bottom: 1px solid #E4E4E4;"><a href="#">付款明细</a></li>
-    <li style="margin-right:0; border-bottom: 1px solid #E4E4E4;"><a href="#">资金查询</a></li>
+	<li style="border-bottom: 1px solid #E4E4E4;"><a href="#" id="order-waiting-list">待付款</a></li>
+    <li style="border-bottom: 1px solid #E4E4E4;"><a href="#" id="order-details-list">付款明细</a></li>
+    <li style="margin-right:0; border-bottom: 1px solid #E4E4E4;"><a href="#" id="trade-details-list">资金查询</a></li>
 </ul>
 <!--
 <div class="panel panel-primary">
@@ -93,6 +93,13 @@
   </div>
 </div>
 -->
+
+<select id="entity-search-order_status" style="display: none;">
+  <option value="-1">全部</option>
+  <option value="1">待付</option>
+  <option value="2">已付</option>
+  <option value="3">拒付</option>
+</select>
 
 <div class="seek"> 
     <p class="p1">

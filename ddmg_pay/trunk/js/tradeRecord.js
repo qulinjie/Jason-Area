@@ -54,7 +54,9 @@ function entitySetSelectedPage(){
 }
 $(function(){
 	entitySetSelectedPage();
+	setLiTabs(0);
 	renderTableEvent();
+	
 });
 
 function search_entity(page){
@@ -80,6 +82,9 @@ function search_entity(page){
 	var order_sum_amount2 = $("#entity-search-order_sum_amount2").val();
 	
 	if(-1 == order_status) { order_status =""; }
+	
+	var spanLoading = $('#span-trade-order-list');
+	spanLoading.html("<div style='width:100%;text-align:center;height:" + spanLoading.height() + "px;'><img alt='正在加载数据...' src='" + BASE_PATH + "view/images/tips_loading.gif'/></div>");
 	
     //查找
     $.post(BASE_PATH + 'tradeRecord/searchList', {
@@ -267,7 +272,7 @@ $(document).on('click', '#add-pay-new', function(event){
 		add_pay();
 	});
 	
-	$('#info-pay-trade').html("<div style='width:100%;text-align:center;'><img alt='正在加载数据...' src='" + BASE_PATH + "view/images/tips_loading.gif'/></div>");
+	$('#info-pay-trade').html("<div style='width:100%;text-align:center;'><img id='img-loging-data' alt='正在加载数据...' src='" + BASE_PATH + "view/images/tips_loading.gif'/></div>");
 	
 	var id =  $(this).parent().parent().parent().children().first().text();
 	$.post(BASE_PATH + 'tradeRecord/getInfo', {'id':id},
@@ -348,25 +353,46 @@ $(document).on('click', '#for-test-btn', function(event){
 });
 
 
+function setLiTabs(num) {
+	$("#tabs").find("li").eq(num).addClass("thistab").show(); 
 
-
-jQuery.jqtab = function(tabtit,tab_conbox,shijian) {
-//	$(tab_conbox).find("li").hide();
-	$(tabtit).find("li:first").addClass("thistab").show(); 
-//	$(tab_conbox).find("li:first").show();
-
-	$(tabtit).find("li").bind(shijian,function(){
-	  $(this).addClass("thistab").siblings("li").removeClass("thistab"); 
-		var activeindex = $(tabtit).find("li").index(this);
-//		$(tab_conbox).children().eq(activeindex).show().siblings().hide();
+	$("#tabs").find("li").bind("click",function(){
+		$(this).addClass("thistab").siblings("li").removeClass("thistab");
+		resetOrderStatusSelect();
+		var chrId = $(this).children("a:first").attr("id");
+		if("order-waiting-list" == chrId){ // 待付款
+			$("#entity-search-order_status").val('1');
+			$("#order-status-show").html("操作");
+			$('#entity-search-btn').click();
+		} else if("order-details-list" == chrId){ // 付款明细
+			$("#entity-search-order_status").append("<option value='9'>已付/拒付</option>");
+			$("#entity-search-order_status").val('9');
+			$("#order-status-show").html("付款类别");
+			$('#entity-search-btn').click();
+		} else if("trade-details-list" == chrId){ // 资金查询
+			
+		}
 		return false;
 	});
 	$("#tabs").find("a").css("text-decoration","none");
 };
 
-$.jqtab("#tabs","#tab_conbox","click");
+function resetOrderStatusSelect(){
+	var sel = $("#entity-search-order_status");
+	sel.empty();
+	sel.append("<option value='-1'>全部</option>");
+	sel.append("<option value='1'>待付</option>");
+	sel.append("<option value='2'>已付</option>");
+	sel.append("<option value='3'>拒付</option>");
+}
 
 function renderTableEvent() {
+	var index = $("#tabs").find("li").filter(".thistab").index();
+	if(0== index){
+		$("#order-status-show").html("操作");
+	} else if(1== index){
+		$("#order-status-show").html("付款类别");
+	} 
 	$(".panel-body").find("div[class='content']:odd").css("background","#f3f3f3");
 	
 	$(".panel-body").find(".odd").each(function(i,e){
