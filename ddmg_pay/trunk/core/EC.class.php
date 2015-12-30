@@ -95,7 +95,7 @@ class EC extends Base {
 			EC_PWD_DEC		=>	'密码解密失败',
 			EC_ARD_LGN		=>	'a user login already, please logout before login another user',
 			EC_USR_ADD		=>	'add user information fail',
-			EC_USR_NON		=>	'user not exists',
+			EC_USR_NON		=>	'用户不存在',
 			EC_PWD_WRN		=>	'wrong password',
 			EC_PWD_EMP		=>	'password is empty',
 			EC_PWD_SAM		=>	'same password',

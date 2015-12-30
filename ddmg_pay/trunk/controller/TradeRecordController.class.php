@@ -63,6 +63,10 @@ class TradeRecordController extends BaseController {
         $tradeRecord_model = $this->model('tradeRecord');
         $user_id = self::getCurrentUserId();
     
+        if($isIndex && !$order_status) {
+            $order_status = TradeRecordModel::$_status_waiting;
+        }
+        
         $params  = array();
         foreach ([ 'order_no', 'user_id', 'code', 'time1', 'time2', 'type', 'order_status',
                     'order_time1', 'order_time2', 'seller_name', 'seller_conn_name', 'order_sum_amount1', 'order_sum_amount2' ] as $val){
@@ -460,7 +464,21 @@ class TradeRecordController extends BaseController {
         
         
         // 收款方用户ID
-        $s_user_id = '1004'; // TODO
+        $user_model = $this->model('user');
+        $params  = array();
+        $params['account'] = $data_obj['seller_tel'];
+        $data = $user_model->getUserInfo($params);
+        if(EC_OK != $data['code']){
+            Log::error("getUserInfo failed . ");
+            EC::fail($data['code']);
+        }
+        $data_info = $data['data'][0];
+        if(empty($data_info)){
+            Log::error("getUserInfo empty . account=" . $params['account']);
+            EC::fail(EC_USR_NON);
+        }
+        
+        $s_user_id = $data_info['id']; // TODO 按照  电话 对应到 收款用户
         $data = $bcsRegister_model->getInfo(array('user_id' => $s_user_id));
         if(EC_OK != $data['code']){
             Log::error("getInfo failed . ");

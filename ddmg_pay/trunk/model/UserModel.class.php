@@ -98,7 +98,12 @@ class UserModel extends CurlModel
     {
         return self::sendRequest('user/getUserBasicInfo');
     }
-
+    
+    public function getUserInfo($params = array())
+    {
+        return self::sendRequest('user/getUserInfo',$params);
+    }
+    
     public function isSetPayPassword()
     {
         return self::sendRequest('user/isSetPayPassword');
