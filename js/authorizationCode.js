@@ -54,6 +54,7 @@ function entitySetSelectedPage(){
 }
 $(function(){
 	entitySetSelectedPage();
+	renderTableEvent();
 });
 
 function search_entity(page){
@@ -93,6 +94,7 @@ function search_entity(page){
             }
             $("#entity-search-btn").removeAttr('disabled');
             entitySetSelectedPage();
+            renderTableEvent();
         },
         'json'
     );
@@ -350,10 +352,14 @@ function fillInEntityValue(data){
 	} else {
 		$("#info-entity-list").css("height","")
 	}
+	$(".classify").css("width","1157px");
 }
 /**************end--查看****************/
 
 
+function renderTableEvent() {
+	$(".right").find("div[class='detail']:odd").css("background","#f3f3f3");
+}
 
 prettyPrint();
 });
