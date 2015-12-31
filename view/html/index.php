@@ -47,7 +47,6 @@
 	</div>
 </div>
 
-<?php if($page_type == 'tradeRecord'){?>
 <div class="entirety">
 
     <div class="t1" style="background:#f4f4f4">
@@ -64,12 +63,18 @@
     <div class="t3">
             <div class="nav">
                 <ul>
-                    <li class="color"><a href="<?php echo Router::getBaseUrl();?>tradeRecord/getIndex">我的大大付款</a></li>
-                    <li><a href="<?php echo Router::getBaseUrl();?>authorizationCode/getIndex">账户管理</a></li>
+                    <li <?php if(doit::$controller == 'TradeRecord'){?> class="color" <?php } ?>>
+                        <a href="<?php echo Router::getBaseUrl();?>tradeRecord/getIndex">我的大大付款</a>
+                    </li>
+                    <li <?php if(doit::$controller == 'AuthorizationCode'){?> class="color" <?php } ?>>
+                        <a href="<?php echo Router::getBaseUrl();?>authorizationCode/getIndex">账户管理</a>
+                    </li>
                 </ul>
             </div>
      </div>
-      <div class="clear"></div>
+     <div class="clear"></div>
+      
+<?php if($page_type == 'tradeRecord'){?>
      <div class="t4">
      		<div class="left">
             	<div class="tx"><img src="<?php echo Router::getBaseUrl();?>/view/images/headImg.jpg" /></div>
@@ -93,105 +98,71 @@
      <div class="clear"></div>
      <div class="tab">
         <ul class="tab_conbox" id="tab_conbox">
-            
             <script src="<?php echo Router::getBaseUrl();?>js/tradeRecord.js"></script>
             <?php echo $tradeRecord_html; ?>
         </ul>
     </div>
+    
+<?php } else {?>
+
+<div class="account">
+    	<div class="left">
+        	<ul>
+            	<li <?php if(doit::$controller == 'BcsTrade'){?> class="discolor" <?php } ?>>
+        			<a href="<?php echo Router::getBaseUrl();?>bcsTrade/getIndex">交易流水</a>
+        	    </li>
+        		<li <?php if(doit::$controller == 'AuthorizationCode'){?> class="discolor" <?php } ?>>
+        			<a href="<?php echo Router::getBaseUrl();?>authorizationCode/getIndex">授权码管理</a>
+        	    </li>
+        	    <li <?php if(doit::$controller == 'BcsCustomer'){?> class="discolor" <?php } ?>>
+        			<a href="<?php echo Router::getBaseUrl();?>bcsCustomer/getInfo">账户信息</a>
+        	    </li>
+        	    <li <?php if(doit::$controller == 'BcsMarket'){?> class="discolor" <?php } ?>>
+        			<a href="<?php echo Router::getBaseUrl();?>bcsMarket/getInfo">市场信息</a>
+        	    </li>
+        		<li <?php if(doit::$controller == 'User'){?> class="discolor" <?php } ?>>
+        			<a href="<?php echo Router::getBaseUrl();if(UserController::isSetPayPassword()){?>user/setPayPassword<?php }else{?>user/unSetPayPassword<?php }?>">重置支付密码</a>
+        		</li>
+        		<li <?php if(doit::$controller == 'BcsRegister'){?> class="discolor" <?php } ?>>
+        			  <a href="<?php echo Router::getBaseUrl();?>bcsRegister/create">绑定银行卡</a>
+        		</li>
+        		<li <?php if(doit::$controller == 'Message'){?> class="discolor" <?php } ?>>
+        			  <a href="<?php echo Router::getBaseUrl();?>message/getIndex">消息提醒</a>
+        		</li>
+            </ul>
+        </div>
+        <div class="right">
+              <?php if($page_type == 'authorizationCode'){?>
+        	        <script src="<?php echo Router::getBaseUrl();?>js/authorizationCode.js"></script>
+        			<?php echo $authorizationCode_html; ?>
+        	  <?php } else if($page_type == 'bcsTrade'){?>
+                    <script src="<?php echo Router::getBaseUrl();?>js/bcsTrade.js"></script>
+                    <?php echo $bcsTrade_html; ?>
+        	  <?php } else if($page_type == 'bcsCustomer'){?>
+        	        <script src="<?php echo Router::getBaseUrl();?>js/bcsCustomerInfo.js"></script>
+        		    <?php echo $bcsCustomer_html; ?>
+              <?php } else if($page_type == 'bcsMarket'){?>
+                    <script src="<?php echo Router::getBaseUrl();?>js/bcsMarketInfo.js"></script>
+                    <?php echo $bcsMarket_html; ?>
+        	  <?php } else if($page_type == 'user'){?>
+        			<?php echo $payPassword_html; ?>
+        	  <?php }else if($page_type == 'message'){?>
+        		    <script src="<?php echo Router::getBaseUrl();?>js/sysMessage.js"></script>
+        		    <div id="message-list"><?php echo $message_html;?></div>
+        	  <?php	}else if($page_type == 'bcsRegister'){?>
+        			<script src="<?php echo Router::getBaseUrl();?>js/bcsRegister.js"></script>
+        			<?php echo $bcsRegister_html;?>
+        	  <?php }?>
+        </div>
+</div>
+<div class="clear"></div>
+
+<?php }?>
+
     <div class="bottom" style="margin-top: 10px;">
     	<div class="bq">湖南大汉电子商务有限公司 版权所有</div>
     </div>
 </div> <!-- end class="entirety" -->
-
-<?php } else {?>
-<nav class="navbar navbar-inverse navbar-fixed-top">
-  <div class="container-fluid">
-	<div class="navbar-header">
-	  <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-		<span class="sr-only">Toggle navigation</span>
-		<span class="icon-bar"></span>
-		<span class="icon-bar"></span>
-		<span class="icon-bar"></span>
-	  </button>
-	  <a class="navbar-brand" href="javascript:void(0);">大大买钢-支付系统</a>
-	</div>
-	<div id="navbar" class="navbar-collapse collapse">
-	  <ul class="nav navbar-nav navbar-right">
-		<li><a href="javascript:;" id="">欢迎: <?php echo UserController::getLoginUser()['nicename']; ?>( <?php echo  UserController::getLoginUser()['account']; ?> )</a></li>
-		<li><a href="javascript:void(0);" id="pwdBtn">修改密码</a></li>
-		<li><a href="javascript:void(0);" id="logoutBtn">退出</a></li>
-	  </ul>
-	  <!-- <form class="navbar-form navbar-right">
-		<input type="text" class="form-control" placeholder="Search...">
-	  </form>
-	   -->
-	</div>
-  </div>
-</nav>
-<div class="container-fluid">
-  <div class="row">
-	<div class="col-sm-3 col-md-2 sidebar">
-	  <ul id="menuList" class="nav nav-sidebar">
-	    <li <?php if(doit::$controller == 'BcsTrade'){?> class="active" <?php } ?>>
-			<a href="<?php echo Router::getBaseUrl();?>bcsTrade/getIndex">交易流水</a>
-	    </li>
-		<li <?php if(doit::$controller == 'AuthorizationCode'){?> class="active" <?php } ?>>
-			<a href="<?php echo Router::getBaseUrl();?>authorizationCode/getIndex">授权码管理</a>
-	    </li>
-	    <li <?php if(doit::$controller == 'BcsCustomer'){?> class="active" <?php } ?>>
-			<a href="<?php echo Router::getBaseUrl();?>bcsCustomer/getInfo">账户信息</a>
-	    </li>
-	    <li <?php if(doit::$controller == 'BcsMarket'){?> class="active" <?php } ?>>
-			<a href="<?php echo Router::getBaseUrl();?>bcsMarket/getInfo">市场信息</a>
-	    </li>
-		<li <?php if(doit::$controller == 'User'){?> class="active" <?php } ?>>
-			<a href="<?php echo Router::getBaseUrl();if(UserController::isSetPayPassword()){?>user/setPayPassword<?php }else{?>user/unSetPayPassword<?php }?>">重置支付密码</a>
-		</li>
-		<li <?php if(doit::$controller == 'BcsRegister'){?> class="active" <?php } ?>>
-			  <a href="<?php echo Router::getBaseUrl();?>bcsRegister/create">绑定银行卡</a>
-		</li>
-		<li <?php if(doit::$controller == 'Message'){?> class="active" <?php } ?>>
-			  <a href="<?php echo Router::getBaseUrl();?>message/getIndex">消息提醒</a>
-		</li>
-	  </ul>
-	</div>
-	<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
-	  <?php if($page_type == 'authorizationCode'){?>
-	        <script src="<?php echo Router::getBaseUrl();?>js/authorizationCode.js"></script>
-			<?php echo $authorizationCode_html; ?>
-	  <?php } else if($page_type == 'bcsTrade'){?>
-            <script src="<?php echo Router::getBaseUrl();?>js/bcsTrade.js"></script>
-            <?php echo $bcsTrade_html; ?>
-	  <?php } else if($page_type == 'bcsCustomer'){?>
-	        <script src="<?php echo Router::getBaseUrl();?>js/bcsCustomerInfo.js"></script>
-		    <?php echo $bcsCustomer_html; ?>
-      <?php } else if($page_type == 'bcsMarket'){?>
-            <script src="<?php echo Router::getBaseUrl();?>js/bcsMarketInfo.js"></script>
-            <?php echo $bcsMarket_html; ?>
-	  <?php } else if($page_type == 'user'){?>
-			<?php echo $payPassword_html; ?>
-	  <?php }else if($page_type == 'message'){?>
-		    <script src="<?php echo Router::getBaseUrl();?>js/sysMessage.js"></script>
-		    <div id="message-list"><?php echo $message_html;?></div>
-	  <?php	}else if($page_type == 'bcsRegister'){?>
-			<script src="<?php echo Router::getBaseUrl();?>js/bcsRegister.js"></script>
-			<?php echo $bcsRegister_html;?>
-	  <?php }?>
-	</div>
-  </div>
-</div>
-<div id="footer">
-	<div class="container-fluid">
-		<div class="row">
-			<div class="col-sm-12 col-md-12" id="realfooter">
-				<!--
-				<p class="text-center">page footer</p>
-				-->
-			</div>
-		</div>
-	</div>
-</div>
-<?php }?>
 
 <div class="modal fade" id="updatePasswordModal">
 	<div class="modal-dialog">
