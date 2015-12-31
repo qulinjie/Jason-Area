@@ -44,7 +44,7 @@ define('EC_UPD_FAI', 120);
 define('EC_ADD_FAI', 121);
 define('EC_VER_NCH', 122);
 define('EC_SIG_ARD', 123);
-
+define('EC_CERT_ERR',124);
 
 define('EC_RED_EXP', 201);
 define('EC_RED_EMP', 202);
@@ -53,6 +53,7 @@ define('EC_REC_EST', 204);
 define('EC_ADD_REC', 205);
 define('EC_UPD_REC', 206);
 define('EC_LOGIN_PAR_REC', 207);
+define('EC_USE_UNA', 220);
 
 define('EC_CODE_ERR', 301);
 define('EC_TOKEN_ERR',302);
@@ -99,7 +100,7 @@ class EC extends Base {
 			EC_PWD_WRN		=>	'wrong password',
 			EC_PWD_EMP		=>	'password is empty',
 			EC_PWD_SAM		=>	'same password',
-			EC_PWD_UPD		=>	'update password fail',
+			EC_PWD_UPD		=>	'密码更新失败',
 			EC_DAT_NON		=>	'data not exists',
 			EC_TEL_NON		=>	'dail failed',
 			EC_OPE_FAI		=>	'operation failure',
@@ -118,13 +119,15 @@ class EC extends Base {
 	    
 	        EC_CODE_ERR      =>  '授权码验证失败',
 			EC_TOKEN_ERR     =>  '禁止非法访问',
-			EC_TOKEN_EXP     =>  '请刷新页面',
+			EC_TOKEN_EXP     =>  '由于您长时间未活动，请刷新页面',
 			EC_PINCODE_ERR   =>  '验证码输入有误',
 
 			EC_UPL_FILE_NON       => '上传文件不存在',
 			EC_UPL_FILE_TYPE_ERR  => '上传文件类型错误',
 			EC_LOGIN_PAR_REC	=>	'用户名或密码错误',
-	    
+
+			EC_USE_UNA		 =>	'用户被禁用',
+			EC_CERT_ERR      => '证书验证失败',
 	);
 	public static function load(){
 		return true;
