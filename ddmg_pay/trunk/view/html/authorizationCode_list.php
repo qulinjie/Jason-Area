@@ -59,7 +59,7 @@
     	   <span>
     	   <?php if( 0 < $item['used_count'] ){?>
 		      <a id="entity-infoDisplay-btn" href="#" data-toggle="modal" data-keyboard="false" data-backdrop="static">查看</a>
-		   <?php }?>
+		   <?php } else { echo "-"; }?>
 		   </span>
 	    </span>
     </div>
