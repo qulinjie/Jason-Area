@@ -105,7 +105,7 @@
     
 <?php } else {?>
 
-<div class="account">
+<div class="account" style="width: 1300px;">
     	<div class="left">
         	<ul>
             	<li <?php if(doit::$controller == 'BcsTrade'){?> class="discolor" <?php } ?>>

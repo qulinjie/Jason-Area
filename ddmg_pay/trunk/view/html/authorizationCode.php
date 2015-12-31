@@ -5,7 +5,7 @@
 ?>
 
 <div class="modal fade" id="info-entity-modal">
-	<div class="modal-dialog" style="width: 1000px;">
+	<div class="modal-dialog" style="width: 1300px;">
 		<div class="modal-content">
 			<div class="modal-header">
 				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -13,7 +13,13 @@
 				</button>
 				<h4 class="modal-title">查看</h4>
 			</div>
+			<div class="entirety">
+			<div class="tab">
+            <ul class="tab_conbox" id="tab_conbox">
 			<div class="modal-body" id="info-entity-list"></div>
+			</ul>
+			</div>
+			</div>
 			<div class="alert alert-danger" id="info-entity-hint"></div>
 			<div class="modal-footer">
 				<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
@@ -88,52 +94,31 @@
 </div>
 <!-- /.modal -->
 
-<h1 class="page-header">授权码管理</h1>
-<div id="add-button-group">
-	<a id="add-entity-new" class="btn btn-primary" href="#" data-toggle="modal"	data-keyboard="false" data-backdrop="static">新增</a>
-</div>
-
-<div class="panel panel-primary">
-  <div class="panel-heading">查找</div>
-  <div class="panel-body">
-    <div class="form-inline">
-	  <div class="form-group">
-	    <label for="entity-search-code">授权码</label>
-	    <input type="text" class="form-control" id="entity-search-code" placeholder="授权码">
-	  </div>
-	  <!-- 
-	  <div class="form-group">
-	    <label for="entity-search-time">添加时间</label>
-	    <input type="text" class="form-control form_datetime" id="entity-search-time1" placeholder="添加时间">
-	    -
-	    <input type="text" class="form-control form_datetime" id="entity-search-time2" placeholder="添加时间">
-	  </div>
-	   -->
-	  <div class="form-group">
-	    <label for="entity-search-type">使用方式</label>
-	    <select class="form-control" id="entity-search-type">
-	      <option value="-1">全部</option>
+<div id="add-button-group" class="add" style="padding-bottom: 0px;">
+	<a id="add-entity-new" href="#" data-toggle="modal"	data-keyboard="false" data-backdrop="static">+授权码</a>
+	<span>
+    	授权码
+    	<input type="text" id="entity-search-code" style="background-color:white;border: #C8C8C8 1px solid;color: black;"/>
+    	使用方式
+    	<select id="entity-search-type">
+          <option value="-1">全部</option>
           <option value="1">按次数</option>
           <option value="2">按时间</option>
         </select>
-	  </div>
-	  <div class="form-group">
-	    <label for="entity-search-status">状态</label>
-	    <select class="form-control" id="entity-search-status">
-	      <option value="-1">全部</option>
-          <option value="1">启用</option>
-          <option value="2">停用</option>
-          <option value="3">失效</option>
-        </select>
-	  </div>
-	  <div class="form-group">
-    	  <button type="button" class="btn btn-primary" id="entity-search-btn">查询</button>
-    	  <button type="button" class="btn btn-default search-clear-btn" id="entity-clear-btn">清空查询条件</button>
-	  </div>
-	  <div class="alert alert-danger  search-list-hint" id="search-list-hint"></div>
-	</div>
-  </div>
+        <input type="button" id="entity-search-btn" value="查询" />
+    </span>
 </div>
+<div class="alert alert-danger  search-list-hint" id="search-list-hint">00</div>
+<div class="form-group" style="display: none;">
+    <label for="entity-search-status">状态</label>
+    <select class="form-control" id="entity-search-status">
+      <option value="-1">全部</option>
+      <option value="1">启用</option>
+      <option value="2">停用</option>
+      <option value="3">失效</option>
+    </select>
+</div>
+	  
 
 <div  id="entity-list">
 <?php echo $entity_list_html; ?>
