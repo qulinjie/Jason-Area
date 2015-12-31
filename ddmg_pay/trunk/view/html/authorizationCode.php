@@ -5,7 +5,7 @@
 ?>
 
 <div class="modal fade" id="info-entity-modal">
-	<div class="modal-dialog" style="width: 1300px;">
+	<div class="modal-dialog" style="width: 1250px;">
 		<div class="modal-content">
 			<div class="modal-header">
 				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -16,7 +16,7 @@
 			<div class="entirety">
 			<div class="tab">
             <ul class="tab_conbox" id="tab_conbox">
-			<div class="modal-body" id="info-entity-list"></div>
+			     <div class="modal-body" id="info-entity-list" style="padding: 5px;"></div>
 			</ul>
 			</div>
 			</div>
@@ -98,17 +98,17 @@
 	<a id="add-entity-new" href="#" data-toggle="modal"	data-keyboard="false" data-backdrop="static">+授权码</a>
 	<span>
     	授权码
-    	<input type="text" id="entity-search-code" style="background-color:white;border: #C8C8C8 1px solid;color: black;"/>
+    	<input type="text" id="entity-search-code" style="background-color:white;border: #C8C8C8 1px solid;color: black;border-radius: 2px;"/>
     	使用方式
     	<select id="entity-search-type">
           <option value="-1">全部</option>
           <option value="1">按次数</option>
           <option value="2">按时间</option>
         </select>
-        <input type="button" id="entity-search-btn" value="查询" />
+        <input type="button" id="entity-search-btn" value="查询" style="border-radius: 5px;"/>
     </span>
 </div>
-<div class="alert alert-danger  search-list-hint" id="search-list-hint">00</div>
+<div class="alert alert-danger  search-list-hint" id="search-list-hint"></div>
 <div class="form-group" style="display: none;">
     <label for="entity-search-status">状态</label>
     <select class="form-control" id="entity-search-status">
