@@ -352,7 +352,11 @@ function fillInEntityValue(data){
 	} else {
 		$("#info-entity-list").css("height","")
 	}
-	$(".classify").css("width","1157px");
+	$("#info-entity-list").find(".classify").css("width","1157px");
+	$("#info-entity-list").find("#order-status-show").html("状态").parent().css("left","1040px");
+	$("#info-entity-list").find(".jf").siblings(".fk").hide();
+	$("#info-entity-list").find(".jf").html("代付").removeClass("jf").addClass("fk");
+	$("#info-entity-list").find(".panel-body").find(".odd").unbind("click").css("color","#999");
 }
 /**************end--查看****************/
 
