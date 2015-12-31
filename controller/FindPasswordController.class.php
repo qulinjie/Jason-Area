@@ -77,7 +77,7 @@ class FindPasswordController extends BaseController
                 $session = self::instance('session');
                 $session->delete('findPasswordTel');
                 Log::error('findPassword verify error msg('.$response['msg'].')');
-                EC::fail(EC_CERT_ERR); //密码更新失败
+                EC::fail($response['code']); //密码更新失败
             }
             EC::success(EC_OK);
         }
