@@ -338,6 +338,7 @@ $(document).on('click', '#entity-infoDisplay-btn', function(event){
 });
 
 function fillInEntityValue(data){
+	$("#info-entity-list").html("").css("height","");
 	$("#info-entity-list").html(data.entity_list_html);
 	$("#search-head-div").html('').hide();
 	$("#entity-pager-ul").html('').hide();
@@ -345,18 +346,19 @@ function fillInEntityValue(data){
 	$("td[name='td-operation-name']").each(function(i,e){
 		$(e).html('').hide();
 	});
-	var height_px = $("#info-entity-list").css("height");
-	height = height_px.substring(0,height_px.length-2);
+	$("#info-entity-list").css("overflow-x","hidden");
+	var height = $("#info-entity-list").height();
 	if( 500 < Number(height) ){
 		$("#info-entity-list").css("height","500px").css("overflow-y","scroll");
+		$("#info-entity-list").find(".classify").css("width","1139px");
 	} else {
-		$("#info-entity-list").css("height","")
+		$("#info-entity-list").css("height","").css("overflow-y","hidden").css("width","100%")
+		$("#info-entity-list").find(".classify").css("width","1157px");
 	}
-	$("#info-entity-list").find(".classify").css("width","1157px");
 	$("#info-entity-list").find("#order-status-show").html("状态").parent().css("left","1040px");
 	$("#info-entity-list").find(".jf").siblings(".fk").hide();
-	$("#info-entity-list").find(".jf").html("代付").removeClass("jf").addClass("fk");
-	$("#info-entity-list").find(".panel-body").find(".odd").unbind("click").css("color","#999");
+	$("#info-entity-list").find(".jf").html("待付").removeClass("jf").addClass("fk");
+	$("#info-entity-list").find(".panel-body").find(".odd").unbind("click").css("color","#999").css("cursor","auto");
 }
 /**************end--查看****************/
 
