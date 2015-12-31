@@ -209,23 +209,4 @@ class UserController extends BaseController
             'login' => ['logout','setPassword','doSetPayPassword']            //需要登录验证
         ];
     }
-
-    /**
-     * 验证不通过，则调用EC::fail
-     */
-    public function init()
-    {
-        foreach(self::filter() as $key => $actList){
-            if(in_array(doit::$params[0],$actList)){
-                switch($key) {
-                    case 'token':
-                        self::checkToken($this->post('token'));//默认 post
-                        break;
-                    case 'login':
-                        !self::isLogin() && EC::fail(EC_NOT_LOGIN);
-                        break;
-                }
-            }
-        }
-    }
 }

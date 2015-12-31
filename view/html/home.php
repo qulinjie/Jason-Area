@@ -41,7 +41,7 @@
                         <div class="img">
                             <a href="javascript:void(0);"><img id="getPinCode" src="<?php echo Router::getBaseUrl()?>user/getPinCode" onclick="this.src='<?php echo Router::getBaseUrl()?>user/getPinCode'" /></a>
                         </div>
-                        <div class="wj"><a href="<?php echo Router::getBaseUrl()?>user/findPassword">忘记密码，去找回！</a></div>
+                        <div class="wj"><a href="<?php echo Router::getBaseUrl()?>findPassword/account">忘记密码，去找回！</a></div>
                         <input type="button" id="loginBtn" class="dl" name="loginBtn" value="登录" />
                     </form>
                 </div>

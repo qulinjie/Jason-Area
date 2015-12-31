@@ -141,21 +141,4 @@ class RegisterController extends BaseController
             'token' => ['account', 'person', 'enterprise', 'sendCmsCode'], //需要token验证
         ];
     }
-
-    /**
-     * 验证不通过，则调用EC::fail
-     */
-    public function init()
-    {
-        if(!IS_POST) return true;
-        foreach (self::filter() as $key => $actList) {
-            if (in_array(doit::$params[0], $actList)) {
-                switch ($key) {
-                    case 'token':
-                        UserController::checkToken($this->post('token'));//默认 post
-                        break;
-                }
-            }
-        }
-    }
 }

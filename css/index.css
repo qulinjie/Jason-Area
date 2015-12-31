@@ -122,6 +122,7 @@ a:hover { text-decoration: none;}
 .entirety .bc form b{font:500 12px 微软雅黑; color:#999999;}
 .entirety .bc form .ts{position:absolute; left:786px;top:63px; }
 .entirety .bc form .xm{position:absolute; left:786px;top:133px; }
+.entirety .bc form .gs{position:absolute; left:786px;top:203px; }
 .entirety .bc .service_l {width:933px;font: 500 14px 微软雅黑;color: #010101;margin: 8px 0;text-align: right;}
 .entirety .bc .service_l input {width: 225px;height: 37px; line-height:37px;border: 1px solid #ccc;margin-left: 20px;font-size: 14px;color: #010101;margin-right: 185px;padding-left: 10px;}
 .entirety .bc .service_x {font: 500 14px 微软雅黑;color: #010101;margin:30px 0;padding-left:422px; position:relative;}
@@ -157,7 +158,7 @@ a:hover { text-decoration: none;}
 .entirety .zc form .qr{position:absolute; left:786px;top:158px; }
 .entirety .zc form .tb{position:absolute; left:786px;top:63px; }
 .entirety .zc form .gs{position:absolute; left:786px;top:158px; }
-.entirety .zc form .gs2{position:absolute; left:786px;top:63px; }
+.entirety .zc form .gs{position:absolute; left:786px;top:158px; }
 .entirety .zc .service_l {width: 954px;font: 500 14px 微软雅黑;color: #010101; margin: 8px 0;text-align: right;}
 .entirety .zc .service_l input {width: 225px;height: 37px; line-height:37px;border: 1px solid #ccc;margin-left: 20px;font-size: 14px;color: #010101;margin-right: 185px;padding-left: 10px;}
 .entirety .zc .service_x {font: 500 14px 微软雅黑;color: #010101;margin: 8px 0;padding-left:470px; position:relative;}
