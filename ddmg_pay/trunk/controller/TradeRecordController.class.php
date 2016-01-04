@@ -403,14 +403,51 @@ class TradeRecordController extends BaseController {
             EC::fail(EC_PAR_ERR);
         }
         
-        // TODO 
         /**
          * 验证密码
          */
         
-        $tradeRecord_model = $this->model('tradeRecord');
+        $user_model = $this->model('user');
         $user_id = self::getCurrentUserId();
         
+        $curr_user_data = $user_model->getUserInfo(array('id' => $user_id));
+        if(EC_OK != $curr_user_data['code']){
+            Log::error("getUserInfo failed . ");
+            EC::fail($curr_user_data['code']);
+        }
+        $curr_user_info = $curr_user_data['data'][0];
+        if(empty($curr_user_info)){
+            Log::error("getUserInfo empty . user_id=" . $user_id);
+            EC::fail(EC_USR_NON);
+        }
+        
+        $privateKey  = openssl_pkey_get_private(self::getConfig('conf')['private_key']);
+        $payPassword = base64_decode($pwd);
+        $decrypted_pwd = '';
+        openssl_private_decrypt($payPassword, $decrypted_pwd, $privateKey);
+        if(!$decrypted_pwd){
+            Log::error('setPayPassword password is empty');
+            EC::fail(EC_PWD_EMP);
+        }
+        
+        $payPassword = password_hash($decrypted_pwd,PASSWORD_DEFAULT);
+        if(!$payPassword){
+            Log::error('password_hash password had error');
+            EC::fail(EC_OTH);
+        }
+        
+        if($curr_user_info['pay_password'] != $payPassword){
+            Log::error('PayPassword is wrong . pay_password=' . $curr_user_info['pay_password'] . ',payPassword=' . $payPassword);
+            Log::error('PayPassword is wrong .');
+            //TODO
+//             EC::fail(EC_PWD_WRN);
+        }
+        
+        /**
+         * 验证 订单 状态
+         */
+        
+        $tradeRecord_model = $this->model('tradeRecord');
         $params = array();
         $params['id'] = $id;
         $params['user_id'] = $user_id;
@@ -420,9 +457,6 @@ class TradeRecordController extends BaseController {
             EC::fail(EC_PAR_BAD);
         }
         
-        /**
-         * 验证 订单 状态 
-         */
         $data_old = $tradeRecord_model->getInfo($params);
         if(EC_OK != $data_old['code']){
             Log::error('getInfo Fail!');
@@ -441,6 +475,10 @@ class TradeRecordController extends BaseController {
             Log::error('record status is exception . status=' . $data_obj['order_status']);
             EC::fail(EC_RED_EXP);
         }
+        
+        /**
+         * 组装交易信息
+         */
         
         $params['order_status'] = TradeRecordModel::$_status_paid;
         $params['disenabled_timestamp'] = date('Y-m-d H:i:s',time());
@@ -464,7 +502,6 @@ class TradeRecordController extends BaseController {
         
         
         // 收款方用户ID
-        $user_model = $this->model('user');
         $params  = array();
         $params['account'] = $data_obj['seller_tel'];
         $data = $user_model->getUserInfo($params);

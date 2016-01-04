@@ -306,6 +306,8 @@ function add_pay(){
         return 0;
     }
     
+    pwd = hex2b64(do_encrypt(pwd));
+    
     $("#btn-add-pay").html("正在付款...");
     $.post(BASE_PATH + 'tradeRecord/pay', {
         	'id':id, 
