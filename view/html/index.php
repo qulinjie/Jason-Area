@@ -66,7 +66,7 @@
                     <li <?php if(doit::$controller == 'TradeRecord'){?> class="color" <?php } ?>>
                         <a href="<?php echo Router::getBaseUrl();?>tradeRecord/getIndex">我的大大付款</a>
                     </li>
-                    <li <?php if(doit::$controller == 'AuthorizationCode'){?> class="color" <?php } ?>>
+                    <li <?php if(doit::$controller != 'TradeRecord'){?> class="color" <?php } ?>>
                         <a href="<?php echo Router::getBaseUrl();?>authorizationCode/getIndex">账户管理</a>
                     </li>
                 </ul>
@@ -123,8 +123,11 @@
         	    <li <?php if(doit::$controller == 'BcsMarket'){?> class="discolor" <?php } ?>>
         			<a href="<?php echo Router::getBaseUrl();?>bcsMarket/getInfo">市场信息</a>
         	    </li>
-        		<li <?php if(doit::$controller == 'User'){?> class="discolor" <?php } ?>>
-        			<a href="<?php echo Router::getBaseUrl();if(UserController::isSetPayPassword()){?>user/setPayPassword<?php }else{?>user/unSetPayPassword<?php }?>">重置支付密码</a>
+				<li <?php if(doit::$controller == 'User'){?> class="discolor" <?php } ?>>
+					<a href="<?php echo Router::getBaseUrl();?>user/passwordReset">重置登录密码</a>
+				</li>
+        		<li <?php if(doit::$controller == 'PayPassword'){?> class="discolor" <?php } ?>>
+        			<a href="<?php echo Router::getBaseUrl();if(PayPasswordController::check()){?>payPassword/reset<?php }else{?>payPassword/notice<?php }?>">重置支付密码</a>
         		</li>
         		<li <?php if(doit::$controller == 'BcsRegister'){?> class="discolor" <?php } ?>>
         			  <a href="<?php echo Router::getBaseUrl();?>bcsRegister/create">绑定银行卡</a>
@@ -148,13 +151,15 @@
                     <script src="<?php echo Router::getBaseUrl();?>js/bcsMarketInfo.js"></script>
                     <?php echo $bcsMarket_html; ?>
         	  <?php } else if($page_type == 'user'){?>
-        			<?php echo $payPassword_html; ?>
+        			<?php echo $password_html; ?>
         	  <?php }else if($page_type == 'message'){?>
         		    <script src="<?php echo Router::getBaseUrl();?>js/sysMessage.js"></script>
         		    <div id="message-list"><?php echo $message_html;?></div>
         	  <?php	}else if($page_type == 'bcsRegister'){?>
         			<script src="<?php echo Router::getBaseUrl();?>js/bcsRegister.js"></script>
         			<?php echo $bcsRegister_html;?>
+        	  <?php }else if($page_type='payPassword'){?>
+				  <?php echo $password_html; ?>
         	  <?php	}else if($page_type == 'bcsTradeStatusQuery'){?>
         			<script src="<?php echo Router::getBaseUrl();?>js/bcsTradeStatusQuery.js"></script>
         			<?php echo $bcsTradeStatusQuery_html;?>
@@ -165,54 +170,13 @@
 
 <?php }?>
 
-    <div class="bottom" style="margin-top: 20px;">
+    <div class="bottom">
+
     	<div class="bq">湖南大汉电子商务有限公司 版权所有</div>
     </div>
 </div> <!-- end class="entirety" -->
 
-<div class="modal fade" id="updatePasswordModal">
-	<div class="modal-dialog">
-		<div class="modal-content">
-			<div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal"
-					aria-label="Close">
-					<span aria-hidden="true">&times;</span>
-				</button>
-				<h4 class="modal-title" id="info_title" >修改密码</h4>
-			</div>
-			<div class="modal-body">
-				<form class="form-horizontal">
-				 <div class="form-group">
-				    <label for="oldPwd" class="col-sm-2 control-label">旧密码</label>
-				    <div class="col-sm-8">
-				      <input type="password" class="form-control" id="oldPwd" placeholder="旧密码">
-				    </div>
-				  </div>
-				  <div class="form-group">
-				    <label for="newPwd" class="col-sm-2 control-label">新密码</label>
-				    <div class="col-sm-8">
-				      <input type="password" class="form-control" id="newPwd" placeholder="新密码">
-				    </div>
-				  </div>
-				  <div class="form-group">
-				    <label for="newPwd2" class="col-sm-2 control-label">确认密码</label>
-				    <div class="col-sm-8">
-				      <input type="password" class="form-control" id="newPwd2" placeholder="确认密码">
-				    </div>
-				  </div>
-				  <div class="alert alert-danger" id="updatePasswordErrorMsg"></div>
-				</form>
-			</div>
-			<div class="modal-footer">
-				<button type="button"  class="btn btn-default" data-dismiss="modal">取消</button>
-				<button type="button" class="btn btn-primary" id="updatePasswordBtnSave">确定</button>
-			</div>
-		</div>
-		<!-- /.modal-content -->
-	</div>
-	<!-- /.modal-dialog -->
-</div>
-<!-- /.modal -->
+
 <!-- Just for debugging purposes. Don't actually copy this line! -->
 <!--[if lt IE 9]><script src="<?php echo Router::getBaseUrl();?>js/ie8-responsive-file-warning.js"></script><![endif]-->
 <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->

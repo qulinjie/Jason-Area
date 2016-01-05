@@ -49,8 +49,8 @@
         </div>
         <div class="theme-popover-mask"></div>
 </div>
-<script src="<?php echo Router::getBaseUrl(); ?>js/jquery.js"></script>
 <script>var BASE_PATH = "<?php echo Router::getBaseUrl();?>" </script>
+<script src="<?php echo Router::getBaseUrl(); ?>js/jquery.js"></script>
 <script src="<?php echo Router::getBaseUrl(); ?>js/jquery.js"></script>
 <script src="<?php echo Router::getBaseUrl(); ?>js/bootstrap.min.js"></script>
 <script src="<?php echo Router::getBaseUrl();?>js/prng4.js"></script>

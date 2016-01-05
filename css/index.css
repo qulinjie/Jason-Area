@@ -591,7 +591,13 @@ a:hover { text-decoration: none;}
 
 /*       重置登陆密码       */
 .entirety .account .right .reset{ width:1038px; height:352px; border:1px solid #d7d7d7;}
-.entirety .account .right .reset form{ padding-top:46px;}
+.entirety .account .right .reset form{ padding-top:46px;position:relative;}
+.entirety .account .right .reset form b{font:500 12px 微软雅黑; color:#999999;}
+.entirety .account .right .reset form .paw{position:absolute; left:676px;top:75px;}
+.entirety .account .right .reset form .pawo{position:absolute; left:676px;top:135px;}
+.entirety .account .right .reset form .pawod{position:absolute; left:676px;top:193px;}
+.entirety .account .right .reset form .z_paw{position:absolute; left:676px;top:75px;}
+.entirety .account .right .reset form .z_pawd{position:absolute; left:676px;top:135px;}
 .entirety .account .right .reset .service_l {width: 840px;font: 500 14px 微软雅黑;color: #010101; margin: 18px 0;text-align: right; position:relative;}
 .entirety .account .right .reset .service_l input {width: 225px;height: 37px; line-height:37px;border: 1px solid #ccc;margin-left: 20px;font-size: 14px;color: #010101;margin-right: 185px;padding-left: 10px;}
 .entirety .account .right .reset .service_l a{position:absolute; top:12px; left:663px;font: 500 12px 微软雅黑;color: #010101;}

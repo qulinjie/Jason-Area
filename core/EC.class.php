@@ -100,7 +100,7 @@ class EC extends Base {
 			EC_PWD_WRN		=>	'密码错误',
 			EC_PWD_EMP		=>	'密码为空',
 			EC_PWD_SAM		=>	'same password',
-			EC_PWD_UPD		=>	'密码更新失败',
+			EC_PWD_UPD		=>	'密码重置失败',
 			EC_DAT_NON		=>	'data not exists',
 			EC_TEL_NON		=>	'dail failed',
 			EC_OPE_FAI		=>	'operation failure',

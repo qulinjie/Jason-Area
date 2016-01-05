@@ -9,7 +9,7 @@ class UserModel extends CurlModel
      */
     public function sendCmsCode($params = array())
     {
-        return self::sendRequest('user/send_sms_code', $params);
+        return self::sendRequest('user/sendSmsCode', $params);
     }
 
     /**
@@ -36,12 +36,7 @@ class UserModel extends CurlModel
      */
     public function logout($params = array())
     {
-        return self::sendRequest('user/login_out', $params);
-    }
-
-    public function personAuth($params = array())
-    {
-        return self::sendRequest('user/personAuth', $params);
+        return self::sendRequest('user/loginOut', $params);
     }
 
     /**
@@ -50,7 +45,7 @@ class UserModel extends CurlModel
      */
     public function updatePersonalAuth($params = array())
     {
-        return self::sendRequest('user/update_personal_auth_info',$params);
+        return self::sendRequest('user/updatePersonalAuthInfo',$params);
     }
 
     /**
@@ -59,7 +54,7 @@ class UserModel extends CurlModel
      */
     public function updateCompanyAuth($params = array())
     {
-        return self::sendRequest('user/update_company_auth_info',$params);
+        return self::sendRequest('user/updateCompanyAuthInfo',$params);
     }
 
     /**
@@ -67,7 +62,7 @@ class UserModel extends CurlModel
      */
     public function isLogin()
     {
-        return self::sendRequest('user/is_login');
+        return self::sendRequest('user/isLogin');
     }
 
     /**
@@ -75,22 +70,12 @@ class UserModel extends CurlModel
      */
     public function getLoginUser()
     {
-        return self::sendRequest('user/get_login_user');
+        return self::sendRequest('user/getLoginUser');
     }
 
-
-    /**
-     * @param array $params
-     * @return array
-     */
-    public function addFindPassword($params = array())
+    public function loginPasswordReset($params = array())
     {
-        return self::sendRequest('user/find_password',$params);
-    }
-
-    public function setPassword($params = array())
-    {
-        return self::sendRequest('user/set_password',$params);
+        return self::sendRequest('user/loginPasswordReset',$params);
     }
 
     
