@@ -55,7 +55,8 @@ class FindPasswordController extends BaseController
             $session->set('findPasswordTel',$tel);
             EC::success(EC_OK);
         }
-        $this->render('findPasswordAccount');
+        $content = $this->render('findPasswordAccount',[],true);
+        $this->render('layout',['content' => $content ]);
     }
 
     private function verify()
@@ -84,7 +85,8 @@ class FindPasswordController extends BaseController
         $session = self::instance('session');
         $tel = $session->get('findPasswordTel');
         !$tel && $this->redirect(Router::getBaseUrl());//默认返回主页
-        $this->render('findPasswordVerify',array('tel' => $tel));
+        $content = $this->render('findPasswordVerify',array('tel' => $tel),true);
+        $this->render('layout',['content' => $content ]);
     }
 
     private function reset()
@@ -106,7 +108,8 @@ class FindPasswordController extends BaseController
         $session = self::instance('session');
         $tel = $session->get('findPasswordTel');
         !$tel && $this->redirect(Router::getBaseUrl());//默认返回主页
-        $this->render('findPasswordReset',array('tel' => $tel));
+        $content = $this->render('findPasswordReset',array('tel' => $tel),true);
+        $this->render('layout',['content' => $content ]);
     }
 
     private function finish()
@@ -114,7 +117,8 @@ class FindPasswordController extends BaseController
         $session  = self::instance('session');
         $viewName = $session->get('findPasswordTel') ? 'findPasswordSuccess' : 'findPasswordFail';
         $session->delete('findPasswordTel');
-        $this->render($viewName);
+        $content = $this->render($viewName,[],true);
+        $this->render('layout',['content' => $content ]);
     }
 
     private function sendCmsCode()

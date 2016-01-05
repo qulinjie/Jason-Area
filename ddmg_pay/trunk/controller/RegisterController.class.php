@@ -47,7 +47,7 @@ class RegisterController extends BaseController
             EC::success(EC_OK);
         }
 
-        $this->render('registerAccount');
+        $this->render('layout',['content' => $this->render('registerAccount',[],true)]);
     }
 
     private function person()
@@ -82,7 +82,8 @@ class RegisterController extends BaseController
         }
 
         $session = self::instance('session');
-        $this->render('registerPerson', array('id' => $session->get('register_cert_id')));
+        $content = $this->render('registerPerson', array('id' => $session->get('register_cert_id')),true);
+        $this->render('layout',['content' => $content]);
     }
 
     private function enterprise()
@@ -116,12 +117,14 @@ class RegisterController extends BaseController
             EC::success(EC_OK);
         }
         $session = self::instance('session');
-        $this->render('registerEnterprise', array('id' => $session->get('register_cert_id')));
+        $content =  $this->render('registerEnterprise', array('id' => $session->get('register_cert_id')),true);
+        $this->render('layout',['content' => $content]);
     }
 
     private function finish()
     {
-        $this->render('registerFinish');
+        $content = $this->render('registerFinish',[],true);
+        $this->render('layout',['content' => $content]);
     }
 
     private function sendCmsCode()

@@ -17,7 +17,57 @@ $(function () {
 		e.preventDefault();
 	});
     /*************************** global start ******************************/
-
+    function checkForm(selector) {
+        var msg    = '';
+        var elem   = '';
+        var error  = false;
+        var config = {
+            'loginOldPwd'   :{'required': true},
+            'loginNewPwd'   :{'required': true},
+            'loginNewPwd2'  :{'required': true, 'equalTo': '#loginNewPwd'},
+            'initPayNewPwd' :{'required': true},
+            'initPayNewPwd2':{'required': true, 'equalTo': '#initPayNewPwd'},
+            'payOldPwd'     :{'required': true},
+            'payNewPwd'     :{'required': true},
+            'payNewPwd2'    :{'required': true, 'equalTo': '#payNewPwd'}
+        };
+        var conMsg = {
+            'loginOldPwd'   :{'required': '请输入当前密码'},
+            'loginNewPwd'   :{'required': '请输入新登录密码'},
+            'loginNewPwd2'  :{'required': '请再次输入新登录密码', 'equalTo': '两次输入密码不一致'},
+            'initPayNewPwd' :{'required': '请输入支付密码'},
+            'initPayNewPwd2':{'required': '请再次输入支付密码', 'equalTo': '两次输入密码不一致'},
+            'payOldPwd'     :{'required': '请输入当前支付密码'},
+            'payNewPwd'     :{'required': '请输入新支付密码'},
+            'payNewPwd2'    :{'required': '请再次输入新支付密码', 'equalTo': '两次输入密码不一致'}
+        };
+        if (selector == undefined) {selector = ':password,:text,:file';}
+        $('form  ' + selector).each(function () {
+            if (config[$(this).attr('id')] != undefined) {
+                var rules = config[$(this).attr('id')];
+                for (var key in rules) {
+                    switch (key) {
+                        case 'required':
+                            msg = rules[key] && !$(this).val()? conMsg[$(this).attr('id')]['required'] : '';
+                            break;
+                        case 'reg':
+                            msg = !rules[key].test($(this).val()) ? conMsg[$(this).attr('id')]['reg'] : '';
+                            break;
+                        case 'equalTo':
+                            msg = $(rules[key]).val()!=$(this).val() ? conMsg[$(this).attr('id')]['equalTo'] : '';
+                            break;
+                    }
+                    if (msg) error = true;
+                    elem = $('#'+$(this).attr('id')+'Msg');
+                    ((!elem.text()&& msg) || (elem.text()&& !msg)) && elem.text(msg);
+                }
+            }
+        });
+        return error;
+    }
+    $('form :password').blur(function(){
+        checkForm('#'+$(this).attr('id'));
+    });
     $('#logoutBtn').click(function () {
         $.post(BASE_PATH + 'user/logout', {'token':$('#token').val()}, function (result) {
             if (result.code == 0) {
@@ -49,102 +99,60 @@ $(function () {
         } else {
             window.location.href = BASE_PATH + 'user/login';
         }
-        $('#pwdBtn').click(function () {
-            $('#oldPwd').val('');
-            $('#newPwd').val('');
-            $('#newPwd2').val('');
-            $('#updatePasswordModal').modal();
-            $('#updatePasswordErrorMsg').hide();
-        });
-        $('#updatePasswordBtnSave').click(function(){
-            var oldPwd  = $('#oldPwd').val();
-            var newPwd  = $('#newPwd').val();
-            var newPwd2 = $('#newPwd2').val();
-            var data    ={};
-            var msg     = '';
-
-            if(!oldPwd){
-                msg += '请输入旧密码<br/>';
-            }
-            if(!newPwd){
-                msg += '请输入新密码<br/>';
-            }
-
-            if(newPwd != newPwd2){
-                msg += '两次输入密码不一样<br/>';
-            }
-
-            if(msg){
-                $('#updatePasswordErrorMsg').html(msg).show();
-                return false;
-            }
-
+        $('#loginPasswordReset').click(function(){
+            if(checkForm()){ return false;}
+            var data = {};
             data.token  = $('#token').val();
-            data.oldPwd = hex2b64(do_encrypt(oldPwd));
-            data.newPwd = hex2b64(do_encrypt(newPwd));
-            $.post(BASE_PATH+'user/setPassword',data,function(res){
+            data.oldPwd = hex2b64(do_encrypt($('#loginOldPwd').val()));
+            data.newPwd = hex2b64(do_encrypt($('#loginNewPwd').val()));
+            $.post(BASE_PATH+'user/passwordReset',data,function(res){
+                var str = '';
                 if(res.code == 0){
-                    alert('密码修改成功，需要重新登录');
-                    $('#logoutBtn').click();
+                    str = '<div class="hint"><div class="hint_tb"><img src="'+BASE_PATH+'view/images/bt_02.jpg"/><span>恭喜，您已成功重置登录密码！</span></div><div class="clear"></div> <div class="hint_lj"><a href="">返回账户安全</a><a href="'+BASE_PATH+'tradeRecord/getIndex">返回我的大大付款</a></div></div>';
+                    $('.reset').html(str);
                 }else{
-                    $('#updatePasswordErrorMsg').text(res.msg+'('+res.code+')').show();
+                    switch (res.code){
+                        case 111:
+                            $('#loginOldPwdMsg').text(res.msg);
+                            break;
+                        default:
+                            alert(res.msg+'('+res.code+')');
+                    }
+                    $('#loginPasswordReset').removeAttr('disabled');
                 }
             },'json');
         });
-        $('#password,#rePassword').change(function(){
-            $('#setPayPasswordMsg').hide().text('');
-        });
-        $('#setPayPassword').click(function(){
-            var password   = $('#password').val();
-            var rePassword = $('#rePassword').val();
-            var data = {};
-            if(!password){
-                $('#setPayPasswordMsg').text('请输入支付密码').show();
-                return false;
+        $('#payPasswordReset').click(function(){
+            if(checkForm()){return false;}
+            var data = {token:$('#token').val()};
+            if($('#initPayNewPwd').length){
+                data.newPwd = hex2b64(do_encrypt($('#initPayNewPwd').val()));
+            }else{
+                data.newPwd = hex2b64(do_encrypt($('#payNewPwd').val()));
+                data.oldPwd = hex2b64(do_encrypt($('#payOldPwd').val()));
             }
-            if(!rePassword){
-                $('#setPayPasswordMsg').text('请输入确认支付密码').show();
-                return false;
-            }
-
-            if(rePassword != password){
-                $('#setPayPasswordMsg').text('两次输入密码不一致').show();
-                return false;
-            }
-            data.password   = hex2b64(do_encrypt(rePassword));
-            data.token = $('#token').val();
-
             $(this).attr('disabled','disabled');
-            $('#setPayPasswordMsg').text('保存中...');
-            $.post(BASE_PATH+'user/doSetPayPassword',data,function(res){
-                var msg = res.code == 0 ? '保存成功' : res.msg+'('+res.code+')';
-                $('#password').val('');
-                $('#rePassword').val('');
-                $('#setPayPassword').removeAttr('disabled','disabled');
-                $('#setPayPasswordMsg').text(msg).show().hide(3000);
+            $.post(BASE_PATH+'payPassword/reset',data,function(res){
+                var str = '';
+                if(res.code == 0){
+                    str = '<div class="hint"><div class="hint_tb"><img src="'+BASE_PATH+'view/images/bt_02.jpg"/><span>恭喜，您已成功重置支付密码！</span></div><div class="clear"></div> <div class="hint_lj"><a href="">返回账户安全</a><a href="'+BASE_PATH+'tradeRecord/getIndex">返回我的大大付款</a></div></div>';
+                    $('.reset').html(str);
+                }else{
+                    switch (res.code){
+                        case 111:
+                            $('#payOldPwdMsg').text(res.msg);
+                            break;
+                        default:
+                            alert(res.msg+'('+res.code+')');
+                    }
+                    $('#payPasswordReset').removeAttr('disabled');
+                }
             });
         });
         prettyPrint();
         /**********************************index end*********************************************/
     } else {
         /**********************************login start*********************************************/
-        $('#loginModalBtn').click(function(){
-            $('#loginModal').modal();
-            $('#getPinCode').click();
-        });
-
-        function centerModals() {
-            $('#loginModal').each(function(i) {
-                var $clone = $(this).clone().css('display', 'block').appendTo('body');
-                var top = Math.round(($clone.height() - $clone.find('.modal-content').height()) / 3);
-                top = top > 0 ? top : 0;
-                $clone.remove();
-                $(this).find('.modal-content').css("margin-top", top);
-            });
-        }
-        $('#loginModal').on('show.bs.modal', centerModals);
-        $(window).on('resize', centerModals);
-
         $('#password,#account,#pinCode').on('keydown', function (event) {
             if (event.which == 13) {
                 $('#loginBtn').click();
@@ -183,7 +191,7 @@ $(function () {
             }
 
             $('#errorMsg').text('登录中...');
-            $.post(BASE_PATH + 'user/doLogin', {
+            $.post(BASE_PATH + 'user/login', {
                     'account': account,
                     'password': hex2b64(do_encrypt(pwd)),
                     'token':$('#token').val(),
