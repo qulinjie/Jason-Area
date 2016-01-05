@@ -24,6 +24,8 @@
 <body>
 <input type="hidden" id="token"   value="<?php echo UserController::getToken();?>">
 <input type="hidden" id="isLogin" value="<?php echo UserController::isLogin();?>"/>
+<input type="hidden" id="view_page_type" value="<?php echo $page_type;?>"/>
+<input type="hidden" id="view_controller" value="<?php echo doit::$controller;?>"/>
 
 <div class="modal fade" id="confirm-admin-modal">
 	<div class="modal-dialog">
@@ -158,7 +160,7 @@
         	  <?php	}else if($page_type == 'bcsRegister'){?>
         			<script src="<?php echo Router::getBaseUrl();?>js/bcsRegister.js"></script>
         			<?php echo $bcsRegister_html;?>
-        	  <?php }else if($page_type='payPassword'){?>
+        	  <?php }else if($page_type == 'payPassword'){?>
 				  <?php echo $password_html; ?>
         	  <?php	}else if($page_type == 'bcsTradeStatusQuery'){?>
         			<script src="<?php echo Router::getBaseUrl();?>js/bcsTradeStatusQuery.js"></script>
