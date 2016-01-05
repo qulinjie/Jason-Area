@@ -24,7 +24,7 @@ $(document).on('click', '#entity-search-btn', function(event){
 	$.post(BASE_PATH + 'bcsTrade/tradeStatusQuery', {'FMS_TRANS_NO':FMS_TRANS_NO,'FUNC_CODE':FUNC_CODE},
 	    function(result){
 	        if(result.code != 0) {
-	            $("#search-list-hint").html(result.msg + '(' + result.code + ')' + ',请刷新页面').fadeIn();
+	            $("#search-list-hint").html(result.msg + '(' + result.code + ')' ).fadeIn();
 	        } else {
 	        	$('#entity-list').html(result.data.entity_list_html);
 	        }

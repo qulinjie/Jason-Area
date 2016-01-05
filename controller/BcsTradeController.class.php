@@ -408,7 +408,7 @@ class BcsTradeController extends BaseController {
             $FMS_TRANS_NO = Request::post('FMS_TRANS_NO');
             $FUNC_CODE = Request::post('FUNC_CODE');
             
-            if(!$FMS_TRANS_NO){
+            if(!$FMS_TRANS_NO || 0 == strlen(strval($FUNC_CODE)) ){
                 Log::error('tradeStatusQuery params error!');
                 EC::fail(EC_PAR_ERR);
             }
