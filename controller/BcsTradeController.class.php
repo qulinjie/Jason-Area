@@ -406,13 +406,14 @@ class BcsTradeController extends BaseController {
             $this->render('index', array('page_type' => 'bcsTradeStatusQuery', 'bcsTradeStatusQuery_html' => $entity_list_html));
         } else {
             $FMS_TRANS_NO = Request::post('FMS_TRANS_NO');
+            $FUNC_CODE = Request::post('FUNC_CODE');
             
             if(!$FMS_TRANS_NO){
                 Log::error('tradeStatusQuery params error!');
                 EC::fail(EC_PAR_ERR);
             }
             
-            $bcs_data = $this->model('bank')->transactionStatusQuery($FMS_TRANS_NO);
+            $bcs_data = $this->model('bank')->transactionStatusQuery($FMS_TRANS_NO,$FUNC_CODE);
             Log::error('tradeStatusQuery----req_data==>>' . var_export($bcs_data, true));
             
             $data_list = $bcs_data['data'];
