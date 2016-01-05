@@ -10,7 +10,7 @@
 	无消息提醒
 </p></div>
 <?php }else{?>
-<div class="panel panel-default">
+<div class="panel panel-default" style="width: 1040px;">
 <div class="panel-heading" id="search-head-div">消息列表</div>
   <div class="panel-body">
 		<table class="table table-hover" id="data-list-table">

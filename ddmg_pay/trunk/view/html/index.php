@@ -106,7 +106,7 @@
 <?php } else {?>
 
 <div class="account" style="width: 1300px;">
-    	<div class="left">
+    	<div class="left" style="height: 370px;">
         	<ul>
         	    <li <?php if(doit::$controller == 'BcsTrade' && $page_type == 'bcsTradeStatusQuery'){?> class="discolor" <?php } ?>>
         			<a href="<?php echo Router::getBaseUrl();?>bcsTrade/tradeStatusQueryIndex">交易状态查询</a>
@@ -165,7 +165,7 @@
 
 <?php }?>
 
-    <div class="bottom" style="margin-top: 10px;">
+    <div class="bottom" style="margin-top: 20px;">
     	<div class="bq">湖南大汉电子商务有限公司 版权所有</div>
     </div>
 </div> <!-- end class="entirety" -->
