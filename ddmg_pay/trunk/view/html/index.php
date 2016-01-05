@@ -108,6 +108,9 @@
 <div class="account" style="width: 1300px;">
     	<div class="left">
         	<ul>
+        	    <li <?php if(doit::$controller == 'BcsTrade' && $page_type == 'bcsTradeStatusQuery'){?> class="discolor" <?php } ?>>
+        			<a href="<?php echo Router::getBaseUrl();?>bcsTrade/tradeStatusQueryIndex">交易状态查询</a>
+        	    </li>
             	<li <?php if(doit::$controller == 'BcsTrade'){?> class="discolor" <?php } ?>>
         			<a href="<?php echo Router::getBaseUrl();?>bcsTrade/getIndex">交易流水</a>
         	    </li>
@@ -152,6 +155,9 @@
         	  <?php	}else if($page_type == 'bcsRegister'){?>
         			<script src="<?php echo Router::getBaseUrl();?>js/bcsRegister.js"></script>
         			<?php echo $bcsRegister_html;?>
+        	  <?php	}else if($page_type == 'bcsTradeStatusQuery'){?>
+        			<script src="<?php echo Router::getBaseUrl();?>js/bcsTradeStatusQuery.js"></script>
+        			<?php echo $bcsTradeStatusQuery_html;?>
         	  <?php }?>
         </div>
 </div>

@@ -36,8 +36,11 @@ class BcsTradeController extends BaseController {
                 case 'exportData':
                     $this->exportData();
                     break;
-                case 'getTradeStatus':
-                    $this->getTradeStatus();
+                case 'tradeStatusQueryIndex':
+                    $this->tradeStatusQuery(true);
+                    break;
+                case 'tradeStatusQuery':
+                    $this->tradeStatusQuery();
                     break;
                 default:
                     Log::error('page not found . ' . $params[0]);
@@ -397,8 +400,25 @@ class BcsTradeController extends BaseController {
         EC::success(EC_OK);
     }
 
-    private function getTradeStatus(){
-        $bcs_data = $this->model('bank')->transactionStatusQuery('D20151218T145237R705U1000');
-        var_dump($bcs_data);exit;
+    private function tradeStatusQuery($isIndex = false){
+        if($isIndex) {
+            $entity_list_html = $this->render('bcsTradeStatusQuery', array('data_list' => null), true);
+            $this->render('index', array('page_type' => 'bcsTradeStatusQuery', 'bcsTradeStatusQuery_html' => $entity_list_html));
+        } else {
+            $FMS_TRANS_NO = Request::post('FMS_TRANS_NO');
+            
+            if(!$FMS_TRANS_NO){
+                Log::error('tradeStatusQuery params error!');
+                EC::fail(EC_PAR_ERR);
+            }
+            
+            $bcs_data = $this->model('bank')->transactionStatusQuery($FMS_TRANS_NO);
+            Log::error('tradeStatusQuery----req_data==>>' . var_export($bcs_data, true));
+            
+            $data_list = $bcs_data['data'];
+            $entity_list_html = $this->render('bcsTradeStatusQuery', array('data_list' => $data_list), true);
+            EC::success(EC_OK, array('entity_list_html' => $entity_list_html));
+        }
     }
+    
 }
