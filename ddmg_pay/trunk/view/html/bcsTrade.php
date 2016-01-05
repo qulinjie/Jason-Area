@@ -99,7 +99,7 @@
 
 <h1 class="page-header">交易流水</h1>
 
-<div class="panel panel-primary">
+<div class="panel panel-primary" style="width:1100px;">
   <div class="panel-heading">查找</div>
   <div class="panel-body">
     <div class="form-inline">
