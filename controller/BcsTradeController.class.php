@@ -404,6 +404,7 @@ class BcsTradeController extends BaseController {
         if($isIndex) {
             $entity_list_html = $this->render('bcsTradeStatusQuery', array('data_list' => null), true);
             $this->render('index', array('page_type' => 'bcsTradeStatusQuery', 'bcsTradeStatusQuery_html' => $entity_list_html));
+            exit(0);
         } else {
             $FMS_TRANS_NO = Request::post('FMS_TRANS_NO');
             $FUNC_CODE = Request::post('FUNC_CODE');
