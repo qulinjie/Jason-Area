@@ -1,5 +1,5 @@
 <h1 class="page-header">重置支付密码</h1>
-<div class="panel panel-primary">
+<div class="panel panel-primary" style="width:1100px;">
     <div class="panel-body">
         <form class="form-horizontal">
             <div class="form-group">

@@ -1,5 +1,5 @@
 <h1 class="page-header">绑定银行卡</h1>
-<div class="panel panel-primary">
+<div class="panel panel-primary" style="width:1100px;">
     <div class="panel-body">
         <form class="form-horizontal" id="bcsRegister">
             <div class="form-group">

@@ -42,7 +42,7 @@
 
 <h1 class="page-header">账户信息</h1>
 
-<div class="panel panel-primary">
+<div class="panel panel-primary" style="width:1100px;">
 
   <div class="panel-body">
     <div class="form-horizontal">
