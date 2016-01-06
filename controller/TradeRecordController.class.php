@@ -349,6 +349,9 @@ class TradeRecordController extends BaseController {
             EC::fail(EC_PAR_ERR);
         }
         
+        /**
+         * 验证 授权码 
+         */
         $code_model = $this->model('authorizationCode');
         $data_code = $code_model->getInfo(array('code' => $code));
         if(EC_OK != $data_code['code']){
@@ -368,6 +371,26 @@ class TradeRecordController extends BaseController {
             EC::fail(EC_CODE_ERR);
         }
     
+        /**
+         * 验证 重复记录
+         */
+        $tradeRecord_model = $this->model('tradeRecord');
+        $data = $tradeRecord_model->searchList(array('order_no' => $order_no));
+        if(EC_OK != $data['code']){
+            Log::error("searchList failed . ");
+            EC::fail($data['code']);
+        }
+        $data_list = $data['data'];
+        if(!empty($data_list)) {
+            foreach ($data_list as $item){
+                Log::error("repetition trade record . order_no=" . $item['order_no'] . ",status=" . $item['status'] . ",id=" . $item['id'] );
+            }
+            EC::fail(EC_REC_EST);
+        }
+        
+        /**
+         *  增加 交易订单记录 
+         */
         $params = array();
         $params['user_id'] = $code_obj['user_id']; // 授权码 所属用户ID
         $params['code_id'] = $code_obj['id']; // 授权码 ID
@@ -385,7 +408,6 @@ class TradeRecordController extends BaseController {
             EC::fail(EC_PAR_BAD);
         }
         
-        $tradeRecord_model = $this->model('tradeRecord');
         $data = $tradeRecord_model->create($params);
         if(EC_OK != $data['code']){
             Log::error('create Fail!');
@@ -477,6 +499,26 @@ class TradeRecordController extends BaseController {
         }
         
         /**
+         * 检查 付款记录
+         */
+        $bcsTrade_model = $this->model('bcsTrade');
+        $params_trade_select = array();
+        $params_trade_select['order_id'] = $data_obj['order_no'] . '-' . $id;
+        $params_trade_select['status'] = BcsTradeModel::$_status_unknown . BcsTradeModel::$_status_success ;
+        $data = $bcsTrade_model->searchList($params_trade_select);
+        if(EC_OK != $data['code']){
+            Log::error("searchList failed . ");
+            EC::fail($data['code']);
+        }
+        $data_list = $data['data'];
+        if(!empty($data_list)) {
+            foreach ($data_list as $item){
+                Log::error("repetition trade . order_id=" . $item['order_id'] . ",status=" . $item['status'] . ",id=" . $item['id'] . ',MCH_TRANS_NO=' . $item['MCH_TRANS_NO'] );
+            }
+            EC::fail(EC_BCS_TRADE_REPE);
+        }
+        
+        /**
          * 组装交易信息
          */
         
@@ -551,7 +593,7 @@ class TradeRecordController extends BaseController {
         $params_trade['TICKET_NUM'] = BcsTradeModel::$_TICKET_NUM_0; // 使用票据数
         
         $params['bcs_trade'] = $params_trade;
-        
+        $params['order_id'] = $order_no . '-' . $id;
         $params['order_no'] = $order_no;
         $params['b_user_id'] = $b_user_id;
         $params['s_user_id'] = $s_user_id;
@@ -562,7 +604,6 @@ class TradeRecordController extends BaseController {
         /**
          * 增加 交易付款
          */
-        $bcsTrade_model = $this->model('bcsTrade');
         $data = $bcsTrade_model->create($params);
         if(EC_OK != $data['code']){
             Log::error('create-pay Fail!');
