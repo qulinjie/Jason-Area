@@ -63,6 +63,8 @@ define('EC_PINCODE_ERR',304);
 define('EC_UPL_FILE_NON',401);
 define('EC_UPL_FILE_TYPE_ERR',402);
 
+define('EC_BCS_TRADE_REPE',501);
+
 class EC extends Base {
 
 	public static $_errMsg = array(
@@ -128,6 +130,8 @@ class EC extends Base {
 
 			EC_USE_UNA		 =>	'用户被禁用',
 			EC_CERT_ERR      => '证书验证失败',
+	    
+	        EC_BCS_TRADE_REPE      => '存在成功或未明的交易记录',
 	);
 	public static function load(){
 		return true;
@@ -152,6 +156,11 @@ class EC extends Base {
 	}
 	
 	public static function success($errno, $data = array(), $unlock = true){
+	    if( EC_NOT_LOGIN == $errno && $_SERVER['REQUEST_METHOD']!="POST") {
+	        $view = View::getInstance();
+	        $view->render('index', array( 'code' => $errno, 'msg' => self::$_errMsg[$errno] ));
+	        exit(0);
+	    }
 		$response_data = array(
 				'caller' => doit::$caller,
 				'callee' => doit::$callee,
