@@ -255,6 +255,10 @@ class BcsCustomerController extends BaseController {
         }
     
         $data_info = $data['data'][0];
+        
+        $cert_type = $this->getConfig('certificate_type');
+        $data_info['MBR_CERT_TYPE'] = $cert_type[$data_info['MBR_CERT_TYPE']];
+        
         $view_html = $this->render('bcsCustomerInfo', array('item' => $data_info), true);
         $this->render('index', array('page_type' => 'bcsCustomer', 'bcsCustomer_html' => $view_html));
     }
