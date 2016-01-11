@@ -443,26 +443,18 @@ class TradeRecordController extends BaseController {
             EC::fail(EC_USR_NON);
         }
         
-        $privateKey  = openssl_pkey_get_private(self::getConfig('conf')['private_key']);
-        $payPassword = base64_decode($pwd);
         $decrypted_pwd = '';
-        openssl_private_decrypt($payPassword, $decrypted_pwd, $privateKey);
+		$privateKey  = openssl_pkey_get_private(self::getConfig('conf')['private_key']);
+		$payPassword = base64_decode($pwd);
+		openssl_private_decrypt($payPassword, $decrypted_pwd, $privateKey);
         if(!$decrypted_pwd){
             Log::error('setPayPassword password is empty');
             EC::fail(EC_PWD_EMP);
         }
         
-        $payPassword = password_hash($decrypted_pwd,PASSWORD_DEFAULT);
-        if(!$payPassword){
-            Log::error('password_hash password had error');
-            EC::fail(EC_OTH);
-        }
-        
-        if($curr_user_info['pay_password'] != $payPassword){
-            Log::error('PayPassword is wrong . pay_password=' . $curr_user_info['pay_password'] . ',payPassword=' . $payPassword);
+        if(!password_verify($decrypted_pwd,$curr_user_info['pay_password']) ){
             Log::error('PayPassword is wrong .');
-            //TODO
-//             EC::fail(EC_PWD_WRN);
+            EC::fail(EC_PWD_WRN);
         }
         
         /**
