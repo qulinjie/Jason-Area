@@ -591,11 +591,18 @@ class BcsCustomerController extends BaseController {
         $params   = [
             'MCH_NO' => $this->getConfig('conf')['MCH_NO'],
             'SIT_NO' => 'DDMG00001',
-            'PAGE_NUMBER' => 1,
-            'PAGE_SIZE' => 50
+            'PAGE_NUMBER' => $this->post('page',1),
+            'PAGE_SIZE' => 10
         ];
-        $bcs_data = $this->model('bank')->customerIncomePayQuery('1',$params);
-        var_dump($bcs_data);
-        exit;
+        /*$bcs_data = $this->model('bank')->customerIncomePayQuery('1',$params);
+        $data = $bcs_data['code'] === 0 ? $bcs_data['data'] : ['List' => []];
+        if($bcs_data['code'] !== 0){
+            Log::bcsError('getIncomePay error code('.$bcs_data['code'].')'.' msg：'.$bcs_data['msg']);
+            IS_POST && EC::fail(EC_OTH);
+        }
+
+        IS_POST && EC::success(EC_OK,$data);*/
+        $incomePay_html = $this->render('bcsCustomerIncomPay',['data' => $data],true);
+        $this->render('index',['page_type' => 'bcsCustomerIncomePay' ,'bcsCustomerIncomePay_html' => $incomePay_html]);
     }
 }
