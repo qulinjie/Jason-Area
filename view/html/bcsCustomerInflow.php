@@ -26,7 +26,7 @@
             <span style="padding-right: 2px;"><?php echo $item['PROCEEDS_NO']; ?></span>
             <span style="padding-right: 2px;"><?php echo $item['PROCEEDS_NAME']; ?></span>
             <span style="padding-right: 2px;"><?php echo $item['BUSI_DATE']; ?></span>
-            <span style="padding-right: 2px;"><?php echo $item['RMRK']; ?></span>
+            <span style="padding-right: 2px;"><?php echo is_array($item['RMRK']) ? '' : $item['RMRK']; ?></span>
         </div>
     <?php }?>
     <nav>
