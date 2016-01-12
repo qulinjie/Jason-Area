@@ -16,9 +16,9 @@
             <span style="padding-right: 10px;"><?php echo $item['MCH_TRANS_NO']; ?></span>
             <span style="padding-right: 10px;"><?php echo $item['BUSI_DATE']; ?></span>
             <span style="padding-right: 10px;"><?php echo $item['TRANS_TIME']; ?></span>
-            <span style="padding-right: 10px;"><?php echo is_array($item['TRANS_STS']) ? '-' : $item['PAYMENT_NAME']; ?></span>
-            <span style="padding-right: 10px;"><?php echo is_array($item['PAY_TYPE ']) ? '-' : $item['MBR_BANK_NAME']; ?></span>
-            <span style="padding-right: 10px;"><?php echo is_array($item['TX_AMT']) ? '-' : $item['MBR_BANK_NO']; ?></span>
+            <span style="padding-right: 10px;"><?php echo is_array($item['TRANS_STS']) ? '-' : $item['TRANS_STS']; ?></span>
+            <span style="padding-right: 10px;"><?php echo is_array($item['PAY_TYPE ']) ? '-' : $item['PAY_TYPE']; ?></span>
+            <span style="padding-right: 10px;"><?php echo is_array($item['TX_AMT']) ? '-' : $item['TX_AMT']; ?></span>
         </div>
     <?php }?>
 </div>
