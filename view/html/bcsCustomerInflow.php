@@ -1,4 +1,9 @@
-<div class="right">
+<style>
+ .class,.detail span{
+     width: 60px;
+}
+</style>
+<div class="right" id="bcsCustomerInflowList">
     <div class="class">
         <span>类型</span>
         <span>状态</span>
@@ -15,18 +20,18 @@
     </div>
     <?php foreach ($data['List'] as $key => $item){?>
         <div class="detail" <?php if($key%2){?>style="background:#f3f3f3;"<?php }?>>
-            <span><?php echo $val['TRANS_TYPE']; ?></span>
-            <span><?php echo $val['TRANS_STATE']; ?></span>
-            <span><?php echo $val['TRANS_AMT']; ?></span>
-            <span><?php echo $val['TRANS_TIME']; ?></span>
-            <span><?php echo $val['PAYMENT_NO']; ?></span>
-            <span><?php echo $val['PAYMENT_NAME']; ?></span>
-            <span><?php echo $val['MBR_BANK_NAME']; ?></span>
-            <span><?php echo $val['MBR_BANK_NO']; ?></span>
-            <span><?php echo $val['PROCEEDS_NO']; ?></span>
-            <span><?php echo $val['PROCEEDS_NAME']; ?></span>
-            <span><?php echo $val['BUSI_DATE']; ?></span>
-            <span><?php echo $val['RMRK']; ?></span>
+            <span><?php echo $item['TRANS_TYPE']; ?></span>
+            <span><?php echo $item['TRANS_STATE']; ?></span>
+            <span><?php echo $item['TRANS_AMT']; ?></span>
+            <span><?php echo $item['TRANS_TIME']; ?></span>
+            <span><?php echo $item['PAYMENT_NO']; ?></span>
+            <span><?php echo $item['PAYMENT_NAME']; ?></span>
+            <span><?php echo $item['MBR_BANK_NAME']; ?></span>
+            <span><?php echo $item['MBR_BANK_NO']; ?></span>
+            <span><?php echo $item['PROCEEDS_NO']; ?></span>
+            <span><?php echo $item['PROCEEDS_NAME']; ?></span>
+            <span><?php echo $item['BUSI_DATE']; ?></span>
+            <span><?php echo $item['RMRK']; ?></span>
         </div>
     <?php }?>
     <nav>
