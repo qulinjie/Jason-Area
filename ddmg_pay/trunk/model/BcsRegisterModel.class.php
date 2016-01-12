@@ -33,6 +33,6 @@ class BcsRegisterModel extends CurlModel {
     }
 
     public function getSitNo($params = array()){
-        return self::sendRequestByJava('bcsRegister/getSitNo', $params);
+        return self::sendRequest('bcsRegister/getSitNo', $params);
     }
 }
