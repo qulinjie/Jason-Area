@@ -139,11 +139,14 @@
         		<li <?php if(doit::$controller == 'AuthorizationCode'){?> class="discolor" <?php } ?>>
         			<a href="<?php echo Router::getBaseUrl();?>authorizationCode/getIndex">授权码管理</a>
         	    </li>
-        	    <li <?php if(doit::$controller == 'BcsCustomer' && doit::$params[0] !='getInflow'){?> class="discolor" <?php } ?>>
+        	    <li <?php if(doit::$controller == 'BcsCustomer' && doit::$params[0] !='getInflow' && doit::$params[0] !='getIncomePay'){?> class="discolor" <?php } ?>>
         			<a href="<?php echo Router::getBaseUrl();?>bcsCustomer/getInfo">账户信息</a>
         	    </li>
 				<li <?php if(doit::$controller == 'BcsCustomer' && doit::$params[0] =='getInflow'){?> class="discolor" <?php } ?>>
 					<a href="<?php echo Router::getBaseUrl();?>bcsCustomer/getInflow">出入金明细</a>
+				</li>
+				<li <?php if(doit::$controller == 'BcsCustomer' && doit::$params[0] =='getIncomePay'){?> class="discolor" <?php } ?>>
+					<a href="<?php echo Router::getBaseUrl();?>bcsCustomer/getIncomePay">交易明细</a>
 				</li>
         	    <li <?php if(doit::$controller == 'BcsMarket'){?> class="discolor" <?php } ?>>
         			<a href="<?php echo Router::getBaseUrl();?>bcsMarket/getInfo">市场信息</a>
@@ -190,6 +193,8 @@
         			<?php echo $bcsTradeStatusQuery_html;?>
 			  <?php	}else if($page_type == 'bcsCustomerInflow'){?>
 				  <?php echo $bcsCustomerInflow_html;?>
+			  <?php } else if($page_type == 'bcsCustomerIncomePay'){?>
+				  <?php echo $bcsCustomerIncomePay_html;?>
 			  <?php }?>
         </div>
 </div>
