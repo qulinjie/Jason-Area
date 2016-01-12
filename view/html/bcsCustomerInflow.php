@@ -15,18 +15,18 @@
     </div>
     <?php foreach ($data['List'] as $key => $item){?>
         <div class="detail" <?php if($key%2){?>style="background:#f3f3f3;"<?php }?>>
-            <span style="padding-right: 8px;"><?php echo $item['TRANS_TYPE']; ?></span>
-            <span style="padding-right: 8px;"><?php echo $item['TRANS_STATE']; ?></span>
-            <span style="padding-right: 8px;"><?php echo $item['TRANS_AMT']; ?></span>
-            <span style="padding-right: 8px;"><?php echo $item['TRANS_TIME']; ?></span>
-            <span style="padding-right: 8px;"><?php echo $item['PAYMENT_NO']; ?></span>
-            <span style="padding-right: 8px;"><?php echo $item['PAYMENT_NAME'] ? $item['PAYMENT_NAME'] : ''; ?></span>
-            <span style="padding-right: 8px;"><?php echo $item['MBR_BANK_NAME']? $item['MBR_BANK_NAME'] : ''; ?></span>
-            <span style="padding-right: 8px;"><?php echo $item['MBR_BANK_NO']; ?></span>
-            <span style="padding-right: 8px;"><?php echo $item['PROCEEDS_NO']; ?></span>
-            <span style="padding-right: 8px;"><?php echo $item['PROCEEDS_NAME']; ?></span>
-            <span style="padding-right: 8px;"><?php echo $item['BUSI_DATE']; ?></span>
-            <span style="padding-right: 8px;"><?php echo $item['RMRK']; ?></span>
+            <span style="padding-right: 2px;"><?php echo $item['TRANS_TYPE']; ?></span>
+            <span style="padding-right: 2px;"><?php echo $item['TRANS_STATE']; ?></span>
+            <span style="padding-right: 2px;"><?php echo $item['TRANS_AMT']; ?></span>
+            <span style="padding-right: 2px;"><?php echo $item['TRANS_TIME']; ?></span>
+            <span style="padding-right: 2px;"><?php echo $item['PAYMENT_NO']; ?></span>
+            <span style="padding-right: 2px;"><?php echo $item['PAYMENT_NAME'][0]; ?></span>
+            <span style="padding-right: 2px;"><?php echo $item['MBR_BANK_NAME'][0]; ?></span>
+            <span style="padding-right: 2px;"><?php echo $item['MBR_BANK_NO']; ?></span>
+            <span style="padding-right: 2px;"><?php echo $item['PROCEEDS_NO']; ?></span>
+            <span style="padding-right: 2px;"><?php echo $item['PROCEEDS_NAME']; ?></span>
+            <span style="padding-right: 2px;"><?php echo $item['BUSI_DATE']; ?></span>
+            <span style="padding-right: 2px;"><?php echo $item['RMRK']; ?></span>
         </div>
     <?php }?>
     <nav>
