@@ -16,9 +16,9 @@
             <span style="padding-right: 20px;"><?php echo $item['MCH_TRANS_NO']; ?></span>
             <span style="padding-right: 20px;"><?php echo $item['BUSI_DATE']; ?></span>
             <span style="padding-right: 20px;"><?php echo $item['TRANS_TIME']; ?></span>
-            <span style="padding-right: 20px;"><?php echo is_array($item['TRANS_STS']) ? '-' : $item['TRANS_STS']; ?></span>
-            <span style="padding-right: 20px;"><?php echo is_array($item['PAY_TYPE ']) ? '-' : $item['PAY_TYPE']; ?></span>
-            <span style="padding-right: 20px;"><?php echo is_array($item['TX_AMT']) ? '-' : $item['TX_AMT']; ?></span>
+            <span style="padding-right: 20px;"><?php if($item['TRANS_STS'] == 1){echo '交易成功';}else if($item['TRANS_STS'] == 2){echo '交易失败';}else{echo '状态未知';} ; ?></span>
+            <span style="padding-right: 20px;"><?php if($item['PAY_TYPE '] == 1){echo '部分付款';}else if($item['PAY_TYPE '] == 2){echo '完结付款';}else{echo '违约付款';} ; ?></span>
+            <span style="padding-right: 20px;"><?php echo $item['TX_AMT']; ?></span>
         </div>
     <?php }?>
 </div>
