@@ -1,39 +1,41 @@
 <div class="right">
-    <h1 class="page-header">出入金明细列表</h1>
-    <table class="table table-hover">
-        <thead style="font: bold 12px 微软雅黑;color: #8b8b8b;line-height: 40px;">
-        <tr>
-            <th>类型</th>
-            <th>状态</th>
-            <th>金额</th>
-            <th>完成时间</th>
-            <th>付款帐号</th>
-            <th>付款户名</th>
-            <th>收款行名</th>
-            <th>收款行号</th>
-            <th>收款帐号</th>
-            <th>收款户名</th>
-            <th>业务日期</th>
-            <th>备注</th>
-        </tr>
-        </thead>
-        <tbody>
-        <?php foreach ($data['List'] as $val) { ?>
-            <tr>
-                <td><?php echo $val['TRANS_TYPE']; ?></td>
-                <td><?php echo $val['TRANS_STATE']; ?></td>
-                <td><?php echo $val['TRANS_AMT']; ?></td>
-                <td><?php echo $val['TRANS_TIME']; ?></td>
-                <td><?php echo $val['PAYMENT_NO']; ?></td>
-                <td><?php echo $val['PAYMENT_NAME']; ?></td>
-                <td><?php echo $val['MBR_BANK_NAME']; ?></td>
-                <td><?php echo $val['MBR_BANK_NO']; ?></td>
-                <td><?php echo $val['PROCEEDS_NO']; ?></td>
-                <td><?php echo $val['PROCEEDS_NAME']; ?></td>
-                <td><?php echo $val['BUSI_DATE']; ?></td>
-                <td><?php echo $val['RMRK']; ?></td>
-            </tr>
-        <?php } ?>
-        </tbody>
-    </table>
+    <div class="class">
+        <span>类型</span>
+        <span>状态</span>
+        <span>金额</span>
+        <span>完成时间</span>
+        <span>付款帐号</span>
+        <span>付款户名</span>
+        <span>收款行名</span>
+        <span>收款行号</span>
+        <span>收款帐号</span>
+        <span>收款户名</span>
+        <span>业务日期</span>
+        <span>备注</span>
+    </div>
+    <?php foreach ($data['List'] as $key => $item){?>
+        <div class="detail" <?php if($key%2){?>style="background:#f3f3f3;"<?php }?>>
+            <span><?php echo $val['TRANS_TYPE']; ?></span>
+            <span><?php echo $val['TRANS_STATE']; ?></span>
+            <span><?php echo $val['TRANS_AMT']; ?></span>
+            <span><?php echo $val['TRANS_TIME']; ?></span>
+            <span><?php echo $val['PAYMENT_NO']; ?></span>
+            <span><?php echo $val['PAYMENT_NAME']; ?></span>
+            <span><?php echo $val['MBR_BANK_NAME']; ?></span>
+            <span><?php echo $val['MBR_BANK_NO']; ?></span>
+            <span><?php echo $val['PROCEEDS_NO']; ?></span>
+            <span><?php echo $val['PROCEEDS_NAME']; ?></span>
+            <span><?php echo $val['BUSI_DATE']; ?></span>
+            <span><?php echo $val['RMRK']; ?></span>
+        </div>
+    <?php }?>
+    <nav>
+        <ul class="pager" id="pager-ul">
+            <li><a id="message-list-prev" href="#" <?php if($current_page == 1){?> class="disabled" <?php }?>>上一页</a></li>
+            <li><span id="message-current-page"><?php echo $current_page;?></span> /  <span id="message-total-page"><?php echo $total_page;?></span></li>
+            <li><a id="message-list-next" href="#" <?php if($current_page == $total_page){?> class="disabled" <?php }?>>下一页</a></li>
+            <li><select class="form-control input-sm " id="message-custom-page" style="width: 60px;height:26px;display:inline;"></select></li>
+        </ul>
+    </nav>
 </div>
+
