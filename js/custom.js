@@ -170,10 +170,10 @@ $(function () {
 
             if (account == '') {
                 msg += '请输入账号<br/>';
-            } else if (!/^[0-9]{11}$/.test(account)) {
+            } /*else if (!/^[0-9]{11}$/.test(account)) {
                 msg += '请输入正确的账号<br/>';
             }
-
+*/
             if (pwd == '') {
                 msg += '请输入密码<br/>';
             }

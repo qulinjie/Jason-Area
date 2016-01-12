@@ -115,4 +115,15 @@ class UserController extends BaseController
             'login' => ['passwordReset']
         ];
     }
+
+    public static function isAdmin()
+    {
+        $data = self::model('user')->isAdmin();
+        if($data['code'] !== EC_OK){
+            Log::error('UserController isAdmin error code:'.$data['code']);
+            EC::fail($data['code']);
+        }
+
+        return $data['data']['status'];
+    }
 }
