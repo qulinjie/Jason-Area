@@ -68,9 +68,14 @@
                     <li <?php if(doit::$controller == 'TradeRecord'){?> class="color" <?php } ?>>
                         <a href="<?php echo Router::getBaseUrl();?>tradeRecord/getIndex">我的大大付款</a>
                     </li>
-                    <li <?php if(doit::$controller != 'TradeRecord'){?> class="color" <?php } ?>>
-                        <a href="<?php echo Router::getBaseUrl();?>authorizationCode/getIndex">账户管理</a>
-                    </li>
+                    <li <?php if(doit::$controller != 'TradeRecord' && doit::$controller!='Backend'){?> class="color" <?php } ?>>
+						<a href="<?php echo Router::getBaseUrl();?>authorizationCode/getIndex">账户管理</a>
+					</li>
+					<?php if(UserController::isAdmin()){?>
+					<li  <?php if(doit::$controller == 'Backend') {?> class="color" <?php }?>>
+						<a href="<?php echo Router::getBaseUrl();?>backend/getIndex">后台管理</a>
+					</li>
+					<?php }?>
                 </ul>
             </div>
      </div>
@@ -104,7 +109,22 @@
             <?php echo $tradeRecord_html; ?>
         </ul>
     </div>
-    
+<?php } else if(doit::$controller == 'Backend'){?>
+	<div class="account" style="width: 1300px;">
+		<div class="left" style="height: 415px;">
+			<ul>
+				<li <?php if($page_type == 'user'){?> class="discolor" <?php } ?>>
+					<a href="<?php echo Router::getBaseUrl();?>backend/getIndex">用户列表</a>
+				</li>
+			</ul>
+		</div>
+		<div class="right">
+			<?php if($page_type == 'user'){?>
+				<?php echo $user_html; ?>
+			<?php }?>
+		</div>
+	</div>
+	<div class="clear"></div>
 <?php } else {?>
 
 <div class="account" style="width: 1300px;">
@@ -119,9 +139,12 @@
         		<li <?php if(doit::$controller == 'AuthorizationCode'){?> class="discolor" <?php } ?>>
         			<a href="<?php echo Router::getBaseUrl();?>authorizationCode/getIndex">授权码管理</a>
         	    </li>
-        	    <li <?php if(doit::$controller == 'BcsCustomer'){?> class="discolor" <?php } ?>>
+        	    <li <?php if(doit::$controller == 'BcsCustomer' && doit::$params[0] !='getInflow'){?> class="discolor" <?php } ?>>
         			<a href="<?php echo Router::getBaseUrl();?>bcsCustomer/getInfo">账户信息</a>
         	    </li>
+				<li <?php if(doit::$controller == 'BcsCustomer' && doit::$params[0] =='getInflow'){?> class="discolor" <?php } ?>>
+					<a href="<?php echo Router::getBaseUrl();?>bcsCustomer/getInflow">出入金明细</a>
+				</li>
         	    <li <?php if(doit::$controller == 'BcsMarket'){?> class="discolor" <?php } ?>>
         			<a href="<?php echo Router::getBaseUrl();?>bcsMarket/getInfo">市场信息</a>
         	    </li>
@@ -165,7 +188,10 @@
         	  <?php	}else if($page_type == 'bcsTradeStatusQuery'){?>
         			<script src="<?php echo Router::getBaseUrl();?>js/bcsTradeStatusQuery.js"></script>
         			<?php echo $bcsTradeStatusQuery_html;?>
-        	  <?php }?>
+			  <?php	}else if($page_type == 'bcsCustomerInflow'){?>
+				  <script src="<?php echo Router::getBaseUrl();?>js/bcsCustomerInfo.js"></script>
+				  <div id="bcsCustomerInflow"><?php echo $bcsCustomerInflow_html;?></div>
+			  <?php }?>
         </div>
 </div>
 <div class="clear"></div>

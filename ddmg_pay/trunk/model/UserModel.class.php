@@ -111,4 +111,25 @@ class UserModel extends CurlModel
     {
         return self::sendRequest('user/validatePayPassword',$params);
     }
+
+
+    public function isAdmin($params = array())
+    {
+        return self::sendRequest('user/isAdmin',$params);
+    }
+
+    public function getCnt($params = array())
+    {
+        return self::sendRequest('user/getCnt',$params);
+    }
+
+    public function getList($params = array())
+    {
+        return self::sendRequest('user/getList',$params);
+    }
+
+    public function audit($params = array())
+    {
+        return self::sendRequest('user/audit',$params);
+    }
 }

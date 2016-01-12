@@ -568,15 +568,22 @@ class BcsCustomerController extends BaseController {
     }
 
     private function getInflow(){
-        $params   = [
-            'MCH_NO' => $this->getConfig('conf')['MCH_NO'],
-            'SIT_NO' => 'DDMG00001',
-            'PAGE_NUMBER' => 1,
-            'PAGE_SIZE' => 50
+        $params = [
+            'MCH_NO'      => $this->getConfig('conf')['MCH_NO'],
+            'SIT_NO'      => 'DDMG00001',
+            'PAGE_SIZE'   => 10,
+            'PAGE_NUMBER' => $this->post('page',1)
         ];
+
         $bcs_data = $this->model('bank')->customerInflowQuery($params);
-        var_dump($bcs_data);
-        exit;
+        if($bcs_data['code'] !== 0){
+            Log::bcsError('getInflow error code('.$bcs_data['code'].')'.' msg：'.$bcs_data['msg']);
+            IS_POST && EC::fail(EC_OTH);
+        }
+
+        IS_POST && EC::success(EC_OK,$bcs_data['data']);
+        $inflow_html = $this->render('bcsCustomerInflow',['data' => $bcs_data['data']],true);
+        $this->render('index',['page_type' => 'bcsCustomerInflow' ,'bcsCustomerInflow_html' => $inflow_html]);
     }
 
     private function getIncomePay(){
