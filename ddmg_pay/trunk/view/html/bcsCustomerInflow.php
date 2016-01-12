@@ -1,37 +1,32 @@
-<style>
- .class,.detail span{
-     width: 60px;
-}
-</style>
 <div class="right" id="bcsCustomerInflowList">
     <div class="class">
-        <span>类型</span>
-        <span>状态</span>
-        <span>金额</span>
-        <span>完成时间</span>
-        <span>付款帐号</span>
-        <span>付款户名</span>
-        <span>收款行名</span>
-        <span>收款行号</span>
-        <span>收款帐号</span>
-        <span>收款户名</span>
-        <span>业务日期</span>
-        <span>备注</span>
+        <span style="padding-right: 35px;">类型</span>
+        <span style="padding-right: 35px;">状态</span>
+        <span style="padding-right: 35px;">金额</span>
+        <span style="padding-right: 35px;">完成时间</span>
+        <span style="padding-right: 35px;">付款帐号</span>
+        <span style="padding-right: 35px;">付款户名</span>
+        <span style="padding-right: 35px;">收款行名</span>
+        <span style="padding-right: 35px;">收款行号</span>
+        <span style="padding-right: 35px;">收款帐号</span>
+        <span style="padding-right: 35px;">收款户名</span>
+        <span style="padding-right: 35px;">业务日期</span>
+        <span style="padding-right: 35px;">备注</span>
     </div>
     <?php foreach ($data['List'] as $key => $item){?>
         <div class="detail" <?php if($key%2){?>style="background:#f3f3f3;"<?php }?>>
-            <span><?php echo $item['TRANS_TYPE']; ?></span>
-            <span><?php echo $item['TRANS_STATE']; ?></span>
-            <span><?php echo $item['TRANS_AMT']; ?></span>
-            <span><?php echo $item['TRANS_TIME']; ?></span>
-            <span><?php echo $item['PAYMENT_NO']; ?></span>
-            <span><?php echo $item['PAYMENT_NAME']; ?></span>
-            <span><?php echo $item['MBR_BANK_NAME']; ?></span>
-            <span><?php echo $item['MBR_BANK_NO']; ?></span>
-            <span><?php echo $item['PROCEEDS_NO']; ?></span>
-            <span><?php echo $item['PROCEEDS_NAME']; ?></span>
-            <span><?php echo $item['BUSI_DATE']; ?></span>
-            <span><?php echo $item['RMRK']; ?></span>
+            <span style="padding-right: 8px;"><?php echo $item['TRANS_TYPE']; ?></span>
+            <span style="padding-right: 8px;"><?php echo $item['TRANS_STATE']; ?></span>
+            <span style="padding-right: 8px;"><?php echo $item['TRANS_AMT']; ?></span>
+            <span style="padding-right: 8px;"><?php echo $item['TRANS_TIME']; ?></span>
+            <span style="padding-right: 8px;"><?php echo $item['PAYMENT_NO']; ?></span>
+            <span style="padding-right: 8px;"><?php echo $item['PAYMENT_NAME']; ?></span>
+            <span style="padding-right: 8px;"><?php echo $item['MBR_BANK_NAME']; ?></span>
+            <span style="padding-right: 8px;"><?php echo $item['MBR_BANK_NO']; ?></span>
+            <span style="padding-right: 8px;"><?php echo $item['PROCEEDS_NO']; ?></span>
+            <span style="padding-right: 8px;"><?php echo $item['PROCEEDS_NAME']; ?></span>
+            <span style="padding-right: 8px;"><?php echo $item['BUSI_DATE']; ?></span>
+            <span style="padding-right: 8px;"><?php echo $item['RMRK']; ?></span>
         </div>
     <?php }?>
     <nav>
