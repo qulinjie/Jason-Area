@@ -31,4 +31,8 @@ class BcsRegisterModel extends CurlModel {
     public function createByJava($params = array()){
         return self::sendRequestByJava('payBcsWs/ws', $params);
     }
+
+    public function getSitNo($params = array()){
+        return self::sendRequestByJava('bcsRegister/getSitNo', $params);
+    }
 }

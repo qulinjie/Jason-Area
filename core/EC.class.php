@@ -64,7 +64,7 @@ define('EC_UPL_FILE_NON',401);
 define('EC_UPL_FILE_TYPE_ERR',402);
 
 define('EC_BCS_TRADE_REPE',501);
-
+define('EC_SIT_NO_NON',601);
 class EC extends Base {
 
 	public static $_errMsg = array(
@@ -132,6 +132,7 @@ class EC extends Base {
 			EC_CERT_ERR      => '证书验证失败',
 	    
 	        EC_BCS_TRADE_REPE      => '存在成功或未明的交易记录',
+			EC_SIT_NO_NON     => '席位号不存在',
 	);
 	public static function load(){
 		return true;
