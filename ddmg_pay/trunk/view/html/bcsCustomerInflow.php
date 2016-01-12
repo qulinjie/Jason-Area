@@ -29,13 +29,5 @@
             <span style="padding-right: 2px;"><?php echo is_array($item['RMRK']) ? '' : $item['RMRK']; ?></span>
         </div>
     <?php }?>
-    <nav>
-        <ul class="pager" id="pager-ul">
-            <li><a id="message-list-prev" href="#" <?php if($current_page == 1){?> class="disabled" <?php }?>>上一页</a></li>
-            <li><span id="message-current-page"><?php echo $current_page;?></span> /  <span id="message-total-page"><?php echo $total_page;?></span></li>
-            <li><a id="message-list-next" href="#" <?php if($current_page == $total_page){?> class="disabled" <?php }?>>下一页</a></li>
-            <li><select class="form-control input-sm " id="message-custom-page" style="width: 60px;height:26px;display:inline;"></select></li>
-        </ul>
-    </nav>
 </div>
 
