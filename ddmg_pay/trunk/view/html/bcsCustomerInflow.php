@@ -20,8 +20,8 @@
             <span style="padding-right: 2px;"><?php echo $item['TRANS_AMT']; ?></span>
             <span style="padding-right: 2px;"><?php echo $item['TRANS_TIME']; ?></span>
             <span style="padding-right: 2px;"><?php echo $item['PAYMENT_NO']; ?></span>
-            <span style="padding-right: 2px;"><?php echo $item['PAYMENT_NAME'][0]; ?></span>
-            <span style="padding-right: 2px;"><?php echo $item['MBR_BANK_NAME'][0]; ?></span>
+            <span style="padding-right: 2px;"><?php echo is_array($item['PAYMENT_NAME']) ? '' : $item['PAYMENT_NAME']; ?></span>
+            <span style="padding-right: 2px;"><?php echo is_array($item['MBR_BANK_NAME']) ? '' : $item['MBR_BANK_NAME']; ?></span>
             <span style="padding-right: 2px;"><?php echo $item['MBR_BANK_NO']; ?></span>
             <span style="padding-right: 2px;"><?php echo $item['PROCEEDS_NO']; ?></span>
             <span style="padding-right: 2px;"><?php echo $item['PROCEEDS_NAME']; ?></span>
