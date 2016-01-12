@@ -189,8 +189,7 @@
         			<script src="<?php echo Router::getBaseUrl();?>js/bcsTradeStatusQuery.js"></script>
         			<?php echo $bcsTradeStatusQuery_html;?>
 			  <?php	}else if($page_type == 'bcsCustomerInflow'){?>
-				  <script src="<?php echo Router::getBaseUrl();?>js/bcsCustomerInfo.js"></script>
-				  <div id="bcsCustomerInflow"><?php echo $bcsCustomerInflow_html;?></div>
+				  <?php echo $bcsCustomerInflow_html;?>
 			  <?php }?>
         </div>
 </div>
