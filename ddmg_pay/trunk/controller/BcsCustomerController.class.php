@@ -568,7 +568,7 @@ class BcsCustomerController extends BaseController {
     }
 
     private function getInflow(){
-        $data = $this->model('bcsCustomer')->getSitNo();
+        $data = $this->model('bcsRegister')->getSitNo();
         if($data['code'] !== EC_OK){ EC::fail($data['code']);}
         $params = [
             'MCH_NO'      => $this->getConfig('conf')['MCH_NO'],
@@ -590,7 +590,7 @@ class BcsCustomerController extends BaseController {
     }
 
     private function getIncomePay(){
-        $data = $this->model('bcsCustomer')->getSitNo();
+        $data = $this->model('bcsRegister')->getSitNo();
         if($data['code'] !== EC_OK){ EC::fail($data['code']);}
         $params   = [
             'MCH_NO' => $this->getConfig('conf')['MCH_NO'],
