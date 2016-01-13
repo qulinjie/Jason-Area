@@ -17,7 +17,7 @@
 	  <div class="t2">
         <div class="top2">
                 <div class="logo"><a href="javascript:void(0);"><img src="<?php echo Router::getBaseUrl(); ?>view/images/logo.png" /></a></div>
-                <div class="nav"><a href="javascript:void(0);">首页</a><a href="payment.html">我的大大付款</a><a href="account.html">账户管理</a></div>
+                <div class="nav"><a href="javascript:void(0);">首页</a><a href="javascript:void(0);">我的大大付款</a><a href="javascript:void(0);">账户管理</a></div>
          </div>
       </div>
       <div class="tbs">
