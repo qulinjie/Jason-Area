@@ -18,7 +18,7 @@
     <div class="t2">
         <div class="top2">
             <div class="logo"><img src="<?php echo Router::getBaseUrl() ?>view/images/logo.png"/></div>
-            <div class="bt"><b>|</b><span><?php if(doit::$controller == 'register'){?>注册<?php }else{?>找回登录密码<?php }?></span></div>
+            <div class="bt"><b>|</b><span><?php if(doit::$controller == 'Register'){?>注册<?php }else{?>找回登录密码<?php }?></span></div>
         </div>
     </div>
     <?php echo $content;?>
