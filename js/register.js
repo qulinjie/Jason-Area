@@ -63,7 +63,7 @@ $(function () {
         return error;
     }
     $('form :text,:password,:file,:checkbox').blur(function () {checkForm('#' + $(this).attr('id'));});
-    $('#sendCode').click(function(){
+    $('#registerSendCode').click(function(){
         var obj      = $(this);
         var index    = -1;
         var timer    = null;
