@@ -632,18 +632,20 @@ class TradeRecordController extends BaseController {
         /**
          * 更新 交易付款
          */
+        Log::notice('bcsTrade-update . params==>>' . var_export($params, true));
         $data = $bcsTrade_model->update($params);
         if(EC_OK != $data['code']){
-            Log::error('create-pay Fail! code=' . $data['code'] . ',msg=' . $data['msg'] ); // 仅仅记录日志，因为 实际交易已经成功。
+            Log::error('update-bcsTrade Fail! code=' . $data['code'] . ',msg=' . $data['msg'] ); // 仅仅记录日志，因为 实际交易已经成功。
         }
         
         /**
          * 修改 支付订单信息 
          */
         $params['order_status'] = TradeRecordModel::$_status_paid;
+        Log::notice('tradeRecord-update . params==>>' . var_export($params, true));
         $data = $tradeRecord_model->pay($params);
         if(EC_OK != $data['code']){
-            Log::error('update-pay Fail! code=' . $data['code'] . ',msg=' . $data['msg'] ); // 仅仅记录日志，因为 实际交易已经成功。
+            Log::error('update-TradeRecord Fail! code=' . $data['code'] . ',msg=' . $data['msg'] ); // 仅仅记录日志，因为 实际交易已经成功。
         }
         
         EC::success(EC_OK);
