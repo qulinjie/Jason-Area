@@ -57,7 +57,7 @@ class MessageController extends BaseController
         }
 
         $params = [
-            'data_list' => $data['data'],
+            'data_list' => $data['data'] ? $data['data'] : [],
             'current_page' => $current_page,
             'total_page' => $total_page,
             'conf' => $this->getConfig('message')
