@@ -79,7 +79,7 @@
 <?php if($page_type == 'tradeRecord'){?>
      <div class="t4">
      		<div class="left">
-            	<div class="tx"><img src="<?php echo Router::getBaseUrl();?>/view/images/headImg.jpg" /></div>
+            	<div class="tx"><img src="<?php echo Router::getBaseUrl();?>/view/images/headerImg.png" /></div>
                 <div class="tm">
                 	<p>账户：<?php echo  UserController::getLoginUser()['account']; ?></p>
                 </div>
