@@ -68,14 +68,9 @@
                     <li <?php if(doit::$controller == 'TradeRecord'){?> class="color" <?php } ?>>
                         <a href="<?php echo Router::getBaseUrl();?>tradeRecord/getIndex">我的大大付款</a>
                     </li>
-                    <li <?php if(doit::$controller != 'TradeRecord' && doit::$controller!='Backend'){?> class="color" <?php } ?>>
+                    <li <?php if(doit::$controller != 'TradeRecord'){?> class="color" <?php } ?>>
 						<a href="<?php echo Router::getBaseUrl();?>authorizationCode/getIndex">账户管理</a>
 					</li>
-					<?php if(UserController::isAdmin()){?>
-					<li  <?php if(doit::$controller == 'Backend') {?> class="color" <?php }?>>
-						<a href="<?php echo Router::getBaseUrl();?>backend/getIndex">后台管理</a>
-					</li>
-					<?php }?>
                 </ul>
             </div>
      </div>
@@ -109,22 +104,6 @@
             <?php echo $tradeRecord_html; ?>
         </ul>
     </div>
-<?php } else if(doit::$controller == 'Backend'){?>
-	<div class="account" style="width: 1300px;">
-		<div class="left" style="height: 415px;">
-			<ul>
-				<li <?php if($page_type == 'user'){?> class="discolor" <?php } ?>>
-					<a href="<?php echo Router::getBaseUrl();?>backend/getIndex">用户列表</a>
-				</li>
-			</ul>
-		</div>
-		<div class="right">
-			<?php if($page_type == 'user'){?>
-				<?php echo $user_html; ?>
-			<?php }?>
-		</div>
-	</div>
-	<div class="clear"></div>
 <?php } else {?>
 
 <div class="account" style="width: 1300px;">
@@ -158,8 +137,11 @@
         			<a href="<?php echo Router::getBaseUrl();if(PayPasswordController::check()){?>payPassword/reset<?php }else{?>payPassword/notice<?php }?>">重置支付密码</a>
         		</li>
         		<li <?php if(doit::$controller == 'BcsRegister'){?> class="discolor" <?php } ?>>
-        			  <a href="<?php echo Router::getBaseUrl();?>bcsRegister/create">绑定银行卡</a>
+        			  <a href="<?php echo Router::getBaseUrl();?>bcsRegister/create">注册银行帐号</a>
         		</li>
+				<li <?php if(doit::$controller == 'Audit'){?> class="discolor" <?php } ?>>
+					<a href="<?php echo Router::getBaseUrl();?>audit/index">审核用户</a>
+				</li>
         		<li <?php if(doit::$controller == 'Message'){?> class="discolor" <?php } ?>>
         			  <a href="<?php echo Router::getBaseUrl();?>message/getIndex">消息提醒</a>
         		</li>
@@ -195,6 +177,8 @@
 				  <?php echo $bcsCustomerInflow_html;?>
 			  <?php } else if($page_type == 'bcsCustomerIncomePay'){?>
 				  <?php echo $bcsCustomerIncomePay_html;?>
+			  <?php } else if($page_type == 'audit'){?>
+			  	<?php echo $audit_html;?>
 			  <?php }?>
         </div>
 </div>
