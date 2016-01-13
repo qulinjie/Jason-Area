@@ -641,6 +641,9 @@ class TradeRecordController extends BaseController {
         /**
          * 修改 支付订单信息 
          */
+        $params = array();
+        $params['id'] = $id;
+        $params['user_id'] = $user_id;
         $params['order_status'] = TradeRecordModel::$_status_paid;
         Log::notice('tradeRecord-update . params==>>' . var_export($params, true));
         $data = $tradeRecord_model->pay($params);
