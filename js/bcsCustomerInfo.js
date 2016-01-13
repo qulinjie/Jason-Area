@@ -1,5 +1,8 @@
 $(document).ready(function(){
 
+// 更新金额
+$.post(BASE_PATH + 'bcsCustomer/loadInfo', {},function(result){},'json');
+
 $(document).on('click', '#for-loadCustInfo-btn', function(event){
 	$(this).text('更新中...');
 	$.post(BASE_PATH + 'bcsCustomer/loadInfo', {},
