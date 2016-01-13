@@ -325,6 +325,8 @@ function add_pay(){
                     $("#btn-add-pay").removeAttr('disabled');
                     $("#btn-add-pay").html("确定支付");
                     $('#entity-clear-btn').click();
+                    // 更新金额
+                    $.post(BASE_PATH + 'bcsCustomer/loadInfo', {},function(result){},'json');
                 }, 500);
             }
         },
