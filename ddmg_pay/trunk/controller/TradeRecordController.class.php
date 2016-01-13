@@ -640,6 +640,7 @@ class TradeRecordController extends BaseController {
         /**
          * 修改 支付订单信息 
          */
+        $params['order_status'] = TradeRecordModel::$_status_paid;
         $data = $tradeRecord_model->pay($params);
         if(EC_OK != $data['code']){
             Log::error('update-pay Fail! code=' . $data['code'] . ',msg=' . $data['msg'] ); // 仅仅记录日志，因为 实际交易已经成功。
