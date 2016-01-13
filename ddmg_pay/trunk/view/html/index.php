@@ -107,7 +107,7 @@
 <?php } else {?>
 
 <div class="account" style="width: 1300px;">
-    	<div class="left" style="height: 415px;">
+    	<div class="left" style="height: 555px;">
         	<ul>
         	    <li <?php if(doit::$controller == 'BcsTrade' && $page_type == 'bcsTradeStatusQuery'){?> class="discolor" <?php } ?>>
         			<a href="<?php echo Router::getBaseUrl();?>bcsTrade/tradeStatusQueryIndex">交易状态查询</a>
