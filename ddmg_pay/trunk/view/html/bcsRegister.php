@@ -49,16 +49,16 @@
                 <div class="col-lg-2">
                     <select class="form-control" id="enableEcds" name="enableEcds">
                         <option value="">请选择</option>
-                        <option value="0" selected>是</option>
-                        <option value="1">否</option>
+                        <option value="1" selected>是</option>
+                        <option value="0">否</option>
                     </select>
                 </div>
                 <label for="isPerson"  class="control-label col-lg-2">是否个人</label>
                 <div class="col-lg-2">
                     <select class="form-control" id="isPerson" name="isPerson">
                         <option value="">请选择</option>
-                        <option value="0">是</option>
-                        <option value="1" selected>否</option>
+                        <option value="1">是</option>
+                        <option value="0" selected>否</option>
                     </select>
                 </div>
             </div>
