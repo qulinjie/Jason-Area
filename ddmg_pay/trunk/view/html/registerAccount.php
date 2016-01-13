@@ -9,7 +9,7 @@
         <b class="zh" id="telMsg"></b>
 
         <p class="service_x">验证码<input type="text" id="code" name="code" style="width: 109px;"/>
-            <input type="button" id="sendCode" name="sendCode" value="获取短信验证码"
+            <input type="button" id="registerSendCode" name="sendCode" value="获取短信验证码"
                    style="background-color: rgb(216,216,216);color: #FFF;width: 112px;margin-left:0;padding-left: 6px;"/>
         </p>
         <b class="tb" id="codeMsg"></b>
