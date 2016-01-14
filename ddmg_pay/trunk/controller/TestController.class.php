@@ -10,10 +10,6 @@ class TestController extends BaseController
 			//$this->markTest();
 			//$this->testGet();
 			//$this->laiyifa();
-
-			//$data = $this->model('bank')->getCustomerInfo('198209','DDMG00007');
-			//var_dump($data);exit;
-
 		} else 
         switch( $params[0] )
         {
