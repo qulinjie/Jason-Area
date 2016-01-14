@@ -287,8 +287,7 @@ class BcsRegisterController extends BaseController {
         $params['xml'] = strval($data[0]);
         Log::notice('params==createByJava--------------------->>' . var_export($params, true));
         $data = $this->model('bcsRegister')->createByJava($params);
-        
-        Log::notice("bank register return data >>>>>".json_encode($data));
+
         if($data['error'] !==0){
             Log::error('create Fail!');
             EC::fail($data['code']);
@@ -296,6 +295,10 @@ class BcsRegisterController extends BaseController {
 
         if(($accountBeginStr = strstr($data['data'],'<ACCOUNT_NO>')) === false){
             Log::error('register bank return ACCOUNT_NO is empty');
+            $errorMsg = strstr($data['data'],'<ReturnMessage>');
+            $errorMsg = substr($errorMsg,strlen('<ReturnMessage>'));
+            $errorMsg = strstr($errorMsg,'<\/ReturnMessage>',true);
+            Log::error('bank register return msg:'.$errorMsg);
             EC::fail(EC_OTH);
         }
         $account = substr($accountBeginStr,strlen('<ACCOUNT_NO>'),23);
