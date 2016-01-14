@@ -10,7 +10,7 @@
 				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 					<span aria-hidden="true">&times;</span>
 				</button>
-				<h4 class="modal-title" id="info_bcsRegister_title">帮我找</h4>
+				<h4 class="modal-title" id="info_bcsRegister_title">虚拟卡号</h4>
 			</div>
 			<div class="modal-body">
 				<form class="form-horizontal">
@@ -63,7 +63,7 @@
 </div>
 <!-- /.modal -->
 
-<h1 class="page-header">帮我找</h1>
+<h1 class="page-header">虚拟卡号</h1>
 
 <div class="panel panel-primary">
   <div class="panel-heading">查找</div>
@@ -100,5 +100,5 @@
 </div>
 
 <div  id="bcsRegister-list">
-<?php echo $list_html; ?>
+<?php echo $entity_list_html; ?>
 </div>
