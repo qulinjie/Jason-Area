@@ -252,9 +252,10 @@ class BcsRegisterController extends BaseController {
     }
     
     private function registerAccount(){
+        $sitNo = $this->model('id')->getSitNo();
         $params = [
             'MCH_NO'               => self::getConfig('conf')['MCH_NO'],// 商户编号
-            'SIT_NO'               => $this->model('id')->getSitNo(),   // 席位号
+            'SIT_NO'               => $sitNo,   // 席位号
             'CUST_CERT_TYPE'       => $this->post('certType'),          // 客户证件类型
             'CUST_CERT_NO'         => $this->post('certNo'),            // 客户证件号码
             'CUST_NAME'            => $this->post('custName'),          // 客户名称
@@ -289,11 +290,23 @@ class BcsRegisterController extends BaseController {
         $data = $this->model('bcsRegister')->createByJava($params);
         
         Log::notice("bank register return data >>>>>".json_encode($data));
-        if($data['code'] !==0){
+        if($data['error'] !==0){
             Log::error('create Fail!');
             EC::fail($data['code']);
         }
-        EC::success(EC_OK);
+
+        preg_match('/<ACCOUNT_NO>(.*)<\/ACCOUNT_NO>/is', $data['data'] , $account);
+        if($account[1]){
+            Log::error('register bank return ACCOUNT_NO is empty');
+            EC::fail(EC_OTH);
+        }
+
+        $data = $this->model('bcsRegister')->update(['ACCOUNT_NO' => $account[1],'SIT_NO' => $sitNo]);
+        if($data !== EC_OK){
+            Log::error('registerCustomer update error');
+            EC::fail(EC_OTH);
+        }
+        EC::success(EC_OK,['ACCOUNT_NO' => $account[1]]);
     }
 
     private function yang_gbk2utf8($str){

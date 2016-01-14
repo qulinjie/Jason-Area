@@ -31,7 +31,6 @@ class ServicesController extends Controller {
         }
 
         $response = $this->model('bcsRegister')->update(array(
-            'MCH_NO'     => $reqData['MCH_NO'],
             'SIT_NO'     => $reqData['SIT_NO'],
             'ACT_TIME'   => $reqData['ACT_TIME'],
             'ACCOUNT_NO' => $reqData['ACCOUNT_NO']
