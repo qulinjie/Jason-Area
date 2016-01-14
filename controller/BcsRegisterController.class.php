@@ -301,7 +301,7 @@ class BcsRegisterController extends BaseController {
         }
         $account = substr($accountBeginStr,strlen('<ACCOUNT_NO>'),23);
         $data = $this->model('bcsRegister')->update(['ACCOUNT_NO' => $account,'SIT_NO' => $sitNo]);
-        if($data['data'] !== EC_OK){
+        if($data['code'] !== EC_OK){
             Log::error('registerCustomer update error');
             EC::fail(EC_OTH);
         }
