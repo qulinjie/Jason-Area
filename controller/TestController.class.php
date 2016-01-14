@@ -11,7 +11,7 @@ class TestController extends BaseController
 			//$this->testGet();
 			//$this->laiyifa();
 
-			$data = $this->model('bank')->getCustomerInfo('198209','DDMG00001');
+			$data = $this->model('bank')->getCustomerInfo('198209','DDMG00007');
 			var_dump($data);exit;
 
 		} else 
