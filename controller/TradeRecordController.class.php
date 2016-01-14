@@ -420,7 +420,7 @@ class TradeRecordController extends BaseController {
         $id = Request::post('id');
         $pwd = Request::post('pwd');
     
-        if( !$id || !pwd ){
+        if( !$id || !$pwd ){
             Log::error('checkCode params error!');
             EC::fail(EC_PAR_ERR);
         }
@@ -509,7 +509,7 @@ class TradeRecordController extends BaseController {
             }
             EC::fail(EC_BCS_TRADE_REPE);
         }
-        
+
         /**
          * 组装交易信息
          */
@@ -533,8 +533,25 @@ class TradeRecordController extends BaseController {
         $b_data_info = $data['data'][0];
         // 付款方席位号
         $buyer_sit_no = $b_data_info['SIT_NO'];
-        
-        
+        //检查买方帐号以及余额
+        $buyer_bank_info = $this->model('bank')->getCustomerInfo($mch_no,$buyer_sit_no);
+        if($buyer_bank_info['code']!==0){
+            Log::error('get buyer bank info error code:'.$buyer_bank_info['code']);
+            EC::fail(EC_OTH);
+        }
+
+        if($buyer_bank_info['data']['MBR_STS'] == '2'){//此处应该是1
+            Log::error('buyer bank not sign status:'.$buyer_bank_info['data']['MBR_STS']);
+            EC::fail(EC_NOT_SIGN);
+        }else if($buyer_bank_info['data']['MBR_STS'] == '3'){
+            Log::error('buyer bank already cancel status:'.$buyer_bank_info['data']['MBR_STS']);
+            EC::fail(EC_ARY_CANCEL);
+        }else if($buyer_bank_info['data']['ACCT_BAL'] < $data_obj['order_sum_amount']){
+            Log::error('buyer bank balance less');
+            EC::fail(EC_BLE_LESS);
+        }
+
+
         // 收款方用户ID
         $params  = array();
         $params['account'] = $data_obj['seller_tel'];
@@ -558,7 +575,21 @@ class TradeRecordController extends BaseController {
         $s_data_info = $data['data'][0];
         // 收款方席位号
         $seller_sit_no = $s_data_info['SIT_NO'];
-        
+        //检查收款方帐号
+        $seller_bank_info = $this->model('bank')->getCustomerInfo($mch_no,$seller_sit_no);
+        if($seller_bank_info['code']!==0){
+            Log::error('get seller bank info error code:'.$seller_bank_info['code']);
+            EC::fail(EC_OTH);
+        }
+
+        if($seller_bank_info['data']['MBR_STS'] == '2'){ //此处应该是1
+            Log::error('seller bank not sign status:'.$seller_bank_info['data']['MBR_STS']);
+            EC::fail(EC_NOT_SIGN);
+        }else if($seller_bank_info['data']['MBR_STS'] == '3'){
+            Log::error('seller bank already cancel status:'.$seller_bank_info['data']['MBR_STS']);
+            EC::fail(EC_ARY_CANCEL);
+        }
+
         // 付款订单号
         $order_no = $data_obj['order_no'];
         // 付款订单总金额
@@ -575,8 +606,8 @@ class TradeRecordController extends BaseController {
         $params_trade['BUYER_SIT_NO'] = $buyer_sit_no; // 付款方席位号
         $params_trade['SELLER_SIT_NO'] = $seller_sit_no; // 收款方席位号
         $params_trade['FUNC_CODE'] = BcsTradeModel::$_FUNC_CODE_FINISH; // 功能号
-//         $params_trade['TX_AMT'] = $order_sum_amount; // 交易金额
-        $params_trade['TX_AMT'] = 1; // TODO for test .
+        $params_trade['TX_AMT'] = $order_sum_amount; // 交易金额
+       // $params_trade['TX_AMT'] = 1; // TODO for test .
         $params_trade['SVC_AMT'] = BcsTradeModel::$_SVC_AMT_0; // 买方佣金金额
         $params_trade['BVC_AMT'] = BcsTradeModel::$_BVC_AMT_0; // 卖方佣金金额
         $params_trade['CURR_COD'] = BcsTradeModel::$_CURR_COD_RMB; // 币别
