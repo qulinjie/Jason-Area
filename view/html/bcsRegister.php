@@ -1,96 +1,104 @@
-<h1 class="page-header">绑定银行卡</h1>
-<div class="panel panel-primary" style="width:1100px;">
-    <div class="panel-body">
-        <form class="form-horizontal" id="bcsRegister">
-            <div class="form-group">
-                <label for="certType"  class="control-label col-lg-2">客户证件类型</label>
-                <div class="col-lg-2">
-                    <select class="form-control" id="certType" name="certType">
-                        <option value="">请选择</option>
-                        <option value="01">身份证</option>
-                        <option value="20">营业执照</option>
-                        <option value="21" selected>组织机构代码</option>
-                    </select>
-                </div>
-                <label for="certNo"  class="control-label col-lg-2">客户证件号码</label>
-                <div class="col-lg-2">
-                    <input type="text" class="form-control" id="certNo" name="certNo" value="9800008107" placeholder="客户证件号码">
-                </div>
-            </div>
+<?php 
+/**
+ * bcsRegister_list_html
+ */
+?>
+<div class="modal fade" id="add-bcsRegister-modal">
+	<div class="modal-dialog" style="width: 800px;">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+				<h4 class="modal-title" id="info_bcsRegister_title">帮我找</h4>
+			</div>
+			<div class="modal-body">
+				<form class="form-horizontal">
+				    <input type="hidden" class="form-control" id="info-bcsRegister-id" value=""></input>
+				  <div class="form-group">
+				    <label for="add-bcsRegister-tel" class="col-sm-2 control-label">手机号</label>
+				    <div class="col-sm-9">
+				      <input class="form-control" id="add-bcsRegister-tel" placeholder="手机号"></input>
+				    </div>
+				  </div>
+				  <div class="form-group">
+				    <label for="add-bcsRegister-name" class="col-sm-2 control-label">姓名</label>
+				    <div class="col-sm-9">
+				      <input class="form-control" id="add-bcsRegister-name" placeholder="姓名"></input>
+				    </div>
+				  </div>
+				  <div class="form-group">
+				    <label for="add-bcsRegister-time" class="col-sm-2 control-label">通话时间</label>
+				    <div class="col-sm-9">
+				      <input class="form-control" id="add-bcsRegister-time" placeholder="通话时间"></input>
+				    </div>
+				  </div>
+				  <div class="form-group">
+				    <label for="add-bcsRegister-status" class="col-sm-2 control-label">状态</label>
+				    <div class="col-sm-9">
+				      <select class="form-control" id="add-bcsRegister-status">
+                	      <option value="1">记录</option>
+                	      <option value="2">待处理</option>
+                	      <option value="3">处理完成</option>
+                      </select>
+				    </div>
+				  </div>
+				  <div class="form-group">
+				    <label for="add-bcsRegister-remark" class="col-sm-2 control-label">备注</label>
+				    <div class="col-sm-9">
+				      <input class="form-control" id="add-bcsRegister-remark" placeholder="备注"></input>
+				    </div>
+				  </div>
+				  <div class="alert alert-danger" id="add-bcsRegister-hint"></div>
+				</form>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+				<button type="button" class="btn btn-primary" id="btn-add-bcsRegister">确定</button>
+			</div>
+		</div>
+		<!-- /.modal-content -->
+	</div>
+	<!-- /.modal-dialog -->
+</div>
+<!-- /.modal -->
 
-            <div class="form-group">
-                <label for="custName"  class="control-label col-lg-2">客户名称</label>
-                <div class="col-lg-2">
-                    <input type="text" class="form-control" id="custName" name="custName" value="湖南省领测试" placeholder="客户名称">
-                </div>
-                <label for="custAcctName"  class="control-label col-lg-2">客户账户名</label>
-                <div class="col-lg-2">
-                    <input type="text" class="form-control" id="custAcctName" name="custAcctName" value="湖南省领测试" placeholder="客户账户名">
-                </div>
-            </div>
+<h1 class="page-header">帮我找</h1>
 
-            <div class="form-group">
-                <label for="custSpeAcctNo"  class="control-label col-lg-2">客户结算账户</label>
-                <div class="col-lg-2">
-                    <input type="text" class="form-control" id="custSpeAcctNo" name="custSpeAcctNo" value="800052170901011" placeholder="客户结算账户">
-                </div>
-                <label for="custAcctBkType"  class="control-label col-lg-2">客户结算账户行别</label>
-                <div class="col-lg-2">
-                    <select class="form-control" id="custAcctBkType" name="custAcctBkType">
-                        <option value="">请选择</option>
-                        <option value="0" selected>长沙银行</option>
-                        <option value="1">非长沙银行</option>
-                    </select>
-                </div>
-            </div>
+<div class="panel panel-primary">
+  <div class="panel-heading">查找</div>
+  <div class="panel-body">
+    <div class="form-inline">
+      <div class="form-group">
+	    <label for="bcsRegister-search-cardId">手机号</label>
+	    <input type="email" class="form-control" id="bcsRegister-search-tel" placeholder="手机号">
+	  </div>
+	  <div class="form-group">
+	    <label for="bcsRegister-search-name">姓名</label>
+	    <input type="email" class="form-control" id="bcsRegister-search-name" placeholder="姓名">
+	  </div>
+	  <div class="form-group">
+	    <label for="bcsRegister-search-time1">通话时间</label>
+	    <input type="email" class="form-control form_datetime" id="bcsRegister-search-time1" placeholder="通话时间">
+	    -
+	    <input type="email" class="form-control form_datetime" id="bcsRegister-search-time2" placeholder="通话时间">
+	  </div>
+	  <div class="form-group">
+	    <label for="bcsRegister-search-status">状态</label>
+	    <select class="form-control" id="bcsRegister-search-status">
+	      <option value="-1">全部</option>
+	      <option value="1">记录</option>
+	      <option value="2">待处理</option>
+	      <option value="3">处理完成</option>
+        </select>
+	  </div>
+	  <button type="button" class="btn btn-primary" id="bcsRegister-search-btn">查询</button>
+	  <button type="button" class="btn btn-default" id="bcsRegister-clear-btn">清空查询条件</button>
+	  <div class="alert alert-danger search-list-hint" id="search-bcsRegister-hint"></div>
+	</div>
+  </div>
+</div>
 
-            <div class="form-group">
-                <label for="enableEcds"  class="control-label col-lg-2">是否开通电票</label>
-                <div class="col-lg-2">
-                    <select class="form-control" id="enableEcds" name="enableEcds">
-                        <option value="">请选择</option>
-                        <option value="1">是</option>
-                        <option value="0" selected>否</option>
-                    </select>
-                </div>
-                <label for="isPerson"  class="control-label col-lg-2">是否个人</label>
-                <div class="col-lg-2">
-                    <select class="form-control" id="isPerson" name="isPerson">
-                        <option value="">请选择</option>
-                        <option value="1">是</option>
-                        <option value="0" selected>否</option>
-                    </select>
-                </div>
-            </div>
-
-            <div class="form-group">
-                <label for="custPhoneNum"  class="control-label col-lg-2">客户手机号码</label>
-                <div class="col-lg-2">
-                    <input type="text" class="form-control" id="custPhoneNum" name="custPhoneNum" placeholder="客户手机号码(可不填)" value="13265431549" />
-                </div>
-                <label for="custTeleNum"  class="control-label col-lg-2">客户电话号码</label>
-                <div class="col-lg-2">
-                    <input type="text" class="form-control" id="custTeleNum" name="custTeleNum" placeholder="客户电话号码(可不填)" value="13265431549" />
-                </div>
-            </div>
-
-            <div class="form-group">
-                <label for="custAddress"  class="control-label col-lg-2">客户地址</label>
-                <div class="col-lg-2">
-                    <input type="text" class="form-control" id="custAddress" name="custAddress" placeholder="客户地址(可不填)" value="深圳科技" />
-                </div>
-                <label for="custMark"  class="control-label col-lg-2">备注</label>
-                <div class="col-lg-2">
-                    <input type="text" class="form-control" id="custMark" name="custMark" placeholder="备注(可不填)" value="大汉测试" />
-                </div>
-            </div>
-
-            <div class="form-group">
-                <div class="col-lg-offset-2 col-lg-2">
-                    <button type="button" class="btn btn-primary form-control" id="bcsRegisterSaveBtn">绑定</button>
-                </div>
-            </div>
-            <div class="alert alert-danger  search-list-hint" id="setPayPasswordMsg"></div>
-        </form>
-    </div>
+<div  id="bcsRegister-list">
+<?php echo $list_html; ?>
 </div>

@@ -1,3 +1,9 @@
+<?php 
+    $session = Controller::instance('session');
+    $encrypt = Controller::instance('encrypt');
+    $login_token = $encrypt->tokenCode('login:' . $session->get_id());
+    $other_token = $encrypt->tokenCode('other:' . $session->get_id());
+?>
 <!DOCTYPE html>
 <html lang="zh">
 <head>
@@ -22,10 +28,60 @@
 	<script type="text/javascript" src="<?php echo Router::getBaseUrl();?>js/jquery-1.11.3.min.js"></script>
 </head>
 <body>
+
 <input type="hidden" id="token"   value="<?php echo UserController::getToken();?>">
 <input type="hidden" id="isLogin" value="<?php echo UserController::isLogin();?>"/>
+<input type="hidden" id="isAdminLogin" value="<?php echo AdminController::isLogin();?>"/>
 <input type="hidden" id="view_page_type" value="<?php echo $page_type;?>"/>
 <input type="hidden" id="view_controller" value="<?php echo doit::$controller;?>"/>
+<input type="hidden" id="user_id" value="<?php echo $session->get('loginUser')['id']; ?>" />
+
+<!-- login-modal -->
+<div class="modal fade" id="admin-login-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" 
+                                          style="background-image:url(<?php echo Router::getBaseUrl();?>view/images/loginbak.jpg);background-size: 100% 100%; ">
+	<div class="modal-dialog">
+		<div class="modal-content" style="margin-top:52%;">
+			<div class="modal-header" style="text-align: center;">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+				<img alt="大大买钢" src="<?php echo Router::getBaseUrl();?>view/images/logo.jpg" style=""/>
+				<h3 class="modal-title" id="myModalLabel">大大买钢支付管理系统</h3>
+			</div>
+			<div class="modal-body">
+				    <form class="form-horizontal">
+					<div class="form-group">
+					    <div class="col-sm-1"></div>
+					    <div class="col-sm-10">
+							<input type="hidden" id="login-csrf" value="<?php echo $login_token;?>">
+							<input type="text" id="admin-login-account" class="form-control" placeholder="用户名" autofocus value="13265431549"><br/>
+							<input type="password" id="admin-login-password" class="form-control" placeholder="密码" value="123456"><br/>
+							<!--
+							<div class="pincode" style="display:none">
+								<input type="text" id="admin-login-pincode" class="form-control pincode" placeholder="验证码">
+									<img class="pincode-img" id="login-pincode-img"
+									   src="<?php echo Router::getBaseUrl()?>admin/pincode/xpp<?php echo rand(); ?>"
+									   alt="点击刷新" class="img-rounded"
+									   onclick="this.src='<?php echo Router::getBaseUrl();?>admin/pincode/xpp' + Math.random();">
+								<div class="clearfix"></div>
+							</div>
+							<label class="checkbox" style="display:none">
+							      <input type="checkbox" value="remember-me" id="login-remember" checked="checked"> 下次自动登录<br/>&nbsp;
+							</label>
+							
+							<label class="checkbox">
+							      <input type="checkbox" value="1" id="login-manager" checked="checked">客户经理<br/>&nbsp;
+							</label>
+							-->
+							<button class="btn btn-lg btn-primary btn-block" type="button" id="btn-admin-login">登录</button>
+							<div class="alert alert-danger" role="alert" id="admin-login-hint"></div>
+						</div>
+					</div>
+					</form>
+			   </div>
+		</div>
+		<!-- /.modal-content -->
+	</div>
+	<!-- /.modal-dialog -->
+</div>
 
 <div class="modal fade" id="confirm-admin-modal">
 	<div class="modal-dialog">
@@ -48,6 +104,85 @@
 		</div>
 	</div>
 </div>
+
+<?php if(doit::$controller == 'Admin' || AdminController::isAdmin()){?>
+    <?php if(AdminController::isLogin()){?>
+    <!-- top横幅 -->
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <!-- <a class="navbar-brand" href="<?php echo Router::getBaseUrl();?>"></a> 
+          <img alt="运营系统" src="<?php echo Router::getBaseUrl();?>view/images/banner.png" style="margin-top: 10px;"/>-->
+          <div style='color: white;font-size: 24px;margin-top: 6px;'>大大买钢支付管理系统</div>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+          <ul class="nav navbar-nav navbar-right">
+            <li style="color: white;vertical-align:middle;line-height:50px;">
+                <?php echo '&nbsp; 管理员'; ?>
+            </li>
+            <li style="color: white;vertical-align:middle;line-height:50px;">
+                &nbsp;&nbsp; <?php echo $session->get('loginUser')['name']; ?>
+            </li>
+<!--             <li><a id="user-chg-pwd-btn" href="#">修改密码</a></li> -->
+            <li><a id="amdin-loginOut-btn" href="#">退出</a></li>
+          </ul>
+          <input type="hidden" id="type-is-admin-tip" value="<?php if( AdminController::isAdmin()){?>1<?php } else {?>2<?php }?>"/>
+          <!-- <form class="navbar-form navbar-right">
+            <input type="text" class="form-control" placeholder="Search...">
+          </form>
+           -->
+        </div>
+      </div>
+    </nav>
+    
+      <!-- 左侧菜单 -->
+      <div class="container-fluid">
+      <div class="row">
+        <div class="col-sm-3 col-md-2 sidebar">
+          <ul id="li-menu-list" class="nav nav-sidebar">
+    		
+    			<li <?php if(doit::$controller == 'BcsMarket'){?> class="discolor" <?php } ?>>
+        			<a href="<?php echo Router::getBaseUrl();?>bcsMarket/getInfo">市场信息</a>
+        	    </li>
+    			
+          </ul>
+        </div>
+        
+        <!-- 右侧内容页面 -->
+        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+          <?php if($page_type == 'bcsMarket'){?>
+                <script src="<?php echo Router::getBaseUrl();?>js/bcsMarketInfo.js"></script>
+                <?php echo $bcsMarket_html; ?>
+          <?php }else {?>
+          	<!-- main page -->
+          	<div class="jumbotron">
+<!--  			  <h1 class="text-center">大大买钢</h1>  -->
+<!--              <img alt="品牌企业  实力非凡" src="view/images/cms_banner.jpg" width="100%"></<img> -->
+			</div>
+          <?php }?>
+        </div>
+        
+      </div>
+    </div>
+    
+    <div id="footer">
+		<div class="container-fluid">
+			<div class="row">
+				<div class="col-sm-12 col-md-12" id="realfooter" style="overflow-x: hidden;">
+					<p class="text-center" style="width: 118%;">Copyright © 2015 大大买钢 All Rights Reserved</p>
+				</div>
+			</div>
+		</div>
+	</div>
+	<?php }?>
+	<script type="text/javascript" src="<?php echo Router::getBaseUrl();?>js/admin.js"></script>
+<?php } else {?>
 
 <div class="entirety">
 
@@ -192,6 +327,9 @@
     </div>
 </div> <!-- end class="entirety" -->
 
+<script type="text/javascript" src="<?php echo Router::getBaseUrl();?>js/custom.js"></script>
+
+<?php } ?>
 
 <!-- Just for debugging purposes. Don't actually copy this line! -->
 <!--[if lt IE 9]><script src="<?php echo Router::getBaseUrl();?>js/ie8-responsive-file-warning.js"></script><![endif]-->
@@ -217,9 +355,7 @@
 <script type="text/javascript" src="<?php echo Router::getBaseUrl();?>js/base64.js"></script>
 <script type="text/javascript" src="<?php echo Router::getBaseUrl();?>js/jsbn.js"></script>
 <script type="text/javascript" src="<?php echo Router::getBaseUrl();?>js/rsa.js"></script>
-<script type="text/javascript" src="<?php echo Router::getBaseUrl();?>js/custom.js"></script>
 <script type="text/javascript" src="<?php echo Router::getBaseUrl();?>js/messenger.min.js"></script>
 <script type="text/javascript" src="<?php echo Router::getBaseUrl();?>js/messenger-theme-future.js"></script>
 </body>
 </html>
-

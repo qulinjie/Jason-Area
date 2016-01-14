@@ -9,8 +9,11 @@ class IndexController extends Controller
 
     public function init()
     {
-        if(UserController::isLogin()){
+        if(AdminController::isAdmin()){
+            Log::notice("============================IndexController init =====================================isAdmin=============================");
+        } else if(UserController::isLogin()){
             $this->redirect($this->getBaseUrl().'tradeRecord/getIndex');
         }
     }
+    
 }

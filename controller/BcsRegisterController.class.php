@@ -247,7 +247,7 @@ class BcsRegisterController extends BaseController {
     }
 
     private function create(){
-        $bcsRegister_html = $this->render('bcsRegister',[],true);
+        $bcsRegister_html = $this->render('bcsRegisterInfo',[],true);
         $this->render('index',['page_type'=>'bcsRegister','bcsRegister_html'=>$bcsRegister_html]);
     }
     
