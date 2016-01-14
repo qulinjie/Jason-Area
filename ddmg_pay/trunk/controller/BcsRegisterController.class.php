@@ -60,10 +60,10 @@ class BcsRegisterController extends BaseController {
         $user_id = self::getCurrentUserId();
     
         $params  = array();
-        foreach ([ 'order_no', 'user_id', 'code', 'time1', 'time2', 'type', 'order_status',
-                    'order_time1', 'order_time2', 'seller_name', 'seller_conn_name', 'order_sum_amount1', 'order_sum_amount2' ] as $val){
-            if($$val) $params[$val] = $$val;
-        }
+//         foreach ([ 'order_no', 'user_id', 'code', 'time1', 'time2', 'type', 'order_status',
+//                     'order_time1', 'order_time2', 'seller_name', 'seller_conn_name', 'order_sum_amount1', 'order_sum_amount2' ] as $val){
+//             if($$val) $params[$val] = $$val;
+//         }
     
         $data_cnt = $bcsRegister_model->searchCnt($params);
         if(EC_OK != $data_cnt['code']){
@@ -75,10 +75,10 @@ class BcsRegisterController extends BaseController {
     
         $conf = $this->getConfig('conf');
         $page_cnt = $conf['page_count_default'];
-    
+        
         $total_page = ($cnt % $page_cnt) ? (integer)($cnt / $page_cnt) + 1 : $cnt / $page_cnt;
     
-        if(!$current_page || 0 >= $current_page) {
+        if(empty($current_page) || 0 >= $current_page) {
             $current_page = 1;
         } if($current_page > $total_page) {
             $current_page = $total_page;

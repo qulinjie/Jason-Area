@@ -27,21 +27,20 @@
 	</div>
 </div>
 
-<?php if(empty($list)){?>
+<?php if(empty($data_list)){?>
 <div class="alert alert-info" role="alert"><p class="text-center">
 	无记录
 </p></div>
 <?php }else{?>
 <div class="panel panel-default">
-<div class="panel-heading">帮我找列表</div>
+<div class="panel-heading">列表</div>
   <div class="panel-body">
 		<table class="table table-hover">
 			<thead>
 				<tr>
 					<th style="display:none">id</th>
-					<th>手机号</th>
-					<th>姓名</th>
-					<th>状态</th>
+					<th>席位号</th>
+					<th>虚拟考号</th>
 					<th>通话时间</th>
 					<th>备注</th>
 					<th>处理时间</th>
@@ -49,22 +48,11 @@
 				</tr>
 			</thead>
 			<tbody>
-<?php foreach ($list as $item){?>
+<?php foreach ($data_list as $item){?>
 			<tr>
 				<td style="display:none"><?php echo $item['id'];?><input type="hidden" value="<?php echo $item['status'];?>"></td>
-				<td><?php echo $item['caller_tel'];?></td>
-				<td><?php echo $item['caller_name'];?></td>
-				<td>
-				    <?php 
-    				    if($item['status'] == CallHelpModel::$_status_record){
-    				        echo '记录';
-    				    } else if($item['status'] == CallHelpModel::$_status_doing){
-    				        echo '待处理';
-    				    } else if($item['status'] == CallHelpModel::$_status_finish){
-    				        echo '处理完成';
-				        }
-				    ?>
-				</td>
+				<td><?php echo $item['MCH_NO'];?></td>
+				<td><?php echo $item['ACCOUNT_NO'];?></td>
 				<td><?php echo $item['add_timestamp'];?></td>
 				<td><?php echo empty($item['remark'])?'-':$item['remark'];?></td>
 				<td><?php echo (0 < strtotime($item['ope_timestamp']))? $item['ope_timestamp'] : '-';?></td>

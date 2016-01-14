@@ -24,7 +24,6 @@
 	<!-- Custom styles for this template -->
 	<link href="<?php echo Router::getBaseUrl();?>css/custom.css" rel="stylesheet">
 	<link href="<?php echo Router::getBaseUrl();?>css/bootstrap-datetimepicker.min.css" rel="stylesheet" media="screen">
-	<link href="<?php echo Router::getBaseUrl();?>css/index.css" type="text/css" rel="stylesheet" />
 	<script type="text/javascript" src="<?php echo Router::getBaseUrl();?>js/jquery-1.11.3.min.js"></script>
 </head>
 <body>
@@ -150,6 +149,9 @@
     			<li <?php if(doit::$controller == 'BcsMarket'){?> class="discolor" <?php } ?>>
         			<a href="<?php echo Router::getBaseUrl();?>bcsMarket/getInfo">市场信息</a>
         	    </li>
+        	    <li <?php if(doit::$controller == 'BcsRegister'){?> class="discolor" <?php } ?>>
+        			<a href="<?php echo Router::getBaseUrl();?>bcsRegister/getIndex">虚拟卡号管理</a>
+        	    </li>
     			
           </ul>
         </div>
@@ -159,12 +161,14 @@
           <?php if($page_type == 'bcsMarket'){?>
                 <script src="<?php echo Router::getBaseUrl();?>js/bcsMarketInfo.js"></script>
                 <?php echo $bcsMarket_html; ?>
+           <?php }else if($page_type == 'bcsRegister'){?>
+    			<script src="<?php echo Router::getBaseUrl();?>js/bcsRegister.js"></script>
+    			<?php echo $bcsRegister_html;?>
           <?php }else {?>
-          	<!-- main page -->
-          	<div class="jumbotron">
-<!--  			  <h1 class="text-center">大大买钢</h1>  -->
-<!--              <img alt="品牌企业  实力非凡" src="view/images/cms_banner.jpg" width="100%"></<img> -->
-			</div>
+              	<div class="jumbotron"> <!-- main page -->
+    <!--  			  <h1 class="text-center">大大买钢</h1>  -->
+    <!--              <img alt="品牌企业  实力非凡" src="view/images/cms_banner.jpg" width="100%"></<img> -->
+    			</div>
           <?php }?>
         </div>
         
@@ -183,6 +187,8 @@
 	<?php }?>
 	<script type="text/javascript" src="<?php echo Router::getBaseUrl();?>js/admin.js"></script>
 <?php } else {?>
+
+<link href="<?php echo Router::getBaseUrl();?>css/index.css" type="text/css" rel="stylesheet" />
 
 <div class="entirety">
 
