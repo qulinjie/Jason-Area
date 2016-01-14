@@ -252,10 +252,9 @@ class BcsRegisterController extends BaseController {
     }
     
     private function registerAccount(){
-        $sitNo = $this->model('id')->getSitNo();
         $params = [
             'MCH_NO'               => self::getConfig('conf')['MCH_NO'],// 商户编号
-            'SIT_NO'               => $sitNo,   // 席位号
+           // 'SIT_NO'               => $sitNo,   // 席位号
             'CUST_CERT_TYPE'       => $this->post('certType'),          // 客户证件类型
             'CUST_CERT_NO'         => $this->post('certNo'),            // 客户证件号码
             'CUST_NAME'            => $this->post('custName'),          // 客户名称
@@ -278,7 +277,7 @@ class BcsRegisterController extends BaseController {
             Log::error('registerAccount insert db error code '.$response['code']);
             EC::fail($response['code']);
         }
-
+        $params['SIT_NO'] = $response['data']['SIT_NO'];
         $data = $this->model('bank')->registerCustomer($params);
         
         $conf = $this->getConfig('conf');
@@ -300,8 +299,7 @@ class BcsRegisterController extends BaseController {
             EC::fail(EC_OTH);
         }
         $account = substr($accountBeginStr,strlen('<ACCOUNT_NO>'),23);
-        $data = $this->model('bcsRegister')->update(['ACCOUNT_NO' => $account,'SIT_NO' => $sitNo]);
-        Log::error('response update<<<<<<<<<<<<'.var_export($data,true));
+        $data = $this->model('bcsRegister')->update(['ACCOUNT_NO' => $account,'SIT_NO' => $response['data']['SIT_NO']]);
         if($data['code'] !== EC_OK){
             Log::error('registerCustomer update error');
             EC::fail(EC_OTH);

@@ -6,7 +6,7 @@ $(function(){
     	            if(result.code != 0) {
     	            	alert(result.msg + '(' + result.code + ')');
     	            }else {
-    	            	alert(result.msg);
+    	            	alert('注册成功,帐号：'+result.data.ACCOUNT_NO);
     	            }
     	            window.location.replace(window.location);
     	        },
