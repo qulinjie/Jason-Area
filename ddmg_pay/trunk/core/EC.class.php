@@ -65,6 +65,10 @@ define('EC_UPL_FILE_TYPE_ERR',402);
 
 define('EC_BCS_TRADE_REPE',501);
 define('EC_SIT_NO_NON',601);
+
+define('EC_NOT_SIGN','801');
+define('EC_ARY_CANCEL','802');
+define('EC_BLE_LESS','803');
 class EC extends Base {
 
 	public static $_errMsg = array(
@@ -133,6 +137,10 @@ class EC extends Base {
 	    
 	        EC_BCS_TRADE_REPE      => '存在成功或未明的交易记录',
 			EC_SIT_NO_NON     => '席位号不存在',
+
+			EC_NOT_SIGN       => '未签约',
+			EC_ARY_CANCEL     => '已注销',
+			EC_BLE_LESS       => '余额不足'
 	);
 	public static function load(){
 		return true;
