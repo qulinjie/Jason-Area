@@ -295,18 +295,17 @@ class BcsRegisterController extends BaseController {
             EC::fail($data['code']);
         }
 
-        preg_match('/<ACCOUNT_NO>(.*)<\/ACCOUNT_NO>/is', $data['data'] , $account);
-        if($account[1]){
+        if(($accountBeginStr = strstr($data['data'],'<ACCOUNT_NO>')) === false){
             Log::error('register bank return ACCOUNT_NO is empty');
             EC::fail(EC_OTH);
         }
-
-        $data = $this->model('bcsRegister')->update(['ACCOUNT_NO' => $account[1],'SIT_NO' => $sitNo]);
+        $account = substr($accountBeginStr,strlen('<ACCOUNT_NO>'),23);
+        $data = $this->model('bcsRegister')->update(['ACCOUNT_NO' => $account,'SIT_NO' => $sitNo]);
         if($data !== EC_OK){
             Log::error('registerCustomer update error');
             EC::fail(EC_OTH);
         }
-        EC::success(EC_OK,['ACCOUNT_NO' => $account[1]]);
+        EC::success(EC_OK,['ACCOUNT_NO' => $account]);
     }
 
     private function yang_gbk2utf8($str){
