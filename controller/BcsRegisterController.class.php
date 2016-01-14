@@ -254,7 +254,6 @@ class BcsRegisterController extends BaseController {
     private function registerAccount(){
         $params = [
             'MCH_NO'               => self::getConfig('conf')['MCH_NO'],// 商户编号
-           // 'SIT_NO'               => $sitNo,   // 席位号
             'CUST_CERT_TYPE'       => $this->post('certType'),          // 客户证件类型
             'CUST_CERT_NO'         => $this->post('certNo'),            // 客户证件号码
             'CUST_NAME'            => $this->post('custName'),          // 客户名称
