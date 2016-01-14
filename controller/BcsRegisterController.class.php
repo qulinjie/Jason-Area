@@ -293,13 +293,7 @@ class BcsRegisterController extends BaseController {
             EC::fail($data['code']);
         }
 
-        Log::error('Test <<<<<<<<<<<<<<<<<<'.$data['data']);
-
         if(($accountBeginStr = strstr($data['data'],'<ACCOUNT_NO>')) === false){
-            $errorMsg = strstr($data['data'],'<ReturnMessage>');
-            $errorMsg = substr($errorMsg,strlen('<ReturnMessage>'));
-            $errorMsg = strstr($errorMsg,'<\/ReturnMessage>',true);
-            Log::error('bank register return msg:'.$errorMsg);
             Log::error('register bank return ACCOUNT_NO is empty');
             EC::fail(EC_OTH);
         }
