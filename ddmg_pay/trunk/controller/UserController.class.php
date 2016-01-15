@@ -6,6 +6,12 @@ class UserController extends BaseController
     public function handle($params = array())
     {
         switch ($params[0]) {
+            case 'getIndex':
+                $this->searchList(true);
+                break;
+            case 'searchList':
+                $this->searchList();
+                break;
             case 'login':
                 $this->login();
                 break;
@@ -24,6 +30,67 @@ class UserController extends BaseController
         }
     }
 
+    protected function searchList($isIndex = false) {
+        $current_page = Request::post('page');
+        $time1 = Request::post('time1');
+        $time2 = Request::post('time2');
+        $status = Request::post('status');
+        $account = Request::post('account');
+        $nicename = Request::post('nicename');
+    
+        $user_model = $this->model('user');
+        //$user_id = self::getCurrentUserId();
+    
+        $params  = array();
+        foreach ([ 'status', 'nicename', 'account', 'time1', 'time2' ] as $val){
+            if($$val) $params[$val] = $$val;
+        }
+    
+        $data_cnt = $user_model->searchCnt($params);
+        if(EC_OK != $data_cnt['code']){
+            Log::error("searchCnt failed . ");
+            EC::fail($data_cnt['code']);
+        }
+    
+        $cnt = $data_cnt['data'];
+    
+        $conf = $this->getConfig('conf');
+        $page_cnt = $conf['page_count_default'];
+    
+        $total_page = ($cnt % $page_cnt) ? (integer)($cnt / $page_cnt) + 1 : $cnt / $page_cnt;
+    
+        if(empty($current_page) || 0 >= $current_page) {
+            $current_page = 1;
+        } if($current_page > $total_page) {
+            $current_page = $total_page;
+        }
+    
+        $params['current_page'] = $current_page;
+        $params['page_count'] = $page_cnt;
+        $data = $user_model->searchList($params);
+        if(EC_OK != $data['code']){
+            Log::error("searchList failed . ");
+            EC::fail($data['code']);
+        }
+    
+        $data_list = $data['data'];
+    
+//         if(!empty($data_list)) {
+//             $cert_type = $this->getConfig('certificate_type');
+//             foreach ($data_list as $key => $item){
+//                 $data_list[$key]['CUST_CERT_TYPE'] = $cert_type[$item['CUST_CERT_TYPE']];
+//             }
+//         }
+    
+        $entity_list_html = $this->render('user_list', array('data_list' => $data_list, 'current_page' => $current_page, 'total_page' => $total_page), true);
+        if($isIndex) {
+            $view_html = $this->render('user', array('entity_list_html' => $entity_list_html ), true);
+            $this->render('index', array('page_type' => 'user', 'user_html' => $view_html));
+        } else {
+            EC::success(EC_OK, array('entity_list_html' => $entity_list_html));
+        }
+    }
+    
     private function login()
     {
         if(IS_POST){

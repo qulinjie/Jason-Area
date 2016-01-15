@@ -149,6 +149,9 @@
     			<li <?php if(doit::$controller == 'BcsMarket'){?> class="active" <?php } ?>>
         			<a href="<?php echo Router::getBaseUrl();?>bcsMarket/getInfo">市场信息</a>
         	    </li>
+        	    <li <?php if(doit::$controller == 'User'){?> class="active" <?php } ?>>
+        			<a href="<?php echo Router::getBaseUrl();?>user/getIndex">用户管理</a>
+        	    </li>
         	    <li <?php if(doit::$controller == 'BcsRegister'){?> class="active" <?php } ?>>
         			<a href="<?php echo Router::getBaseUrl();?>bcsRegister/getIndex">注册信息管理</a>
         	    </li>
@@ -165,12 +168,15 @@
           <?php if($page_type == 'bcsMarket'){?>
                 <script src="<?php echo Router::getBaseUrl();?>js/bcsMarketInfo.js"></script>
                 <?php echo $bcsMarket_html; ?>
+          <?php }else if($page_type == 'user'){?>
+    			<script src="<?php echo Router::getBaseUrl();?>js/user.js"></script>
+    			<?php echo $user_html;?>
            <?php }else if($page_type == 'bcsRegister'){?>
     			<script src="<?php echo Router::getBaseUrl();?>js/bcsRegister.js"></script>
     			<?php echo $bcsRegister_html;?>
           <?php }else if($page_type == 'bcsCustomer'){?>
     			<script src="<?php echo Router::getBaseUrl();?>js/bcsCustomer.js"></script>
-		  <?php echo $bcsCustomer_html;?>
+		        <?php echo $bcsCustomer_html;?>
           <?php }else {?>
               	<div class="jumbotron"> <!-- main page -->
     <!--  			  <h1 class="text-center">大大买钢</h1>  -->
