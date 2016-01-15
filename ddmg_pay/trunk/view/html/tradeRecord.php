@@ -18,7 +18,9 @@
                 <div style="margin-left: 15px;">
                      <font style="font-weight: bold;">支付密码：</font>
                      <input type="password" class="form-control" id="add-pay-pwd" value="" style="width: 150px;display: inline;"/>
+                     <!-- 
                      <span id="tips_set_pay_pwd"><span style="color: #ADABAB;">您当前未设置支付密码，请先</span><a href="#">设置支付密码</a></span>
+                     -->
                 </div>
                 <div style="margin: 15px;">
                     <button type="button" class="btn btn-primary" id="btn-add-pay" style="width: 150px;height: 38px;">确定支付</button>
@@ -35,7 +37,9 @@
 <ul  class="tabs" id="tabs" style="border: 1px solid #E4E4E4;">
 	<li style="border-bottom: 1px solid #E4E4E4;"><a href="#" id="order-waiting-list">待付款</a></li>
     <li style="border-bottom: 1px solid #E4E4E4;"><a href="#" id="order-details-list">付款明细</a></li>
+    <!-- 
     <li style="margin-right:0; border-bottom: 1px solid #E4E4E4;"><a href="#" id="trade-details-list">资金查询</a></li>
+    -->
 </ul>
 <!--
 <div class="panel panel-primary">

@@ -75,11 +75,13 @@
 
 <br/>
 <div style="border: 1px dashed #BFBFBF;line-height: 55px;height: 60px;">
+<!-- 
     <span style="float:left;margin-left: 15px;">
         <input name="pay_type" value="1" checked="checked" type="radio"/>大大付款 余额：<font color="red">100,000.00</font> 元
         &nbsp;&nbsp;&nbsp;&nbsp;
         <input name="pay_type" value="2" type="radio"/>网银支付
     </span>
+    -->
     <span style="float:right;margin-right: 15px;">
                           付款金额：<font color="red"><?php echo number_format($item['order_sum_amount'],2);?></font> 元
     </span>

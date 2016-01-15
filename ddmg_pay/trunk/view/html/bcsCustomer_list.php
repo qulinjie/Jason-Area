@@ -39,6 +39,7 @@
 			<thead>
 				<tr>
 					<th style="display:none">id</th>
+					<th style="display:none">user_id</th>
 					<th>席位号</th>
 					<th>虚拟卡号</th>
 					<th>客户名称</th>
@@ -55,7 +56,9 @@
 					<th>余额</th>
 					<th>可用余额</th>
 					<th>注册时间</th>
+					<th>开户日期</th>
 					<th>签约时间</th>
+					<th>解约时间</th>
 					<th>备注</th>
 					<th>操作</th>
 				</tr>
@@ -64,6 +67,7 @@
 <?php foreach ($data_list as $item){?>
 			<tr>
 				<td style="display:none"><?php echo $item['id'];?><input type="hidden" value="<?php echo $item['status'];?>"></td>
+				<td style="display:none"><?php echo $item['user_id'];?></td>
 				<td><?php echo $item['SIT_NO'];?></td>
 				<td><?php echo $item['ACCOUNT_NO'];?></td>
 				<td><?php echo $item['MBR_NAME'];?></td>
@@ -79,14 +83,14 @@
 				<td><?php echo (1== $item['MBR_STS'])?'已注册':((2== $item['MBR_STS'])?'已签约':'已注销');?></td>
 				<td><?php echo $item['ACCT_BAL'];?></td>
 				<td><?php echo $item['AVL_BAL'];?></td>
-				<td><?php echo (0 < strtotime($item['SIGNED_DATE']))? $item['SIGNED_DATE'] : '-';?></td>
 				<td><?php echo $item['add_timestamp'];?></td>
+				<td><?php echo (0 < strtotime($item['SIGNED_DATE']))? $item['SIGNED_DATE'] : '-';?></td>
 				<td><?php echo (0 < strtotime($item['ACT_TIME']))? $item['ACT_TIME'] : '-';?></td>
 				<td><?php echo (0 < strtotime($item['cancel_TIME']))? $item['cancel_TIME'] : '-';?></td>
 				<td><?php echo empty($item['comment'])?'-':$item['comment'];?></td>
 				<td>
 					<div class="btn-group" role="group">
-    			       <a id="callHelp-changeInfo-btn" href="#" data-toggle="modal" data-keyboard="false" data-backdrop="static">修改</a>
+    			       <a id="entity-loadInfo-btn" href="#" data-toggle="modal" data-keyboard="false" data-backdrop="static">更新</a>
 					</div>
 				</td>
 			</tr>

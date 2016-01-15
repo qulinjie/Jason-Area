@@ -344,7 +344,13 @@ class BcsCustomerController extends BaseController {
         $bcsRegister_model = $this->model('bcsRegister');
         $conf = $this->getConfig('conf');
         
-        $user_id = self::getCurrentUserId();
+        
+        $user_id = '';
+        if(AdminController::isAdmin()) {
+            $user_id = Request::post('user_id');
+        } else {
+            $user_id = self::getCurrentUserId();
+        }
         $mch_no = $conf['MCH_NO']; // 商户编号
         
         $params  = array();
