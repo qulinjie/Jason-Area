@@ -12,6 +12,9 @@ class UserController extends BaseController
             case 'searchList':
                 $this->searchList();
                 break;
+            case 'searchListAll':
+                $this->searchListAll();
+                break;
             case 'login':
                 $this->login();
                 break;
@@ -89,6 +92,25 @@ class UserController extends BaseController
         } else {
             EC::success(EC_OK, array('entity_list_html' => $entity_list_html));
         }
+    }
+    
+    protected function searchListAll() {
+        $current_page = Request::post('page');
+        $status = Request::post('status');
+    
+        $user_model = $this->model('user');
+        $params  = array();
+        foreach ([ 'status', 'nicename', 'account', 'time1', 'time2' ] as $val){
+            if($$val) $params[$val] = $$val;
+        }
+    
+        $data = $user_model->searchList($params);
+        if(EC_OK != $data['code']){
+            Log::error("searchList failed . ");
+            EC::fail($data['code']);
+        }
+        $data_list = $data['data'];
+        EC::success(EC_OK, array('data' => $data_list));
     }
     
     private function login()
