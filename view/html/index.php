@@ -242,11 +242,13 @@
             	<div class="money">
                     <div class="balance">可用余额</div>
                     <div class="how"><em><?php echo $bcsCustomerInfo['ACCT_BAL'];?></em><span>元</span>
+                        <!--  
                         <span>
                             <a href="">充值</a>
                             <a href="">提现</a>
                         </span>
                         <a href="">查看</a>
+                        -->
                     </div>
                 </div>
             </div>

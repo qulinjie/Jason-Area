@@ -116,6 +116,29 @@ $(document).ready(function(){
 		$("#entity-search-status").val("-1");
 	}
 	
+	/**************str--更新****************/
+	$(document).on('click', '#entity-loadInfo-btn', function(event){
+		var user_id =  $(this).parent().parent().parent().children().get(1).textContent;
+		
+		var objBtn = $(this);
+		objBtn.html('更新中...');
+		
+		$.post(BASE_PATH + 'bcsCustomer/loadInfo', {'user_id':user_id},
+		        function(result){
+		            if(result.code != 0) {
+		            	$("#search-entity-hint").html(result.msg + '(' + result.code + ')').fadeIn();
+		            }else {
+		            	$("#search-entity-hint").html(result.msg).fadeOut();
+		            	objBtn.html('更新');
+		            	setTimeout(function(){
+		                    $('#entity-search-btn').click();
+		                }, 1000);
+		            }
+		        },
+		        'json'
+		    );
+	});
+	/**************end--更新****************/
     
     prettyPrint();
 });
