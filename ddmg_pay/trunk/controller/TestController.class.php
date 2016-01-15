@@ -10,6 +10,7 @@ class TestController extends BaseController
 			//$this->markTest();
 			//$this->testGet();
 			//$this->laiyifa();
+			//
 		} else 
         switch( $params[0] )
         {
