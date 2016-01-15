@@ -146,12 +146,16 @@
         <div class="col-sm-3 col-md-2 sidebar">
           <ul id="li-menu-list" class="nav nav-sidebar">
     		
-    			<li <?php if(doit::$controller == 'BcsMarket'){?> class="discolor" <?php } ?>>
+    			<li <?php if(doit::$controller == 'BcsMarket'){?> class="active" <?php } ?>>
         			<a href="<?php echo Router::getBaseUrl();?>bcsMarket/getInfo">市场信息</a>
         	    </li>
-        	    <li <?php if(doit::$controller == 'BcsRegister'){?> class="discolor" <?php } ?>>
-        			<a href="<?php echo Router::getBaseUrl();?>bcsRegister/getIndex">虚拟卡号管理</a>
+        	    <li <?php if(doit::$controller == 'BcsRegister'){?> class="active" <?php } ?>>
+        			<a href="<?php echo Router::getBaseUrl();?>bcsRegister/getIndex">注册信息管理</a>
         	    </li>
+        	    <li <?php if(doit::$controller == 'BcsCustomer'){?> class="active" <?php } ?>>
+        			<a href="<?php echo Router::getBaseUrl();?>bcsCustomer/getIndex">虚拟卡管理</a>
+        	    </li>
+    			
     			
           </ul>
         </div>
@@ -164,6 +168,9 @@
            <?php }else if($page_type == 'bcsRegister'){?>
     			<script src="<?php echo Router::getBaseUrl();?>js/bcsRegister.js"></script>
     			<?php echo $bcsRegister_html;?>
+          <?php }else if($page_type == 'bcsCustomer'){?>
+    			<script src="<?php echo Router::getBaseUrl();?>js/bcsCustomer.js"></script>
+		  <?php echo $bcsCustomer_html;?>
           <?php }else {?>
               	<div class="jumbotron"> <!-- main page -->
     <!--  			  <h1 class="text-center">大大买钢</h1>  -->

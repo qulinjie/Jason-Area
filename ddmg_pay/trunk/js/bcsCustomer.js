@@ -87,7 +87,7 @@ $(document).ready(function(){
 		if(-1 == status) { status =""; }
 		
 	    //查找
-	    $.post(BASE_PATH + 'bcsRegister/searchList', {
+	    $.post(BASE_PATH + 'bcsCustomer/searchList', {
 		    	'time1':time1,
 		    	'time2':time2,
 		    	'SIT_NO':SIT_NO,
@@ -116,21 +116,6 @@ $(document).ready(function(){
 		$("#entity-search-status").val("-1");
 	}
 	
-    $(document).on('click', '#bcsRegisterSaveBtn', function(event){
-    	$(this).text('更新中...');
-    	$.post(BASE_PATH + 'bcsRegister/registerAccount', $('#bcsRegister').serialize(),
-    	        function(result){
-    	            if(result.code != 0) {
-    	            	alert(result.msg + '(' + result.code + ')');
-    	            }else {
-    	            	alert('注册成功,帐号：'+result.data.ACCOUNT_NO);
-    	            }
-    	            window.location.replace(window.location);
-    	        },
-    	        'json'
-    	    );
-    });
-
     
     prettyPrint();
 });

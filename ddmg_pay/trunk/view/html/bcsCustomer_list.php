@@ -42,20 +42,18 @@
 					<th>席位号</th>
 					<th>虚拟卡号</th>
 					<th>客户名称</th>
-					<th>客户账户名</th>
 					<th>证件号码</th>
 					<th>证件类型</th>
 					<th>客户结算账户</th>
-					<th>客户结算账户行别</th>
-					<th>客户结算账户行号</th>
+					<th>客户结算账户名</th>
 					<th>客户结算账户行名</th>
+					<th>客户结算账户行号</th>
 					<th>客户手机号码</th>
 					<th>客户电话号码</th>
 					<th>客户地址</th>
-					<th>客户备注</th>
-					<th>是否开通电票</th>
-					<th>是否个人</th>
-					<th>状态</th>
+					<th>客户状态</th>
+					<th>余额</th>
+					<th>可用余额</th>
 					<th>注册时间</th>
 					<th>签约时间</th>
 					<th>备注</th>
@@ -68,23 +66,23 @@
 				<td style="display:none"><?php echo $item['id'];?><input type="hidden" value="<?php echo $item['status'];?>"></td>
 				<td><?php echo $item['SIT_NO'];?></td>
 				<td><?php echo $item['ACCOUNT_NO'];?></td>
-				<td><?php echo $item['CUST_NAME'];?></td>
-				<td><?php echo $item['CUST_ACCT_NAME'];?></td>
-				<td><?php echo $item['CUST_CERT_NO'];?></td>
-				<td><?php echo $item['CUST_CERT_TYPE'];?></td>
-				<td><?php echo $item['CUST_SPE_ACCT_NO'];?></td>
-				<td><?php echo (0== $item['CUST_SPE_ACCT_BKTYPE'])?'长沙银行':'其它行';?></td>
-				<td><?php echo $item['CUST_SPE_ACCT_BKID'];?></td>
-				<td><?php echo $item['CUST_SPE_ACCT_BKNAME'];?></td>
-				<td><?php echo $item['CUST_PHONE_NUM'];?></td>
-				<td><?php echo $item['CUST_TELE_NUM'];?></td>
-				<td><?php echo $item['CUST_ADDR'];?></td>
-				<td><?php echo $item['RMRK'];?></td>
-				<td><?php echo (1== $item['ENABLE_ECDS'])?'是':'否';?></td>
-				<td><?php echo (1== $item['IS_PERSON'])?'是':'否';?></td>
-				<td><?php echo (1== $item['status'])?'成功':((2== $item['status'])?'失败':'处理中');?></td>
+				<td><?php echo $item['MBR_NAME'];?></td>
+				<td><?php echo $item['MBR_CERT_NO'];?></td>
+				<td><?php echo $item['MBR_CERT_TYPE'];?></td>
+				<td><?php echo $item['MBR_SPE_ACCT_NO'];?></td>
+				<td><?php echo $item['MBR_SPE_ACCT_NAME'];?></td>
+				<td><?php echo $item['MBR_BANK_NAME'];?></td>
+				<td><?php echo $item['MBR_BANK_NO'];?></td>
+				<td><?php echo $item['MBR_PHONE'];?></td>
+				<td><?php echo $item['MBR_TELENO'];?></td>
+				<td><?php echo $item['MBR_ADDR'];?></td>
+				<td><?php echo (1== $item['MBR_STS'])?'已注册':((2== $item['MBR_STS'])?'已签约':'已注销');?></td>
+				<td><?php echo $item['ACCT_BAL'];?></td>
+				<td><?php echo $item['AVL_BAL'];?></td>
+				<td><?php echo (0 < strtotime($item['SIGNED_DATE']))? $item['SIGNED_DATE'] : '-';?></td>
 				<td><?php echo $item['add_timestamp'];?></td>
 				<td><?php echo (0 < strtotime($item['ACT_TIME']))? $item['ACT_TIME'] : '-';?></td>
+				<td><?php echo (0 < strtotime($item['cancel_TIME']))? $item['cancel_TIME'] : '-';?></td>
 				<td><?php echo empty($item['comment'])?'-':$item['comment'];?></td>
 				<td>
 					<div class="btn-group" role="group">

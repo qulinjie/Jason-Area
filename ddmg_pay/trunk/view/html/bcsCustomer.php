@@ -84,12 +84,12 @@
 	    <input type="email" class="form-control form_datetime" id="entity-search-time2" placeholder="注册时间">
 	  </div>
 	  <div class="form-group">
-	    <label for="entity-search-status">注册状态</label>
+	    <label for="entity-search-status">客户状态</label>
 	    <select class="form-control" id="entity-search-status">
 	      <option value="-1">全部</option>
-	      <option value="1">成功</option>
-	      <option value="2">失败</option>
-	      <option value="3">处理中</option>
+	      <option value="1">已注册</option>
+	      <option value="2">已签约</option>
+	      <option value="3">已注销</option>
         </select>
 	  </div>
 	  <button type="button" class="btn btn-primary" id="entity-search-btn">查询</button>
