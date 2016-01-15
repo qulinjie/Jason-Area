@@ -247,8 +247,44 @@ class BcsRegisterController extends BaseController {
     }
 
     private function create(){
-        $bcsRegister_html = $this->render('bcsRegisterInfo',[],true);
-        $this->render('index',['page_type'=>'bcsRegister','bcsRegister_html'=>$bcsRegister_html]);
+        $params = [
+            'MCH_NO'               => self::getConfig('conf')['MCH_NO'],    // 商户编号
+            'SIT_NO'               => $this->post('SIT_NO'),                // 客户证件类型
+            'CUST_CERT_TYPE'       => $this->post('CUST_CERT_TYPE'),          // 客户证件类型
+            'CUST_CERT_NO'         => $this->post('CUST_CERT_NO'),            // 客户证件号码
+            'CUST_NAME'            => $this->post('CUST_NAME'),          // 客户名称
+            'CUST_ACCT_NAME'       => $this->post('CUST_ACCT_NAME'),      // 客户账户名
+            'CUST_SPE_ACCT_NO'     => $this->post('CUST_SPE_ACCT_NO'),     // 客户结算账户
+            'CUST_SPE_ACCT_BKTYPE' => $this->post('CUST_SPE_ACCT_BKTYPE'),    // 客户结算账户行别
+            'CUST_SPE_ACCT_BKID'   => $this->post('CUST_SPE_ACCT_BKID'),	// 客户结算账户行号
+            'CUST_SPE_ACCT_BKNAME' => $this->post('CUST_SPE_ACCT_BKNAME'),	// 客户结算账户行名
+            'ENABLE_ECDS'          => $this->post('ENABLE_ECDS'),        // 是否开通电票
+            'IS_PERSON'            => $this->post('IS_PERSON'),          // 是否个人
+            'CUST_PHONE_NUM'       => $this->post('CUST_PHONE_NUM'),      // 客户手机号码
+            'CUST_TELE_NUM'        => $this->post('CUST_TELE_NUM'),       // 客户电话号码
+            'CUST_ADDR'            => $this->post('CUST_ADDR'),       // 客户地址
+            'RMRK'                 => $this->post('RMRK')           // 客户备注
+        ];
+        
+        $user_id = $this->post('user_id');
+        $comment = $this->post('comment');
+        
+        $params['user_id'] = $user_id;
+        $params['comment'] = $comment;
+        
+        //TODO 
+        //验证参数
+        
+        
+        $bcsRegister_model = $this->model('bcsRegister');
+        $data = $bcsRegister_model->create($params);
+        if(EC_OK != $data['code']){
+            Log::error('create Fail!');
+            EC::fail($data['code']);
+        }
+        
+        Log::error( '---------------------------------------------params==>>' . var_export($params, true) . ',user_id=' . $user_id . ',comment=' .$comment );
+        EC::success(EC_OK);
     }
     
     private function registerAccount(){

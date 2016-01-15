@@ -5,12 +5,11 @@
  */
 ?>
 
-<div class="modal fade" id="confirm-callHelp-modal">
+<div class="modal fade" id="confirm-entity-modal">
 	<div class="modal-dialog">
 		<div class="modal-content">
 			<div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal"
-					aria-label="Close">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 					<span aria-hidden="true">&times;</span>
 				</button>
 				<h5 class="modal-title">提示</h5>
@@ -21,7 +20,7 @@
 			<div class="alert alert-danger" id="confirm-callHelp-hint"></div>
 			<div class="modal-footer">
 				<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-				<button type="button" class="btn btn-primary" id="btn-confirm-callHelp">确定</button>
+				<button type="button" class="btn btn-primary" id="btn-confirm-entity">确定</button>
 			</div>
 		</div>
 	</div>
