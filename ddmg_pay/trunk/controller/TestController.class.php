@@ -3,14 +3,13 @@ class TestController extends BaseController
 {
 	protected static $client;
 
-    public function handle( $params=[] )
+    public function handle( $params= [] )
     {
 		if ( !$params ) {
 			//$this->test();
 			//$this->markTest();
 			//$this->testGet();
 			//$this->laiyifa();
-			//
 		} else 
         switch( $params[0] )
         {
