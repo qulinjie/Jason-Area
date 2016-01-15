@@ -3,6 +3,15 @@
 
 class UserModel extends CurlModel
 {
+    
+    public function searchCnt($params = array()){
+        return self::sendRequest('user/searchCnt', $params);
+    }
+    
+    public function searchList($params = array()){
+        return self::sendRequest('user/searchList', $params);
+    }
+    
     /**
      * @param array $params ['tel','type'{1:注册，2：找回密码}]
      * @return array
