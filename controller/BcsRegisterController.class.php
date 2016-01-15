@@ -43,27 +43,19 @@ class BcsRegisterController extends BaseController {
     
     protected function searchList($isIndex = false) {
         $current_page = Request::post('page');
-        $order_no = Request::post('order_no');
-        $code = Request::post('code');
         $time1 = Request::post('time1');
         $time2 = Request::post('time2');
-        $type = Request::post('type');
-        $order_status = Request::post('order_status');
-        $order_time1 = Request::post('order_time1');
-        $order_time2 = Request::post('order_time2');
-        $seller_name = Request::post('seller_name');
-        $seller_conn_name = Request::post('seller_conn_name');
-        $order_sum_amount1 = Request::post('order_sum_amount1');
-        $order_sum_amount2 = Request::post('order_sum_amount2');
+        $status = Request::post('status');
+        $SIT_NO = Request::post('SIT_NO');
+        $ACCOUNT_NO = Request::post('ACCOUNT_NO');
     
         $bcsRegister_model = $this->model('bcsRegister');
-        $user_id = self::getCurrentUserId();
+        //$user_id = self::getCurrentUserId();
     
         $params  = array();
-//         foreach ([ 'order_no', 'user_id', 'code', 'time1', 'time2', 'type', 'order_status',
-//                     'order_time1', 'order_time2', 'seller_name', 'seller_conn_name', 'order_sum_amount1', 'order_sum_amount2' ] as $val){
-//             if($$val) $params[$val] = $$val;
-//         }
+        foreach ([ 'status', 'SIT_NO', 'ACCOUNT_NO', 'time1', 'time2' ] as $val){
+            if($$val) $params[$val] = $$val;
+        }
     
         $data_cnt = $bcsRegister_model->searchCnt($params);
         if(EC_OK != $data_cnt['code']){
@@ -93,6 +85,14 @@ class BcsRegisterController extends BaseController {
         }
     
         $data_list = $data['data'];
+        
+        if(!empty($data_list)) {
+            $cert_type = $this->getConfig('certificate_type');
+            foreach ($data_list as $key => $item){
+                $data_list[$key]['CUST_CERT_TYPE'] = $cert_type[$item['CUST_CERT_TYPE']];
+            }
+        }
+        
         $entity_list_html = $this->render('bcsRegister_list', array('data_list' => $data_list, 'current_page' => $current_page, 'total_page' => $total_page), true);
         if($isIndex) {
             $view_html = $this->render('bcsRegister', array('entity_list_html' => $entity_list_html ), true);
