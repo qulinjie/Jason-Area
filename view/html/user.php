@@ -84,15 +84,17 @@
 	    <input type="email" class="form-control form_datetime" id="entity-search-time2" placeholder="注册时间">
 	  </div>
 	  <div class="form-group">
-	    <label for="entity-search-status">注册状态</label>
+	    <label for="entity-search-status">用户状态</label>
 	    <select class="form-control" id="entity-search-status">
 	      <option value="-1">全部</option>
 	      <option value="1">启用</option>
 	      <option value="2">禁用</option>
         </select>
 	  </div>
-	  <button type="button" class="btn btn-primary" id="entity-search-btn">查询</button>
-	  <button type="button" class="btn btn-default" id="entity-clear-btn">清空查询条件</button>
+	  <div class="form-group">
+    	  <button type="button" class="btn btn-primary" id="entity-search-btn">查询</button>
+    	  <button type="button" class="btn btn-default" id="entity-clear-btn">清空查询条件</button>
+	  </div>
 	  <div class="alert alert-danger search-list-hint" id="search-entity-hint"></div>
 	</div>
   </div>

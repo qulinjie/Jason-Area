@@ -92,8 +92,10 @@
 	      <option value="3">已注销</option>
         </select>
 	  </div>
-	  <button type="button" class="btn btn-primary" id="entity-search-btn">查询</button>
-	  <button type="button" class="btn btn-default" id="entity-clear-btn">清空查询条件</button>
+	  <div class="form-group">
+    	  <button type="button" class="btn btn-primary" id="entity-search-btn">查询</button>
+    	  <button type="button" class="btn btn-default" id="entity-clear-btn">清空查询条件</button>
+	  </div>
 	  <div class="alert alert-danger search-list-hint" id="search-entity-hint"></div>
 	</div>
   </div>
