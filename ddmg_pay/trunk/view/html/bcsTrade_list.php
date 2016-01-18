@@ -34,8 +34,8 @@
 <?php }else{?>
 <div class="panel panel-default">
 <div class="panel-heading" id="search-head-div">付款列表</div>
-  <div class="panel-body">
-		<table class="table table-hover" id="data-list-table">
+  <div class="panel-body" style="width: 1500px;overflow-x: scroll;">
+		<table class="table table-hover" id="data-list-table" style="width: 3000px;max-width: 3000px;overflow-x: scroll;">
 			<thead>
 				<tr>
 					<th style="display:none">id</th>
@@ -43,7 +43,11 @@
 					<th>订单号</th>
 					<th>交易完成时间</th>
 					<th>收款方</th>
+					<th>收款方登录账号</th>
+					<th>收款方名称</th>
 					<th>付款方</th>
+					<th>付款方登录账号</th>
+					<th>付款方名称</th>
 					<th>付款金额</th>
 					<th>付款时间</th>
 					<th>状态</th>
@@ -58,7 +62,11 @@
 				<td><?php echo $item['order_no'];?></td>
 				<td><?php echo (0 < strtotime($item['TRANS_TIME']))? $item['TRANS_TIME'] : '-';?>
 				<td><?php echo $item['seller_name'];?></td>
-				<td><?php echo $item['b_user_id'];?></td>
+				<td><?php echo $item['s_account'];?></td>
+				<td><?php echo $item['s_nicename'];?></td>
+				<td><?php echo $item['b_company_name'];?></td>
+				<td><?php echo $item['b_account'];?></td>
+				<td><?php echo $item['b_nicename'];?></td>
 				<td><?php echo number_format($item['TX_AMT'],2);?></td>
 				<td><?php echo (0 < strtotime($item['add_timestamp']))? $item['add_timestamp'] : '-';?></td>
 				<td><?php if($item['status']==BcsTradeModel::$_status_success){ echo "成功"; } 

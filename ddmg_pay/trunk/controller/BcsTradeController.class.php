@@ -52,7 +52,7 @@ class BcsTradeController extends BaseController {
     
     protected function searchList($isIndex = false) {
         $current_page = Request::post('page');
-        $seller_name = Request::post('seller_name');
+        $seller_name = Request::post('seller_name'); // 收款方
         $time1 = Request::post('time1');
         $time2 = Request::post('time2');
         $order_no = Request::post('order_no');
@@ -60,10 +60,50 @@ class BcsTradeController extends BaseController {
         $amount1 = Request::post('amount1');
         $amount2 = Request::post('amount2');
         $FMS_TRANS_NO = Request::post('FMS_TRANS_NO');
+        $b_account = Request::post('b_account');
+        $s_account = Request::post('s_account');
         
         $bcsTrade_model = $this->model('bcsTrade');
+        $user_model = $this->model('user');
         $b_user_id = null;
-        if(!AdminController::isAdmin()){
+        $b_user_id_list = array(); // 付款方
+        $s_user_id_list = array(); // 收款方
+        if(AdminController::isAdmin()){
+            // 付款方
+            if($b_account && !empty($b_account)){
+                $user_data = $user_model->searchList(array('account' => $b_account));
+                if(EC_OK != $user_data['code']){
+                    Log::error("searchList failed . ");
+                } else {
+                    $user_data = $user_data['data'];
+                    if(empty($user_data)){
+                        Log::notice("searchList is empty . ");
+                        EC::success(EC_OK, array('entity_list_html' => $this->render('bcsTrade_list', array(), true) ));
+                    } else {
+                        foreach ($user_data as $key => $val){
+                            $b_user_id_list[] = $user_data[$key]['id'];
+                        }
+                    }
+                }
+            }
+            // 收款方
+            if($s_account && !empty($s_account)){
+                $user_data = $user_model->searchList(array('account' => $s_account));
+                if(EC_OK != $user_data['code']){
+                    Log::error("searchList failed . ");
+                } else {
+                    $user_data = $user_data['data'];
+                    if(empty($user_data)){
+                        Log::notice("searchList is empty . ");
+                        EC::success(EC_OK, array('entity_list_html' => $this->render('bcsTrade_list', array(), true) ));
+                    } else {
+                        foreach ($user_data as $key => $val){
+                            $s_user_id_list[] = $user_data[$key]['id'];
+                        }
+                    }
+                }
+            }
+        } else {
             $b_user_id = self::getCurrentUserId();
         }
         
@@ -71,6 +111,13 @@ class BcsTradeController extends BaseController {
         foreach ([ 'b_user_id', 'seller_name', 'time1', 'time2', 'order_no', 'status',
                     'FMS_TRANS_NO', 'seller_name', 'amount1', 'amount2' ] as $val){
             if($$val) $params[$val] = $$val;
+        }
+        
+        if( $s_user_id_list && !empty($s_user_id_list) ){
+            $params['s_user_id_list'] = $s_user_id_list;
+        }
+        if( $b_user_id_list && !empty($b_user_id_list) ){
+            $params['b_user_id_list'] = $b_user_id_list;
         }
     
         $data_cnt = $bcsTrade_model->searchCnt($params);
@@ -101,6 +148,56 @@ class BcsTradeController extends BaseController {
         }
     
         $data_list = $data['data'];
+        
+        // 用户账号 	用户名称 	用户公司名称
+        if(!empty($data_list)){
+            $s_user_id_list = array(); // 收款方
+            $b_user_id_list = array(); // 付款方
+            foreach($data_list as $key => $val){
+                if( !in_array($data_list[$key]['s_user_id'], $s_user_id_list, true)){
+                    $s_user_id_list[] = $data_list[$key]['s_user_id'];
+                }
+                if( !in_array($data_list[$key]['b_user_id'], $b_user_id_list, true)){
+                    $b_user_id_list[] = $data_list[$key]['b_user_id'];
+                }
+            }
+            // 收款方
+            $user_data = $user_model->searchList(array('user_id_list' => $s_user_id_list));
+            if(EC_OK != $user_data['code']){
+                Log::error("searchList failed . ");
+            } else {
+                $user_data = $user_data['data'];
+                foreach($data_list as $key1 => $val1){
+                    foreach($user_data as $key2 => $val2){
+                        if( $data_list[$key1]['s_user_id'] == $user_data[$key2]['id'] ){
+                            $data_list[$key1]['s_account'] = $user_data[$key2]['account'];
+                            $data_list[$key1]['s_nicename'] = $user_data[$key2]['nicename'];
+                            $data_list[$key1]['s_company_name'] = $user_data[$key2]['company_name'];
+                            break ;
+                        }
+                    }
+                }
+            }
+            // 付款方
+            $user_data = $user_model->searchList(array('user_id_list' => $b_user_id_list));
+            if(EC_OK != $user_data['code']){
+                Log::error("searchList failed . ");
+            } else {
+                $user_data = $user_data['data'];
+                foreach($data_list as $key1 => $val1){
+                    foreach($user_data as $key2 => $val2){
+                        if( $data_list[$key1]['b_user_id'] == $user_data[$key2]['id'] ){
+                            $data_list[$key1]['b_account'] = $user_data[$key2]['account'];
+                            $data_list[$key1]['b_nicename'] = $user_data[$key2]['nicename'];
+                            $data_list[$key1]['b_company_name'] = $user_data[$key2]['company_name'];
+                            break ;
+                        }
+                    }
+                }
+            }
+            
+        }
+        
         $entity_list_html = $this->render('bcsTrade_list', array('data_list' => $data_list, 'current_page' => $current_page, 'total_page' => $total_page), true);
         if($isIndex) {
             $view_html = $this->render('bcsTrade', array('entity_list_html' => $entity_list_html ), true);

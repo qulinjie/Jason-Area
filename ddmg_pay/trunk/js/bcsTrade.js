@@ -75,6 +75,8 @@ function search_entity(page){
 	var status = $("#entity-search-status").val();
 	var amount1 = $("#entity-search-amount1").val();
 	var amount2 = $("#entity-search-amount2").val();
+	var s_account = $("#entity-search-s_account").val();
+	var b_account = $("#entity-search-b_account").val();
 	
 	if(-1 == status) { status =""; }
 	
@@ -88,6 +90,8 @@ function search_entity(page){
 	    	'status':status,
 	    	'amount1':amount1,
 	    	'amount2':amount2,
+	    	's_account':s_account,
+	    	'b_account':b_account,
 	        'page':page
         },
         function(result){
@@ -112,6 +116,8 @@ function search_clearFields(){
 	$("#entity-search-status").val("-1");
 	$("#entity-search-amount1").val("");
 	$("#entity-search-amount2").val("");
+	$("#entity-search-s_account").val("");
+	$("#entity-search-b_account").val("");
 }
 
 /**************start--查看****************/

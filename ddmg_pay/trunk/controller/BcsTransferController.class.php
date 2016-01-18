@@ -56,6 +56,7 @@ class BcsTransferController extends BaseController {
                 } else {
                     $user_data = $user_data['data'];
                     if(empty($user_data)){
+                        Log::notice("searchList is empty . ");
                         EC::success(EC_OK, array('entity_list_html' => $this->render('bcsTransfer_list', array(), true) ));
                     } else {
                         foreach ($user_data as $key => $val){
