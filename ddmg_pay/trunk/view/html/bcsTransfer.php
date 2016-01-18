@@ -29,28 +29,6 @@
 				    <div class="col-sm-4">
     				    <select class="form-control" id="add-entity-CUST_CERT_TYPE">
     				            <option value="-1">请选择</option>
-                    	        <option value="01">身份证18位</option>
-                                <option value="02">身份证15位</option>
-                                <option value="03">军官证</option>
-                                <option value="04">台胞证</option>
-                                <option value="05">外国护照</option>
-                                <option value="06">户口簿</option>
-                                <option value="07">香港通行证</option>
-                                <option value="08">边民出入境通行证</option>
-                                <option value="09">士兵证</option>
-                                <option value="10">护照</option>
-                                <option value="11">军事学员证</option>
-                                <option value="12">离休干部荣誉证</option>
-                                <option value="13">军官退休证</option>
-                                <option value="14">文职干部证</option>
-                                <option value="15">学生证</option>
-                                <option value="16">澳门通行证</option>
-                                <option value="17">外国人永久居留证</option>
-                                <option value="18">村民委员证明</option>
-                                <option value="19">武警证</option>
-                                <option value="20">营业执照</option>
-                                <option value="21">组织结构代码</option>
-                                <option value="22">其他</option>
                           </select>
 				    </div>
 				    <label for="add-entity-CUST_CERT_NO" class="col-sm-2 control-label">客户证件号码</label>
@@ -150,7 +128,7 @@
 </div>
 <!-- /.modal -->
 
-<h1 class="page-header">开户管理</h1>
+<h1 class="page-header">出入金</h1>
 
 <div class="panel panel-primary">
   <div class="panel-heading">查找</div>
@@ -161,17 +139,17 @@
 	    <input type="email" class="form-control" id="entity-search-SIT_NO" placeholder="席位号">
 	  </div>
 	  <div class="form-group">
-	    <label for="entity-search-ACCOUNT_NO">虚拟卡号</label>
-	    <input type="email" class="form-control" id="entity-search-ACCOUNT_NO" placeholder="虚拟卡号">
+	    <label for="entity-search-FMS_TRANS_NO">资金监管交易流水号</label>
+	    <input type="email" class="form-control" id="entity-search-FMS_TRANS_NO" placeholder="资金监管交易流水号">
 	  </div>
 	  <div class="form-group">
-	    <label for="entity-search-time1">注册时间</label>
+	    <label for="entity-search-time1">交易发送时间</label>
 	    <input type="email" class="form-control form_datetime" id="entity-search-time1" placeholder="注册时间">
 	    -
 	    <input type="email" class="form-control form_datetime" id="entity-search-time2" placeholder="注册时间">
 	  </div>
 	  <div class="form-group">
-	    <label for="entity-search-status">注册状态</label>
+	    <label for="entity-search-status">交易发送状态</label>
 	    <select class="form-control" id="entity-search-status">
 	      <option value="-1">全部</option>
 	      <option value="1">成功</option>
@@ -188,7 +166,7 @@
   </div>
 </div>
 
-<div id="add-button-group" style="padding-bottom: 2px;">
+<div id="add-button-group" style="padding-bottom: 2px;display: none;">
 	<a id="add-entity-new" class="btn btn-primary" href="#" data-toggle="modal" data-keyboard="false" data-backdrop="static">新增</a>
 </div>
 <div  id="entity-list">

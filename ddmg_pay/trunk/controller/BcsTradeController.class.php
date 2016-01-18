@@ -62,8 +62,11 @@ class BcsTradeController extends BaseController {
         $FMS_TRANS_NO = Request::post('FMS_TRANS_NO');
         
         $bcsTrade_model = $this->model('bcsTrade');
-        $b_user_id = self::getCurrentUserId();
-    
+        $b_user_id = null;
+        if(!AdminController::isAdmin()){
+            $b_user_id = self::getCurrentUserId();
+        }
+        
         $params  = array();
         foreach ([ 'b_user_id', 'seller_name', 'time1', 'time2', 'order_no', 'status',
                     'FMS_TRANS_NO', 'seller_name', 'amount1', 'amount2' ] as $val){
