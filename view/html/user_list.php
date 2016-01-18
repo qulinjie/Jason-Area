@@ -41,6 +41,7 @@
 					<th style="display:none">id</th>
 					<th>用户登录帐号</th>
 					<th>用户名称</th>
+					<th>用户公司名称</th>
 					<th>用户状态</th>
 					<th>个人认证状态</th>
 					<th>企业认证状态</th>
@@ -54,7 +55,8 @@
 			<tr>
 				<td style="display:none"><?php echo $item['id'];?><input type="hidden" value="<?php echo $item['status'];?>"></td>
 				<td><?php echo $item['account'];?></td>
-				<td><?php echo $item['nicename'];?></td>
+				<td><?php echo empty($item['nicename'])?'-':$item['nicename'];?></td>
+				<td><?php echo empty($item['company_name'])?'-':$item['company_name'];?></td>
 				<td><?php echo (1== $item['status'])?'启用':'停用';?></td>
 				<td><?php 
     				    if(1== $item['personal_authentication_status']) {echo '未认证'; }

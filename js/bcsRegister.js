@@ -155,9 +155,9 @@ $(document).ready(function(){
     	if('' == CUST_NAME ){
         	hint_html += (hint_html == '' ? '' : '<BR>') + '请填写 客户名称！' ;
         }
-    	if('' == SIT_NO ){
+    	/*if('' == SIT_NO ){
         	hint_html += (hint_html == '' ? '' : '<BR>') + '请填写 席位号 ！' ;
-        }
+        }*/
 	    
 	    if(hint_html != ''){
 	        $("#add-entity-hint").html(hint_html).fadeIn();
