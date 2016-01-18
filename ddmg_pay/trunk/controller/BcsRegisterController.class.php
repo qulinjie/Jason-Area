@@ -18,6 +18,9 @@ class BcsRegisterController extends BaseController {
                 case 'searchList':
                     $this->searchList();
                     break;
+                case 'info':
+                    $this->getInfoById();
+                    break;
                 case 'getInfo':
                     $this->getInfo();
                     break;           
@@ -142,7 +145,35 @@ class BcsRegisterController extends BaseController {
         }
     }
     
-   
+    private function getInfoById(){
+        $id	=	Request::post('id');
+        
+        $bcsRegister_model = $this->model('bcsRegister');
+        $user_model = $this->model('user');
+        
+        $data = $bcsRegister_model->getInfo(array('id' => $id));
+        if(EC_OK != $data['code']){
+            EC::fail($data['code']);
+        }
+        $data = $data['data'];
+        if(empty($data)){
+            Log::error('Register user not exist. id=' . $id);
+            EC::fail(EC_PAR_ERR);
+        }
+        
+        $user_data = $user_model->searchList(array('id' => $data[id]));
+        if(EC_OK != $user_data['code']){
+            Log::error("searchList failed . ");
+        } else {
+            $user_data = $user_data['data'][0];
+            $data[0]['account'] = $user_data['account'];
+            $data[0]['nicename'] = $user_data['nicename'];
+            $data[0]['company_name'] = $user_data['company_name'];
+        }
+        
+        Log::error('response_data==>>' . var_export($data, true));
+        EC::success(EC_OK,$data);
+    }
     
     protected function getInfo() {
         $bcsRegister_model = $this->model('bcsRegister');
