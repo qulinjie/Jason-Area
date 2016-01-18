@@ -39,6 +39,9 @@
 				<tr>
 					<th style="display:none">id</th>
 					<th>席位号</th>
+					<th>用户登录账号</th>
+					<th>用户名称</th>
+					<th>用户公司名称</th>
 					<th>虚拟卡号</th>
 					<th>客户名称</th>
 					<th>客户账户名</th>
@@ -66,6 +69,9 @@
 			<tr>
 				<td style="display:none"><?php echo $item['id'];?><input type="hidden" value="<?php echo $item['status'];?>"></td>
 				<td><?php echo $item['SIT_NO'];?></td>
+				<td><?php echo $item['account'];?></td>
+				<td><?php echo $item['nicename'];?></td>
+				<td><?php echo $item['company_name'];?></td>
 				<td><?php echo $item['ACCOUNT_NO'];?></td>
 				<td><?php echo $item['CUST_NAME'];?></td>
 				<td><?php echo $item['CUST_ACCT_NAME'];?></td>

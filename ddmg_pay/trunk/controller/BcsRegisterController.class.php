@@ -39,15 +39,37 @@ class BcsRegisterController extends BaseController {
         $status = Request::post('status');
         $SIT_NO = Request::post('SIT_NO');
         $ACCOUNT_NO = Request::post('ACCOUNT_NO');
-    
+        $account = Request::post('account');
+        
         $bcsRegister_model = $this->model('bcsRegister');
-        //$user_id = self::getCurrentUserId();
+        $user_model = $this->model('user');
+        
+        if($account && !empty($account)){
+            $user_data = $user_model->searchList(array('account' => $account));
+            if(EC_OK != $user_data['code']){
+                Log::error("searchList failed . ");
+            } else {
+                $user_data = $user_data['data'];
+                if(empty($user_data)){
+                    Log::notice("searchList is empty . ");
+                    EC::success(EC_OK, array('entity_list_html' => $this->render('bcsRegister_list', array(), true) ));
+                } else {
+                    foreach ($user_data as $key => $val){
+                        $user_id_list[] = $user_data[$key]['id'];
+                    }
+                }
+            }
+        }
     
         $params  = array();
         foreach ([ 'status', 'SIT_NO', 'ACCOUNT_NO', 'time1', 'time2' ] as $val){
             if($$val) $params[$val] = $$val;
         }
     
+        if( $user_id_list && !empty($user_id_list) ){
+            $params['user_id_list'] = $user_id_list;
+        }
+        
         $data_cnt = $bcsRegister_model->searchCnt($params);
         if(EC_OK != $data_cnt['code']){
             Log::error("searchCnt failed . ");
@@ -81,6 +103,33 @@ class BcsRegisterController extends BaseController {
             $cert_type = $this->getConfig('certificate_type');
             foreach ($data_list as $key => $item){
                 $data_list[$key]['CUST_CERT_TYPE'] = $cert_type[$item['CUST_CERT_TYPE']];
+            }
+        }
+        
+        // 用户账号 	用户名称 	用户公司名称
+        if(!empty($data_list)){
+            $user_id_list = array();
+            foreach($data_list as $key => $val){
+                if( !in_array($data_list[$key]['user_id'], $user_id_list, true)){
+                    $user_id_list[] = $data_list[$key]['user_id'];
+                }
+            }
+        
+            $user_data = $user_model->searchList(array('user_id_list' => $user_id_list));
+            if(EC_OK != $user_data['code']){
+                Log::error("searchList failed . ");
+            } else {
+                $user_data = $user_data['data'];
+                foreach($data_list as $key1 => $val1){
+                    foreach($user_data as $key2 => $val2){
+                        if( $data_list[$key1]['user_id'] == $user_data[$key2]['id'] ){
+                            $data_list[$key1]['account'] = $user_data[$key2]['account'];
+                            $data_list[$key1]['nicename'] = $user_data[$key2]['nicename'];
+                            $data_list[$key1]['company_name'] = $user_data[$key2]['company_name'];
+                            break ;
+                        }
+                    }
+                }
             }
         }
         

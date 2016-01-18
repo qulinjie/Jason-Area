@@ -157,6 +157,10 @@
   <div class="panel-body">
     <div class="form-inline">
       <div class="form-group">
+	    <label for="entity-search-account">用户登录账号</label>
+	    <input type="email" class="form-control" id="entity-search-account" placeholder="用户登录账号">
+	  </div>
+      <div class="form-group">
 	    <label for="entity-search-SIT_NO">席位号</label>
 	    <input type="email" class="form-control" id="entity-search-SIT_NO" placeholder="席位号">
 	  </div>
