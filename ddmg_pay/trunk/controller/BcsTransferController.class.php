@@ -42,16 +42,39 @@ class BcsTransferController extends BaseController {
         $SIT_NO = Request::post('SIT_NO');
         $FMS_TRANS_NO = Request::post('FMS_TRANS_NO');
         $status = Request::post('status');
+        $account = Request::post('account');
         
         $code_model = $this->model('bcsTransfer');
+        $user_model = $this->model('user');
         $user_id = null;
-        if(!AdminController::isAdmin()){
+        $user_id_list = array();
+        if(AdminController::isAdmin()){
+            if($account && !empty($account)){
+                $user_data = $user_model->searchList(array('account' => $account));
+                if(EC_OK != $user_data['code']){
+                    Log::error("searchList failed . ");
+                } else {
+                    $user_data = $user_data['data'];
+                    if(empty($user_data)){
+                        EC::success(EC_OK, array('entity_list_html' => $this->render('bcsTransfer_list', array(), true) ));
+                    } else {
+                        foreach ($user_data as $key => $val){
+                            $user_id_list[] = $user_data[$key]['id'];
+                        }
+                    }
+                }
+            }
+        } else {
             $user_id = self::getCurrentUserId();
         }
         
         $params  = array();
         foreach ([ 'user_id', 'SIT_NO', 'time1', 'time2', 'FMS_TRANS_NO', 'status'] as $val){
             if($$val) $params[$val] = $$val;
+        }
+        
+        if( $user_id_list && !empty($user_id_list) ){
+            $params['user_id_list'] = $user_id_list;
         }
         
         $data_cnt = $code_model->searchCnt($params);
@@ -82,6 +105,34 @@ class BcsTransferController extends BaseController {
         }
         
         $data_list = $data['data'];
+        
+        // 用户账号 	用户名称 	用户公司名称
+        if(!empty($data_list)){
+            $user_id_list = array();
+            foreach($data_list as $key => $val){
+                if( !in_array($data_list[$key]['user_id'], $user_id_list, true)){
+                    $user_id_list[] = $data_list[$key]['user_id'];
+                }
+            }
+            
+            $user_data = $user_model->searchList(array('user_id_list' => $user_id_list));
+            if(EC_OK != $user_data['code']){
+                Log::error("searchList failed . ");
+            } else {
+                $user_data = $user_data['data'];
+                foreach($data_list as $key1 => $val1){
+                    foreach($user_data as $key2 => $val2){
+                        if( $data_list[$key1]['user_id'] == $user_data[$key2]['id'] ){
+                            $data_list[$key1]['account'] = $user_data[$key2]['account'];
+                            $data_list[$key1]['nicename'] = $user_data[$key2]['nicename'];
+                            $data_list[$key1]['company_name'] = $user_data[$key2]['company_name'];
+                            break ;
+                        }
+                    }
+                }
+            }
+        }
+        
         $entity_list_html = $this->render('bcsTransfer_list', array('data_list' => $data_list, 'current_page' => $current_page, 'total_page' => $total_page), true);
         if($isIndex) {
             $view_html = $this->render('bcsTransfer', array('entity_list_html' => $entity_list_html ), true);
