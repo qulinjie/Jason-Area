@@ -301,10 +301,7 @@
 				</li>
         		<li <?php if(doit::$controller == 'PayPassword'){?> class="discolor" <?php } ?>>
         			<a href="<?php echo Router::getBaseUrl();if(PayPasswordController::check()){?>payPassword/reset<?php }else{?>payPassword/notice<?php }?>">重置支付密码</a>
-        		</li>        
-				<li <?php if(doit::$controller == 'Audit'){?> class="discolor" <?php } ?>>
-					<a href="<?php echo Router::getBaseUrl();?>audit/index">审核用户</a>
-				</li>
+        		</li>      
         		<li <?php if(doit::$controller == 'Message'){?> class="discolor" <?php } ?>>
         			  <a href="<?php echo Router::getBaseUrl();?>message/getIndex">消息提醒</a>
         		</li>
@@ -337,9 +334,7 @@
 				  <?php echo $bcsCustomerInflow_html;?>
 			  <?php } else if($page_type == 'bcsCustomerIncomePay'){?>
 				  <?php echo $bcsCustomerIncomePay_html;?>
-			  <?php } else if($page_type == 'audit'){?>
-			  	<?php echo $audit_html;?>
-			  <?php }?>
+			  <?php }?>			  
         </div>
 </div>
 <div class="clear"></div>
