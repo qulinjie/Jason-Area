@@ -83,6 +83,7 @@ $(document).ready(function(){
 		var SIT_NO = $("#entity-search-SIT_NO").val();
 		var FMS_TRANS_NO = $("#entity-search-FMS_TRANS_NO").val();
 		var status = $("#entity-search-status").val();
+		var account = $("#entity-search-account").val();
 		
 		if(-1 == status) { status =""; }
 		
@@ -93,6 +94,7 @@ $(document).ready(function(){
 		    	'SIT_NO':SIT_NO,
 		    	'FMS_TRANS_NO':FMS_TRANS_NO,
 		    	'status':status,
+		    	'account':account,
 		        'page':page
 	        },
 	        function(result){
@@ -114,6 +116,7 @@ $(document).ready(function(){
 		$("#entity-search-SIT_NO").val("");
 		$("#entity-search-FMS_TRANS_NO").val("");
 		$("#entity-search-status").val("-1");
+		$("#entity-search-account").val("");
 	}
 	
     prettyPrint();

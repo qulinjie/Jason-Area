@@ -38,7 +38,10 @@
 			<thead>
 				<tr>
 					<th style="display:none">id</th>
-					<th>用户ID</th>
+					<th style="display:none">用户ID</th>
+					<th>用户账号</th>
+					<th>用户名称</th>
+					<th>用户公司名称</th>
 					<th>出入金类型</th>
 					<th>席位号</th>
 					<th>商户交易流水号</th>
@@ -58,7 +61,10 @@
 <?php foreach ($data_list as $item){?>
 			<tr>
 				<td style="display:none"><?php echo $item['id'];?><input type="hidden" value="<?php echo $item['status'];?>"></td>
-				<td><?php echo $item['user_id'];?></td>
+				<td style="display:none"><?php echo $item['user_id'];?></td>
+				<td><?php echo $item['account'];?></td>
+				<td><?php echo $item['nicename'];?></td>
+				<td><?php echo $item['company_name'];?></td>
 				<td><?php echo (1== $item['transfer_type'])?'出金':'入金';?></td>
 				<td><?php echo $item['SIT_NO'];?></td>
 				<td><?php echo $item['MCH_TRANS_NO'];?></td>
@@ -67,7 +73,7 @@
 				<td><?php echo number_format($item['TRANS_AMT'],2);?></td>
 				<td><?php echo number_format($item['TOTALAMT'],2);?></td>
 				<td><?php echo (1== $item['TRANS_STS'])?'成功':((2== $item['TRANS_STS'])?'失败':'处理中');?></td>
-				<td><?php echo (0 < strtotime($item['TRANS_TIME']))? $item['ACT_TIME'] : '-';?></td>
+				<td><?php echo (0 < strtotime($item['TRANS_TIME']))? $item['TRANS_TIME'] : '-';?></td>
 				<td><?php echo (1== $item['status'])?'成功':((2== $item['status'])?'失败':'处理中');?></td>
 				<td><?php echo $item['add_timestamp'];?></td>
 				<td><?php echo empty($item['comment'])?'-':$item['comment'];?></td>
