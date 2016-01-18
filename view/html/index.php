@@ -153,12 +153,17 @@
         			<a href="<?php echo Router::getBaseUrl();?>user/getIndex">用户管理</a>
         	    </li>
         	    <li <?php if(doit::$controller == 'BcsRegister'){?> class="active" <?php } ?>>
-        			<a href="<?php echo Router::getBaseUrl();?>bcsRegister/getIndex">注册信息管理</a>
+        			<a href="<?php echo Router::getBaseUrl();?>bcsRegister/getIndex">开户管理</a>
         	    </li>
         	    <li <?php if(doit::$controller == 'BcsCustomer'){?> class="active" <?php } ?>>
         			<a href="<?php echo Router::getBaseUrl();?>bcsCustomer/getIndex">虚拟卡管理</a>
         	    </li>
-    			
+    			<li <?php if(doit::$controller == 'BcsTrade'){?> class="active" <?php } ?>>
+        			<a href="<?php echo Router::getBaseUrl();?>bcsTrade/getIndex">交易流水</a>
+        	    </li>
+    			<li <?php if(doit::$controller == 'BcsTransfer'){?> class="active" <?php } ?>>
+        			<a href="<?php echo Router::getBaseUrl();?>bcsTransfer/getIndex">出入金</a>
+        	    </li>
     			
           </ul>
         </div>
@@ -177,6 +182,12 @@
           <?php }else if($page_type == 'bcsCustomer'){?>
     			<script src="<?php echo Router::getBaseUrl();?>js/bcsCustomer.js"></script>
 		        <?php echo $bcsCustomer_html;?>
+          <?php }else if($page_type == 'bcsTrade'){?>
+    			<script src="<?php echo Router::getBaseUrl();?>js/bcsTrade.js"></script>
+		        <?php echo $bcsTrade_html;?>
+          <?php }else if($page_type == 'bcsTransfer'){?>
+    			<script src="<?php echo Router::getBaseUrl();?>js/bcsTransfer.js"></script>
+		        <?php echo $bcsTransfer_html;?>
           <?php }else {?>
               	<div class="jumbotron"> <!-- main page -->
     <!--  			  <h1 class="text-center">大大买钢</h1>  -->
