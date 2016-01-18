@@ -151,7 +151,7 @@
         	    </li>
         	    <li <?php if(doit::$controller == 'User'){?> class="active" <?php } ?>>
         			<a href="<?php echo Router::getBaseUrl();?>user/getIndex">用户管理</a>
-        	    </li>
+        	    </li>       
         	    <li <?php if(doit::$controller == 'BcsRegister'){?> class="active" <?php } ?>>
         			<a href="<?php echo Router::getBaseUrl();?>bcsRegister/getIndex">开户管理</a>
         	    </li>
@@ -164,7 +164,6 @@
     			<li <?php if(doit::$controller == 'BcsTransfer'){?> class="active" <?php } ?>>
         			<a href="<?php echo Router::getBaseUrl();?>bcsTransfer/getIndex">出入金</a>
         	    </li>
-    			
           </ul>
         </div>
         
@@ -302,10 +301,7 @@
 				</li>
         		<li <?php if(doit::$controller == 'PayPassword'){?> class="discolor" <?php } ?>>
         			<a href="<?php echo Router::getBaseUrl();if(PayPasswordController::check()){?>payPassword/reset<?php }else{?>payPassword/notice<?php }?>">重置支付密码</a>
-        		</li>
-        		<li <?php if(doit::$controller == 'BcsRegister'){?> class="discolor" <?php } ?>>
-        			  <a href="<?php echo Router::getBaseUrl();?>bcsRegister/create">注册银行帐号</a>
-        		</li>
+        		</li>        
 				<li <?php if(doit::$controller == 'Audit'){?> class="discolor" <?php } ?>>
 					<a href="<?php echo Router::getBaseUrl();?>audit/index">审核用户</a>
 				</li>
@@ -331,10 +327,7 @@
         			<?php echo $password_html; ?>
         	  <?php }else if($page_type == 'message'){?>
         		    <script src="<?php echo Router::getBaseUrl();?>js/sysMessage.js"></script>
-        		    <div id="message-list"><?php echo $message_html;?></div>
-        	  <?php	}else if($page_type == 'bcsRegister'){?>
-        			<script src="<?php echo Router::getBaseUrl();?>js/bcsRegister.js"></script>
-        			<?php echo $bcsRegister_html;?>
+        		    <div id="message-list"><?php echo $message_html;?></div>        	 
         	  <?php }else if($page_type == 'payPassword'){?>
 				  <?php echo $password_html; ?>
         	  <?php	}else if($page_type == 'bcsTradeStatusQuery'){?>

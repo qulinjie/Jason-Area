@@ -22,7 +22,7 @@
 				    <label for="add-entity-SIT_NO" class="col-sm-2 control-label">席位号</label>
 				    <div class="col-sm-4">
 				        <input class="form-control" id="add-entity-SIT_NO" placeholder="席位号"></input>
-				    </div>
+				    </div>				  
 				  </div>
 				  <div class="form-group">
 				    <label for="add-entity-CUST_CERT_TYPE" class="col-sm-2 control-label">客户证件类型</label>

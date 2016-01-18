@@ -264,4 +264,13 @@ abstract class BaseController extends Controller
         return true;
     }
 
+    public function getMCH_NO()
+    {
+        if(!$MCH_NO = self::getConfig('conf')['MCH_NO']){
+            Log::error('bcsRegister create MCH_NO miss');
+            EC::fail(EC_CNF_NON);
+        }
+        
+        return $MCH_NO;
+    }
 }
