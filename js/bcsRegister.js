@@ -243,7 +243,7 @@ $(document).ready(function(){
 		        	$('#add-entity-user_id').append("<option value='-1'>请选择</option>");
 		        	var data = result['data']['data'];
 		        	for(var i=0;i<data.length;i++){
-		        		$("#add-entity-user_id").append("<option value='" + data[i].id + "'>" + data[i].account + "</option>");
+		        		$("#add-entity-user_id").append("<option value='" + data[i].id + "'>" + data[i].account + ' ' + data[i].nicename + ' ' + data[i].company_name + "</option>");
 		        	}
 		        }
 		    },
