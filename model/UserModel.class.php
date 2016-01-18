@@ -136,9 +136,9 @@ class UserModel extends CurlModel
     {
         return self::sendRequest('user/getList',$params);
     }
-
-    public function audit($params = array())
+    
+    public function update($params = array())
     {
-        return self::sendRequest('user/audit',$params);
+        return self::sendRequest('user/update',$params);
     }
 }

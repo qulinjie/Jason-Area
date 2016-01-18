@@ -14,7 +14,7 @@ class UserController extends BaseController
                 break;
             case 'searchListAll':
                 $this->searchListAll();
-                break;
+                break;                
             case 'login':
                 $this->login();
                 break;
@@ -27,12 +27,70 @@ class UserController extends BaseController
             case 'passwordReset':
                 $this->passwordReset();
                 break;
+            case 'update':
+                $this->update();
+                break;
+            case 'getInfo':
+                $this->getInfo();
+                break;
+            case 'getCert':
+                $this->getCert();
+                break;
             default:
                 Log::error('UserController method not exists ' . $params[0]);
                 EC::fail(EC_MTD_NON);
         }
     }
+    
+    private function getCert()
+    {
+        $id = $this->get('id');
+        $flag = $this->get('flag');
+        if(!$id || !$flag){
+            exit('403 forbidden');
+        }      
+        
+        $data = $this->model('cert')->getInfo(['user_id' => $id]);
+        $data['code'] !== EC_OK && EC::fail($data['code']);
+        
+        $file = DOIT_ROOT;
+        if($flag == '10000'){
+            $file .= $data['data']['certificate_filepath'];
+        }else if($flag == '20000'){
+            $file .= $data['data']['business_license_filepath'];
+        }else{
+            exit('403 forbidden');
+        }    
+        
+     
+        if (file_exists($file)) {
+            header('content-type:' . getimagesize($file)['mime']);
+            echo file_get_contents($file);
+            exit;
+        }
+    }
 
+    protected function getInfo()
+    {
+        if(!$id = $this->post('id')){
+            Log::error('User getInfo params error');
+            EC::fail(EC_PAR_ERR);
+        }
+        
+        $data = $this->model('user')->getUserInfo(['id' => $id]);
+        $data['code'] !== EC_OK && EC::fail($data['code']);
+        
+        //用户不存在
+        !$data['data'] && EC::success(EC_OK);
+        $user = $data['data'][0];
+        
+        $data = $this->model('cert')->getInfo(['user_id' => $id]);
+        $data['code'] !== EC_OK && EC::fail($data['code']);
+        
+        unset($data['data']['id'],$user['password'],$user['pay_password']);        
+        EC::success(EC_OK,array_merge($user,$data['data']));        
+    }
+    
     protected function searchList($isIndex = false) {
         $current_page = Request::post('page');
         $time1 = Request::post('time1');
@@ -111,6 +169,32 @@ class UserController extends BaseController
         }
         $data_list = $data['data'];
         EC::success(EC_OK, array('data' => $data_list));
+    }
+    
+    private function update(){  
+        $params = [
+            'id'                 => $this->post('id'),
+            'account'            => $this->post('user-account'),
+            'real_name'          => $this->post('user-name'),
+            'legal_name'         => $this->post('user-legal-name'),
+            'company_name'       => $this->post('user-company-name'),
+            'business_license'   => $this->post('user-business-license'),
+            'status'             => $this->post('user-status'),
+            'comment'            => $this->post('user-remark'),
+            'personal_authentication_status' => $this->post('user-person-cert'),
+            'company_authentication_status'  => $this->post('user-company-cert')        
+        ];
+        
+        if(!$params['id']){
+            Log::error('User update id is empty');
+            EC::fail(EC_PAR_ERR);
+        }       
+        
+        
+        $response = $this->model('user')->update($params);
+        $response['code'] !== EC_OK && EC::fail($response['code']);
+        
+        EC::success(EC_OK);
     }
     
     private function login()
@@ -203,16 +287,5 @@ class UserController extends BaseController
             'token' => ['login','passwordReset'],
             'login' => ['passwordReset']
         ];
-    }
-
-    public static function isAdmin()
-    {
-        $data = self::model('user')->isAdmin();
-        if($data['code'] !== EC_OK){
-            Log::error('UserController isAdmin error code:'.$data['code']);
-            EC::fail($data['code']);
-        }
-
-        return $data['data']['status'];
     }
 }

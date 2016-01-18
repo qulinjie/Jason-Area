@@ -81,7 +81,7 @@ class EC extends Base {
 			EC_MOD_NON		=>	'mode does not exists',
 			EC_CTR_NON		=>	'controller does not exists',
 			EC_LIB_NON		=>	'library does not exists',
-			EC_CNF_NON		=>	'configuration file does not exists',
+			EC_CNF_NON		=>	'配置文件错误',
 			EC_CNF_ERR		=>	'configuration invalid',
 			EC_MAL_NOT_VRF	=>	'the email is not verified',
 			EC_OTH			=>	'other error',
