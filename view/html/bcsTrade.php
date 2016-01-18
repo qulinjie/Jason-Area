@@ -99,7 +99,7 @@
 
 <h1 class="page-header">交易流水</h1>
 
-<div class="panel panel-primary" style="width:1100px;">
+<div class="panel panel-primary" style="width:100%;">
   <div class="panel-heading">查找</div>
   <div class="panel-body">
     <div class="form-inline">
@@ -114,6 +114,14 @@
 	  <div class="form-group">
 	    <label for="entity-search-seller_name">收款方</label>
 	    <input type="text" class="form-control" id="entity-search-seller_name" placeholder="收款方">
+	  </div>
+	  <div class="form-group">
+	    <label for="entity-search-s_account">收款方登录账号</label>
+	    <input type="text" class="form-control" id="entity-search-s_account" placeholder="收款方登录账号">
+	  </div>
+	  <div class="form-group">
+	    <label for="entity-search-b_account">付款方登录账号</label>
+	    <input type="text" class="form-control" id="entity-search-b_account" placeholder="付款方登录账号">
 	  </div>
 	  <div class="form-group">
 	    <label for="entity-search-time">付款时间</label>
