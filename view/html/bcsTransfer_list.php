@@ -74,7 +74,10 @@
 				<td><?php echo number_format($item['TOTALAMT'],2);?></td>
 				<td><?php echo (1== $item['TRANS_STS'])?'成功':((2== $item['TRANS_STS'])?'失败':'处理中');?></td>
 				<td><?php echo (0 < strtotime($item['TRANS_TIME']))? $item['TRANS_TIME'] : '-';?></td>
-				<td><?php echo (1== $item['status'])?'成功':((2== $item['status'])?'失败':'处理中');?></td>
+				<td><?php if($item['status']==BcsTransferModel::$_status_success){ echo "成功"; } 
+            				else if($item['status']==BcsTransferModel::$_status_failed) { echo "失败"; } 
+                            else if($item['status']==BcsTransferModel::$_status_unknown) { echo "未知"; } ?>
+				</td>
 				<td><?php echo $item['add_timestamp'];?></td>
 				<td><?php echo empty($item['comment'])?'-':$item['comment'];?></td>
 				<td>

@@ -148,7 +148,7 @@
     	  <button type="button" class="btn btn-primary" id="entity-search-btn">查询</button>
     	  <button type="button" class="btn btn-default search-clear-btn" id="entity-clear-btn">清空查询条件</button>
 	  </div>
-	  <div class="form-group">
+	  <div class="form-group" style="display: none;">
     	  <button type="button" class="btn btn-primary" id="entity-export-page-btn">导出当前页</button>
     	  <button type="button" class="btn btn-primary" id="entity-export-all-btn">导出全部</button>
 	  </div>

@@ -158,7 +158,7 @@
 	      <option value="-1">全部</option>
 	      <option value="1">成功</option>
 	      <option value="2">失败</option>
-	      <option value="3">处理中</option>
+	      <option value="3">未知</option>
         </select>
 	  </div>
 	  <div class="form-group">
