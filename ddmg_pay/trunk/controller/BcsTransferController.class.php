@@ -172,6 +172,16 @@ class BcsTransferController extends BaseController {
         $data = $bcs_data['data'];
         if(empty($data)){
             Log::error("loadInfo failed . msg=" . $bcs_data['code'] . $bcs_data['msg']);
+            
+            $params = array();
+            $params['id'] = $id;
+            $params['status'] = 2 ;     // 失败
+            $params['TRANS_STS'] = 2 ;  // 失败
+            $data_upd = $code_model->update($params);
+            if(EC_OK != $data_upd['code']){
+                Log::error("update failed . " . $data_upd['code'] );
+            }
+            
             EC::fail($bcs_data['code'] . $bcs_data['msg']);
         } else {
             $TRANS_STS = $data['TRANS_STS']; // 交易状态 1:交易成功；2：交易失败；3：状态未知；4：未找到交易记录
