@@ -231,7 +231,7 @@ $(document).on('click', '#entity-loadInfo-btn', function(event){
 	objBtn.html('更新中...');
 	
 	$("#search-entity-hint").html('').fadeOut();
-	$.post(BASE_PATH + 'bcsTrade/loadTradeInfo', {'id':id},
+	$.post(BASE_PATH + 'bcsTrade/loadInfo', {'id':id},
 	        function(result){
 	            if(result.code != 0) {
 	            	$("#search-entity-hint").html(result.msg + '(' + result.code + ')').fadeIn();
