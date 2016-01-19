@@ -517,6 +517,10 @@ class BcsTradeController extends BaseController {
             Log::notice('tradeStatusQuery----req_data==>>' . var_export($bcs_data, true));
             
             $data_list = $bcs_data['data'];
+            if(empty($data_list)){
+                $data_list['OLD_RECODE'] = $bcs_data['code'];
+                $data_list['OLD_REMSG'] = $bcs_data['msg'];
+            }
             $entity_list_html = $this->render('bcsTradeStatusQuery', array('data_list' => $data_list), true);
             EC::success(EC_OK, array('entity_list_html' => $entity_list_html));
         }
