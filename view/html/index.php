@@ -158,11 +158,14 @@
         	    <li <?php if(doit::$controller == 'BcsCustomer'){?> class="active" <?php } ?>>
         			<a href="<?php echo Router::getBaseUrl();?>bcsCustomer/getIndex">虚拟卡管理</a>
         	    </li>
-    			<li <?php if(doit::$controller == 'BcsTrade'){?> class="active" <?php } ?>>
+    			<li <?php if(doit::$controller == 'BcsTrade' && $page_type != 'bcsTradeStatusQuery'){?> class="active" <?php } ?>>
         			<a href="<?php echo Router::getBaseUrl();?>bcsTrade/getIndex">交易流水</a>
         	    </li>
     			<li <?php if(doit::$controller == 'BcsTransfer'){?> class="active" <?php } ?>>
         			<a href="<?php echo Router::getBaseUrl();?>bcsTransfer/getIndex">出入金</a>
+        	    </li>
+        	    <li <?php if(doit::$controller == 'BcsTrade' && $page_type == 'bcsTradeStatusQuery'){?> class="active" <?php } ?>>
+        			<a href="<?php echo Router::getBaseUrl();?>bcsTrade/tradeStatusQueryIndex">交易状态查询</a>
         	    </li>
           </ul>
         </div>
@@ -187,6 +190,9 @@
           <?php }else if($page_type == 'bcsTransfer'){?>
     			<script src="<?php echo Router::getBaseUrl();?>js/bcsTransfer.js"></script>
 		        <?php echo $bcsTransfer_html;?>
+         <?php	}else if($page_type == 'bcsTradeStatusQuery'){?>
+			    <script src="<?php echo Router::getBaseUrl();?>js/bcsTradeStatusQuery.js"></script>
+			    <?php echo $bcsTradeStatusQuery_html;?>
           <?php }else {?>
               	<div class="jumbotron"> <!-- main page -->
     <!--  			  <h1 class="text-center">大大买钢</h1>  -->
@@ -275,9 +281,6 @@
 <div class="account" style="width: 1300px;">
     	<div class="left" style="height: 555px;">
         	<ul>
-        	    <li <?php if(doit::$controller == 'BcsTrade' && $page_type == 'bcsTradeStatusQuery'){?> class="discolor" <?php } ?>>
-        			<a href="<?php echo Router::getBaseUrl();?>bcsTrade/tradeStatusQueryIndex">交易状态查询</a>
-        	    </li>
             	<li <?php if(doit::$controller == 'BcsTrade'){?> class="discolor" <?php } ?>>
         			<a href="<?php echo Router::getBaseUrl();?>bcsTrade/getIndex">交易流水</a>
         	    </li>
@@ -327,9 +330,6 @@
         		    <div id="message-list"><?php echo $message_html;?></div>        	 
         	  <?php }else if($page_type == 'payPassword'){?>
 				  <?php echo $password_html; ?>
-        	  <?php	}else if($page_type == 'bcsTradeStatusQuery'){?>
-        			<script src="<?php echo Router::getBaseUrl();?>js/bcsTradeStatusQuery.js"></script>
-        			<?php echo $bcsTradeStatusQuery_html;?>
 			  <?php	}else if($page_type == 'bcsCustomerInflow'){?>
 				  <?php echo $bcsCustomerInflow_html;?>
 			  <?php } else if($page_type == 'bcsCustomerIncomePay'){?>
