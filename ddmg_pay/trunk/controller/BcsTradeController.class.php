@@ -18,24 +18,24 @@ class BcsTradeController extends BaseController {
                 case 'searchList':
                     $this->searchList();
                     break;
-                case 'getInfo':
-                    $this->getInfo();
-                    break;
-                case 'changeStatus':
-                    $this->changeStatus();
-                    break;
-                case 'delete':
-                    $this->delete();
-                    break;
-                case 'create':
-                    $this->create();
-                    break;
+//                 case 'getInfo':
+//                     $this->getInfo();
+//                     break;
+//                 case 'changeStatus':
+//                     $this->changeStatus();
+//                     break;
+//                 case 'delete':
+//                     $this->delete();
+//                     break;
+//                 case 'create':
+//                     $this->create();
+//                     break;
                 case 'loadInfo':
                     $this->loadInfo();
                     break;
-                case 'exportData':
-                    $this->exportData();
-                    break;
+//                 case 'exportData':
+//                     $this->exportData();
+//                     break;
                 case 'tradeStatusQueryIndex':
                     $this->tradeStatusQuery(true);
                     break;
@@ -426,80 +426,6 @@ class BcsTradeController extends BaseController {
         EC::success(EC_OK);
     }
     
-    protected function loadInfo() {
-        $bcsBank_model = $this->model('bank');
-        $bcsTrade_model = $this->model('bcsTrade');
-        $bcsRegister_model = $this->model('bcsRegister');
-        $conf = $this->getConfig('conf');
-        
-        $user_id = self::getCurrentUserId();
-        $mch_no = $conf['MCH_NO'];
-        
-        $params  = array();
-        $params['user_id'] = $user_id;
-        
-        /**
-         * 查询 注册信息 
-         */
-        $info_data = $bcsRegister_model->getInfo($params);
-        if(EC_OK != $info_data['code']){
-            Log::error("getInfo failed . ");
-            EC::fail($info_data['code']);
-        }
-        $info_data = $info_data['data'][0];
-        if(empty($info_data)){
-            Log::error("getInfo failed . obj is empty .");
-            EC::fail($info_data['code']);
-        }
-        $sit_no = $info_data['SIT_NO'];
-        
-        /**
-         * 调用接口，查询 客户信息 
-         */
-        $bcs_data = $bcsBank_model->getCustomerInfo( $mch_no, $sit_no );
-        Log::notice('loadInfo ==== >>> getCustomerInfo response=##' . json_encode($bcs_data) . '##');
-        if(false == $bcs_data || !empty($bcs_data['code'])){
-            Log::error("getCustomerInfo failed . ");
-            EC::fail($bcs_data['code']);
-        }
-        $bcs_data = $bcs_data['data'];
-        
-        $params['ACCOUNT_NO'] = $bcs_data['ACCOUNT_NO']; // 客户虚拟账号
-        $params['SIT_NO'] = $bcs_data['SIT_NO']; // 客户席位号
-        $params['MBR_STS'] = $bcs_data['MBR_STS']; // 客户状态 1-已注册；2-已签约；3-已注销
-        $params['MBR_CERT_TYPE'] = $bcs_data['MBR_CERT_TYPE']; // 会员证件类型
-        $params['MBR_CERT_NO'] = $bcs_data['MBR_CERT_NO']; // 会员证件号码
-        $params['MBR_NAME'] = $bcs_data['MBR_NAME']; // 会员名称
-        $params['MBR_SPE_ACCT_NO'] = $bcs_data['MBR_SPE_ACCT_NO']; // 会员指定账号（客户结算账号）
-        $params['MBR_SPE_ACCT_NAME'] = $bcs_data['MBR_SPE_ACCT_NAME']; // 会员指定户名
-        $params['MBR_BANK_NAME'] = $bcs_data['MBR_BANK_NAME']; // 行名
-        $params['MBR_BANK_NO'] = $bcs_data['MBR_BANK_NO']; // 行号
-        $params['MBR_ADDR'] = $bcs_data['MBR_ADDR']; // 会员联系地址
-        $params['MBR_TELENO'] = $bcs_data['MBR_TELENO']; // 电话
-        $params['MBR_PHONE'] = $bcs_data['MBR_PHONE']; // 手机号
-        $params['ACCT_BAL'] = $bcs_data['ACCT_BAL']; // 余额
-        $params['AVL_BAL'] = $bcs_data['ACCOUNT_NO']; // 可用余额
-        $params['SIGNED_DATE'] = $bcs_data['SIGNED_DATE']; // 开户日期
-        $params['ACT_TIME'] = $bcs_data['ACT_TIME']; // 签约时间（时间格式：YYYY-MM-DD HH24:MI:SS）
-        
-        if(empty($params['ACCOUNT_NO'])) {
-            Log::error("getCustomerInfo failed [ACCOUNT_NO] is empty . ");
-            EC::fail($bcs_data['code']);
-        }
-        
-        /**
-         * 更新 客户信息
-         */
-        $upd_data = $bcsTrade_model->update($params);
-        if(EC_OK != $upd_data['code']){
-            Log::error("update failed . ");
-            EC::fail($upd_data['code']);
-        }
-        
-        Log::notice('loadInfo ==== >>> upd_data=' . json_encode($upd_data) );
-        EC::success(EC_OK);
-    }
-
     private function tradeStatusQuery($isIndex = false){
         if($isIndex) {
             $entity_list_html = $this->render('bcsTradeStatusQuery', array('data_list' => null), true);
@@ -524,6 +450,56 @@ class BcsTradeController extends BaseController {
             $entity_list_html = $this->render('bcsTradeStatusQuery', array('data_list' => $data_list), true);
             EC::success(EC_OK, array('entity_list_html' => $entity_list_html));
         }
+    }
+    
+    protected function loadInfo() {
+        $id = Request::post('id');
+        if(!$id){
+            Log::error('loadTradeInfo params error!');
+            EC::fail(EC_PAR_ERR);
+        }
+    
+        $code_model = $this->model('bcsTrade');
+    
+        $data = $code_model->getInfo(array('id'=>$id));
+        if(EC_OK != $data['code']){
+            Log::error("getInfo failed . ");
+            EC::fail($data['code']);
+        }
+    
+        $data_info = $data['data'][0];
+    
+        $FMS_TRANS_NO = $data_info['FMS_TRANS_NO'];
+        $FUNC_CODE = '2'; //0-出入金交易，1-冻结解冻交易，2-现货交易
+        Log::notice('loadInfo-str---req_data==>> FMS_TRANS_NO=' . $FMS_TRANS_NO);
+        $bcs_data = $this->model('bank')->transactionStatusQuery($FMS_TRANS_NO,$FUNC_CODE);
+        Log::notice('loadInfo-end---req_data==>>' . var_export($bcs_data, true));
+    
+        $data = $bcs_data['data'];
+        if(empty($data)){
+            Log::error("loadInfo failed . msg=" . $bcs_data['code'] . $bcs_data['msg']);
+            EC::fail($bcs_data['code'] . $bcs_data['msg']);
+        } else {
+            $TRANS_STS = $data['TRANS_STS']; // 交易状态 1:交易成功；2：交易失败；3：状态未知；4：未找到交易记录
+            $params = array();
+            $params['id'] = $id;
+            if( 1 == $TRANS_STS){
+                $params['status'] = 1 ;     // 成功
+            } else if( 2 == $TRANS_STS){
+                $params['status'] = 2 ;     // 失败
+            } else if( 3 == $TRANS_STS){
+                $params['status'] = 3 ;     // 处理中
+            } else if( 4 == $TRANS_STS){
+                $params['status'] = 2 ;     // 失败
+            }
+    
+            $data_upd = $code_model->update($params);
+            if(EC_OK != $data_upd['code']){
+                Log::error("update failed . " . $data_upd['code'] );
+            }
+        }
+    
+        EC::success(EC_OK, $data);
     }
     
 }

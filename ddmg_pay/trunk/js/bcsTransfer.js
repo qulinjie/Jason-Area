@@ -119,6 +119,31 @@ $(document).ready(function(){
 		$("#entity-search-account").val("");
 	}
 	
+	/**************str--更新****************/
+	$(document).on('click', '#entity-loadInfo-btn', function(event){
+		var id =  $(this).parent().parent().parent().children().get(1).textContent;
+		
+		var objBtn = $(this);
+		objBtn.html('更新中...');
+		
+		$("#search-entity-hint").html('').fadeOut();
+		$.post(BASE_PATH + 'bcsTransfer/loadInfo', {'id':id},
+		        function(result){
+		            if(result.code != 0) {
+		            	$("#search-entity-hint").html(result.msg + '(' + result.code + ')').fadeIn();
+		            }else {
+		            	$("#search-entity-hint").html('更新完成！').fadeOut();
+		            	setTimeout(function(){
+		            		search_entity($("#entity-current-page").html());
+		                }, 1000);
+		            }
+		            objBtn.html('更新');
+		        },
+		        'json'
+		    );
+	});
+	/**************end--更新****************/
+	
     prettyPrint();
 });
 

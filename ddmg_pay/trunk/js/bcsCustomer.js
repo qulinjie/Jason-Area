@@ -129,9 +129,10 @@ $(document).ready(function(){
 		            if(result.code != 0) {
 		            	$("#search-entity-hint").html(result.msg + '(' + result.code + ')').fadeIn();
 		            }else {
+		            	// TODO
 		            	$("#search-entity-hint").html(result.msg).fadeOut();
 		            	setTimeout(function(){
-		                    $('#entity-search-btn').click();
+		            		search_entity($("#entity-current-page").html());
 		                }, 1000);
 		            }
 		            objBtn.html('更新');
