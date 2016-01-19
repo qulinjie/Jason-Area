@@ -79,7 +79,7 @@ return array(
 		'xpp_processing_token_session_key' => 'xpp_processing_token_session_key',
     
         // BCS-str
-        'MCH_NO' => 198209,
+        'MCH_NO' => 8001529592,
         // BCS-end
     
     'private_key'	=>	'-----BEGIN PRIVATE KEY-----
