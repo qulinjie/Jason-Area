@@ -52,6 +52,8 @@
 					<th>付款时间</th>
 					<th>状态</th>
 					<th>备注</th>
+					<th>商户交易流水号</th>
+					<th>银行交易订单编号</th>
 					<th>操作</th>
 				</tr>
 			</thead>
@@ -75,6 +77,8 @@
                             else if($item['status']==BcsTradeModel::$_status_unknown) { echo "未知"; } ?>
 				</td>
 				<td><?php echo $item['comment'];?></td>
+				<td><?php echo $item['MCH_TRANS_NO'];?></td>
+				<td><?php echo $item['CTRT_NO'];?></td>
 				<td>
 					<div class="btn-group" role="group">
 			             <a id="entity-loadInfo-btn" href="#" data-toggle="modal" data-keyboard="false" data-backdrop="static">更新</a>

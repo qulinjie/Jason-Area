@@ -166,6 +166,7 @@
     	  <button type="button" class="btn btn-default" id="entity-clear-btn">清空查询条件</button>
 	  </div>
 	  <div class="alert alert-danger search-list-hint" id="search-entity-hint"></div>
+	  <div class="alert alert-danger search-list-hint" id="operation-entity-hint"></div>
 	</div>
   </div>
 </div>

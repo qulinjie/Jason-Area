@@ -153,6 +153,7 @@
     	  <button type="button" class="btn btn-primary" id="entity-export-all-btn">导出全部</button>
 	  </div>
 	  <div class="alert alert-danger  search-list-hint" id="search-list-hint"></div>
+	  <div class="alert alert-danger search-list-hint" id="operation-entity-hint"></div>
 	</div>
   </div>
 </div>
