@@ -225,7 +225,7 @@ jQuery.download = function(url, data, method){
 
 /**************str--更新****************/
 $(document).on('click', '#entity-loadInfo-btn', function(event){
-	var id =  $(this).parent().parent().parent().children().get(1).textContent;
+	var id =  $(this).parent().parent().parent().children().get(0).textContent;
 	
 	var objBtn = $(this);
 	objBtn.html('更新中...');
