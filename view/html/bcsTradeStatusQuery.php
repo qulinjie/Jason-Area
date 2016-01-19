@@ -28,25 +28,30 @@
 <div  id="entity-list" style="height: 100%; width: 100%;"></div>
 <?php } else { ?>
 
+<div class="panel panel-primary" style="width: 100%;">
 <div class="panel-body">
     <div class="form-inline">
       <div class="form-group">
-        <label for="">资金监管系统交易流水号</label>
-        <?php echo $data_list['FMS_TRANS_NO'] ?>
+        <label for="">资金监管系统交易流水号:</label>
+        <?php echo $data_list['FMS_TRANS_NO']; ?>
       </div>
+      <p/>
       <div class="form-group">  
-        <label for="">交易状态</label>
-        <?php echo $data_list['TRANS_STS'] ?> &nbsp; (备注：1:交易成功；2：交易失败；3：状态未知；4：未找到交易记录)
+        <label for="">交易状态:</label>
+        <?php echo $data_list['TRANS_STS']; ?> &nbsp;&nbsp; (备注：1:交易成功；2：交易失败；3：状态未知；4：未找到交易记录)
       </div>
+      <p/>
       <div class="form-group">
-        <label for="">返回码</label>
-        <?php echo $data_list['OLD_RECODE'] ?>
+        <label for="">返回码:</label>
+        <?php echo $data_list['OLD_RECODE']; ?>
       </div>
+      <p/>
       <div class="form-group">
-        <label for="">返回信息</label>
-        <?php echo $data_list['OLD_REMSG'] ?>
+        <label for="">返回信息:</label>
+        <?php echo $data_list['OLD_REMSG']; ?>
       </div>
     </div>
+</div>
 </div>
 
 <?php } ?>
