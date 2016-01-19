@@ -483,6 +483,7 @@ class BcsTradeController extends BaseController {
             $params = array();
             $params['id'] = $id;
             $params['status'] = 2 ;     // 失败
+            $params['comment'] = $bcs_data['code'] . $bcs_data['msg'] ;
             $data_upd = $code_model->update($params);
             if(EC_OK != $data_upd['code']){
                 Log::error("update failed . " . $data_upd['code'] );
@@ -495,12 +496,16 @@ class BcsTradeController extends BaseController {
             $params['id'] = $id;
             if( 1 == $TRANS_STS){
                 $params['status'] = 1 ;     // 成功
+                $params['comment'] = '交易成功' ;
             } else if( 2 == $TRANS_STS){
                 $params['status'] = 2 ;     // 失败
+                $params['comment'] = '交易失败' ;
             } else if( 3 == $TRANS_STS){
                 $params['status'] = 3 ;     // 处理中
+                $params['comment'] = '交易状态未知' ;
             } else if( 4 == $TRANS_STS){
                 $params['status'] = 2 ;     // 失败
+                $params['comment'] = '未找到交易记录' ;
             }
     
             $data_upd = $code_model->update($params);
