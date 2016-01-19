@@ -126,13 +126,15 @@ $(document).ready(function(){
 		var objBtn = $(this);
 		objBtn.html('更新中...');
 		
-		$("#search-entity-hint").html('').fadeOut();
+		$("#operation-entity-hint").html('').fadeOut();
 		$.post(BASE_PATH + 'bcsTransfer/loadInfo', {'id':id},
 		        function(result){
-		            if(result.code != 0) {
-		            	$("#search-entity-hint").html(result.msg + '(' + result.code + ')').fadeIn();
-		            }else {
-		            	$("#search-entity-hint").html('更新完成！').fadeOut();
+					if(''==result.code){
+		        		$("#operation-entity-hint").html('更新失败！').fadeIn();
+		        	} else if(result.code != 0) {
+	            		$("#operation-entity-hint").html(result.msg + '(' + result.code + ')').fadeIn();	
+		            } else {
+		            	$("#operation-entity-hint").html('更新完成！').fadeIn();
 		            	setTimeout(function(){
 		            		search_entity($("#entity-current-page").html());
 		                }, 1000);

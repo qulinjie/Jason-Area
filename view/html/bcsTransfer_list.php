@@ -39,13 +39,12 @@
 				<tr>
 					<th style="display:none">id</th>
 					<th style="display:none">用户ID</th>
+					<th>交易流水号</th>
 					<th>用户账号</th>
 					<th>用户名称</th>
 					<th>用户公司名称</th>
 					<th>出入金类型</th>
 					<th>席位号</th>
-					<th>商户交易流水号</th>
-					<th>资金监管交易流水号</th>
 					<th>币别</th>
 					<th>交易金额</th>
 					<th>手续费</th>
@@ -54,6 +53,7 @@
 					<th>交易发送状态</th>
 					<th>交易发送时间</th>
 					<th>备注</th>
+					<th>商户交易流水号</th>
 					<th>操作</th>
 				</tr>
 			</thead>
@@ -62,13 +62,12 @@
 			<tr>
 				<td style="display:none"><?php echo $item['id'];?><input type="hidden" value="<?php echo $item['status'];?>"></td>
 				<td style="display:none"><?php echo $item['user_id'];?></td>
+				<td><?php echo $item['FMS_TRANS_NO'];?></td>
 				<td><?php echo $item['account'];?></td>
 				<td><?php echo $item['nicename'];?></td>
 				<td><?php echo $item['company_name'];?></td>
 				<td><?php echo (1== $item['transfer_type'])?'出金':'入金';?></td>
 				<td><?php echo $item['SIT_NO'];?></td>
-				<td><?php echo $item['MCH_TRANS_NO'];?></td>
-				<td><?php echo $item['FMS_TRANS_NO'];?></td>
 				<td><?php echo ('01'== $item['CURR_COD'])?'人民币':'其它';?></td>
 				<td><?php echo number_format($item['TRANS_AMT'],2);?></td>
 				<td><?php echo number_format($item['TOTALAMT'],2);?></td>
@@ -80,6 +79,7 @@
 				</td>
 				<td><?php echo $item['add_timestamp'];?></td>
 				<td><?php echo empty($item['comment'])?'-':$item['comment'];?></td>
+				<td><?php echo $item['MCH_TRANS_NO'];?></td>
 				<td>
 					<div class="btn-group" role="group">
 			             <a id="entity-loadInfo-btn" href="#" data-toggle="modal" data-keyboard="false" data-backdrop="static">更新</a>

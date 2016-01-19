@@ -123,14 +123,15 @@ $(document).ready(function(){
 		var objBtn = $(this);
 		objBtn.html('更新中...');
 		
-		$("#search-entity-hint").html('').fadeOut();
+		$("#operation-entity-hint").html('').fadeOut();
 		$.post(BASE_PATH + 'bcsCustomer/loadInfo', {'user_id':user_id},
 		        function(result){
-		            if(result.code != 0) {
-		            	$("#search-entity-hint").html(result.msg + '(' + result.code + ')').fadeIn();
-		            }else {
-		            	// TODO
-		            	$("#search-entity-hint").html(result.msg).fadeOut();
+		            if(''==result.code){
+		        		$("#operation-entity-hint").html('更新失败！').fadeIn();
+		        	} else if(result.code != 0) {
+	            		$("#operation-entity-hint").html(result.msg + '(' + result.code + ')').fadeIn();	
+		            } else {
+		            	$("#operation-entity-hint").html('更新完成！').fadeIn();
 		            	setTimeout(function(){
 		            		search_entity($("#entity-current-page").html());
 		                }, 1000);
