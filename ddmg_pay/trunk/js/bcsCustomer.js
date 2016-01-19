@@ -123,18 +123,18 @@ $(document).ready(function(){
 		var objBtn = $(this);
 		objBtn.html('更新中...');
 		
+		$("#search-entity-hint").html('').fadeOut();
 		$.post(BASE_PATH + 'bcsCustomer/loadInfo', {'user_id':user_id},
 		        function(result){
 		            if(result.code != 0) {
 		            	$("#search-entity-hint").html(result.msg + '(' + result.code + ')').fadeIn();
-		            	objBtn.html('更新');
 		            }else {
 		            	$("#search-entity-hint").html(result.msg).fadeOut();
-		            	objBtn.html('更新');
 		            	setTimeout(function(){
 		                    $('#entity-search-btn').click();
 		                }, 1000);
 		            }
+		            objBtn.html('更新');
 		        },
 		        'json'
 		    );
