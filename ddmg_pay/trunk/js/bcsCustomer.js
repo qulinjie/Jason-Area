@@ -127,6 +127,7 @@ $(document).ready(function(){
 		        function(result){
 		            if(result.code != 0) {
 		            	$("#search-entity-hint").html(result.msg + '(' + result.code + ')').fadeIn();
+		            	objBtn.html('更新');
 		            }else {
 		            	$("#search-entity-hint").html(result.msg).fadeOut();
 		            	objBtn.html('更新');

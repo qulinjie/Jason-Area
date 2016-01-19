@@ -42,7 +42,9 @@
 		<div class="modal-content" style="margin-top:52%;">
 			<div class="modal-header" style="text-align: center;">
 				<button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+				<!-- 
 				<img alt="大大买钢" src="<?php echo Router::getBaseUrl();?>view/images/logo.jpg" style=""/>
+				 -->
 				<h3 class="modal-title" id="myModalLabel">大大买钢支付管理系统</h3>
 			</div>
 			<div class="modal-body">
