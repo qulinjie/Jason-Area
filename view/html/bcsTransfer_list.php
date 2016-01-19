@@ -79,7 +79,7 @@
 				<td><?php echo empty($item['comment'])?'-':$item['comment'];?></td>
 				<td>
 					<div class="btn-group" role="group">
-    			       <a id="entity-changeInfo-btn" href="#" data-toggle="modal" data-keyboard="false" data-backdrop="static">修改</a>
+			             <a id="entity-loadInfo-btn" href="#" data-toggle="modal" data-keyboard="false" data-backdrop="static">更新</a>
 					</div>
 				</td>
 			</tr>

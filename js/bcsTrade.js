@@ -222,6 +222,32 @@ jQuery.download = function(url, data, method){
 
 /**************end--导出数据****************/
 
+
+/**************str--更新****************/
+$(document).on('click', '#entity-loadInfo-btn', function(event){
+	var id =  $(this).parent().parent().parent().children().get(1).textContent;
+	
+	var objBtn = $(this);
+	objBtn.html('更新中...');
+	
+	$("#search-entity-hint").html('').fadeOut();
+	$.post(BASE_PATH + 'bcsTrade/loadTradeInfo', {'id':id},
+	        function(result){
+	            if(result.code != 0) {
+	            	$("#search-entity-hint").html(result.msg + '(' + result.code + ')').fadeIn();
+	            }else {
+	            	$("#search-entity-hint").html('更新完成！').fadeOut();
+	            	setTimeout(function(){
+	            		search_entity($("#entity-current-page").html());
+	                }, 1000);
+	            }
+	            objBtn.html('更新');
+	        },
+	        'json'
+	    );
+});
+/**************end--更新****************/
+
 prettyPrint();
 });
 

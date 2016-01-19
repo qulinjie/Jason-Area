@@ -21,6 +21,9 @@ class BcsTransferController extends BaseController {
                 case 'getInfo':
                     $this->getInfo();
                     break;
+                case 'loadInfo':
+                    $this->loadInfo();
+                    break;
                 case 'delete':
                     $this->delete();
                     break;
@@ -143,6 +146,61 @@ class BcsTransferController extends BaseController {
         }
     }
  
+    protected function loadInfo() {
+        $id = Request::post('id');
+        if(!$id){
+            Log::error('loadInfo params error!');
+            EC::fail(EC_PAR_ERR);
+        }
+        
+        $code_model = $this->model('bcsTransfer');
+        
+        $data = $code_model->getInfo(array('id'=>$id));
+        if(EC_OK != $data['code']){
+            Log::error("getInfo failed . ");
+            EC::fail($data['code']);
+        }
+        
+        $data_info = $data['data'][0];
+        
+        $FMS_TRANS_NO = $data_info['FMS_TRANS_NO'];
+        $FUNC_CODE = '0'; //0-出入金交易，1-冻结解冻交易，2-现货交易
+        Log::notice('loadInfo-str---req_data==>> FMS_TRANS_NO=' . $FMS_TRANS_NO);
+        $bcs_data = $this->model('bank')->transactionStatusQuery($FMS_TRANS_NO,$FUNC_CODE);
+        Log::notice('loadInfo-end---req_data==>>' . var_export($bcs_data, true));
+        
+        $data = $bcs_data['data'];
+        if(empty($data)){
+            Log::error("loadInfo failed . msg=" . $bcs_data['code'] . $bcs_data['msg']);
+            EC::fail($bcs_data['code'] . $bcs_data['msg']);
+        } else {
+            $TRANS_STS = $data['TRANS_STS']; // 交易状态 1:交易成功；2：交易失败；3：状态未知；4：未找到交易记录
+            $params = array();
+            $params['id'] = $id;
+            if( 1 == $TRANS_STS){
+                $params['status'] = 1 ;     // 成功
+                $params['TRANS_STS'] = 1 ;  // 成功
+            } else if( 2 == $TRANS_STS){
+                $params['status'] = 1 ;     // 成功
+                $params['TRANS_STS'] = 2 ;  // 失败
+            } else if( 3 == $TRANS_STS){
+                $params['status'] = 1 ;     // 成功
+                $params['TRANS_STS'] = 3 ;  // 处理中
+            } else if( 4 == $TRANS_STS){
+                $params['status'] = 2 ;     // 失败
+                $params['TRANS_STS'] = 2 ;  // 失败
+            }
+            
+            $data_upd = $code_model->update($params);
+            if(EC_OK != $data_upd['code']){
+                Log::error("update failed . " . $data_upd['code'] );
+            }
+        }
+        
+        EC::success(EC_OK, $data);
+    }
+    
+    // disabled
     protected function getInfo() {
         $code = Request::post('code');
     
@@ -165,6 +223,7 @@ class BcsTransferController extends BaseController {
         EC::success(EC_OK, array('entity_list_html' => $entity_list_html));
     }
     
+    // disabled
     private function delete(){
         $id = Request::post('id');
     
@@ -215,6 +274,7 @@ class BcsTransferController extends BaseController {
         EC::success(EC_OK);
     }
     
+    // disabled
     private function create(){
         $code = Request::post('code');
         $type = Request::post('type');

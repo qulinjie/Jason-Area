@@ -22,21 +22,21 @@ class BcsCustomerController extends BaseController {
                 case 'getInfo':
                     $this->getInfo();
                     break;
-                case 'changeStatus':
-                    $this->changeStatus();
-                    break;
-                case 'delete':
-                    $this->delete();
-                    break;
-                case 'create':
-                    $this->create();
-                    break;
+//                 case 'changeStatus':
+//                     $this->changeStatus();
+//                     break;
+//                 case 'delete':
+//                     $this->delete();
+//                     break;
+//                 case 'create':
+//                     $this->create();
+//                     break;
                 case 'loadInfo':
                     $this->loadInfo();
                     break;
-                case 'exportData':
-                    $this->exportData();
-                    break;
+//                 case 'exportData':
+//                     $this->exportData();
+//                     break;
                 case 'transfer':
                     $this->transfer();
                     break;

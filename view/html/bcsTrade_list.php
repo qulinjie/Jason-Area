@@ -52,6 +52,7 @@
 					<th>付款时间</th>
 					<th>状态</th>
 					<th>备注</th>
+					<th>操作</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -74,6 +75,11 @@
                             else if($item['status']==BcsTradeModel::$_status_unknown) { echo "未知"; } ?>
 				</td>
 				<td><?php echo $item['comment'];?></td>
+				<td>
+					<div class="btn-group" role="group">
+			             <a id="entity-loadInfo-btn" href="#" data-toggle="modal" data-keyboard="false" data-backdrop="static">更新</a>
+					</div>
+				</td>
 			</tr>
 <?php }?>
 		</tbody>
