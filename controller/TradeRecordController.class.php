@@ -539,8 +539,6 @@ class TradeRecordController extends BaseController {
             EC::fail(EC_OTH);
         }
 
-        Log::error('----------------------------买方帐号------------------------------------params==>>' . var_export($buyer_bank_info, true));
-        Log::error('-----------------------------data_obj----------------------------------params==>>' . var_export($data_obj, true));
         if($buyer_bank_info['data']['MBR_STS'] == '2'){//此处应该是1
             Log::error('buyer bank not sign status:'.$buyer_bank_info['data']['MBR_STS']);
             EC::fail(EC_NOT_SIGN);
@@ -552,11 +550,10 @@ class TradeRecordController extends BaseController {
             EC::fail(EC_BLE_LESS);
         }
 
-        Log::error('------------------------------data----------------------------------params==>>' . var_export($buyer_bank_info['data'], true));
         // 收款方用户ID
         $params  = array();
         $params['account'] = $data_obj['seller_tel'];
-        $data = $user_model->getUserInfo($params);
+        $data = $user_model->getInfo($params);
         if(EC_OK != $data['code']){
             Log::error("getUserInfo failed . ");
             EC::fail($data['code']);
@@ -567,7 +564,6 @@ class TradeRecordController extends BaseController {
             EC::fail(EC_USR_NON);
         }
         
-        Log::error('------------------------------收款方用户----------------------------------params==>>' . var_export($data_info, true));
         $s_user_id = $data_info['id']; // TODO 按照  电话 对应到 收款用户
         $data = $bcsRegister_model->getInfo(array('user_id' => $s_user_id));
         if(EC_OK != $data['code']){
@@ -637,7 +633,6 @@ class TradeRecordController extends BaseController {
         $bcs_trade_id = $data['data'];
         $params['bcs_trade_id'] = $bcs_trade_id;
         
-        Log::error('----------------------------交易付款------------------------------------params==>>' . var_export($bcs_trade_id, true));
         /**
          * 支付（转账）
          */
