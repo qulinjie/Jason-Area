@@ -540,7 +540,7 @@ class TradeRecordController extends BaseController {
         }
 
         Log::error('----------------------------买方帐号------------------------------------params==>>' . var_export($buyer_bank_info, true));
-        
+        Log::error('-----------------------------data_obj----------------------------------params==>>' . var_export($data_obj, true));
         if($buyer_bank_info['data']['MBR_STS'] == '2'){//此处应该是1
             Log::error('buyer bank not sign status:'.$buyer_bank_info['data']['MBR_STS']);
             EC::fail(EC_NOT_SIGN);
@@ -552,7 +552,7 @@ class TradeRecordController extends BaseController {
             EC::fail(EC_BLE_LESS);
         }
 
-
+        Log::error('------------------------------data----------------------------------params==>>' . var_export($buyer_bank_info['data'], true));
         // 收款方用户ID
         $params  = array();
         $params['account'] = $data_obj['seller_tel'];
