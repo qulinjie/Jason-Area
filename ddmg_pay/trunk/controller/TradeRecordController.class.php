@@ -634,12 +634,14 @@ class TradeRecordController extends BaseController {
         $bcs_trade_id = $data['data'];
         $params['bcs_trade_id'] = $bcs_trade_id;
         
+        Log::error('----------------------------交易付款------------------------------------params==>>' . var_export($bcs_trade_id, true));
         /**
          * 支付（转账）
          */
         $bcsBank_model = $this->model('bank');
+        Log::notice('loadInfo-str ==== >>> notFrozenSpotsTradePay params_trade=##' . json_encode($params_trade) . '##');
         $bcs_data = $bcsBank_model->notFrozenSpotsTradePay($params_trade);
-        Log::notice('loadInfo ==== >>> notFrozenSpotsTradePay response=##' . json_encode($bcs_data) . '##');
+        Log::notice('loadInfo-end ==== >>> notFrozenSpotsTradePay response=##' . json_encode($bcs_data) . '##');
         if(false == $bcs_data || !empty($bcs_data['code'])){
             Log::error("notFrozenSpotsTradePay failed . ");
             EC::fail($bcs_data['code']);
