@@ -234,6 +234,7 @@ class BcsRegisterController extends BaseController {
         
         unset($params['user_id'],$params['comment']);       
         $params['SIT_NO'] = $data['data']['SIT_NO'];
+        $SIT_NO = $data['data']['SIT_NO'];
         $data = $this->model('bank')->registerCustomer($params);
        
         //临时方案 开始
@@ -257,7 +258,7 @@ class BcsRegisterController extends BaseController {
         //临时方案结束
         
         $ACCOUNT_NO = substr($ACCOUNT_NO,strlen('<ACCOUNT_NO>'),23);
-        $data = $this->model('bcsRegister')->update(['ACCOUNT_NO' => $ACCOUNT_NO,'SIT_NO' => $params['SIT_NO']]);
+        $data = $this->model('bcsRegister')->update(['ACCOUNT_NO' => $ACCOUNT_NO,'SIT_NO' => $SIT_NO]);
         if($data['code'] !== EC_OK){
             Log::error('bcsRegister create update  ACCOUNT_NO error');
             EC::fail(EC_UPD_REC);
