@@ -97,7 +97,7 @@ class UserController extends BaseController
         
         //用户不存在
         !$data['data'] && EC::success(EC_OK);
-        $user = $data['data'][0];
+        $user = $data['data'];
         
         $params = array(
             'user_id'=> $params['id'],
@@ -113,7 +113,7 @@ class UserController extends BaseController
         $data = $this->model('cert')->getList($params);
         $data['code'] !== EC_OK && EC::fail($data['code']);
            
-        EC::success(EC_OK,array_merge($data,$data['data'][0]));        
+        EC::success(EC_OK,array_merge($data,$data['data']));        
     }
     
     protected function searchList($isIndex = false) {
