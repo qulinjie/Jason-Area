@@ -58,25 +58,32 @@ class RegisterController extends BaseController
                 Log::error('register person upload file is fail msg(' . $file['code'] . ')');
                 EC::fail($file['code']);
             }
+            
+            $params['id']                   = $this->post('id');
+            $params['nicename']             = $this->post('name');
+            $params['certificate_filename'] = $file['fileName'];
+            $params['certificate_filepath'] = $file['filePath'];
+            
+            foreach ($params as $val){
+                if(!$val){
+                    Log::error('register person params miss ');
+                    EC::fail(EC_PAR_BAD);
+                }
+            }        
+            
+            $data = $this->model('cert')->update($params);
+            $data['code'] !== EC_OK && EC::fail($data['code']);
+            
+            unset($params['certificate_filename'],$params['certificate_filepath']);
+            $params['personal_authentication_status'] = 2;
 
-            $id = $this->post('id');
-            $realName = $this->post('name');
-            if(!$id || !$realName){
-                Log::error('register person params miss ');
-                EC::fail(EC_PAR_BAD);
-            }
-
-            $response = $this->model('user')->updatePersonalAuth(array(
-                'id' => $id,
-                'realName' => $realName,
-                'fileName' => $file['fileName'],
-                'filePath' => $file['filePath']
-            ));
-
-            $response['code'] !== EC_OK && EC::fail($response['code']);
+            $data = $this->model('user')->update($params);
+            $data['code'] !== EC_OK && EC::fail($data['code']);
+            
+            
             //再刷一次，防止session过期
             $session = self::instance('session');
-            $session->set('register_cert_id', $id);
+            $session->set('register_cert_id', $params['id']);
 
             EC::success(EC_OK);
         }
@@ -95,25 +102,28 @@ class RegisterController extends BaseController
                 EC::fail($file['code']);
             }
 
-            $id          = $this->post('id');
-            $license     = $this->post('license');
-            $legalPerson = $this->post('legalPerson');
-            $companyName = $this->post('companyName');
-            if(!$id || !$license || !$legalPerson || !$companyName){
-                Log::error('register enterprise params miss ');
-                EC::fail(EC_PAR_BAD);
+            $params['id']               = $this->post('id');
+            $params['legal_name']       = $this->post('legalPerson');
+            $params['company_name']     = $this->post('companyName');
+            $params['business_license'] = $this->post('license');                       
+            $params['business_license_filename'] = $file['fileName'];
+            $params['business_license_filepath'] = $file['filePath'];            
+        
+            foreach ($params as $val){
+                if(!$val){
+                    Log::error('register enterprise params miss ');
+                    EC::fail(EC_PAR_BAD);
+                }
             }
+            
+            $data = $this->model('cert')->update($params);
+            $data['code'] !== EC_OK && EC::fail($data['code']);
+            
+            unset($params['legal_name'], $params['business_license'],$params['business_license_filename'], $params['business_license_filepath']);
+            $params['company_authentication_status'] = 2 ;
+            $data = $this->model('user')->update($params);
 
-            $response = $this->model('user')->updateCompanyAuth(array(
-                'id'          => $id,
-                'license'     => $license,
-                'legalPerson' => $legalPerson,
-                'companyName' => $companyName,
-                'fileName'    => $file['fileName'],
-                'filePath'    => $file['filePath']
-            ));
-
-            $response['code'] !== EC_OK && EC::fail($response['code']);
+            $data['code'] !== EC_OK && EC::fail($data['code']);
             EC::success(EC_OK);
         }
         $session = self::instance('session');

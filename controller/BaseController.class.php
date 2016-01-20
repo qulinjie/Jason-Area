@@ -264,6 +264,7 @@ abstract class BaseController extends Controller
         return true;
     }
 
+    //获取商铺编号
     public function getMCH_NO()
     {
         if(!$MCH_NO = self::getConfig('conf')['MCH_NO']){
@@ -272,5 +273,17 @@ abstract class BaseController extends Controller
         }
         
         return $MCH_NO;
+    }
+    
+    //解密网页数据加密、base64
+    public function decrypt($data)
+    {
+        $string      = '';
+        $data        = base64_decode($data);
+        $conf        = Controller::getConfig('conf');
+        $private_key = openssl_pkey_get_private($conf['private_key']);   
+        
+        openssl_private_decrypt($data, $string, $private_key);        
+        return $string;
     }
 }

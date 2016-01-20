@@ -4,7 +4,7 @@
 class PayPasswordController extends BaseController
 {
     public function handle($params = array())
-    {
+    {   
         switch ($params[0]) {
             case 'reset':
                 $this->reset();
@@ -21,17 +21,32 @@ class PayPasswordController extends BaseController
     private function reset()
     {
         if(IS_POST){
-            $params['newPwd'] = $this->post('newPwd');
-            self::check() && $params['oldPwd']=$this->post('oldPwd');
-            foreach($params as $val){
-                if(!$val){
-                    Log::error('payPassword reset params miss');
+            if(!$newPwd = self::decrypt($this->post('newPwd'))){
+                Log::error('payPassword reset params error');
+                EC::fail(EC_PAR_BAD);
+            }
+            
+            if(self::check()){
+                if(!$oldPwd = self::decrypt($this->post('oldPwd'))){
+                    Log::error('payPassword reset params error');
                     EC::fail(EC_PAR_BAD);
                 }
+                
+                if(!self::verify($oldPwd)){
+                    Log::error('PayPassword reset oldPwd error');
+                    EC::fail(EC_PWD_WRN);
+                }
             }
-
-            $response = $this->model('payPassword')->passwordReset($params);
-            $response['code'] !== EC_OK && EC::fail($response['code']);
+            
+            if(!$build = password_hash($newPwd, PASSWORD_DEFAULT)){
+                Log::error('PayPassword reset build error newPwd='.$newPwd);
+                EC::fail(EC_OTH);
+            }
+            
+            $loginUser = UserController::getLoginUser();            
+            $data = $this->model('user')->update(array('id' => $loginUser['id'], 'pay_password' => $build));
+            $data['code'] !== EC_OK && EC::fail($data['code']);           
+                      
             EC::success(EC_OK);
         }
         $password_html = $this->render('payPasswordReset',['status' => self::check()],true);
@@ -46,25 +61,30 @@ class PayPasswordController extends BaseController
 
     public static function check()
     {
-        $response = self::model('payPassword')->check();
-        if($response['code'] !== EC_OK){
-            Log::error('payPassword check error code='.$response['code']);
-            EC::fail_page($response['code']);
+        if(!$loginUser = UserController::getLoginUser()){
+            Log::error('PayPassword check not login');
+            EC::fail(EC_NOT_LOGIN);
         }
 
-        return $response['data']['status'];
+        return $loginUser['pay_password'] == true;
     }
 
     public static function verify($payPassword = '')
     {
-        if(!$payPassword) return false;
-        $response = self::model('payPassword')->validatePassword(['payPassword' => $payPassword]);
-        if($response['code'] !== EC_OK){
-            Log::error('payPassword password verify error msg:'.$response['msg']);
+        $loginUser = UserController::getLoginUser();
+        if(!$payPassword || !$loginUser){
+            Log::error('PayPassword verify error');
+            return false;
+        }
+       
+        if(true !== password_verify($payPassword, $loginUser['pay_password'])){
+            Log::error('payPassword password verify error');
+            Log::error('payPassword password payPassword='.$payPassword);
+            Log::error('payPassword password id='.$loginUser['id']);
             return false;
         }
 
-        return $response['data']['status'];
+        return true;
     }
 
     public static function filter()
