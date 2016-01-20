@@ -4,7 +4,7 @@
 class UserController extends BaseController
 {
     public function handle($params = array())
-    {
+    { 
         switch ($params[0]) {
             case 'getIndex':
                 $this->searchList(true);
@@ -50,14 +50,14 @@ class UserController extends BaseController
             exit('403 forbidden');
         }      
         
-        $data = $this->model('cert')->getInfo(['user_id' => $id]);
+        $data = $this->model('cert')->getList(['user_id' => $id]);
         $data['code'] !== EC_OK && EC::fail($data['code']);
         
         $file = DOIT_ROOT;
         if($flag == '10000'){
-            $file .= $data['data']['certificate_filepath'];
+            $file .= $data['data'][0]['certificate_filepath'];
         }else if($flag == '20000'){
-            $file .= $data['data']['business_license_filepath'];
+            $file .= $data['data'][0]['business_license_filepath'];
         }else{
             exit('403 forbidden');
         }    
@@ -72,23 +72,48 @@ class UserController extends BaseController
 
     protected function getInfo()
     {
-        if(!$id = $this->post('id')){
+        $params['id']        = $this->post('id');
+        $params['is_delete'] = 1;
+        
+        if(!$params['id'] ){
             Log::error('User getInfo params error');
             EC::fail(EC_PAR_ERR);
         }
         
-        $data = $this->model('user')->getUserInfo(['id' => $id]);
+        $params['fields'] = array(
+            'id',
+            'account',
+            'nicename',
+            'status',
+            'comment',   
+            'company_name',
+            'add_timestamp',
+            'personal_authentication_status',
+            'company_authentication_status',            
+        );
+        
+        $data   = $this->model('user')->getList($params);
         $data['code'] !== EC_OK && EC::fail($data['code']);
         
         //用户不存在
         !$data['data'] && EC::success(EC_OK);
         $user = $data['data'][0];
         
-        $data = $this->model('cert')->getInfo(['user_id' => $id]);
+        $params = array(
+            'user_id'=> $params['id'],
+            'fields' => array(
+                //'certificate_filename',
+                //'certificate_filepath',
+                'legal_name',
+                'business_license'
+                //'business_license_filename',
+                //'business_license_filepath'
+        ));
+       
+        $data = $this->model('cert')->getList($params);
         $data['code'] !== EC_OK && EC::fail($data['code']);
-        
-        unset($data['data']['id'],$user['password'],$user['pay_password']);        
-        EC::success(EC_OK,array_merge($user,$data['data']));        
+           
+        EC::success(EC_OK,array_merge($data,$data['data'][0]));        
     }
     
     protected function searchList($isIndex = false) {
@@ -152,18 +177,9 @@ class UserController extends BaseController
         }
     }
     
-    protected function searchListAll() {
-        $current_page = Request::post('page');
-        $status = Request::post('status');
-    
-        $user_model = $this->model('user');
-        $params  = array();
-        foreach ([ 'status', 'nicename', 'account', 'time1', 'time2' ] as $val){
-            if($$val) $params[$val] = $$val;
-        }
-    
-        $data = $user_model->searchList($params);
-        if(EC_OK != $data['code']){
+    protected function searchListAll() {    
+        $data = $this->model('user')->getList();
+        if(EC_OK !== $data['code']){
             Log::error("searchList failed . ");
             EC::fail($data['code']);
         }
@@ -198,7 +214,7 @@ class UserController extends BaseController
     }
     
     private function login()
-    {
+    {   
         if(IS_POST){
             $tel  = $this->post('account');
             $pwd  = $this->post('password');
@@ -208,11 +224,15 @@ class UserController extends BaseController
             $pinCode = self::instance('pincode');
             !$pinCode->check($code) && EC::fail(EC_PINCODE_ERR);
 
-            $response = $this->model('user')->login(['tel' => $tel, 'pwd' => $pwd]);
-            $response['code'] !== EC_OK && EC::fail($response['code']);
+            $data = $this->model('user')->login(['tel' => $tel, 'pwd' => $pwd]);
+            $data['code'] !== EC_OK && EC::fail($data['code']);
+            
+            $session = $this->instance('session');
+            $session->set('_loginUser',$data['data']);
+           
             EC::success(EC_OK);
         }
-        self::isLogin()&&$this->redirect(Router::getBaseUrl());
+        self::isLogin() && $this->redirect(Router::getBaseUrl());
         $this->render('login');
     }
 
@@ -222,6 +242,14 @@ class UserController extends BaseController
         if($response['code'] !== EC_OK){
             Log::error('User Logout error '.$response['code']);
         }
+        
+        $session = $this->instance('session');
+        $session->clear();
+        $session->destroy();
+       
+        $cookie = $this->instance('cookie');
+        $cookie->clear(Router::getBaseUrl());
+        
         EC::success(EC_OK);
     }
 
@@ -235,14 +263,21 @@ class UserController extends BaseController
     private function passwordReset()
     {
         if(IS_POST){
-            $oldPwd = $this->post('oldPwd');
-            $newPwd = $this->post('newPwd');
+            $oldPwd = self::decrypt($this->post('oldPwd'));
+            $newPwd = self::decrypt($this->post('newPwd'));
             if(!$oldPwd || !$newPwd){
-                Log::error('loginPassword reset params miss');
+                Log::error('User passwordReset oldPwd or newPwd is empty');
                 EC::fail(EC_PAR_BAD);
             }
 
-            $response = $this->model('user')->loginPasswordReset(['oldPwd' => $oldPwd,'newPwd' => $newPwd]);
+            $loginUser = UserController::getLoginUser();         
+          
+            if(md5($loginUser['id'].$oldPwd) != $loginUser['password']){
+                Log::error('User passwordReset error oldPwd='.$oldPwd);
+                EC::fail(EC_PWD_WRN);
+            }
+            
+            $response = $this->model('user')->update(['password' => md5($loginUser['id'].$newPwd),'id' => $loginUser['id']]);
             $response['code'] !== EC_OK && EC::fail($response['code']);
             EC::success(EC_OK);
         }
@@ -253,14 +288,29 @@ class UserController extends BaseController
 
     public static function isLogin()
     {
-        $response = self::model('user')->isLogin();
-        return $response['code'] === EC_OK && $response['data']['isLogin'];
+        $session = self::instance('session');
+        if(!$session->is_set('_loginUser')){
+            return self::getLoginUser() == true;
+        }
+        
+        return true;
     }
 
     public static function getLoginUser()
     {
-        $response = self::model('user')->getLoginUser();
-        return $response['code'] === EC_OK ? $response['data']['loginUser'] : [];
+        $session = self::instance('session');
+        if(!$loginUser = $session->get('_loginUser')){
+            $data = self::model('user')->getLoginUser();
+            if($data['code'] === EC_OK){
+                $session->set('_loginUser',$data['data']);               
+                return $data['data'];
+            }else{
+                Log::error('User getLoginUser not login');
+                return [];
+            }
+        }
+       
+        return $loginUser;
     }
 
     public static function getToken()
