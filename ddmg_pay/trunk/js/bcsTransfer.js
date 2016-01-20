@@ -132,13 +132,13 @@ $(document).ready(function(){
 					if(result.code != 0) {
 	            		$("#operation-entity-hint").html(result.msg + '(' + result.code + ')').fadeIn();	
 		            } else {
-		            	if(''==result.code){
-			        		$("#operation-entity-hint").html('更新失败！').fadeIn();
-			        	} else {
-			        		$("#operation-entity-hint").html('更新完成！').fadeIn();
+		            	if(0==result.code){
+		            		$("#operation-entity-hint").html('更新完成！').fadeIn();
 			            	setTimeout(function(){
 			            		search_entity($("#entity-current-page").html());
 			                }, 1000);
+			        	} else {
+			        		$("#operation-entity-hint").html('更新失败！').fadeIn();
 			        	}
 		            }
 		            objBtn.html('更新');
