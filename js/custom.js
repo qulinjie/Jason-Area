@@ -136,7 +136,7 @@ $(function () {
                 var str = '';
                 if(res.code == 0){
                     str = '<div class="hint"><div class="hint_tb"><img src="'+BASE_PATH+'view/images/bt_02.jpg"/><span>恭喜，您已成功重置支付密码！</span></div><div class="clear"></div> <div class="hint_lj"><a href="">返回账户安全</a><a href="'+BASE_PATH+'tradeRecord/getIndex">返回我的大大付款</a></div></div>';
-                    $('.reset').html(str);
+                    $('.reset').html(str);                    
                 }else{
                     switch (res.code){
                         case 111:

@@ -147,7 +147,7 @@
 
 					<td style="display:none"><?php echo $item['id'];?><input type="hidden" value="<?php echo $item['status'];?>"></td>
 					<td><?php echo $item['account'];?></td>
-					<td><?php echo $item['real_name'] ? $item['real_name'] : '-';?></td>
+					<td><?php echo $item['nicename'] ? $item['nicename'] : '-';?></td>
 					<td><?php echo $item['legal_name'] ? $item['legal_name'] : '-';?></td>
 					<td><?php echo $item['company_name'] ? $item['company_name'] : '-';?></td>
 					<td><?php echo $item['business_license'] ? $item['business_license'] : '-';?></td>					

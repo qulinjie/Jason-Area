@@ -38,7 +38,7 @@ $(document).ready(
 					if(res.code == 0){
 						$('#id').val(res.data.id);
 						$('#user-account').val(res.data.account);
-						$('#user-name').val(res.data.real_name);
+						$('#user-name').val(res.data.nicename);
 						$('#user-legal-name').val(res.data.legal_name);
 						$('#user-company-name').val(res.data.company_name);
 						$('#user-business-license').val(res.data.business_license);
