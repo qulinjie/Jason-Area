@@ -126,15 +126,17 @@ $(document).ready(function(){
 		$("#operation-entity-hint").html('').fadeOut();
 		$.post(BASE_PATH + 'bcsCustomer/loadInfo', {'user_id':user_id},
 		        function(result){
-		            if(''==result.code){
-		        		$("#operation-entity-hint").html('更新失败！').fadeIn();
-		        	} else if(result.code != 0) {
+		            if(result.code != 0) {
 	            		$("#operation-entity-hint").html(result.msg + '(' + result.code + ')').fadeIn();	
 		            } else {
-		            	$("#operation-entity-hint").html('更新完成！').fadeIn();
-		            	setTimeout(function(){
-		            		search_entity($("#entity-current-page").html());
-		                }, 1000);
+		            	if(0==result.code){
+		            		$("#operation-entity-hint").html('更新完成！').fadeIn();
+			            	setTimeout(function(){
+			            		search_entity($("#entity-current-page").html());
+			                }, 1000);
+		            	} else {
+		            		$("#operation-entity-hint").html('更新失败！').fadeIn();
+		            	}
 		            }
 		            objBtn.html('更新');
 		        },
