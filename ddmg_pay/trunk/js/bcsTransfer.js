@@ -129,6 +129,7 @@ $(document).ready(function(){
 		$("#operation-entity-hint").html('').fadeOut();
 		$.post(BASE_PATH + 'bcsTransfer/loadInfo', {'id':id},
 		        function(result){
+					kk(result);
 					if(''==result.code){
 		        		$("#operation-entity-hint").html('更新失败！').fadeIn();
 		        	} else if(result.code != 0) {
