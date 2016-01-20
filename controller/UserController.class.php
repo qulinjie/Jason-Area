@@ -183,7 +183,7 @@ class UserController extends BaseController
             Log::error("searchList failed . ");
             EC::fail($data['code']);
         }
-        $data_list = $data['data'];
+        
         EC::success(EC_OK, array('data' => $data['data']));
     }
     
