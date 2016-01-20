@@ -99,7 +99,7 @@ class BankModel extends CSBankSoap
 		$requestParms = [ 'MCH_NO'=> $MCH_NO, 'SIT_NO'=>$SIT_NO ];
 		LOG::notice("getCustomerInfo . requestParms=" . json_encode($requestParms) );
 		return $this-> sendQuery( $ServiceCode, $requestParms, $fetchAll=false );
-		return $this-> sendQuery( $ServiceCode, $requestParms, $fetchAll=true );
+// 		return $this-> sendQuery( $ServiceCode, $requestParms, $fetchAll=true );
 	}
 
 
