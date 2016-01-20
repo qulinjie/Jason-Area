@@ -484,6 +484,7 @@ class BcsTradeController extends BaseController {
             $params['id'] = $id;
             $params['status'] = 2 ;     // 失败
             $params['comment'] = $bcs_data['code'] . $bcs_data['msg'] ;
+            Log::notice('bcsTrade--update----params==>>' . var_export($params, true));
             $data_upd = $code_model->update($params);
             if(EC_OK != $data_upd['code']){
                 Log::error("update failed . " . $data_upd['code'] );
@@ -507,7 +508,8 @@ class BcsTradeController extends BaseController {
                 $params['status'] = 2 ;     // 失败
                 $params['comment'] = '未找到交易记录' ;
             }
-    
+            
+            Log::notice('bcsTrade--update----params==>>' . var_export($params, true));
             $data_upd = $code_model->update($params);
             if(EC_OK != $data_upd['code']){
                 Log::error("update failed . " . $data_upd['code'] );
