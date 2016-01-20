@@ -374,8 +374,9 @@ class BcsCustomerController extends BaseController {
         /**
          * 调用接口，查询 客户信息 
          */
+        Log::notice('loadInfo-str ==== >>> getCustomerInfo sit_no=##' . $sit_no . '##');
         $bcs_data = $bcsBank_model->getCustomerInfo( $mch_no, $sit_no );
-        Log::notice('loadInfo ==== >>> getCustomerInfo response=##' . json_encode($bcs_data) . '##');
+        Log::notice('loadInfo-end ==== >>> getCustomerInfo response=##' . json_encode($bcs_data) . '##');
         if(false == $bcs_data || !empty($bcs_data['code'])){
             Log::error("getCustomerInfo failed . ");
             EC::fail($bcs_data['code']);
