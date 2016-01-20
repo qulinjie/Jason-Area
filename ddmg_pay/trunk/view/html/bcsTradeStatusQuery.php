@@ -6,8 +6,8 @@
   <div class="panel-body">
     <div class="form-inline">
       <div class="form-group">
-	    <label for="entity-search-FMS_TRANS_NO">交易流水号</label>
-	    <input type="text" class="form-control" id="entity-search-FMS_TRANS_NO" placeholder="交易流水号" style="width: 330px;"/>
+	    <label for="entity-search-FMS_TRANS_NO">商户交易流水号</label>
+	    <input type="text" class="form-control" id="entity-search-FMS_TRANS_NO" placeholder="商户交易流水号" style="width: 330px;"/>
 	  </div>
 	  <div class="form-group">  
 	    <label for="entity-search-FUNC_CODE">交易类型</label>
