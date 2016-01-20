@@ -113,7 +113,7 @@ class UserController extends BaseController
         $data = $this->model('cert')->getList($params);
         $data['code'] !== EC_OK && EC::fail($data['code']);
            
-        EC::success(EC_OK,array_merge($user,$data['data']));        
+        EC::success(EC_OK,array_merge($user[0],$data['data'][0]));        
     }
     
     protected function searchList($isIndex = false) {
