@@ -39,7 +39,7 @@
 			<thead>
 				<tr>
 					<th style="display:none">id</th>
-					<th>交易流水号</th>
+					<th>交易流水号</th><!-- 商户交易流水号 -->
 					<th>订单号</th>
 					<th>交易完成时间</th>
 					<th>收款方</th>
@@ -52,7 +52,7 @@
 					<th>付款时间</th>
 					<th>状态</th>
 					<th>备注</th>
-					<th>商户交易流水号</th>
+					<th>资金监管交易流水号</th>
 					<th>银行交易订单编号</th>
 					<th>操作</th>
 				</tr>
@@ -61,7 +61,7 @@
 <?php foreach ($data_list as $item){?>
 			<tr>
 				<td style="display:none"><?php echo $item['id'];?><input type="hidden" value="<?php echo $item['status'];?>"></td>
-				<td><?php echo $item['FMS_TRANS_NO'];?></td>
+				<td><?php echo $item['MCH_TRANS_NO'];?></td>
 				<td><?php echo $item['order_no'];?></td>
 				<td><?php echo (0 < strtotime($item['TRANS_TIME']))? $item['TRANS_TIME'] : '-';?>
 				<td><?php echo $item['seller_name'];?></td>
@@ -77,7 +77,7 @@
                             else if($item['status']==BcsTradeModel::$_status_unknown) { echo "未知"; } ?>
 				</td>
 				<td><?php echo $item['comment'];?></td>
-				<td><?php echo $item['MCH_TRANS_NO'];?></td>
+				<td><?php echo $item['FMS_TRANS_NO'];?></td>
 				<td><?php echo $item['CTRT_NO'];?></td>
 				<td>
 					<div class="btn-group" role="group">

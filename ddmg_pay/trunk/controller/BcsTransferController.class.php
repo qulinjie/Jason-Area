@@ -163,10 +163,10 @@ class BcsTransferController extends BaseController {
         
         $data_info = $data['data'][0];
         
-        $FMS_TRANS_NO = $data_info['FMS_TRANS_NO'];
+        $MCH_TRANS_NO = $data_info['MCH_TRANS_NO']; // 商户交易流水号
         $FUNC_CODE = '0'; //0-出入金交易，1-冻结解冻交易，2-现货交易
-        Log::notice('loadInfo-str---req_data==>> FMS_TRANS_NO=' . $FMS_TRANS_NO);
-        $bcs_data = $this->model('bank')->transactionStatusQuery($FMS_TRANS_NO,$FUNC_CODE);
+        Log::notice('loadInfo-str---req_data==>> MCH_TRANS_NO=' . $MCH_TRANS_NO);
+        $bcs_data = $this->model('bank')->transactionStatusQuery($MCH_TRANS_NO,$FUNC_CODE);
         Log::notice('loadInfo-end---req_data==>>' . var_export($bcs_data, true));
         
         $data = $bcs_data['data'];
