@@ -10,6 +10,10 @@ class UserModel extends CurlModel
         return self::sendRequest('user/searchList', $params);
     }
     
+    public function getInfo($params = array()){
+        return self::sendRequest('user/getInfo', $params);
+    }
+    
     public function getList($params = array()){
         return self::sendRequest('user/getList',$params);
     }

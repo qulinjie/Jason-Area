@@ -419,7 +419,7 @@ class TradeRecordController extends BaseController {
     private function pay(){
         $id = Request::post('id');
         $pwd = Request::post('pwd');
-    
+        
         if( !$id || !$pwd ){
             Log::error('checkCode params error!');
             EC::fail(EC_PAR_ERR);
@@ -432,7 +432,7 @@ class TradeRecordController extends BaseController {
         $user_model = $this->model('user');
         $user_id = self::getCurrentUserId();
         
-        $curr_user_data = $user_model->getUserInfo(array('id' => $user_id));
+        $curr_user_data = $user_model->getInfo(array('id' => $user_id));
         if(EC_OK != $curr_user_data['code']){
             Log::error("getUserInfo failed . ");
             EC::fail($curr_user_data['code']);
@@ -451,7 +451,6 @@ class TradeRecordController extends BaseController {
             Log::error('setPayPassword password is empty');
             EC::fail(EC_PWD_EMP);
         }
-        
         if(!password_verify($decrypted_pwd,$curr_user_info['pay_password']) ){
             Log::error('PayPassword is wrong .');
             EC::fail(EC_PWD_WRN);
