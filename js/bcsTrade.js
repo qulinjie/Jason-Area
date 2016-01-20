@@ -237,6 +237,8 @@ $(document).on('click', '#entity-loadInfo-btn', function(event){
 				if(result.code != 0) {
 		    		$("#operation-entity-hint").html(result.msg + '(' + result.code + ')').fadeIn();	
 		        } else {
+		        	alert(result.code);
+		        	alert((''==result.code));
 		        	if(''==result.code){
 		        		$("#operation-entity-hint").html('更新失败！').fadeIn();
 		        	} else {
