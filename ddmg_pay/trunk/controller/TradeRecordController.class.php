@@ -539,6 +539,8 @@ class TradeRecordController extends BaseController {
             EC::fail(EC_OTH);
         }
 
+        Log::error('----------------------------买方帐号------------------------------------params==>>' . var_export($buyer_bank_info, true));
+        
         if($buyer_bank_info['data']['MBR_STS'] == '2'){//此处应该是1
             Log::error('buyer bank not sign status:'.$buyer_bank_info['data']['MBR_STS']);
             EC::fail(EC_NOT_SIGN);
