@@ -184,7 +184,7 @@ class UserController extends BaseController
             EC::fail($data['code']);
         }
         $data_list = $data['data'];
-        EC::success(EC_OK, array('data' => $data_list));
+        EC::success(EC_OK, array('data' => $data['data']));
     }
     
     private function update(){  
