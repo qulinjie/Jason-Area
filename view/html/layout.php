@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <title>大大支付-<?php if(doit::$controller == 'register'){?>注册<?php }else{?>找回登录密码<?php }?></title>
+    <title>大大支付-<?php if(doit::$controller == 'Register'){?>注册<?php }else{?>找回登录密码<?php }?></title>
     <link rel="stylesheet" href="<?php echo Router::getBaseUrl() ?>css/index.css" type="text/css"/>
 </head>
 
