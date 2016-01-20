@@ -298,9 +298,6 @@
 				<li <?php if(doit::$controller == 'BcsCustomer' && doit::$params[0] =='getIncomePay'){?> class="discolor" <?php } ?>>
 					<a href="<?php echo Router::getBaseUrl();?>bcsCustomer/getIncomePay">交易明细</a>
 				</li>
-        	    <li <?php if(doit::$controller == 'BcsMarket'){?> class="discolor" <?php } ?>>
-        			<a href="<?php echo Router::getBaseUrl();?>bcsMarket/getInfo">市场信息</a>
-        	    </li>
 				<li <?php if(doit::$controller == 'User'){?> class="discolor" <?php } ?>>
 					<a href="<?php echo Router::getBaseUrl();?>user/passwordReset">重置登录密码</a>
 				</li>
@@ -322,9 +319,6 @@
         	  <?php } else if($page_type == 'bcsCustomer'){?>
         	        <script src="<?php echo Router::getBaseUrl();?>js/bcsCustomerInfo.js"></script>
         		    <?php echo $bcsCustomer_html; ?>
-              <?php } else if($page_type == 'bcsMarket'){?>
-                    <script src="<?php echo Router::getBaseUrl();?>js/bcsMarketInfo.js"></script>
-                    <?php echo $bcsMarket_html; ?>
         	  <?php } else if($page_type == 'user'){?>
         			<?php echo $password_html; ?>
         	  <?php }else if($page_type == 'message'){?>
