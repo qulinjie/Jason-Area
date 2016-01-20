@@ -567,6 +567,7 @@ class TradeRecordController extends BaseController {
             EC::fail(EC_USR_NON);
         }
         
+        Log::error('------------------------------收款方用户----------------------------------params==>>' . var_export($data_info, true));
         $s_user_id = $data_info['id']; // TODO 按照  电话 对应到 收款用户
         $data = $bcsRegister_model->getInfo(array('user_id' => $s_user_id));
         if(EC_OK != $data['code']){
