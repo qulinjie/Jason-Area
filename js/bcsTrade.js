@@ -233,6 +233,7 @@ $(document).on('click', '#entity-loadInfo-btn', function(event){
 	$("#operation-entity-hint").html('').fadeOut();
 	$.post(BASE_PATH + 'bcsTrade/loadInfo', {'id':id},
 	        function(result){
+		kk(result);
 				if(result.code != 0) {
 		    		$("#operation-entity-hint").html(result.msg + '(' + result.code + ')').fadeIn();	
 		        } else {
