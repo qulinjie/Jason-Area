@@ -398,9 +398,10 @@ class BcsCustomerController extends BaseController {
         $params['MBR_PHONE'] = $bcs_data['MBR_PHONE']; // 手机号
         $params['ACCT_BAL'] = $bcs_data['ACCT_BAL']; // 余额
         $params['AVL_BAL'] = $bcs_data['ACCOUNT_NO']; // 可用余额
-        $params['SIGNED_DATE'] = $bcs_data['SIGNED_DATE']; // 开户日期
-        $params['ACT_TIME'] = $bcs_data['ACT_TIME']; // 签约时间（时间格式：YYYY-MM-DD HH24:MI:SS）
+        $params['SIGNED_DATE'] = strval($bcs_data['SIGNED_DATE']); // 开户日期
+        $params['ACT_TIME'] = strval($bcs_data['ACT_TIME']); // 签约时间（时间格式：YYYY-MM-DD HH24:MI:SS）
         
+        Log::error('----------------------------------------------------------------params==>>' . var_export($params, true));
         if(empty($params['ACCOUNT_NO'])) {
             Log::error("getCustomerInfo failed [ACCOUNT_NO] is empty . ");
             EC::fail($bcs_data['code']);
