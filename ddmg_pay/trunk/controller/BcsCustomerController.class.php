@@ -510,8 +510,9 @@ class BcsCustomerController extends BaseController {
          */
         // 客户入金
         if(BcsTransferModel::$_transfer_type_in == $inOut) {
+            Log::notice('loadInfo-str ==== >>> customerInflow sit_no=##' . $sit_no . '##');
             $bcs_data = $bcsBank_model->customerInflow( $mch_no, $sit_no, $mch_trans_no, $curr_cod, $trans_amt );
-            Log::notice('loadInfo ==== >>> customerInflow response=##' . json_encode($bcs_data) . '##');
+            Log::notice('loadInfo-end ==== >>> customerInflow response=##' . json_encode($bcs_data) . '##');
             if(false == $bcs_data || !empty($bcs_data['code'])){
                 Log::error("customerInflow failed . ");
                 EC::fail($bcs_data['code']);
@@ -533,8 +534,9 @@ class BcsCustomerController extends BaseController {
         else if(BcsTransferModel::$_transfer_type_out == $inOut) {
             $trans_fee = 0; // 手续费
             
+            Log::notice('loadInfo-str ==== >>> customerInflow sit_no=##' . $sit_no . '##');
             $bcs_data = $bcsBank_model->customerOutflow( $mch_no, $sit_no, $mch_trans_no, $curr_cod, $trans_amt, $trans_fee );
-            Log::notice('loadInfo ==== >>> customerOutflow response=##' . json_encode($bcs_data) . '##');
+            Log::notice('loadInfo-end ==== >>> customerOutflow response=##' . json_encode($bcs_data) . '##');
             if(false == $bcs_data || !empty($bcs_data['code'])){
                 Log::error("customerOutflow failed . ");
                 EC::fail($bcs_data['code']);
