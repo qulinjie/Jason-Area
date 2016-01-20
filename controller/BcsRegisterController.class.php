@@ -217,7 +217,7 @@ class BcsRegisterController extends BaseController {
                     
         $filter = ['CUST_CERT_TYPE','CUST_CERT_NO','CUST_NAME','CUST_ACCT_NAME','CUST_SPE_ACCT_NO','CUST_SPE_ACCT_BKTYPE','ENABLE_ECDS','IS_PERSON','user_id'];
         foreach ($filter as $filed){
-            if(!isset($params[$filed]) || !$params[$filed]){
+            if(!isset($params[$filed]) || $params[$filed] === ''){
                 Log::error('bcsRegister create params error filed :'.$filed);
                 EC::fail(EC_PAR_ERR);
             }
