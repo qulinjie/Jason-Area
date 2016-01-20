@@ -393,9 +393,9 @@ class BcsCustomerController extends BaseController {
         $params['MBR_SPE_ACCT_NAME'] = $bcs_data['MBR_SPE_ACCT_NAME']; // 会员指定户名
         $params['MBR_BANK_NAME'] = $bcs_data['MBR_BANK_NAME']; // 行名
         $params['MBR_BANK_NO'] = $bcs_data['MBR_BANK_NO']; // 行号
-        $params['MBR_ADDR'] = $bcs_data['MBR_ADDR']; // 会员联系地址
-        $params['MBR_TELENO'] = $bcs_data['MBR_TELENO']; // 电话
-        $params['MBR_PHONE'] = $bcs_data['MBR_PHONE']; // 手机号
+        $params['MBR_ADDR'] = strval($bcs_data['MBR_ADDR']); // 会员联系地址
+        $params['MBR_TELENO'] = strval($bcs_data['MBR_TELENO']); // 电话
+        $params['MBR_PHONE'] = strval($bcs_data['MBR_PHONE']); // 手机号
         $params['ACCT_BAL'] = $bcs_data['ACCT_BAL']; // 余额
         $params['AVL_BAL'] = $bcs_data['ACCOUNT_NO']; // 可用余额
         $params['SIGNED_DATE'] = strval($bcs_data['SIGNED_DATE']); // 开户日期
