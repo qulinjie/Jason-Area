@@ -15,14 +15,14 @@
 				<form class="form-horizontal">
 				  <input type="hidden" class="form-control" id="info-entity-id" value=""></input>
 				  <div class="form-group">
-				    <label for="add-entity-user_id" class="col-sm-2 control-label">用户登录帐号</label>
+				    <label for="add-entity-account" class="col-sm-2 control-label">用户登录帐号</label>
 				    <div class="col-sm-4">
-    				    <select class="form-control" id="add-entity-user_id"></select>
+    				    <input class="form-control" id="add-entity-account" placeholder="用户登录帐号">    				   
 				    </div>
-				    <span style="display: none;">
-				    <label for="add-entity-SIT_NO" class="col-sm-2 control-label">席位号</label>
+				    <span>
+				    <label for="add-entity-pwd" class="col-sm-2 control-label">登录密码</label>
 				    <div class="col-sm-4">
-				        <input class="form-control" id="add-entity-SIT_NO" placeholder="席位号"></input>
+				        <input type="password" class="form-control" id="add-entity-pwd" placeholder="登录密码"></input>
 				    </div>	
 				    </span>
 				  </div>
@@ -133,6 +133,10 @@
 				    </div>
 				  </div>
 				  <div class="form-group">
+				    <label for="add-entity-company-name" class="col-sm-2 control-label">企业名称</label>
+				    <div class="col-sm-4">
+				      <input class="form-control" id="add-entity-company-name" placeholder="企业名称"></input>
+				    </div>
 				    <label for="add-entity-comment" class="col-sm-2 control-label">备注</label>
 				    <div class="col-sm-4">
 				      <input class="form-control" id="add-entity-comment" placeholder="备注"></input>

@@ -20,8 +20,8 @@ class BcsRegisterModel extends CurlModel {
         return self::sendRequest('bcsRegister/update', $params);
     }
     
-    public function getInfo($params = array()){
-        return self::sendRequest('bcsRegister/getInfo', $params);
+    public function getList($params = array()){
+        return self::sendRequest('bcsRegister/getList', $params);
     }
     
     public function create($params = array()){
@@ -31,9 +31,5 @@ class BcsRegisterModel extends CurlModel {
     public function createByJava($params = array()){
 //         return self::sendRequestByJava('payBcsWs/wsDemo', $params); // for test
         return self::sendRequestByJava('payBcsWs/ws ', $params);
-    }
-
-    public function getSitNo($params = array()){
-        return self::sendRequest('bcsRegister/getSitNo', $params);
     }
 }

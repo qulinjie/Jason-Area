@@ -92,9 +92,11 @@
 				<td><?php echo (0 < strtotime($item['ACT_TIME']))? $item['ACT_TIME'] : '-';?></td>
 				<td><?php echo empty($item['comment'])?'-':$item['comment'];?></td>
 				<td>
+				    <?php if($item['status'] == 2){?>
 					<div class="btn-group" role="group">
     			       <a id="entity-changeInfo-btn" href="#" data-toggle="modal" data-keyboard="false" data-backdrop="static">修改</a>
 					</div>
+					<?php }?>
 				</td>
 			</tr>
 <?php }?>

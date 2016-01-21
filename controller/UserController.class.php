@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * 
+ * @author zhangsong
+ *
+ */
 
 class UserController extends BaseController
 {
@@ -177,14 +182,33 @@ class UserController extends BaseController
         }
     }
     
-    protected function searchListAll() {    
-        $data = $this->model('user')->getList();
-        if(EC_OK !== $data['code']){
+    protected function searchListAll() {
+        $userList = $this->model('user')->getList(array('status' => '1','is_delete' => '1','fields' => array('id,account,nicename,company_name')));
+        if(EC_OK !== $userList['code']){
             Log::error("searchList failed . ");
-            EC::fail($data['code']);
+            EC::fail($userList['code']);
         }
         
-        EC::success(EC_OK, array('data' => $data['data']));
+        //无用户
+        !$userList['data'] && EC::success(EC_OK);
+        
+        $bcsRegisterList = $this->model('bcsRegister')->getList(array('fields' => array('user_id')));
+        if($bcsRegisterList['code'] !== EC_OK){
+            Log::error('User searchListAll error code='.$bcsRegisterList['code']);
+            EC::fail($bcsRegisterList['code']);
+        }
+        
+        //过滤已经开户的数据
+        if($bcsRegisterList['data']){
+            $filter = array_flip(array_column($bcsRegisterList['data'], 'user_id'));         
+            foreach ($userList['data'] as $key => $val){  
+                if(isset($filter[(int)$val['id']])){
+                    unset($userList['data'][$key]);                   
+                }
+            }            
+        }
+       
+        EC::success(EC_OK, $userList['data']);
     }
     
     private function update(){  
@@ -338,4 +362,5 @@ class UserController extends BaseController
             'login' => ['passwordReset']
         ];
     }
+
 }

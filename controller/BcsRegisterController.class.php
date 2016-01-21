@@ -6,7 +6,7 @@
 class BcsRegisterController extends BaseController {
 
     public function handle($params = array()) {
-        Log::notice('BcsRegisterController  ==== >>> params=' . json_encode($params));
+        //Log::notice('BcsRegisterController  ==== >>> params=' . json_encode($params));
         if (empty($params)) {
             Log::error('Controller . params is empty . ');
             EC::fail(EC_MTD_NON);
@@ -19,14 +19,14 @@ class BcsRegisterController extends BaseController {
                     $this->searchList();
                     break;
                 case 'info':
-                    $this->getInfoById();
-                    break;
-                case 'getInfo':
                     $this->getInfo();
-                    break;           
+                    break;                      
                 case 'create':
                     $this->create();
-                    break;              
+                    break;
+                case 'update':
+                    $this->update();
+                    break;
                 default:
                     Log::error('page not found . ' . $params[0]);
                     EC::fail(EC_MTD_NON);
@@ -145,58 +145,78 @@ class BcsRegisterController extends BaseController {
         }
     }
     
-    private function getInfoById(){
-        $id	=	Request::post('id');
+    private function getInfo(){
+        if(!$id	= Request::post('id')){
+            Log::error('bcsRegister getInfo id miss');
+            EC::fail(EC_PAR_BAD);
+        }
         
         $bcsRegister_model = $this->model('bcsRegister');
         $user_model = $this->model('user');
+        $params = array(  
+            'id'        => $id,
+            'status'    => 2,
+            'is_delete' => 1,            
+            'fields' => array(
+                'id',
+                'user_id',
+                'MCH_NO',
+                'ACCOUNT_NO',
+                'CUST_CERT_TYPE',
+                'CUST_CERT_NO',
+                'SIT_NO',
+                'CUST_NAME',
+                'CUST_ACCT_NAME',
+                'CUST_SPE_ACCT_NO',
+                'CUST_SPE_ACCT_BKTYPE',
+                'CUST_SPE_ACCT_BKID',
+                'CUST_SPE_ACCT_BKNAME',
+                'CUST_PHONE_NUM',
+                'CUST_TELE_NUM',
+                'CUST_ADDR',
+                'RMRK',
+                'ENABLE_ECDS',
+                'IS_PERSON',
+                'status',
+                'comment'                
+        ));        
         
-        $data = $bcsRegister_model->getInfo(array('id' => $id));
+        $data = $bcsRegister_model->getList($params);
         if(EC_OK != $data['code']){
             EC::fail($data['code']);
         }
-        $data = $data['data'];
+        
+        $data = $data['data'][0];
         if(empty($data)){
             Log::error('Register user not exist. id=' . $id);
             EC::fail(EC_PAR_ERR);
         }
         
-        $user_data = $user_model->searchList(array('id' => $data[id]));
+        $params = array(
+            'id'        => $data['user_id'],
+            'status'    => 1,
+            'is_delete' => 1,
+            'fields' => array(
+                'id',
+                'account',
+                'nicename',
+                'company_name'             
+        ));
+        $user_data = $user_model->getList($params);
         if(EC_OK != $user_data['code']){
             Log::error("searchList failed . ");
-        } else {
-            $user_data = $user_data['data'][0];
-            $data[0]['account'] = $user_data['account'];
-            $data[0]['nicename'] = $user_data['nicename'];
-            $data[0]['company_name'] = $user_data['company_name'];
+            EC::fail(EC_PAR_ERR);
         }
         
         Log::error('response_data==>>' . var_export($data, true));
-        EC::success(EC_OK,$data);
-    }
-    
-    protected function getInfo() {
-        $bcsRegister_model = $this->model('bcsRegister');
-        $user_id = self::getCurrentUserId();
-    
-        $params  = array();
-        $params['user_id'] = $user_id;
-    
-        $data = $bcsRegister_model->getInfo($params);
-        if(EC_OK != $data['code']){
-            Log::error("getInfo failed . ");
-            EC::fail($data['code']);
-        }
-    
-        $data_info = $data['data'][0];
-        $view_html = $this->render('bcsRegisterInfo', array('item' => $data_info), true);
-        $this->render('index', array('page_type' => 'bcsRegister', 'bcsRegister_html' => $view_html));
+        EC::success(EC_OK,array_merge($data,$user_data['data'][0]));
     }
 
     private function create(){
         $params = [
-            //'MCH_NO'               => self::getConfig('conf')['MCH_NO'],    // 商户编号
-            //'SIT_NO'               => $this->post('SIT_NO'),                // 客户证件类型
+            'account'              => $this->post('account'),                       //登录账户
+            'password'             => self::decrypt($this->post('password')),       //登录密码
+            'company_name'         => $this->post('company_name'),          //公司名称
             'CUST_CERT_TYPE'       => $this->post('CUST_CERT_TYPE'),          // 客户证件类型
             'CUST_CERT_NO'         => $this->post('CUST_CERT_NO'),            // 客户证件号码
             'CUST_NAME'            => $this->post('CUST_NAME'),          // 客户名称
@@ -210,31 +230,70 @@ class BcsRegisterController extends BaseController {
             'CUST_PHONE_NUM'       => $this->post('CUST_PHONE_NUM'),      // 客户手机号码
             'CUST_TELE_NUM'        => $this->post('CUST_TELE_NUM'),       // 客户电话号码
             'CUST_ADDR'            => $this->post('CUST_ADDR'),       // 客户地址
-            'RMRK'                 => $this->post('RMRK'),           // 客户备注
-            'user_id'              => $this->post('user_id'),          //用户ID
+            'RMRK'                 => $this->post('RMRK'),           // 客户备注          
             'comment'              => $this->post('comment')           //管理员备注
         ];
                     
-        $filter = ['CUST_CERT_TYPE','CUST_CERT_NO','CUST_NAME','CUST_ACCT_NAME','CUST_SPE_ACCT_NO','CUST_SPE_ACCT_BKTYPE','ENABLE_ECDS','IS_PERSON','user_id'];
+        $filter = ['CUST_CERT_TYPE','CUST_CERT_NO','CUST_NAME','CUST_ACCT_NAME','CUST_SPE_ACCT_NO','CUST_SPE_ACCT_BKTYPE','ENABLE_ECDS','IS_PERSON','account','password','company_name'];
+        if($params['CUST_SPE_ACCT_BKTYPE'] == '1'){
+            $filter[] = 'CUST_SPE_ACCT_BKID';
+            $filter[] = 'CUST_SPE_ACCT_BKNAME';
+        }
         foreach ($filter as $filed){
-            if(!isset($params[$filed]) || $params[$filed] === ''){
+            if(!isset($params[$filed]) || $params[$filed] === '' || $params[$filed] === false){
                 Log::error('bcsRegister create params error filed :'.$filed);
                 EC::fail(EC_PAR_ERR);
             }
-        }     
-             
-        $params['MCH_NO'] = $this->getMCH_NO();
-        
-        //先写数据库
-        $data = $this->model('bcsRegister')->create($params);
-        if($data['code'] !== EC_OK){
-            Log::error('bcsRegister create error code: '.$data['code']);
-            EC::fail($data['code']);
         }
         
-        unset($params['user_id'],$params['comment']);       
-        $params['SIT_NO'] = $data['data']['SIT_NO'];
-        $SIT_NO = $data['data']['SIT_NO'];
+        //创建账户    
+        $checkComp = $this->model('user')->getList(['company_name' => $params['company_name'] ,'fields' => ['id']]);
+        $checkComp['code'] !== EC_OK && EC::fail($checkComp['code']);        
+        $checkComp['data'] && EC::fail(EC_COMPANY_EST);
+        
+        $checkAccount = $this->model('user')->getList(['account' => $params['account'] ,'fields' => ['id']]);
+        $checkAccount['code'] !== EC_OK && EC::fail($checkAccount['code']);
+        $checkAccount['data'] && EC::fail(EC_ACCOUNT_EST);
+        
+        $data = $this->model('user')->create([
+            'account'      => $params['account'],
+            'password'     => $params['password'],
+            'nicename'     => $params['CUST_NAME'],
+            'company_name' => $params['company_name'],
+            'comment'      => $params['comment'],
+            'status'       => 1,
+            'user_type'    => 1,
+            'is_delete'    => 1,
+            'pay_password' => '',
+            'personal_authentication_status' => 3,
+            'company_authentication_status'  => 3,
+            'add_timestamp' => date('Y-m-d H:i:s')
+        ]);  
+        
+        if($data['code'] !== EC_OK){
+            Log::error('bcsRegister create user error code='.$data['code']);
+            EC::fail($data['code']);
+        }
+        $user_id = $data['data']['id'];        
+        unset($params['account'],$params['password'],$params['company_name']);      
+        $params['MCH_NO']  = $this->getMCH_NO();
+        $params['user_id'] = $user_id;
+        $params['is_delete'] = 1;
+        $params['status']   = 3;
+        $params['add_timestamp'] = date('Y-m-d H:i:s');
+        
+        //创建开户
+        $data = $this->model('bcsRegister')->create($params);
+        if($data['code'] !== EC_OK){
+            Log::error('bcsRegister create bcsRegister error code: '.$data['code']);
+            EC::fail($data['code']);
+        }
+       
+        $register_id = $data['data']['id'];
+        $SIT_NO      = $data['data']['SIT_NO'];
+        unset($params['user_id'],$params['comment'],$params['is_delete'],$params['status'],$params['add_timestamp']);       
+        $params['SIT_NO'] =  $SIT_NO;
+        
         $data = $this->model('bank')->registerCustomer($params);
        
         //临时方案 开始
@@ -246,25 +305,28 @@ class BcsRegisterController extends BaseController {
         Log::notice('params==createByJava--------------------->>' . var_export($params, true));
         $data = $this->model('bcsRegister')->createByJava($params);
      
-        if($data['error'] !==0){
+        
+        if($data['error'] !== 0){
             Log::error('bcsRegister createByJava Fail!');
+            $this->model('bcsRegister')->update(['id' => $register_id,'status' => 2]);
             EC::fail($data['code']);
         }
                
         if(($ACCOUNT_NO = strstr($data['data'],'<ACCOUNT_NO>')) === false){
             Log::error('bcsRegister create bank return ACCOUNT_NO is empty');
+            $this->model('bcsRegister')->update(['id' => $register_id,'status' => 2]);
             EC::fail(EC_OTH);
         }      
         //临时方案结束
         
         $ACCOUNT_NO = substr($ACCOUNT_NO,strlen('<ACCOUNT_NO>'),23);
-        $data = $this->model('bcsRegister')->update(['ACCOUNT_NO' => $ACCOUNT_NO,'SIT_NO' => $SIT_NO]);
+        $data = $this->model('bcsRegister')->update(['ACCOUNT_NO' => $ACCOUNT_NO,'id' => $register_id]);
         if($data['code'] !== EC_OK){
             Log::error('bcsRegister create update  ACCOUNT_NO error');
             EC::fail(EC_UPD_REC);
         }
         
-        EC::success(EC_OK,['ACCOUNT_NO' => $ACCOUNT_NO]);
+        EC::success(EC_OK);
      }
 
 }

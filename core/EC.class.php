@@ -69,6 +69,9 @@ define('EC_SIT_NO_NON',601);
 define('EC_NOT_SIGN','801');
 define('EC_ARY_CANCEL','802');
 define('EC_BLE_LESS','803');
+
+define('EC_ACCOUNT_EST',901);
+define('EC_COMPANY_EST',902);
 class EC extends Base {
 
 	public static $_errMsg = array(
@@ -140,7 +143,11 @@ class EC extends Base {
 
 			EC_NOT_SIGN       => '未签约',
 			EC_ARY_CANCEL     => '已注销',
-			EC_BLE_LESS       => '余额不足'
+			EC_BLE_LESS       => '余额不足',
+	    
+	       EC_ACCOUNT_EST     => '帐号已存在',
+	       EC_COMPANY_EST     => '公司已存在',
+	    
 	);
 	public static function load(){
 		return true;

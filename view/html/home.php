@@ -10,7 +10,7 @@
 <div class="all">
 	  <div class="t1">
       	<div class="top1">
-            <div class="left"><span><a class="theme-login" href="javascript:;">登陆</a></span><span><a href="<?php echo Router::getBaseUrl()?>register/account">注册</a></span></div>
+            <div class="left"><span><a class="theme-login" href="javascript:;">登陆</a></span><!--  <span><a href="<?php echo Router::getBaseUrl()?>register/account">注册</a></span>--></div>
             <div class="right"><span>欢迎来到大大付款</span><span><a href="javascript:void(0);">大大买钢首页</a></span><span><a href="javascript:void(0);">大大买钢APP</a></span></div>
          </div>
       </div>	
@@ -21,7 +21,7 @@
          </div>
       </div>
       <div class="tbs">
-             <div class="register"><a href="<?php echo Router::getBaseUrl()?>register/account">我要注册大大付款</a></div>
+             <!--  <div class="register"><a href="<?php echo Router::getBaseUrl()?>register/account">我要注册大大付款</a></div>-->
              <div class="login"><a class="theme-login" href="javascript:;">已有账号，去登录</a></div>
       </div>
       <div class="bottom">

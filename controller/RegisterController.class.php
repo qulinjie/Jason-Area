@@ -6,7 +6,8 @@
 class RegisterController extends BaseController
 {
     public function handle($params = array())
-    {
+    {   
+        exit('403 forbidden');
         switch ($params[0]) {
             case 'account'://填写帐号
                 $this->account();
