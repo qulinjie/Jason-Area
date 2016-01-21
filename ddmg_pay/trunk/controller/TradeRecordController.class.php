@@ -320,6 +320,9 @@ class TradeRecordController extends BaseController {
     }
     
     private function create(){
+        
+        EC::success(EC_OK);
+        
         $post_data = self::getPostDataJson();
         if(empty($post_data)) {
             Log::error('post_data params error!');
