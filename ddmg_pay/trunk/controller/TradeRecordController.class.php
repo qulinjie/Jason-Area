@@ -320,42 +320,97 @@ class TradeRecordController extends BaseController {
     }
     
     private function create(){
-        
-        EC::success(EC_OK);
-        
         $post_data = self::getPostDataJson();
         if(empty($post_data)) {
-            Log::error('post_data params error!');
+            Log::error('post_data params empty error!');
             EC::fail(EC_PAR_ERR);
         }
         // request 数据
         $request_data = $post_data['data'];
         
-        $code = $request_data['code']; // 授权码
-        $seller_id = $request_data['seller_id']; // 卖家ID
-        $seller_name = $request_data['company']; // 卖家(公司)名称
-        $seller_conn_name = $request_data['seller_name']; // 联系人
-        $seller_tel = $request_data['tel']; // 联系人电话
-        $seller_comp_phone = $request_data['seller_comp_phone']; // 公司电话
-        $order_no = $request_data['order_num']; // 订单号
-        $order_timestamp = $request_data['order_timestamp']; // 订单时间/日期
-        $order_goods_name = $request_data['product_name']; // 品名
-        $order_goods_size = $request_data['size_name']; // 规格
-        $order_goods_type = $request_data['material_name']; // 材质
-        $order_goods_price = $request_data['price']; // 单价（元/ 吨）
-        $order_goods_count = $request_data['ton']; // 订购量（吨）
-        $order_delivery_addr = $request_data['delivery_address']; // 交货地
-        $order_sum_amount = $request_data['amount']; // 订单金额（元）
+        $order = $request_data['order']; // 订单信息
+        $orderItem = $request_data['orderItem']; // 订单商品信息
     
-        if(!$code || !$seller_name || !$order_no || !$order_sum_amount ){
+        if(!$order || !$orderItem || !$order['order_num']){
             Log::error('create params error!');
             EC::fail(EC_PAR_ERR);
         }
         
+        $trade_record = array();
+        $trade_record_item = array();
+        $item_bid_amount = array();
+        foreach ($orderItem as $itemVal){
+            $record_item = array();
+            
+            $record_item['order_no'] = $order['order_num']; // 订单号
+            
+            $record_item['itme_no'] = $itemVal['item_num']; // 订单商品ID
+            $record_item['item_name'] = $itemVal['product_name']; // 品名 
+            $record_item['item_type'] = $itemVal['material_name']; // 材质
+            $record_item['item_size'] = $itemVal['size_name']; // 规格
+            $record_item['item_factory'] = $itemVal['factory_name']; // 钢厂
+            $record_item['item_count'] = $itemVal['quantity']; // 数量
+            $record_item['item_weight'] = $itemVal['allton']; // 总重量
+            $record_item['item_price'] = $itemVal['price']; // 商品单价
+            $record_item['bid_price'] = $itemVal['pur_price']; // 采购单价
+            $record_item['item_delivery_addr'] = $itemVal['delivery_point']; // 交割地点（仓库地址）
+            $record_item['item_amount'] = $itemVal['amount']; // 总金额
+            $record_item['bid_amount'] = floatval($itemVal['pur_price']) * floatval($itemVal['allton']); // 采购总金额 = 采购单价 * 总重量
+            
+            // 采购单位
+            $trade_record_item[$itemVal['pur_unit']][] = $record_item;
+            if(empty($item_bid_amount[$itemVal['pur_unit']])){
+                $item_bid_amount[$itemVal['pur_unit']] = $record_item['bid_amount'];
+            } else {
+                $item_bid_amount[$itemVal['pur_unit']] = floatval($record_item['bid_amount']) + floatval($item_bid_amount[$itemVal['pur_unit']]);
+            }
+        }
+        
+//         Log::error('----------------------------------trade_record_item------------------------------params==>>' . var_export($trade_record_item, true));
+        
+        $conf = $this->getConfig('conf');
+        // 商户付款ID（大汉账号）
+        $pay_user_id = $conf['pay_user_id'];
+        $user_model = $this->model('user');
+        
+        foreach ($trade_record_item as $itemKey => $itemVal){
+            $trade_record[$itemKey] = array();
+            
+            $trade_record[$itemKey]['user_id'] = $pay_user_id; // 付款用户ID（支付账户）
+            
+            $trade_record[$itemKey]['seller_name'] = $itemKey; // 卖家/供应商公司名称
+            
+            // 查询卖家支付账户的用户ID
+            $data = $user_model->getInfo(array('company_name' => $itemKey));
+            if(EC_OK != $data['code']){
+                Log::error("getInfo failed . company_name=" . $itemKey);
+            } else {
+                $data_info = $data['data'][0];
+                $trade_record[$itemKey]['seller_id'] = $data_info['id']; // 卖家/供应商ID（支付账户）
+            }
+            
+            $trade_record[$itemKey]['order_date'] = $order['order_date']; // 订单日期
+            $trade_record[$itemKey]['order_no'] = $order['order_num']; // 订单号
+            $trade_record[$itemKey]['partner_name'] = $order['name']; // 合伙人名字
+            $trade_record[$itemKey]['partner_tel'] = $order['tel']; // 合伙人电话
+            $trade_record[$itemKey]['partner_company_tel'] = $order['com_tel']; // 合伙人公司电话
+            $trade_record[$itemKey]['partner_company_name'] = $order['invoice_unit']; // 合伙人公司
+            $trade_record[$itemKey]['order_amount'] = $order['order_amount']; // 订单总金额（元）
+            
+            $trade_record[$itemKey]['item'] = $trade_record_item[$itemKey]; // 商品列表
+            
+            $trade_record[$itemKey]['order_bid_amount'] = $item_bid_amount[$itemKey]; // 订单采购总金额
+            
+            $trade_record[$itemKey]['order_status'] = TradeRecordModel::$_status_waiting; // 订单交易状态 1-待付款 2-已付款 3-拒付
+        }
+        
+//         Log::error('----------------------------------trade_record------------------------------params==>>' . var_export($trade_record, true));
+//         EC::success(EC_OK);
+        
         /**
          * 验证 授权码 
          */
-        $code_model = $this->model('authorizationCode');
+        /* $code_model = $this->model('authorizationCode');
         $data_code = $code_model->getInfo(array('code' => $code));
         if(EC_OK != $data_code['code']){
             Log::error('getInfo Fail!');
@@ -372,11 +427,12 @@ class TradeRecordController extends BaseController {
             ){
             Log::error('code validation failed ! id=' . $code_obj['id'] . ',code=' . $code_obj['code'] );
             EC::fail(EC_CODE_ERR);
-        }
+        } */
     
         /**
          * 验证 重复记录
          */
+        $order_no = $order['order_num']; // 订单号
         $tradeRecord_model = $this->model('tradeRecord');
         $data = $tradeRecord_model->searchList(array('order_no' => $order_no));
         if(EC_OK != $data['code']){
@@ -394,24 +450,12 @@ class TradeRecordController extends BaseController {
         /**
          *  增加 交易订单记录 
          */
-        $params = array();
-        $params['user_id'] = $code_obj['user_id']; // 授权码 所属用户ID
-        $params['code_id'] = $code_obj['id']; // 授权码 ID
-        $params['code_used_count'] = $code_obj['used_count']; // 授权码 已经使用次数
-        $params['order_status'] = TradeRecordModel::$_status_waiting; // 订单交易状态 1-待付款
-        $params['pay_timestamp'] = TradeRecordModel::$_empyt_time; // 操作（付款/拒付）时间
-        foreach ([ 'code', 'seller_id', 'seller_name', 'seller_conn_name', 'seller_tel', 'seller_comp_phone',
-                    'order_no', 'order_timestamp', 'order_goods_name', 'order_goods_size', 'order_goods_type', 'order_goods_price', 'order_goods_count',
-                    'order_delivery_addr', 'order_sum_amount' ] as $val ){
-            if($$val) $params[$val] = $$val;
-        }
-    
-        if(empty($params)){
+        if(empty($trade_record)){
             Log::error('create params is empty!');
             EC::fail(EC_PAR_BAD);
         }
         
-        $data = $tradeRecord_model->create($params);
+        $data = $tradeRecord_model->create($trade_record);
         if(EC_OK != $data['code']){
             Log::error('create Fail!');
             EC::fail($data['code']);
