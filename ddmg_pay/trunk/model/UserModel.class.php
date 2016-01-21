@@ -21,15 +21,18 @@ class UserModel extends CurlModel
     public function update($params = array()){
         return self::sendRequest('user/update',$params);
     }
+
+    public function create($params = array()){
+        return self::sendRequest('user/create', $params);
+    }
     
-    public function sendCmsCode($params = array()){
-        return self::sendRequest('user/sendSmsCode', $params);
+    public function delete($params = array())
+    {
+        return self::sendRequest('user/delete',$params);
     }
 
-    public function register($params = array()){
-        return self::sendRequest('user/register', $params);
-    }
-
+    
+    //////////
     public function login($params = array()){
         return self::sendRequest('user/login', $params);
     }

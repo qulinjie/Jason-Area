@@ -124,8 +124,8 @@ $(document).ready(function(){
 		$("#btn-add-entity").attr('disabled', 'disabled');
 	    $("#add-entity-hint").html('').fadeOut();
 	    
-	    var user_id = $("#add-entity-user_id").val();
-	    var SIT_NO = $('#add-entity-SIT_NO').val();       // 席位号（允许字母、数字）
+	    var account  = $("#add-entity-account").val();
+	    var password = $("#add-entity-pwd").val();
 	    var CUST_CERT_TYPE = $('#add-entity-CUST_CERT_TYPE').val();       // 客户证件类型
 	    var CUST_CERT_NO = $('#add-entity-CUST_CERT_NO').val();         // 客户证件号码
 	    var CUST_NAME = $('#add-entity-CUST_NAME').val();            // 客户名称
@@ -140,25 +140,55 @@ $(document).ready(function(){
 	    var CUST_TELE_NUM = $('#add-entity-CUST_TELE_NUM').val();        // 客户电话号码
 	    var CUST_ADDR = $('#add-entity-CUST_ADDR').val();            // 客户地址
 	    var RMRK = $('#add-entity-RMRK').val();                 // 客户备注
+	    var company_name = $("#add-entity-company-name").val();
 	    var comment = $("#add-entity-comment").val();
 	    
 	    var hint_html = '';
-    	if('-1' == user_id || '' == user_id ){
-        	hint_html += (hint_html == '' ? '' : '<BR>') + '请填写 用户登录账号 ！' ;
+    	if( '' == account ){
+        	hint_html += (hint_html == '' ? '' : '<BR>') + '请填写用户登录账号 ！' ;
         }
+    	
+    	if( '' == password ){
+        	hint_html += (hint_html == '' ? '' : '<BR>') + '请填写用户登录密码 ！' ;
+        }
+    	
     	if('-1' == CUST_CERT_TYPE || '' == CUST_CERT_TYPE ){
-        	hint_html += (hint_html == '' ? '' : '<BR>') + '请填写 客户证件类型 ！' ;
+        	hint_html += (hint_html == '' ? '' : '<BR>') + '请填写客户证件类型 ！' ;
         }
     	if('' == CUST_CERT_NO ){
-        	hint_html += (hint_html == '' ? '' : '<BR>') + '请填写 客户证件号码！' ;
+        	hint_html += (hint_html == '' ? '' : '<BR>') + '请填写客户证件号码！' ;
         }
     	if('' == CUST_NAME ){
-        	hint_html += (hint_html == '' ? '' : '<BR>') + '请填写 客户名称！' ;
+        	hint_html += (hint_html == '' ? '' : '<BR>') + '请填写客户名称！' ;
         }
-    	/*if('' == SIT_NO ){
-        	hint_html += (hint_html == '' ? '' : '<BR>') + '请填写 席位号 ！' ;
-        }*/
+    	if('' == CUST_ACCT_NAME ){
+        	hint_html += (hint_html == '' ? '' : '<BR>') + '请填写客户账户名 ！' ;
+        }
 	    
+    	if('' == CUST_SPE_ACCT_NO ){
+        	hint_html += (hint_html == '' ? '' : '<BR>') + '请填写客户结算账户！' ;
+        }
+    	if('-1' == CUST_SPE_ACCT_BKTYPE ){
+        	hint_html += (hint_html == '' ? '' : '<BR>') + '请填写客户结算账户行别！' ;
+        }
+    	if('1' == CUST_SPE_ACCT_BKTYPE && '' == CUST_SPE_ACCT_BKID ){
+        	hint_html += (hint_html == '' ? '' : '<BR>') + '请填写客户结算账户行号 ！' ;
+        }
+    	if('1' == CUST_SPE_ACCT_BKTYPE && '' == CUST_SPE_ACCT_BKNAME){
+        	hint_html += (hint_html == '' ? '' : '<BR>') + '请填写客户结算账户行名 ！' ;
+        }
+    	
+    	if('-1' == ENABLE_ECDS ){
+        	hint_html += (hint_html == '' ? '' : '<BR>') + '请填是否开通电票！' ;
+        }
+    	if('-1' == IS_PERSON ){
+        	hint_html += (hint_html == '' ? '' : '<BR>') + '请填写是否个人 ！' ;
+        }
+    	
+    	if('' == company_name ){
+        	hint_html += (hint_html == '' ? '' : '<BR>') + '请填写企业名称 ！' ;
+        }
+    	
 	    if(hint_html != ''){
 	        $("#add-entity-hint").html(hint_html).fadeIn();
 	        $("#btn-add-entity").removeAttr('disabled');
@@ -167,8 +197,8 @@ $(document).ready(function(){
 	    
 	    $("#btn-add-entity").html("添加中...");
 	    $.post(BASE_PATH + 'bcsRegister/create', {
-	        	'user_id':user_id, 
-	        	'SIT_NO':SIT_NO,       				// 席位号
+	        	'account':account, 
+	        	'password':hex2b64(do_encrypt(password)),       				
 	        	'CUST_CERT_TYPE':CUST_CERT_TYPE,       // 客户证件类型
 	        	'CUST_CERT_NO':CUST_CERT_NO,         // 客户证件号码
 	        	'CUST_NAME':CUST_NAME,            // 客户名称
@@ -183,6 +213,7 @@ $(document).ready(function(){
 	        	'CUST_TELE_NUM':CUST_TELE_NUM,        // 客户电话号码
 	        	'CUST_ADDR':CUST_ADDR,            // 客户地址
 	        	'RMRK':RMRK,                 // 客户备注
+	        	'company_name' :company_name,
 		        'comment':comment
 	        },
 	        function(result){
@@ -218,7 +249,6 @@ $(document).ready(function(){
 		
 		clear_entity_field();
 		
-		getUserAccountList();
 		
 		$("#btn-add-entity").removeAttr('disabled');
 	    $("#btn-add-entity").html("确定");
@@ -236,24 +266,6 @@ $(document).ready(function(){
 		$('#add-entity-comment').val('');
 	}
 
-	function getUserAccountList(){
-		$.post(BASE_PATH + 'user/searchListAll', {},
-		    function(result){
-		        if(result.code != 0) {
-		            $("#add-entity-hint").html(result.msg + '(' + result.code + ')' + ',请刷新页面').fadeIn();
-		        }else {
-		        	$('#add-entity-user_id').empty();
-		        	$('#add-entity-user_id').append("<option value='-1'>请选择</option>");
-		        	var data = result['data']['data'];
-		        	for(var i=0;i<data.length;i++){
-		        		$("#add-entity-user_id").append("<option value='" + data[i].id + "'>" + data[i].account + ' ' + data[i].nicename + ' ' + data[i].company_name + "</option>");
-		        	}
-		        }
-		    },
-		    'json'
-		);
-	}
-
 	/**************end--增加****************/
 	
 	
@@ -269,7 +281,7 @@ $(document).ready(function(){
 	            if(result.code != 0) {
 	                $("#search-entity-hint").html(result.msg + '(' + result.code + ')').fadeIn();
 	            }else {
-	            	fillInentityValue(result.data[0]);
+	            	fillInentityValue(result.data);
 	            }
 	        },
 	        'json'
