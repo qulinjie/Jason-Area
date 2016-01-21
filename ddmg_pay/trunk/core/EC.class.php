@@ -72,6 +72,7 @@ define('EC_BLE_LESS','803');
 
 define('EC_ACCOUNT_EST',901);
 define('EC_COMPANY_EST',902);
+define('EC_CERT_BEEN' , 903);
 class EC extends Base {
 
 	public static $_errMsg = array(
@@ -147,6 +148,7 @@ class EC extends Base {
 	    
 	       EC_ACCOUNT_EST     => '帐号已存在',
 	       EC_COMPANY_EST     => '公司已存在',
+	       EC_CERT_BEEN        => '证件已被占用',
 	    
 	);
 	public static function load(){

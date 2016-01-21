@@ -341,7 +341,7 @@ class BcsRegisterController extends BaseController {
         if(strstr($data['data'],'DDMG')){
             Log::error('bcsRegister create bank return cert been');
             $this->model('bcsRegister')->update(['id' => $register_id,'status' => 2]);
-            EC::fail(EC_CERT_ERR);
+            EC::fail(EC_CERT_BEEN);
         }
                
         if(($ACCOUNT_NO = strstr($data['data'],'<ACCOUNT_NO>')) === false){
@@ -460,7 +460,7 @@ class BcsRegisterController extends BaseController {
          if(strstr($data['data'],'DDMG')){
              Log::error('bcsRegister create bank return cert been');
              $this->model('bcsRegister')->update(['id' => $register_id,'status' => 2]);
-             EC::fail(EC_CERT_ERR);
+             EC::fail(EC_CERT_BEEN);
          }
          
          if(($ACCOUNT_NO = strstr($data['data'],'<ACCOUNT_NO>')) === false){
