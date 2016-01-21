@@ -13,7 +13,9 @@
 			</div>
 			<div class="modal-body">
 				<form class="form-horizontal">
-				  <input type="hidden" class="form-control" id="info-entity-id" value=""></input>
+				  <input type="hidden" id="info-entity-id" value=""></input>
+				  <input type="hidden" id="info-entity-user-id" value=""></input>
+				  <input type="hidden" id="info-entity-sit-no" value=""></input>
 				  <div class="form-group">
 				    <label for="add-entity-account" class="col-sm-2 control-label">用户登录帐号</label>
 				    <div class="col-sm-4">

@@ -294,7 +294,9 @@ $(document).ready(function(){
 		$("#add-entity-hint").html('').fadeOut();
 		
 		$('#info-entity-id').val(data.id);
-
+		$('#info-entity-user-id').val(data.user_id);
+		$('#info-entity-sit-no').val(data.SIT_NO);
+		$('#add-entity-account').val(data.account);
 		$('#add-entity-CUST_CERT_TYPE').val(data.CUST_CERT_TYPE);       // 客户证件类型
 		$('#add-entity-CUST_CERT_NO').val(data.CUST_CERT_NO);         // 客户证件号码
 		$('#add-entity-CUST_NAME').val(data.CUST_NAME);            // 客户名称
@@ -309,13 +311,8 @@ $(document).ready(function(){
 		$('#add-entity-CUST_TELE_NUM').val(data.CUST_TELE_NUM);        // 客户电话号码
 		$('#add-entity-CUST_ADDR').val(data.CUST_ADDR);            // 客户地址
 		$('#add-entity-RMRK').val(data.RMRK);                 // 客户备注
+		$("#add-entity-company-name").val(data.company_name);
 		$("#add-entity-comment").val(data.comment);
-	    
-		
-//		$('#add-entity-time').attr('readonly','readonly');
-		
-//		$('#add-entity-status').removeAttr('disabled');
-//		$('#add-entity-remark').removeAttr('readonly');
 		
 		$('#btn-add-entity').show();
 		$('#btn-add-entity').unbind("click");
@@ -326,7 +323,10 @@ $(document).ready(function(){
 
 	function updateEntity(){
 		var id = $("#info-entity-id").val();
-		
+		var user_id = $("#info-entity-user-id").val();
+		var sit_no  = $("#info-entity-sit-no").val();
+		var account = $('#add-entity-account').val();
+		var password = $('#add-entity-pwd').val();
 	    var CUST_CERT_TYPE = $('#add-entity-CUST_CERT_TYPE').val();       // 客户证件类型
 	    var CUST_CERT_NO = $('#add-entity-CUST_CERT_NO').val();         // 客户证件号码
 	    var CUST_NAME = $('#add-entity-CUST_NAME').val();            // 客户名称
@@ -341,18 +341,51 @@ $(document).ready(function(){
 	    var CUST_TELE_NUM = $('#add-entity-CUST_TELE_NUM').val();        // 客户电话号码
 	    var CUST_ADDR = $('#add-entity-CUST_ADDR').val();            // 客户地址
 	    var RMRK = $('#add-entity-RMRK').val();                 // 客户备注
-	    var comment = $("#add-entity-comment").val();
+	    var company_name = $("#add-entity-company-name").val();
+	    var comment      = $("#add-entity-comment").val();
 	    
 	    var hint_html = '';
+	    if( '' == account ){
+        	hint_html += (hint_html == '' ? '' : '<BR>') + '请填写用户登录账号 ！' ;
+        }
+    	
     	if('-1' == CUST_CERT_TYPE || '' == CUST_CERT_TYPE ){
-        	hint_html += (hint_html == '' ? '' : '<BR>') + '请填写 客户证件类型 ！' ;
+        	hint_html += (hint_html == '' ? '' : '<BR>') + '请填写客户证件类型 ！' ;
         }
     	if('' == CUST_CERT_NO ){
-        	hint_html += (hint_html == '' ? '' : '<BR>') + '请填写 客户证件号码！' ;
+        	hint_html += (hint_html == '' ? '' : '<BR>') + '请填写客户证件号码！' ;
         }
     	if('' == CUST_NAME ){
-        	hint_html += (hint_html == '' ? '' : '<BR>') + '请填写 客户名称！' ;
+        	hint_html += (hint_html == '' ? '' : '<BR>') + '请填写客户名称！' ;
         }
+    	if('' == CUST_ACCT_NAME ){
+        	hint_html += (hint_html == '' ? '' : '<BR>') + '请填写客户账户名 ！' ;
+        }
+	    
+    	if('' == CUST_SPE_ACCT_NO ){
+        	hint_html += (hint_html == '' ? '' : '<BR>') + '请填写客户结算账户！' ;
+        }
+    	if('-1' == CUST_SPE_ACCT_BKTYPE ){
+        	hint_html += (hint_html == '' ? '' : '<BR>') + '请填写客户结算账户行别！' ;
+        }
+    	if('1' == CUST_SPE_ACCT_BKTYPE && '' == CUST_SPE_ACCT_BKID ){
+        	hint_html += (hint_html == '' ? '' : '<BR>') + '请填写客户结算账户行号 ！' ;
+        }
+    	if('1' == CUST_SPE_ACCT_BKTYPE && '' == CUST_SPE_ACCT_BKNAME){
+        	hint_html += (hint_html == '' ? '' : '<BR>') + '请填写客户结算账户行名 ！' ;
+        }
+    	
+    	if('-1' == ENABLE_ECDS ){
+        	hint_html += (hint_html == '' ? '' : '<BR>') + '请填是否开通电票！' ;
+        }
+    	if('-1' == IS_PERSON ){
+        	hint_html += (hint_html == '' ? '' : '<BR>') + '请填写是否个人 ！' ;
+        }
+    	
+    	if('' == company_name ){
+        	hint_html += (hint_html == '' ? '' : '<BR>') + '请填写企业名称 ！' ;
+        }
+    	
     	
 	    if(hint_html != ''){
 	        $("#add-entity-hint").html(hint_html).fadeIn();
@@ -363,6 +396,10 @@ $(document).ready(function(){
 	    $("#btn-add-selle").html("提交中...");
 	    $.post(BASE_PATH + 'bcsRegister/update', {
 		    	'id':id,
+		    	'user_id':user_id,
+		    	'SIT_NO' :sit_no,
+		    	'account':account,
+		    	'password':password,
 	        	'CUST_CERT_TYPE':CUST_CERT_TYPE,       // 客户证件类型
 	        	'CUST_CERT_NO':CUST_CERT_NO,         // 客户证件号码
 	        	'CUST_NAME':CUST_NAME,            // 客户名称
@@ -378,7 +415,7 @@ $(document).ready(function(){
 	        	'CUST_ADDR':CUST_ADDR,            // 客户地址
 	        	'RMRK':RMRK,                 // 客户备注
 		        'comment':comment,
-		        'status':status
+		        'company_name':company_name
 	        },
 	        function(result){
 	        	$("#add-entity-hint").html('');
