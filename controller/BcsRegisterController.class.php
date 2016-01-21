@@ -6,7 +6,6 @@
 class BcsRegisterController extends BaseController {
 
     public function handle($params = array()) {
-        //Log::notice('BcsRegisterController  ==== >>> params=' . json_encode($params));
         if (empty($params)) {
             Log::error('Controller . params is empty . ');
             EC::fail(EC_MTD_NON);
@@ -337,6 +336,13 @@ class BcsRegisterController extends BaseController {
             $this->model('bcsRegister')->update(['id' => $register_id,'status' => 2]);
             EC::fail($data['code']);
         }
+        
+        //临时解决
+        if(strstr($data['data'],'DDMG')){
+            Log::error('bcsRegister create bank return cert been');
+            $this->model('bcsRegister')->update(['id' => $register_id,'status' => 2]);
+            EC::fail(EC_CERT_ERR);
+        }
                
         if(($ACCOUNT_NO = strstr($data['data'],'<ACCOUNT_NO>')) === false){
             Log::error('bcsRegister create bank return ACCOUNT_NO is empty');
@@ -449,7 +455,14 @@ class BcsRegisterController extends BaseController {
              $this->model('bcsRegister')->update(['id' => $bcsRegister_id,'status' => 2]);
              EC::fail($data['code']);
          }
-          
+         
+         //临时解决
+         if(strstr($data['data'],'DDMG')){
+             Log::error('bcsRegister create bank return cert been');
+             $this->model('bcsRegister')->update(['id' => $register_id,'status' => 2]);
+             EC::fail(EC_CERT_ERR);
+         }
+         
          if(($ACCOUNT_NO = strstr($data['data'],'<ACCOUNT_NO>')) === false){
              Log::error('bcsRegister create bank return ACCOUNT_NO is empty');
              $this->model('bcsRegister')->update(['id' => $bcsRegister_id,'status' => 2]);
