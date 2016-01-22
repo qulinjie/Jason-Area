@@ -63,7 +63,7 @@ class ServicesController extends Controller {
         }
         $customer = $customer['data'];
         
-        $data = $this->model('bcsCustmer')->getList(['MCH_NO' => $reqData['MCH_NO'],'SIT_NO' => $reqData['SIT_NO'],'fields' => ['id']]);
+        $data = $this->model('bcsCustmer')->getList(['MCH_NO' => $reqData['MCH_NO'],'SIT_NO' => $reqData['SIT_NO'],'fields' => ['id,user_id']]);
         if($data['code'] !== EC_OK){
             Log::bcsError('bank callback bcsCustomer getList error msg('.$data['msg'].')');
             return $this->response($xml,'00000008','api拉取客户信息失败','通知失败');
@@ -74,7 +74,7 @@ class ServicesController extends Controller {
         $customer['MBR_PHONE']  = $customer['MBR_PHONE'] ? $customer['MBR_PHONE'] :'';
         
         if($data['data']){
-            $customer['id'] = $data['data'][0]['id'];
+            $customer['user_id'] = $data['data'][0]['user_id'];
             $data = $this->model('bcsCustmer')->update($customer);
             if($data['code'] !== EC_OK){
                 Log::bcsError('bank callback update customer info error msg('.$data['msg'].')');
