@@ -10,7 +10,7 @@ class TestController extends BaseController
         
         $result = $soap->request($xml);
         var_dump($result); */
-        $data = $this->model('bank')->getCustomerInfo($reqData['MCH_NO'],$reqData['SIT_NO']);
+        $data = $this->model('bank')->getCustomerInfo('8001529592','DDMG00212');
         var_dump($data);
         exit;
 		if ( !$params ) {
