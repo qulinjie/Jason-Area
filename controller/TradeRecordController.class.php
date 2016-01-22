@@ -101,6 +101,16 @@ class TradeRecordController extends BaseController {
         }
     
         $data_list = $data['data'];
+        $tradeRecordItem_model = $this->model('tradeRecordItem');
+        
+        foreach ($data_list as $key => $val){
+            $data = $tradeRecordItem_model->searchList(array('trade_record_id' => $val['id']));
+            if($data['code'] !== EC_OK){
+                Log::error('tradeRecordItem searchList error');
+            }            
+            $data_list[$key]['list'] = $data['data'] ? $data['data'] : [];
+        }
+        
         $entity_list_html = $this->render('tradeRecord_list', array('data_list' => $data_list, 'current_page' => $current_page, 'total_page' => $total_page), true);
         if($isIndex) {
             
