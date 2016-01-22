@@ -5,7 +5,7 @@
 ?>
 
 <div class="modal fade" id="info-pay-modal">
-	<div class="modal-dialog" style="width: 1000px;">
+	<div class="modal-dialog" style="width: 1100px;">
 		<div class="modal-content">
 			<div class="modal-header">
 				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -109,7 +109,7 @@
     <p class="p1">
         <span class="dh">单号<input type="text" id="entity-search-order_no"/></span>
         <span class="sj">时间<input style=" margin-left:6px;" type="text" class="form_datetime" id="entity-search-order_time1"/><b>—</b><input type="text" class="form_datetime" id="entity-search-order_time2"/></span>
-        <span class="mj">卖家<input type="text" id="entity-search-seller_name"/></span>
+        <span class="mj">供应商<input type="text" id="entity-search-seller_name"/></span>
     </p>
     <p class="p2"> 
         <span class="yw">业务员<input type="text" id="entity-search-seller_conn_name"/></span>
