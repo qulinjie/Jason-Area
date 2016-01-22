@@ -588,6 +588,7 @@ class BcsCustomerController extends BaseController {
         ];
 
         $bcs_data = $this->model('bank')->customerInflowQuery($params);
+        Log::error('getInflow<<<<'.var_export($bcs_data['data'],true));
         $data = $bcs_data['code'] === 0 ? $bcs_data['data'] : ['List' => []];
         if($bcs_data['code'] !== 0){
             Log::bcsError('getInflow error code('.$bcs_data['code'].')'.' msg：'.$bcs_data['msg']);
