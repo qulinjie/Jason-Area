@@ -339,6 +339,7 @@ class TradeRecordController extends BaseController {
         $trade_record = array();
         $trade_record_item = array();
         $item_bid_amount = array();
+        $trade_record_amount = array();
         foreach ($orderItem as $itemVal){
             $record_item = array();
             
@@ -359,10 +360,17 @@ class TradeRecordController extends BaseController {
             
             // 采购单位
             $trade_record_item[$itemVal['pur_unit']][] = $record_item;
+            // 采购金额
             if(empty($item_bid_amount[$itemVal['pur_unit']])){
-                $item_bid_amount[$itemVal['pur_unit']] = $record_item['bid_amount'];
+                $item_bid_amount[$itemVal['pur_unit']] = floatval($record_item['bid_amount']);
             } else {
-                $item_bid_amount[$itemVal['pur_unit']] = floatval($record_item['bid_amount']) + floatval($item_bid_amount[$itemVal['pur_unit']]);
+                $item_bid_amount[$itemVal['pur_unit']] =  floatval($item_bid_amount[$itemVal['pur_unit']]) + floatval($record_item['bid_amount']) ;
+            }
+            // 拆分后订单的金额
+            if(empty($trade_record_amount[$itemVal['pur_unit']])){
+                $trade_record_amount[$itemVal['pur_unit']] = floatval($record_item['item_amount']);
+            } else {
+                $trade_record_amount[$itemVal['pur_unit']] =  floatval($item_bid_amount[$itemVal['pur_unit']]) + floatval($record_item['item_amount']) ;
             }
         }
         
@@ -400,6 +408,7 @@ class TradeRecordController extends BaseController {
             $trade_record[$itemKey]['item'] = $trade_record_item[$itemKey]; // 商品列表
             
             $trade_record[$itemKey]['order_bid_amount'] = $item_bid_amount[$itemKey]; // 订单采购总金额
+            $trade_record[$itemKey]['order_new_amount'] = $trade_record_amount[$itemKey]; // 拆分后订单的金额
             
             $trade_record[$itemKey]['order_status'] = TradeRecordModel::$_status_waiting; // 订单交易状态 1-待付款 2-已付款 3-拒付
         }
@@ -598,20 +607,24 @@ class TradeRecordController extends BaseController {
         }
 
         // 收款方用户ID
-        $params  = array();
-        $params['account'] = $data_obj['seller_tel'];
-        $data = $user_model->getInfo($params);
-        if(EC_OK != $data['code']){
-            Log::error("getUserInfo failed . ");
-            EC::fail($data['code']);
-        }
-        $data_info = $data['data'][0];
-        if(empty($data_info)){
-            Log::error("getUserInfo empty . account=" . $params['account']);
-            EC::fail(EC_USR_NON);
+        $s_user_id = $data_obj['seller_id'];
+        if(empty($s_user_id)){
+            // 查询卖家支付账户的用户ID
+            $data = $user_model->getInfo(array('company_name' => $data_obj['seller_name']) );
+            if(EC_OK != $data['code']){
+                Log::error("getInfo failed . company_name=" . $data_obj['seller_name'] );
+                EC::fail($data['code']);
+            } else {
+                $data_info = $data['data'][0];
+                if(empty($data_info)){
+                     Log::error("getUserInfo empty . company_name=" . $data_obj['seller_name'] );
+                     EC::fail(EC_USR_NON);
+                } else {
+                    $s_user_id = $data_info['id']; // 卖家/供应商ID（支付账户）
+                }
+            }
         }
         
-        $s_user_id = $data_info['id']; // TODO 按照  电话 对应到 收款用户
         $data = $bcsRegister_model->getInfo(array('user_id' => $s_user_id));
         if(EC_OK != $data['code']){
             Log::error("getInfo failed . ");
@@ -652,7 +665,6 @@ class TradeRecordController extends BaseController {
         $params_trade['SELLER_SIT_NO'] = $seller_sit_no; // 收款方席位号
         $params_trade['FUNC_CODE'] = BcsTradeModel::$_FUNC_CODE_FINISH; // 功能号
         $params_trade['TX_AMT'] = $order_sum_amount; // 交易金额
-       // $params_trade['TX_AMT'] = 1; // TODO for test .
         $params_trade['SVC_AMT'] = BcsTradeModel::$_SVC_AMT_0; // 买方佣金金额
         $params_trade['BVC_AMT'] = BcsTradeModel::$_BVC_AMT_0; // 卖方佣金金额
         $params_trade['CURR_COD'] = BcsTradeModel::$_CURR_COD_RMB; // 币别
@@ -660,6 +672,7 @@ class TradeRecordController extends BaseController {
         $params_trade['ORGNO'] = '0'; // 银票机构编号
         $params_trade['TICKET_NUM'] = BcsTradeModel::$_TICKET_NUM_0; // 使用票据数
         
+        $params  = array();
         $params['bcs_trade'] = $params_trade;
         $params['order_id'] = $order_no . '-' . $id;
         $params['order_no'] = $order_no;
