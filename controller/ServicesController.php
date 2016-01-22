@@ -14,10 +14,10 @@ class ServicesController extends Controller {
     public function request($xml)
     {
         Log::bcsNotice('Bank callback request data ' . var_export($xml ,true));
-        if(!$this->checkSignData($xml)){
+       /*  if(!$this->checkSignData($xml)){
             Log::bcsError('validate signData error');
             return $this->response($xml,'00000001','验证签名失败','通知失败');
-        }
+        } */
 
         preg_match('/<Body>(.*)<\/Body>/is', $xml , $body);
         $reqData = json_decode(json_encode(simplexml_load_string($body[1])),true);
@@ -30,10 +30,20 @@ class ServicesController extends Controller {
             }
         }
 
+        $data = $this->model('bcsRegister')->getList(array('SIT_NO' => $reqData['SIT_NO'],'ACCOUNT_NO' => $reqData['ACCOUNT_NO']));
+        if($data['code'] !== EC_OK){
+            Log::bcsError('bcsRegister getList error');
+            return $this->response($xml,'00000004','操作异常','通知失败');
+        }
+        
+        if(!$data['data']){
+            Log::bcsError('bcsRegister getList is empty');
+            return $this->response($xml,'00000005','请求数据不存在','通知失败');
+        }
+        
         $response = $this->model('bcsRegister')->update(array(
-            'SIT_NO'     => $reqData['SIT_NO'],
-            'ACT_TIME'   => $reqData['ACT_TIME'],
-            'ACCOUNT_NO' => $reqData['ACCOUNT_NO']
+            'id'         => $data['data'][0]['id'],
+            'ACT_TIME'   => date('Y-m-d H:i:s',strtotime($reqData['ACT_TIME']))
         ));
 
         if($response['code'] !== EC_OK){
