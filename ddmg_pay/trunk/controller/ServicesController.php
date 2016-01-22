@@ -64,7 +64,7 @@ class ServicesController extends Controller {
         }
         $customer = $customer['data'];
         
-        $data = $this->model('bcsCustomer')->getList(['MCH_NO' => $reqData['MCH_NO'],'SIT_NO' => $reqData['SIT_NO'],'fields' => ['id,user_id']]);
+        $data = $this->model('bcsCustomer')->getList(['SIT_NO' => $reqData['SIT_NO'],'fields' => ['id,user_id']]);
         if($data['code'] !== EC_OK){
             Log::bcsError('bank callback bcsCustomer getList error msg('.$data['msg'].')');
             return $this->response($xml,'00000008','api拉取客户信息失败','通知失败');
