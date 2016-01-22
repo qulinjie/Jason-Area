@@ -10,9 +10,9 @@ class TestController extends BaseController
         
         $result = $soap->request($xml);
         var_dump($result); */
-        $data = $this->model('bank')->getCustomerInfo('8001529592','DDMG00212');
+     /*    $data = $this->model('bank')->getCustomerInfo('8001529592','DDMG00212');
         var_dump($data);
-        exit;
+        exit; */
 		if ( !$params ) {
 			//$this->test();
 			//$this->markTest();

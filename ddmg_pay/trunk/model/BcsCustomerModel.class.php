@@ -33,4 +33,8 @@ class BcsCustomerModel extends CurlModel {
         return self::sendRequest('bcsCustomer/create', $params);
     }
     
+    public function getList($params = array()){
+        return self::sendRequest('bcsCustomer/getList', $params);
+    }
+    
 }
