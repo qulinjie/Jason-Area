@@ -595,16 +595,17 @@ class TradeRecordController extends BaseController {
             EC::fail(EC_OTH);
         }
 
-        if($buyer_bank_info['data']['MBR_STS'] == '2'){//此处应该是1
-            Log::error('buyer bank not sign status:'.$buyer_bank_info['data']['MBR_STS']);
-            EC::fail(EC_NOT_SIGN);
-        }else if($buyer_bank_info['data']['MBR_STS'] == '3'){
-            Log::error('buyer bank already cancel status:'.$buyer_bank_info['data']['MBR_STS']);
-            EC::fail(EC_ARY_CANCEL);
-        }else if($buyer_bank_info['data']['ACCT_BAL'] < $data_obj['order_bid_amount']){
-            Log::error('buyer bank balance less');
-            EC::fail(EC_BLE_LESS);
-        }
+        // for test
+//         if($buyer_bank_info['data']['MBR_STS'] == '2'){//此处应该是1
+//             Log::error('buyer bank not sign status:'.$buyer_bank_info['data']['MBR_STS']);
+//             EC::fail(EC_NOT_SIGN);
+//         }else if($buyer_bank_info['data']['MBR_STS'] == '3'){
+//             Log::error('buyer bank already cancel status:'.$buyer_bank_info['data']['MBR_STS']);
+//             EC::fail(EC_ARY_CANCEL);
+//         }else if($buyer_bank_info['data']['ACCT_BAL'] < $data_obj['order_bid_amount']){
+//             Log::error('buyer bank balance less');
+//             EC::fail(EC_BLE_LESS);
+//         }
 
         // 收款方用户ID
         $s_user_id = $data_obj['seller_id'];
