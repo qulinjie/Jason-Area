@@ -14,7 +14,7 @@
  */
 define('IN_DOIT', 1);
 
-define('DOIT_ROOT', dirname(__FILE__) . DIRECTORY_SEPARATOR . "../");
+define('DOIT_ROOT', dirname(dirname(__FILE__)) . DIRECTORY_SEPARATOR);
 
 /**
  * 定义错误提示级别
