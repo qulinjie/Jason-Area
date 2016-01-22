@@ -63,7 +63,7 @@ class ServicesController extends Controller {
         }
         $customer = $customer['data'];
         
-        $data = $this->model('bcsCustmer')->getList(['MCH_NO' => $reqData['MCH_NO'],'SIT_NO' => $reqData['SIT_NO'],'fields' => ['id,user_id']]);
+        $data = $this->model('bcsCustomer')->getList(['MCH_NO' => $reqData['MCH_NO'],'SIT_NO' => $reqData['SIT_NO'],'fields' => ['id,user_id']]);
         if($data['code'] !== EC_OK){
             Log::bcsError('bank callback bcsCustomer getList error msg('.$data['msg'].')');
             return $this->response($xml,'00000008','api拉取客户信息失败','通知失败');
@@ -75,14 +75,14 @@ class ServicesController extends Controller {
         
         if($data['data']){
             $customer['user_id'] = $data['data'][0]['user_id'];
-            $data = $this->model('bcsCustmer')->update($customer);
+            $data = $this->model('bcsCustomer')->update($customer);
             if($data['code'] !== EC_OK){
                 Log::bcsError('bank callback update customer info error msg('.$data['msg'].')');
             }
         }else{
             $customer['user_id']       = $user_id;
             $customer['add_timestamp'] = date('Y-m-d H:i:s');
-            $data = $this->model('bcsCustmer')->create($customer);
+            $data = $this->model('bcsCustomer')->create($customer);
             if($data['code'] !== EC_OK){
                 Log::bcsError('bank callback create customer info error msg('.$data['msg'].')');
             }
