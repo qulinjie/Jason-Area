@@ -30,10 +30,11 @@ class ServicesController extends Controller {
             }
         }
 
-        $data = $this->model('bcsRegister')->getList(array('SIT_NO' => $reqData['SIT_NO'],'ACCOUNT_NO' => $reqData['ACCOUNT_NO']));
+        //判断是否存在记录
+        $data = $this->model('bcsRegister')->getList(array('SIT_NO' => $reqData['SIT_NO'],'ACCOUNT_NO' => $reqData['ACCOUNT_NO'],'fields' => ['id','user_id']));
         if($data['code'] !== EC_OK){
             Log::bcsError('bcsRegister getList error');
-            return $this->response($xml,'00000004','操作异常','通知失败');
+            return $this->response($xml,'00000004','拉取数据异常','通知失败');
         }
         
         if(!$data['data']){
@@ -41,16 +42,52 @@ class ServicesController extends Controller {
             return $this->response($xml,'00000005','请求数据不存在','通知失败');
         }
         
-        $response = $this->model('bcsRegister')->update(array(
-            'id'         => $data['data'][0]['id'],
+        $register_id = $data['data']['0']['id'];
+        $user_id = $data['data']['0']['user_id'];
+        $data = $this->model('bcsRegister')->update(array(
+            'id'         => $register_id,
             'ACT_TIME'   => date('Y-m-d H:i:s',strtotime($reqData['ACT_TIME']))
         ));
-
-        if($response['code'] !== EC_OK){
-            Log::bcsError('bank callback error msg('.$response['code'].')');
-            return $this->response($xml,'00000003','请求异常','通知失败');
+        
+        //更新签约时间失败
+        if($data['code'] !== EC_OK){
+            Log::bcsError('bank callback update sign_time error msg('.$data['code'].')');
+            return $this->response($xml,'00000006','更新签约时间失败','通知失败');
         }
-
+        
+        //拉取注册用户信息
+        $customer = $this->model('bank')->getCustomerInfo($reqData['MCH_NO'],$reqData['SIT_NO']);
+        if($data['code'] !== 0 ){
+            Log::bcsError('bank callback get customer info error masg('.$data['msg'].')');
+            return $this->response($xml,'00000007','拉取银行客户信息失败','通知失败');
+        }
+        $customer = $customer['data'];
+        
+        $data = $this->model('bcsCustmer')->getList(['MCH_NO' => $reqData['MCH_NO'],'SIT_NO' => $reqData['SIT_NO'],'fields' => ['id']]);
+        if($data['code'] !== EC_OK){
+            Log::bcsError('bank callback bcsCustomer getList error msg('.$data['msg'].')');
+            return $this->response($xml,'00000008','api拉取客户信息失败','通知失败');
+        }
+        //处理数组
+        $customer['MBR_ADDR']   = $customer['MBR_ADDR'] ? $customer['MBR_ADDR']   :'';
+        $customer['MBR_TELENO'] = $customer['MBR_TELENO'] ?$customer['MBR_TELENO']:'';
+        $customer['MBR_PHONE']  = $customer['MBR_PHONE'] ? $customer['MBR_PHONE'] :'';
+        
+        if($data['data']){
+            $customer['id'] = $data['data'][0]['id'];
+            $data = $this->model('bcsCustmer')->update($customer);
+            if($data['code'] !== EC_OK){
+                Log::bcsError('bank callback update customer info error msg('.$data['msg'].')');
+            }
+        }else{
+            $customer['user_id']       = $user_id;
+            $customer['add_timestamp'] = date('Y-m-d H:i:s');
+            $data = $this->model('bcsCustmer')->create($customer);
+            if($data['code'] !== EC_OK){
+                Log::bcsError('bank callback create customer info error msg('.$data['msg'].')');
+            }
+        }
+       
         return $this->response($xml,'00000000');
     }
     
