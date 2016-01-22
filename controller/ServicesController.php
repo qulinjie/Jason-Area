@@ -13,6 +13,7 @@ class ServicesController extends Controller {
 
     public function request($xml)
     {
+        set_time_limit(300);
         Log::bcsNotice('Bank callback request data ' . var_export($xml ,true));
        /*  if(!$this->checkSignData($xml)){
             Log::bcsError('validate signData error');
