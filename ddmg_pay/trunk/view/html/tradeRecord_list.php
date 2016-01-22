@@ -9,8 +9,7 @@
 	<div class="modal-dialog">
 		<div class="modal-content">
 			<div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal"
-					aria-label="Close">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 					<span aria-hidden="true">&times;</span>
 				</button>
 				<h5 class="modal-title">提示</h5>
@@ -33,7 +32,7 @@
 		<div class="classify" style="width: 1197px;">
             <span class="dh">单号</span>
             <span class="sj">时间</span>
-            <span class="mj">卖家</span>
+            <span class="mj">供应商</span>
             <span class="je">金额（元）</span>
             <span class="yw">业务员信息</span>
             <span class="cz"><span id="order-status-show">操作</span></span>

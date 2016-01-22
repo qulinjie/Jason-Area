@@ -301,6 +301,7 @@ class TradeRecordController extends BaseController {
         $id = Request::post('id');
     
         $tradeRecord_model = $this->model('tradeRecord');
+        $tradeRecordItem_model = $this->model('tradeRecordItem');
         $user_id = self::getCurrentUserId();
     
         $params  = array();
@@ -313,8 +314,16 @@ class TradeRecordController extends BaseController {
             Log::error("getInfo failed . ");
             EC::fail($data['code']);
         }
-    
         $data_info = $data['data'][0];
+        
+        $data_item = $tradeRecordItem_model->searchList(array('trade_record_id' => $data_info['id']));
+        if(EC_OK != $data_item['code']){
+            Log::error("searchList failed . ");
+            EC::fail($data_item['code']);
+        }
+        $data_info['data_list'] = $data_item['data'];
+        Log::notice('data_info-----------------------------------params==>>' . var_export($data_info, true));
+        
         $entity_list_html = $this->render('tradePay', array('item' => $data_info), true);
         EC::success(EC_OK, array('tradeRecord_pay' => $entity_list_html));
     }
@@ -397,7 +406,7 @@ class TradeRecordController extends BaseController {
                 $trade_record[$itemKey]['seller_id'] = $data_info['id']; // 卖家/供应商ID（支付账户）
             }
             
-            $trade_record[$itemKey]['order_date'] = $order['order_date']; // 订单日期
+            $trade_record[$itemKey]['order_timestamp'] = $order['order_date']; // 订单日期
             $trade_record[$itemKey]['order_no'] = $order['order_num']; // 订单号
             $trade_record[$itemKey]['partner_name'] = $order['name']; // 合伙人名字
             $trade_record[$itemKey]['partner_tel'] = $order['tel']; // 合伙人电话
@@ -655,7 +664,7 @@ class TradeRecordController extends BaseController {
         $order_sum_amount = $data_obj['order_bid_amount'];
         
         // 订单编号
-        $ctrt_no = 'D' . date('Ymd',time()) . 'T' . date('His',time()) . 'N' . $order_no;
+        $ctrt_no = 'D' . date('md',time()) . 'T' . date('His',time()) . 'N' . $order_no;
         // 商户交易流水号
         $mch_trans_no = 'D' . date('Ymd',time()) . 'T' . date('His',time()) . 'R' . rand(100,999) . 'U' . $user_id;
         
