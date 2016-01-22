@@ -31,7 +31,7 @@ class ServicesController extends Controller {
         }
 
         //判断是否存在记录
-        $data = $this->model('bcsRegister')->getList(array('SIT_NO' => $reqData['SIT_NO'],'ACCOUNT_NO' => $reqData['ACCOUNT_NO'],'fields' => ['id','user_id']));
+        $data = $this->model('bcsRegister')->getList(array('SIT_NO' => $reqData['SIT_NO'],'ACCOUNT_NO' => $reqData['ACCOUNT_NO'],'fields' => array('id','user_id')));
         if($data['code'] !== EC_OK){
             Log::bcsError('bcsRegister getList error');
             return $this->response($xml,'00000004','拉取数据异常','通知失败');
