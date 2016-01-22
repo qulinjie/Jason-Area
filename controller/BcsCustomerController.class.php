@@ -464,7 +464,7 @@ class BcsCustomerController extends BaseController {
         $params  = array();
         $params['user_id'] = $user_id;
     
-        
+        Log::error('----------------------------------------------------------------params==>>' . var_export($params, true));
         /**
          * 查询 注册信息
          */
@@ -480,7 +480,7 @@ class BcsCustomerController extends BaseController {
         }
         $sit_no = $info_data['SIT_NO']; // 席位号
         
-        
+        Log::error('------------------------------------info_data----------------------------params==>>' . var_export($info_data, true));
         /**
          * 增加 客户出入金 记录
          */
