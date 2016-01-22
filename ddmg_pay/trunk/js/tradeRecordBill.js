@@ -54,7 +54,7 @@ function entitySetSelectedPage(){
 }
 $(function(){
 	entitySetSelectedPage();
-	setLiTabs(0);
+	setLiTabs(2);
 	renderTableEvent();
 	
 });
@@ -87,7 +87,7 @@ function search_entity(page){
 	spanLoading.html("<div style='width:100%;text-align:center;height:" + spanLoading.height() + "px;'><img alt='正在加载数据...' src='" + BASE_PATH + "view/images/tips_loading.gif'/></div>");
 	
     //查找
-    $.post(BASE_PATH + 'tradeRecord/searchList', {
+    $.post(BASE_PATH + 'tradeRecord/searchListBill', {
 	    	'order_no':order_no, 
 	    	'time1':time1,
 	    	'time2':time2,
@@ -186,7 +186,7 @@ jQuery.download = function(url, data, method){
 
 /**************end--导出数据****************/
 
-/**************start--拒付****************/
+/**************start--确认发货****************/
 $(document).on('click', '#entity-changeStatus-btn', function(event){
 	stopPropagation = true;
 	var id =  $(this).parent().parent().parent().children().first().text();
@@ -217,7 +217,7 @@ $(document).on('click', '#entity-changeStatus-btn', function(event){
 		    );
 	});
 });
-/**************end--拒付****************/
+/**************end--确认发货****************/
 
 
 /**************start--删除****************/
@@ -252,35 +252,34 @@ $(document).on('click', '#entity-delete-btn', function(event){
 });
 /**************end--删除****************/
 
-/**************start--付款****************/
+/**************start--登记实发****************/
 
-$(document).on('click', '#add-pay-new', function(event){
+$(document).on('click', '#add-check-new', function(event){
 	stopPropagation = true;
 	
-	$("#add-pay-pwd").val('');
-	$("#info-pay-hint").html('').hide();
-	$('#info-pay-modal').modal('show');
-	$('#info-pay-modal').modal({keyboard: false});
+	$("#info-check-hint").html('').hide();
+	$('#info-check-modal').modal('show');
+	$('#info-check-modal').modal({keyboard: false});
 	
-	$('#btn-add-pay').show();
-	$('#btn-add-pay').unbind("click");
+	$('#btn-add-check').show();
+	$('#btn-add-check').unbind("click");
 
-	$("#btn-add-pay").removeAttr('disabled');
-    $("#btn-add-pay").html("确定支付");
+	$("#btn-add-check").removeAttr('disabled');
+    $("#btn-add-check").html("确定");
     
-	$('#btn-add-pay').on('click',function(event){
-		add_pay();
+	$('#btn-add-check').on('click',function(event){
+		add_check();
 	});
 	
-	$('#info-pay-trade').html("<div style='width:100%;text-align:center;'><img id='img-loging-data' alt='正在加载数据...' src='" + BASE_PATH + "view/images/tips_loading.gif'/></div>");
+	$('#info-check-trade').html("<div style='width:100%;text-align:center;'><img id='img-loging-data' alt='正在加载数据...' src='" + BASE_PATH + "view/images/tips_loading.gif'/></div>");
 	
 	var id =  $(this).parent().parent().parent().children().first().text();
-	$.post(BASE_PATH + 'tradeRecord/getInfo', {'id':id},
+	$.post(BASE_PATH + 'tradeRecord/getInfoCheck', {'id':id},
 	    function(result){
 	        if(result.code != 0) {
-	            $("#add-pay-hint").html(result.msg + '(' + result.code + ')' + ',请刷新页面').fadeIn();
+	            $("#add-check-hint").html(result.msg + '(' + result.code + ')' + ',请刷新页面').fadeIn();
 	        } else {
-	        	$('#info-pay-trade').html(result.data.tradeRecord_pay);
+	        	$('#info-check-trade').html(result.data.tradeRecord_check);
 	        }
 	    },
 	    'json'
@@ -288,12 +287,11 @@ $(document).on('click', '#add-pay-new', function(event){
 	
 });
 
-function add_pay(){
-	$("#btn-add-pay").attr('disabled', 'disabled');
-    $("#info-pay-hint").html('').fadeOut();
+function add_check(){
+	$("#btn-add-check").attr('disabled', 'disabled');
+    $("#info-check-hint").html('').fadeOut();
     
-    var id = $("#info-pay-id").val();
-    var pwd = $("#add-pay-pwd").val();
+    var id = $("#info-check-id").val();
     
     var hint_html = '';
     if( !pwd || '' == pwd ){
@@ -301,32 +299,28 @@ function add_pay(){
     }
     
     if(hint_html != ''){
-        $("#info-pay-hint").html(hint_html).fadeIn();
-        $("#btn-add-pay").removeAttr('disabled');
+        $("#info-check-hint").html(hint_html).fadeIn();
+        $("#btn-add-check").removeAttr('disabled');
         return 0;
     }
     
     pwd = hex2b64(do_encrypt(pwd));
     
-    $("#btn-add-pay").html("正在付款...");
-    $.post(BASE_PATH + 'tradeRecord/pay', {
-        	'id':id, 
-        	'pwd':pwd
+    $("#btn-add-check").html("正在提交...");
+    $.post(BASE_PATH + 'tradeRecord/check', {
+        	'id':id
         },
         function(result){
             if(result.code != 0) {
-                $("#info-pay-hint").html(result.msg + '(' + result.code + ')').fadeIn();
-                $("#btn-add-pay").removeAttr('disabled');
-                $("#btn-add-pay").html("确定支付");
+                $("#info-check-hint").html(result.msg + '(' + result.code + ')').fadeIn();
+                $("#btn-add-check").removeAttr('disabled');
+                $("#btn-add-check").html("确定支付");
             }else {
                 $("#info-pay-hint").html(result.msg + ', 关闭...').fadeIn();
                 setTimeout(function(){
-                    $("#info-pay-modal").modal('hide');
-                    $("#btn-add-pay").removeAttr('disabled');
-                    $("#btn-add-pay").html("确定支付");
-                    $('#entity-clear-btn').click();
-                    // 更新金额
-                    $.post(BASE_PATH + 'bcsCustomer/loadInfo', {},function(result){},'json');
+                    $("#info-check-modal").modal('hide');
+                    $("#btn-add-check").removeAttr('disabled');
+                    $("#btn-add-check").html("确定支付");
                 }, 500);
             }
         },
@@ -335,7 +329,7 @@ function add_pay(){
     
 }
 
-/**************end--付款****************/
+/**************end--登记实发****************/
 
 $("td[name='td-operation-name']").each(function(i,e){
 	$(e).unbind("click");

@@ -272,10 +272,29 @@
             </div>
      </div>
      <div class="clear"></div>
+     <ul  class="tabs" id="tabs" style="border: 1px solid #E4E4E4;background: #F4F4F4;height: 50px;width: 1200px;margin-left: 358px;">
+    	<li style="border-bottom: 1px solid #E4E4E4;border-right: 1px solid #E4E4E4;float: left;">
+    	   <a href="#" id="order-waiting-list" style="height: 50px;width: 111px;padding: 18px;text-align: center;">待付款</a>
+    	</li>
+        <li style="border-bottom: 1px solid #E4E4E4;border-right: 1px solid #E4E4E4;float: left;">
+            <a href="#" id="order-details-list" style="height: 50px;width: 111px;padding: 18px;text-align: center;">付款明细</a>
+        </li>
+        <li style="border-bottom: 1px solid #E4E4E4;border-right: 1px solid #E4E4E4;float: left;">
+            <a href="<?php echo Router::getBaseUrl();?>tradeRecord/getIndexBill" id="order-bill-list" style="height: 50px;width: 111px;padding: 18px;text-align: center;">收款管理</a>
+        </li>
+        <!-- 
+        <li style="margin-right:0; border-bottom: 1px solid #E4E4E4;"><a href="#" id="trade-details-list">资金查询</a></li>
+        -->
+    </ul>
      <div class="tab">
         <ul class="tab_conbox" id="tab_conbox">
+        <?php if(doit::$params[0] =='getIndexBill'){ ?>
+            <script src="<?php echo Router::getBaseUrl();?>js/tradeRecordBill.js"></script>
+            <?php echo $tradeRecordBill_html; ?>
+        <?php } else {?>
             <script src="<?php echo Router::getBaseUrl();?>js/tradeRecord.js"></script>
             <?php echo $tradeRecord_html; ?>
+        <?php } ?>
         </ul>
     </div>
 <?php } else {?>
