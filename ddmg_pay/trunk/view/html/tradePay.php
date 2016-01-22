@@ -34,9 +34,9 @@
 <table style="width: 100%;background: #CCDFEF none repeat scroll 0% 0%;border: 1px solid #BFBFBF;line-height: 35px;">
  <tr style="font-weight: bold;">
      <td>&nbsp;&nbsp;&nbsp;&nbsp;卖家：<?php echo $item['seller_name'];?></td>
-     <td>联系人：<?php echo $item['seller_conn_name'];?></td>
-     <td>手机：<?php echo $item['seller_tel'];?></td>
-     <td>公司电话：<?php echo $item['seller_comp_phone'];?></td>
+     <td>联系人：<?php echo $item['partner_name'];?></td>
+     <td>手机：<?php echo $item['partner_tel'];?></td>
+     <td>公司电话：<?php echo $item['partner_company_tel'];?></td>
  </tr>
  <tr>
      <td colspan="4" align="center">
@@ -68,7 +68,7 @@
  </tr>
  <tr>
      <td colspan="4" style="text-align: right;font-weight: bold;">
-        <span style="margin-right: 15px;">合计：<span style="color:red;"><?php echo number_format($item['order_sum_amount'],2);?></span>&nbsp;元 </span>
+        <span style="margin-right: 15px;">合计：<span style="color:red;"><?php echo number_format($item['order_bid_amount'],3);?></span>&nbsp;元 </span>
      </td>
  </tr>
 </table>
@@ -83,7 +83,7 @@
     </span>
     -->
     <span style="float:right;margin-right: 15px;">
-                          付款金额：<font color="red"><?php echo number_format($item['order_sum_amount'],2);?></font> 元
+                          付款金额：<font color="red"><?php echo number_format($item['order_bid_amount'],3);?></font> 元
     </span>
 </div>
 <?php }?>

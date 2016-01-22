@@ -601,7 +601,7 @@ class TradeRecordController extends BaseController {
         }else if($buyer_bank_info['data']['MBR_STS'] == '3'){
             Log::error('buyer bank already cancel status:'.$buyer_bank_info['data']['MBR_STS']);
             EC::fail(EC_ARY_CANCEL);
-        }else if($buyer_bank_info['data']['ACCT_BAL'] < $data_obj['order_sum_amount']){
+        }else if($buyer_bank_info['data']['ACCT_BAL'] < $data_obj['order_bid_amount']){
             Log::error('buyer bank balance less');
             EC::fail(EC_BLE_LESS);
         }
@@ -651,7 +651,7 @@ class TradeRecordController extends BaseController {
         // 付款订单号
         $order_no = $data_obj['order_no'];
         // 付款订单总金额
-        $order_sum_amount = $data_obj['order_sum_amount'];
+        $order_sum_amount = $data_obj['order_bid_amount'];
         
         // 订单编号
         $ctrt_no = 'D' . date('Ymd',time()) . 'T' . date('His',time()) . 'N' . $order_no;
