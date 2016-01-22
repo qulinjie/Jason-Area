@@ -51,9 +51,9 @@
             <span class="odd"><?php echo $item['order_no'];?></span>
             <span class="sj"><?php echo $item['order_timestamp'];?></span>
             <span class="mj"><?php echo $item['seller_name'];?></span>
-            <span class="je"><?php echo number_format($item['order_sum_amount'],2);?></span>
-            <span class="xm"><?php echo $item['seller_conn_name']; ?></span>
-            <span class="phone"><?php echo $item['seller_tel']; ?></span>
+            <span class="je"><?php echo number_format($item['order_bid_amount'],3);?></span>
+            <span class="xm"><?php echo $item['partner_name']; ?></span>
+            <span class="phone"><?php echo $item['partner_tel']; ?></span>
             <?php if($item['order_status']==TradeRecordModel::$_status_waiting){ ?>
                 <span class="fk"><span><a id="add-pay-new" href="#" data-toggle="modal"	data-keyboard="false" data-backdrop="static">付款</a></span></span>
                 <span class="jf"><span><a id="entity-changeStatus-btn" href="#" data-toggle="modal" data-keyboard="false" data-backdrop="static" style="margin-left: 5px;">拒付</a></span></span>
@@ -67,9 +67,9 @@
        <div class="information" style="width:1198px;">
             <div class="one">
                 <span class="mj">商家：<?php echo $item['seller_name'];?></span>
-                <span class="lx">联系人：<?php echo $item['seller_conn_name']; ?></span>
-                <span class="phone">手机：<?php echo $item['seller_tel']; ?></span>
-                <span class="dh">公司电话：<?php echo $item['seller_comp_phone'];?></span>
+                <span class="lx">联系人：<?php echo $item['partner_name']; ?></span>
+                <span class="phone">手机：<?php echo $item['partner_tel']; ?></span>
+                <span class="dh">公司电话：<?php echo $item['partner_company_tel'];?></span>
             </div>
             <div class="two">
                 <span class="dh">订单号</span>

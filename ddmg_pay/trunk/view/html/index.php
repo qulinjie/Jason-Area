@@ -241,7 +241,7 @@
                         <a href="<?php echo Router::getBaseUrl();?>tradeRecord/getIndex">我的大大付款</a>
                     </li>
                     <li <?php if(doit::$controller != 'TradeRecord'){?> class="color" <?php } ?>>
-						<a href="<?php echo Router::getBaseUrl();?>authorizationCode/getIndex">账户管理</a>
+						<a href="<?php echo Router::getBaseUrl();?>bcsCustomer/getInfo">账户管理</a>
 					</li>
                 </ul>
             </div>
@@ -286,9 +286,6 @@
             	<li <?php if(doit::$controller == 'BcsTrade'){?> class="discolor" <?php } ?>>
         			<a href="<?php echo Router::getBaseUrl();?>bcsTrade/getIndex">交易流水</a>
         	    </li>
-        		<li <?php if(doit::$controller == 'AuthorizationCode'){?> class="discolor" <?php } ?>>
-        			<a href="<?php echo Router::getBaseUrl();?>authorizationCode/getIndex">授权码管理</a>
-        	    </li>
         	    <li <?php if(doit::$controller == 'BcsCustomer' && doit::$params[0] !='getInflow' && doit::$params[0] !='getIncomePay'){?> class="discolor" <?php } ?>>
         			<a href="<?php echo Router::getBaseUrl();?>bcsCustomer/getInfo">账户信息</a>
         	    </li>
@@ -310,10 +307,7 @@
             </ul>
         </div>
         <div class="right">
-              <?php if($page_type == 'authorizationCode'){?>
-        	        <script src="<?php echo Router::getBaseUrl();?>js/authorizationCode.js"></script>
-        			<?php echo $authorizationCode_html; ?>
-        	  <?php } else if($page_type == 'bcsTrade'){?>
+        	  <?php if($page_type == 'bcsTrade'){?>
                     <script src="<?php echo Router::getBaseUrl();?>js/bcsTrade.js"></script>
                     <?php echo $bcsTrade_html; ?>
         	  <?php } else if($page_type == 'bcsCustomer'){?>
