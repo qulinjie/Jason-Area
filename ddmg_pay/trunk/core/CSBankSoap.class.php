@@ -160,7 +160,7 @@ class CSBankSoap
 	 */
 	private function CreateSignData( $bodyXmlString )
 	{
-		$privateKeyFilePath = './security/008.08.pfx';
+		$privateKeyFilePath = DOIT_ROOT.'security/008.08.pfx';
 		$privKeyPassword = '952789';
 		return  $this->sign($bodyXmlString, $privateKeyFilePath, $privKeyPassword);
 	}
