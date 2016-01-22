@@ -18,7 +18,7 @@ class BcsTradeModel extends CurlModel {
     // 卖方佣金金额
     public static $_BVC_AMT_0 = 0;
     
-    public static $_comment_build = '发送';
+    public static $_comment_build = '准备发送';
     public static $_comment_success = '成功';
     
     // 导出数据 1-当前页 2-全部
