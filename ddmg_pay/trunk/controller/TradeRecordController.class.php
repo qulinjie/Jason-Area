@@ -706,9 +706,6 @@ class TradeRecordController extends BaseController {
             EC::fail($bcs_data['code']);
         }
         $bcs_data = $bcs_data['data'];
-//         Log::notice('loadInfo ==== >>> notFrozenSpotsTradePay params_trade=##' . json_encode($params_trade) . '##');
-//         $bcs_data['FMS_TRANS_NO'] = '201511136070100049291';
-//         $bcs_data['TRANS_TIME'] = '2015-11-13 16:34:58';
         
         if(empty($bcs_data['FMS_TRANS_NO'])){
             Log::error("notFrozenSpotsTradePay failed [FMS_TRANS_NO] is empty . ");

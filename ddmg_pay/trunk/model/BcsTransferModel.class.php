@@ -14,7 +14,7 @@ class BcsTransferModel extends CurlModel {
     public static $_transfer_type_out = 1;
     public static $_transfer_type_in = 2;
     
-    public static $_comment_build = '发送';
+    public static $_comment_build = '准备发送';
     public static $_comment_success = '成功';
     
     // 导出数据 1-当前页 2-全部
