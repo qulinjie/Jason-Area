@@ -42,8 +42,8 @@ class ServicesController extends Controller {
             return $this->response($xml,'00000005','请求数据不存在','通知失败');
         }
         
-        $register_id = $data['data']['0']['id'];
-        $user_id = $data['data']['0']['user_id'];
+        $register_id = $data['data'][0]['id'];
+        $user_id = $data['data'][0]['user_id'];
         $data = $this->model('bcsRegister')->update(array(
             'id'         => $register_id,
             'ACT_TIME'   => date('Y-m-d H:i:s',strtotime($reqData['ACT_TIME']))
