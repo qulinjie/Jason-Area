@@ -168,10 +168,11 @@ class TradeRecordController extends BaseController {
         $order_status = TradeRecordModel::$_status_paid;
     
         $params  = array();
-        foreach ([ 'order_no', 'user_id', 'code', 'time1', 'time2', 'type', 'order_status',
+        foreach ([ 'order_no', 'code', 'time1', 'time2', 'type', 'order_status',
             'order_time1', 'order_time2', 'seller_name', 'seller_conn_name', 'order_sum_amount1', 'order_sum_amount2' ] as $val){
             if($$val) $params[$val] = $$val;
         }
+        $params['seller_id'] = $user_id;
     
         $data_cnt = $tradeRecord_model->searchCnt($params);
         if(EC_OK != $data_cnt['code']){
@@ -416,8 +417,11 @@ class TradeRecordController extends BaseController {
         $user_id = self::getCurrentUserId();
     
         $params  = array();
-        foreach ([ 'user_id', 'id' ] as $val){
-            if($$val) $params[$val] = $$val;
+        $params['id'] = $id;
+        if($isCheck){
+            $params['seller_id'] = $user_id;
+        } else {
+            $params['user_id'] = $user_id;
         }
         
         $data = $tradeRecord_model->getInfo($params);
