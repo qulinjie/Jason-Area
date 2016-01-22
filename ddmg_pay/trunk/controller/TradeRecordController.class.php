@@ -100,7 +100,7 @@ class TradeRecordController extends BaseController {
             EC::fail($data['code']);
         }
     
-        $data_list = $data['data'];
+        $data_list = $data['data'] ? $data['data'] : [];
         $tradeRecordItem_model = $this->model('tradeRecordItem');
         
         foreach ($data_list as $key => $val){
