@@ -6,10 +6,19 @@ class TradeRecordModel extends CurlModel {
     public static $_is_delete_false = 1;
     public static $_is_delete_true = 2;
     
-    // 订单交易状态 1-待付款 2-已付款 3-拒付
+    // 订单状态 1-待付款 2-已付款 3-拒付
     public static $_status_waiting = 1;
     public static $_status_paid = 2;
     public static $_status_refuse = 3;
+    
+    // 发货状态 1-未发货 2-已发货
+    public static $_send_status_n = 1;
+    public static $_send_status_y = 2;
+    
+    // 实提登记状态 1-未登记 2-已登记
+    public static $_check_status_n = 1;
+    public static $_check_status_y = 2;
+    
     
     // 导出数据 1-当前页 2-全部
     public static $_export_type_page = 1;

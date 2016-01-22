@@ -19,8 +19,21 @@ class TradeRecordController extends BaseController {
                 case 'searchList':
                     $this->searchList();
                     break;
+                    
+                    // str-收款单
+                case 'getIndexBill':
+                    $this->searchListBill(true);
+                    break;
+                case 'searchListBill':
+                    $this->searchListBill();
+                    break;
+                    // end-收款单
+                    
                 case 'getInfo':
                     $this->getInfo();
+                    break;
+                case 'getInfoCheck':
+                    $this->getInfo(true);
                     break;
                 case 'changeStatus':
                     $this->changeStatus();
@@ -130,6 +143,94 @@ class TradeRecordController extends BaseController {
             
             $view_html = $this->render('tradeRecord', array('entity_list_html' => $entity_list_html ), true);
             $this->render('index', array('page_type' => 'tradeRecord', 'tradeRecord_html' => $view_html, 'bcsCustomerInfo' => $data_info) );
+        } else {
+            EC::success(EC_OK, array('entity_list_html' => $entity_list_html));
+        }
+    }
+    
+    protected function searchListBill($isIndex = false) {
+        $current_page = Request::post('page');
+        $order_no = Request::post('order_no');
+        $code = Request::post('code');
+        $time1 = Request::post('time1');
+        $time2 = Request::post('time2');
+        $type = Request::post('type');
+        $order_time1 = Request::post('order_time1');
+        $order_time2 = Request::post('order_time2');
+        $seller_name = Request::post('seller_name');
+        $seller_conn_name = Request::post('seller_conn_name');
+        $order_sum_amount1 = Request::post('order_sum_amount1');
+        $order_sum_amount2 = Request::post('order_sum_amount2');
+    
+        $tradeRecord_model = $this->model('tradeRecord');
+        $user_id = self::getCurrentUserId();
+    
+        $order_status = TradeRecordModel::$_status_paid;
+    
+        $params  = array();
+        foreach ([ 'order_no', 'user_id', 'code', 'time1', 'time2', 'type', 'order_status',
+            'order_time1', 'order_time2', 'seller_name', 'seller_conn_name', 'order_sum_amount1', 'order_sum_amount2' ] as $val){
+            if($$val) $params[$val] = $$val;
+        }
+    
+        $data_cnt = $tradeRecord_model->searchCnt($params);
+        if(EC_OK != $data_cnt['code']){
+            Log::error("searchCnt failed . ");
+            EC::fail($data_cnt['code']);
+        }
+    
+        $cnt = $data_cnt['data'];
+    
+        $conf = $this->getConfig('conf');
+        $page_cnt = $conf['page_count_default'];
+    
+        $total_page = ($cnt % $page_cnt) ? (integer)($cnt / $page_cnt) + 1 : $cnt / $page_cnt;
+    
+        if(!$current_page || 0 >= $current_page) {
+            $current_page = 1;
+        } if($current_page > $total_page) {
+            $current_page = $total_page;
+        }
+    
+        $params['current_page'] = $current_page;
+        $params['page_count'] = $page_cnt;
+        $data = $tradeRecord_model->searchList($params);
+        if(EC_OK != $data['code']){
+            Log::error("searchList failed . ");
+            EC::fail($data['code']);
+        }
+    
+        $data_list = $data['data'] ? $data['data'] : [];
+        
+        $tradeRecordItem_model = $this->model('tradeRecordItem');
+        
+        foreach ($data_list as $key => $val){
+            $data = $tradeRecordItem_model->searchList(array('trade_record_id' => $val['id']));
+            if($data['code'] !== EC_OK){
+                Log::error('tradeRecordItem searchList error');
+            }
+            $data_list[$key]['list'] = $data['data'] ? $data['data'] : [];
+        }
+        
+        $entity_list_html = $this->render('tradeRecordBill_list', array('data_list' => $data_list, 'current_page' => $current_page, 'total_page' => $total_page), true);
+        if($isIndex) {
+    
+            $bcsCustomer_model = $this->model('bcsCustomer');
+            $user_id = self::getCurrentUserId();
+    
+            $params  = array();
+            $params['user_id'] = $user_id;
+    
+            $data = $bcsCustomer_model->getInfo($params);
+            if(EC_OK != $data['code']){
+                Log::error("getInfo failed . ");
+                EC::fail($data['code']);
+            }
+    
+            $data_info = $data['data'][0];
+    
+            $view_html = $this->render('tradeRecordBill', array('entity_list_html' => $entity_list_html ), true);
+            $this->render('index', array('page_type' => 'tradeRecord', 'tradeRecordBill_html' => $view_html, 'bcsCustomerInfo' => $data_info) );
         } else {
             EC::success(EC_OK, array('entity_list_html' => $entity_list_html));
         }
@@ -307,7 +408,7 @@ class TradeRecordController extends BaseController {
         EC::success(EC_OK);
     }    
     
-    protected function getInfo() {
+    protected function getInfo($isCheck=false) {
         $id = Request::post('id');
     
         $tradeRecord_model = $this->model('tradeRecord');
@@ -333,9 +434,13 @@ class TradeRecordController extends BaseController {
         }
         $data_info['data_list'] = $data_item['data'];
         Log::notice('data_info-----------------------------------params==>>' . var_export($data_info, true));
-        
-        $entity_list_html = $this->render('tradePay', array('item' => $data_info), true);
-        EC::success(EC_OK, array('tradeRecord_pay' => $entity_list_html));
+        if($isCheck){
+            $entity_list_html = $this->render('tradeCheck', array('item' => $data_info), true);
+            EC::success(EC_OK, array('tradeRecord_check' => $entity_list_html));
+        } else {
+            $entity_list_html = $this->render('tradePay', array('item' => $data_info), true);
+            EC::success(EC_OK, array('tradeRecord_pay' => $entity_list_html));
+        }
     }
     
     private function create(){
@@ -430,6 +535,8 @@ class TradeRecordController extends BaseController {
             $trade_record[$itemKey]['order_new_amount'] = $trade_record_amount[$itemKey]; // 拆分后订单的金额
             
             $trade_record[$itemKey]['order_status'] = TradeRecordModel::$_status_waiting; // 订单交易状态 1-待付款 2-已付款 3-拒付
+            $trade_record[$itemKey]['check_status'] = TradeRecordModel::$_check_status_n; // 实提登记状态 1-未登记 2-已登记
+            $trade_record[$itemKey]['send_status'] = TradeRecordModel::$_send_status_n; // 发货状态 1-未发货 2-已发货
         }
         
 //         Log::error('----------------------------------trade_record------------------------------params==>>' . var_export($trade_record, true));
@@ -673,7 +780,7 @@ class TradeRecordController extends BaseController {
         // 付款订单总金额
         $order_sum_amount = $data_obj['order_bid_amount'];
         
-        // 订单编号
+        // 订单编号 （最长32位）
         $ctrt_no = 'D' . date('md',time()) . 'T' . date('His',time()) . 'N' . $order_no;
         // 商户交易流水号
         $mch_trans_no = 'D' . date('Ymd',time()) . 'T' . date('His',time()) . 'R' . rand(100,999) . 'U' . $user_id;
@@ -753,6 +860,7 @@ class TradeRecordController extends BaseController {
         $params['id'] = $id;
         $params['user_id'] = $user_id;
         $params['order_status'] = TradeRecordModel::$_status_paid;
+        $params['pay_timestamp'] = date('Y-m-d H:i:s',time());;
         Log::notice('tradeRecord-update . params==>>' . var_export($params, true));
         $data = $tradeRecord_model->pay($params);
         if(EC_OK != $data['code']){

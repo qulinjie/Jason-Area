@@ -4,31 +4,20 @@
  */
 ?>
 
-<div class="modal fade" id="info-pay-modal">
+<div class="modal fade" id="info-check-modal">
 	<div class="modal-dialog" style="width: 1100px;">
 		<div class="modal-content">
 			<div class="modal-header">
 				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 					<span aria-hidden="true">&times;</span>
 				</button>
-				<h4 class="modal-title">付款</h4>
+				<h4 class="modal-title">登记实发</h4>
 			</div>
-			<div class="modal-body" id="info-pay-trade"></div>
-			<div class="modal-body">
-                <div style="margin-left: 15px;">
-                     <font style="font-weight: bold;">支付密码：</font>
-                     <input type="password" class="form-control" id="add-pay-pwd" value="" style="width: 150px;display: inline;"/>
-                     <!-- 
-                     <span id="tips_set_pay_pwd"><span style="color: #ADABAB;">您当前未设置支付密码，请先</span><a href="#">设置支付密码</a></span>
-                     -->
-                </div>
-                <div style="margin: 15px;">
-                    <button type="button" class="btn btn-primary" id="btn-add-pay" style="width: 150px;height: 38px;">确定支付</button>
-                </div>
-			</div>
-			<div class="alert alert-danger" id="info-pay-hint"></div>
+			<div class="modal-body" id="info-check-trade"></div>
+			<div class="alert alert-danger" id="info-check-hint"></div>
 			<div class="modal-footer">
 				<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+				<button type="button" class="btn btn-primary" id="btn-add-check">确定</button>
 			</div>
 		</div>
 	</div>

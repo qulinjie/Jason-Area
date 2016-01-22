@@ -31,10 +31,11 @@
   
 		<div class="classify" style="width: 1197px;">
             <span class="dh">单号</span>
-            <span class="sj">时间</span>
-            <span class="mj">供应商</span>
-            <span class="je">金额（元）</span>
-            <span class="yw">业务员信息</span>
+            <span class="sj">下单时间</span>
+            <span class="mj">采购商</span>
+            <span class="je">实收金额（元）</span>
+            <span class="yw" style="left: 760px;">收款时间</span>
+            <span class="yw" style="left: 910px;">收款状态</span>
             <span class="cz"><span id="order-status-show">操作</span></span>
        </div>
     <?php if(empty($data_list)){?>
@@ -49,33 +50,34 @@
             <span style="display:none"><?php echo $item['id'];?><input type="hidden" value="<?php echo $item['order_status'];?>"></span>
             <span class="odd"><?php echo $item['order_no'];?></span>
             <span class="sj"><?php echo $item['order_timestamp'];?></span>
-            <span class="mj"><?php echo $item['seller_name'];?></span>
+            <span class="mj"><?php echo $item['user_id'];?></span>
             <span class="je"><?php echo number_format($item['order_bid_amount'],2);?></span>
-            <span class="xm"><?php echo $item['partner_name']; ?></span>
-            <span class="phone"><?php echo $item['partner_tel']; ?></span>
-            <?php if($item['order_status']==TradeRecordModel::$_status_waiting){ ?>
-                <span class="fk"><span><a id="add-pay-new" href="#" data-toggle="modal"	data-keyboard="false" data-backdrop="static">付款</a></span></span>
-                <span class="jf"><span><a id="entity-changeStatus-btn" href="#" data-toggle="modal" data-keyboard="false" data-backdrop="static" style="margin-left: 5px;">拒付</a></span></span>
-            <?php }else if($item['order_status']==TradeRecordModel::$_status_paid) { ?>
-                <span class="fk">已付</span>
-            <?php } else if($item['order_status']==TradeRecordModel::$_status_refuse) { ?>
-                <span class="fk">拒付</span>
-            <?php } ?>
-            
+            <span class="xm" style="left: 760px;"><?php echo $item['pay_timestamp'];?></span>
+            <span class="xm" style="left: 910px;"><?php echo (TradeRecordModel::$_send_status_n == $item['send_status'])?'冻结':'正常';?></span>
+            <span class="fk" style="left: 1017px;">
+                <?php if( TradeRecordModel::$_send_status_n == $item['send_status'] ){ ?> <!-- 未 确认发货 ，才能 登记实发 (发货状态 1-未发货 2-已发货) -->
+                <span><a id="add-check-new" href="#" data-toggle="modal"	data-keyboard="false" data-backdrop="static">登记实发</a></span>
+                <?php } else { echo '-'; } ?>
+            </span>
+            <span class="jf" style="left: 1097px;">
+                <?php if( TradeRecordModel::$_check_status_y == $item['check_status'] ){ ?> <!-- 已 登记实发 ，才能 确认发货  (实提登记状态 1-未登记 2-已登记) -->
+                <span><a id="entity-changeStatus-btn" href="#" data-toggle="modal" data-keyboard="false" data-backdrop="static" style="margin-left: 5px;">确认发货</a></span>
+                <?php } else { echo '-'; } ?>
+            </span>
        </div>
        <div class="information" style="width:1198px;">
             <div class="one">
-                <span class="lx">联系人：<?php echo $item['partner_name']; ?></span>                
-                <span class="phone">手机：<?php echo $item['partner_tel']; ?></span>               
-                <span class="mj">公司电话：<?php echo $item['partner_company_tel'];?></span>
+                <span class="lx">联系人：<?php echo $item['partner_name']; ?></span>
+                <span class="phone">手机：<?php echo $item['partner_tel']; ?></span>
+                <span class="dh">公司电话：<?php echo $item['partner_company_tel'];?></span>
             </div>
             <div class="two">
                 <span class="dh">订单号</span>
-                <span class="cz">品名</span>               
-                <span class="gg">材质</span>
-                 <span class="pm">规格</span>
+                <span class="pm">品名</span>
+                <span class="gg">规格</span>
+                <span class="cz">材质</span>
                 <span class="jh">交货地</span>
-                <span class="dj">单价（元/ 吨）</span>                
+                <span class="dj">单价（元/ 吨）</span>
                 <span class="dg">订购量（吨）</span>
                 <span class="je">订单金额（元）</span>
             </div>
