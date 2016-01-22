@@ -65,32 +65,33 @@
        </div>
        <div class="information" style="width:1198px;">
             <div class="one">
-                <span class="mj">商家：<?php echo $item['seller_name'];?></span>
-                <span class="lx">联系人：<?php echo $item['partner_name']; ?></span>
-                <span class="phone">手机：<?php echo $item['partner_tel']; ?></span>
-                <span class="dh">公司电话：<?php echo $item['partner_company_tel'];?></span>
+                <span class="lx">联系人：<?php echo $item['partner_name']; ?></span>                
+                <span class="phone">手机：<?php echo $item['partner_tel']; ?></span>               
+                <span class="mj">公司电话：<?php echo $item['partner_company_tel'];?></span>
             </div>
             <div class="two">
                 <span class="dh">订单号</span>
-                <span class="pm">品名</span>
-                <span class="gg">规格</span>
-                <span class="cz">材质</span>
+                <span class="cz">品名</span>               
+                <span class="gg">材质</span>
+                 <span class="pm">规格</span>
                 <span class="jh">交货地</span>
-                <span class="dj">单价（元/ 吨）</span>
+                <span class="dj">单价（元/ 吨）</span>                
                 <span class="dg">订购量（吨）</span>
                 <span class="je">订单金额（元）</span>
             </div>
+            <?php foreach ($item['list'] as $v){?>
             <div class="three">
-                <span class="dh"><?php echo $item['order_no'];?></span>
-                <span class="pm"><?php echo $item['order_goods_name'];?></span>
-                <span class="gg"><?php echo $item['order_goods_size'];?></span>
-                <span class="cz"><?php echo $item['order_goods_type'];?></span>
-                <span class="jh"><?php echo $item['order_delivery_addr'];?></span>
-                <span class="dj"><?php echo number_format($item['order_goods_price'],2);?></span>
-                <span class="dg"><?php echo $item['order_goods_count'];?></span>
-                <span class="je"><?php echo number_format($item['order_sum_amount'],2);?></span>
+                <span class="dh"><?php echo $v['order_no'];?></span>
+                <span class="pm"><?php echo $v['item_name'];?></span>
+                <span class="gg"><?php echo $v['item_type'];?></span>
+                <span class="cz"><?php echo $v['item_size'];?></span>
+                <span class="jh"><?php echo $v['item_delivery_addr'];?></span>
+                <span class="dj"><?php echo number_format($v['item_price'],2);?></span>
+                <span class="dg"><?php echo $v['item_weight'];?></span>
+                <span class="je"><?php echo number_format($v['item_amount'],2);?></span>
             </div>
-            <div class="four">合计：<em><?php echo number_format($item['order_sum_amount'],2);?></em>元</div>
+            <div class="four">合计：<em><?php echo number_format(array_sum(array_column($item['list'], 'item_amount')),2);?></em>元</div>
+            <?php }?>
       </div>
     <?php }?>
     </span>
