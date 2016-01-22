@@ -24,6 +24,10 @@ class BcsRegisterModel extends CurlModel {
         return self::sendRequest('bcsRegister/getList', $params);
     }
     
+    public function getInfo($params = array()){
+        return self::sendRequest('bcsRegister/getInfo', $params);
+    }
+    
     public function create($params = array()){
         return self::sendRequest('bcsRegister/create', $params);
     }
