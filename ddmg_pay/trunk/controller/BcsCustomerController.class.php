@@ -578,11 +578,11 @@ class BcsCustomerController extends BaseController {
     }
 
     private function getInflow(){
-        $data = $this->model('bcsRegister')->getSitNo();
-        if($data['code'] !== EC_OK){ EC::fail($data['code']);}
+        $loginUser = UserController::getLoginUser();
+        if(!$SIT_NO = $loginUser['SIT_NO']){ EC::fail(EC_SIT_NO_NON);}
         $params = [
             'MCH_NO'      => $this->getConfig('conf')['MCH_NO'],
-            'SIT_NO'      => $data['data']['SIT_NO'],
+            'SIT_NO'      => $SIT_NO,
             'PAGE_SIZE'   => 10,
             'PAGE_NUMBER' => $this->post('page',1)
         ];
@@ -600,11 +600,11 @@ class BcsCustomerController extends BaseController {
     }
 
     private function getIncomePay(){
-        $data = $this->model('bcsRegister')->getSitNo();
-        if($data['code'] !== EC_OK){ EC::fail($data['code']);}
+        $loginUser = UserController::getLoginUser();
+        if(!$SIT_NO = $loginUser['SIT_NO']){ EC::fail(EC_SIT_NO_NON);}
         $params   = [
             'MCH_NO' => $this->getConfig('conf')['MCH_NO'],
-            'SIT_NO' => $data['data']['SIT_NO'],
+            'SIT_NO' => $SIT_NO,
             'PAGE_NUMBER' => $this->post('page',1),
             'PAGE_SIZE' => 10
         ];
