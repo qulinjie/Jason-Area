@@ -294,9 +294,23 @@ function add_check(){
     var id = $("#info-check-id").val();
     
     var hint_html = '';
-    if( !pwd || '' == pwd ){
-    	hint_html += (hint_html == '' ? '' : '<BR>') + '请填写支付密码！' ;
-    }
+    var data = '';
+    
+    $('#registerNet tr').each(function(){
+    	var number = $(this).find('input:first').val();
+    	var weight = $(this).find('input:last').val();
+    	if(number === undefined || weight === undefined){
+    		return true;
+    	}else if(number == '' || weight == ''){
+    		hint_html =  hint_html ? hint_html : '请填写实发信息！' ;
+    	}else{
+    		if(!isNaN(number)){
+    			hint_html =  hint_html ? hint_html : '请填写正确的实发数量！' ;
+    		}else{
+    			data += $(this).find('td:first').text() + '_' + number+'_'+weight+';';  
+    		}    		
+    	}
+    });
     
     if(hint_html != ''){
         $("#info-check-hint").html(hint_html).fadeIn();
@@ -304,23 +318,21 @@ function add_check(){
         return 0;
     }
     
-    pwd = hex2b64(do_encrypt(pwd));
-    
     $("#btn-add-check").html("正在提交...");
-    $.post(BASE_PATH + 'tradeRecord/check', {
-        	'id':id
+    $.post(BASE_PATH + 'tradeRecord/registerNet', {
+        	'data':data
         },
         function(result){
             if(result.code != 0) {
                 $("#info-check-hint").html(result.msg + '(' + result.code + ')').fadeIn();
                 $("#btn-add-check").removeAttr('disabled');
-                $("#btn-add-check").html("确定支付");
+                //$("#btn-add-check").html("确定支付");
             }else {
                 $("#info-pay-hint").html(result.msg + ', 关闭...').fadeIn();
                 setTimeout(function(){
                     $("#info-check-modal").modal('hide');
                     $("#btn-add-check").removeAttr('disabled');
-                    $("#btn-add-check").html("确定支付");
+                    //$("#btn-add-check").html("确定支付");
                 }, 500);
             }
         },

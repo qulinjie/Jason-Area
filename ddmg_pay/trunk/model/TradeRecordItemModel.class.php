@@ -32,4 +32,8 @@ class TradeRecordItemModel extends CurlModel {
         return self::sendRequest('tradeRecordItem/create', $params);
     }
     
+    public function registerNetToServer($params = array()){
+        return $this->sendRequestServer('order/paybackup',$params);
+    }
+    
 }

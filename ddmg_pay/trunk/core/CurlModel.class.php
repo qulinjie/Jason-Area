@@ -118,6 +118,21 @@ class CurlModel
         return $ret;
     }
     
+    public function sendRequestServer( $interface, $data=[] )
+    {
+        if ( !$interface ) {
+            return false;
+        }
+        //         $base_data = [ 'caller'=>'test', 'callee'=>'ddmg_payapi', 'eventid'=>rand()%10000, 'timestamp'=>time() ];
+        //         $base_data['data'] = $data;
+        $base_data = $data;
+        Log::notice("sendRequest data ================================>> interface = " . $interface . ",request = ##" . json_encode($base_data) . "##" );
+        $url = $this->getUrlServer( $interface );
+        $ret = $this->postRequest( $url, $base_data );
+        Log::notice("sendRequest data ================================>> response = ##" . json_encode($ret) . "##" );
+        return $ret;
+    }
+    
     
 	protected function getCookieFile()
 	{
@@ -148,6 +163,17 @@ class CurlModel
 	        EC::fail(EC_DAT_NON);
 	    }
 	    return $config['ddmg_java_url'].$interface;
+	}
+	
+	//大大买刚server
+	protected function getUrlServer( $interface )
+	{
+	    $config = Controller::getConfig('conf');
+	    if(!isset($config['ddmg_server_url']) || !$config['ddmg_server_url']){
+	        Log::error('config ddmg_server_url is not exists or is empty');
+	        EC::fail(EC_DAT_NON);
+	    }
+	    return $config['ddmg_server_url'].$interface;
 	}
 
 	protected function getCURLCookieInfoFromLocalFile( $cookieFile )
