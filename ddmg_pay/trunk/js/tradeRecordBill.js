@@ -304,11 +304,11 @@ function add_check(){
     	}else if(number == '' || weight == ''){
     		hint_html =  hint_html ? hint_html : '请填写实发信息！' ;
     	}else{
-    		if(!isNaN(number)){
-    			hint_html =  hint_html ? hint_html : '请填写正确的实发数量！' ;
-    		}else{
+//    		if(!isNaN(number)){
+//    			hint_html =  hint_html ? hint_html : '请填写正确的实发数量！' ;
+//    		}else{
     			data += $(this).find('td:first').text() + '_' + number+'_'+weight+';';  
-    		}    		
+    		//}    		
     	}
     });
     
