@@ -40,10 +40,10 @@
  </tr>
  <tr>
      <td colspan="4" align="center">
-         <table style="width: 98%;background-color: #EFEFEF;text-align: left;margin: 3px;">
+         <table id="registerNet" style="width: 98%;background-color: #EFEFEF;text-align: left;margin: 3px;">
               <tr style="background-color: #EFEFEF;color: #424242;font-weight: 600;">
-                <td>&nbsp;</td>
-                <td>订单号</td>
+                <td style="display: none;"></td>
+                <td>&nbsp;订单号</td>
                 <td>钢厂</td>
                 <td>品名</td>
                 <td>规格</td>
@@ -51,13 +51,15 @@
                 <td>交货地</td>
                 <td>数量（件）</td>
                 <td>重量（吨）</td>
-                <td>单价（元/吨）</td>
+                <td>单价（元/吨）</td>          
+                <td>实发数量（件）</td>
+                <td>实发重量（吨）</td>
                 <td>应收小计（元）</td>
               </tr>
               <?php foreach ($item['data_list'] as $item_info){?>
               <tr style="background-color: #FFF;">
-                 <td>&nbsp;</td>
-                 <td><?php echo $item_info['order_no'];?></td>
+                 <td style="display: none;"><?php echo $item_info['id'].'_'.$item_info['itme_no'].'_'.$item_info['bid_price'];?></td>
+                 <td>&nbsp;<?php echo $item_info['order_no'];?></td>
                  <td><?php echo $item_info['item_factory'];?></td>
                  <td><?php echo $item_info['item_name'];?></td>
                  <td><?php echo $item_info['item_size'];?></td>
@@ -65,7 +67,9 @@
                  <td><?php echo $item_info['item_delivery_addr'];?></td>
                  <td><?php echo $item_info['item_count'];?></td>
                  <td><?php echo number_format($item_info['item_weight'],3);?></td>
-                 <td><?php echo number_format($item_info['bid_price'],2);?></td>
+                 <td><?php echo number_format($item_info['bid_price'],2);?></td>                 
+                 <td><input type="text" value="<?php if($item_info['item_count_send']){echo $item_info['item_count_send'];}?>"></td>
+                 <td><input type="text" value="<?php if($item_info['item_weight_send'] != '0.000'){echo number_format($item_info['item_weight_send'],3);}?>"></td>
                  <td><?php echo number_format($item_info['bid_amount'],2);?></td>
               </tr>
               <?php } ?>

@@ -27,6 +27,9 @@ class TradeRecordController extends BaseController {
                 case 'searchListBill':
                     $this->searchListBill();
                     break;
+                case 'registerNet':
+                    $this->registerNet();
+                    break;
                     // end-收款单
                     
                 case 'getInfo':
@@ -235,6 +238,35 @@ class TradeRecordController extends BaseController {
         } else {
             EC::success(EC_OK, array('entity_list_html' => $entity_list_html));
         }
+    }
+    
+    protected function registerNet(){
+        if(!$postData = $this->post('data')){
+            Log::error('registerNet params error');
+            EC::fail(EC_PAR_BAD);
+        }
+
+        $postData = explode(';', $postData);
+        array_pop($postData);      
+        $tradeRecordItemModel = $this->model('tradeRecordItem');
+        $sendData = array();
+        foreach ($postData as $val){
+            //0:id , 1:item_no, 2:price,3:number,4:weight.  吨数是总吨数
+            list($id,$item_no,$price,$number,$weight) = explode('_', $val);
+            $data = $tradeRecordItemModel->update(array('id' => $id,'item_count_send' => $number,'item_weight_send' => $weight,'item_amount_send' => $weight*$price));
+            if($data['code'] !== EC_OK){
+                Log::error('tradeRecordItem update error code='.$data['code']);   
+                EC::fail($data['code']);
+            }
+            $sendData [] = array('item_no' => $item_no,'number' => $number,'weight' => $weight);
+        }
+       
+        $data = $this->model('tradeRecordItem')->registerNetToServer(array('data' => $sendData));
+        if($data['code'] !== EC_OK){
+            Log::error('registerNet send server error code='.$data['code']);
+            EC::fail($data['code']);
+        }
+        EC::success(EC_OK);
     }
     
     protected function exportData() {
