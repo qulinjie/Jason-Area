@@ -400,7 +400,7 @@ class TradeRecordController extends BaseController {
             EC::fail(EC_RED_EXP);
         }
     
-        $params['user_id'] = $data_old['user_id'];
+        $params['user_id'] = $data_obj['user_id'];
         $params['send_status'] = TradeRecordModel::$_send_status_y;
         $params['send_timestamp'] = date('Y-m-d H:i:s',time());
     
