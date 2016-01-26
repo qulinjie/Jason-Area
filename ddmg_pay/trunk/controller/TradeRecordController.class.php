@@ -855,7 +855,7 @@ class TradeRecordController extends BaseController {
             EC::fail($data['code']);
         }
         $bcs_trade_id = $data['data'];
-        $params['bcs_trade_id'] = $bcs_trade_id;
+        $params['id'] = $bcs_trade_id;
         
         /**
          * 支付（转账）
@@ -896,7 +896,7 @@ class TradeRecordController extends BaseController {
         $params['id'] = $id;
         $params['user_id'] = $user_id;
         $params['order_status'] = TradeRecordModel::$_status_paid;
-        $params['pay_timestamp'] = date('Y-m-d H:i:s',time());;
+        $params['pay_timestamp'] = date('Y-m-d H:i:s',time());
         Log::notice('tradeRecord-update . params==>>' . var_export($params, true));
         $data = $tradeRecord_model->pay($params);
         if(EC_OK != $data['code']){
