@@ -47,6 +47,7 @@ class ServicesController extends Controller {
         $user_id = $data['data'][0]['user_id'];
         $data = $this->model('bcsRegister')->update(array(
             'id'         => $register_id,
+            'status'     => 2,
             'ACT_TIME'   => date('Y-m-d H:i:s',strtotime($reqData['ACT_TIME']))
         ));
         
