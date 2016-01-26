@@ -385,7 +385,7 @@ class TradeRecordController extends BaseController {
             Log::error('getInfo Fail!');
             EC::fail($data_old['code']);
         }
-        $data_obj = $data_old['data'][0];
+        $data_obj = $data_old['data'];
         if(empty($data_obj)) {
             Log::error('getInfo empty !');
             EC::fail(EC_RED_EMP);
