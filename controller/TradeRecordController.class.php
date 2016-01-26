@@ -400,15 +400,16 @@ class TradeRecordController extends BaseController {
             EC::fail(EC_RED_EXP);
         }
     
-        $params['order_status'] = TradeRecordModel::$_status_refuse;
-        $params['disenabled_timestamp'] = date('Y-m-d H:i:s',time());
+        $params['user_id'] = $data_old['user_id'];
+        $params['send_status'] = TradeRecordModel::$_send_status_y;
+        $params['send_timestamp'] = date('Y-m-d H:i:s',time());
     
         Log::notice('changeStatus ==== >>> params=' . json_encode($params) );
         $data = $tradeRecord_model->update($params);
         if(EC_OK != $data['code']){
             Log::error('update Fail!');
             EC::fail($data['code']);
-        }
+        } 
         
         $data = $tradeRecord_model->orderStatusToServer(array('data' => array('order_no' => $data_obj['order_no'])));
         if($data['code'] !== EC_OK){
