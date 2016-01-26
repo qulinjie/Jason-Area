@@ -373,7 +373,7 @@ class TradeRecordController extends BaseController {
     
         $params = array();
         $params['id'] = $id;
-        $params['user_id'] = $user_id;
+        $params['seller_id'] = $user_id;
     
         if(empty($params)){
             Log::error('update params is empty!');
