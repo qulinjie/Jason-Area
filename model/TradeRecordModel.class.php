@@ -50,4 +50,8 @@ class TradeRecordModel extends CurlModel {
         return self::sendRequest('tradeRecord/pay', $params);
     }
     
+    //server update order_status
+    public function orderStatusToServer($params = array()) {
+        return self::sendRequestServer('order/paystatus',$params);
+    }
 }

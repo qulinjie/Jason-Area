@@ -251,14 +251,30 @@ class TradeRecordController extends BaseController {
         $tradeRecordItemModel = $this->model('tradeRecordItem');
         $sendData = array();
         foreach ($postData as $val){
-            //0:id , 1:item_no, 2:price,3:number,4:weight.  吨数是总吨数
-            list($id,$item_no,$price,$number,$weight) = explode('_', $val);
+            //0:order_no,1:id , 2:item_no, 3:price,4:number,5:weight.  吨数是总吨数
+            list($order_no,$id,$item_no,$price,$number,$weight) = explode('_', $val);
             $data = $tradeRecordItemModel->update(array('id' => $id,'item_count_send' => $number,'item_weight_send' => $weight,'item_amount_send' => $weight*$price));
             if($data['code'] !== EC_OK){
                 Log::error('tradeRecordItem update error code='.$data['code']);   
                 EC::fail($data['code']);
             }
             $sendData [] = array('item_no' => $item_no,'number' => $number,'weight' => $weight);
+        }
+        
+        //更新订单实提状态
+        if(isset($order_no)){
+            $data = $this->model('tradeRecord')->searchList(array('order_no' => $order_no));
+            if($data['code'] !== EC_OK){
+                Log::error('registerNet update tradeRecord status error');
+                EC::fail(EC_UPD_FAI);
+            }else{           
+                $params = array('check_status' => TradeRecordModel::$_check_status_y,'id' => $data['data'][0]['id'],'user_id' => $data['data'][0]['user_id']);
+                $data = $this->model('tradeRecord')->update($params);
+                if($data['code'] !== EC_OK){
+                    Log::error('registerNet update tradeRecord status error');
+                    EC::fail(EC_UPD_FAI);
+                }
+            }
         }
        
         $data = $this->model('tradeRecordItem')->registerNetToServer(array('data' => $sendData));
@@ -392,6 +408,13 @@ class TradeRecordController extends BaseController {
             Log::error('update Fail!');
             EC::fail($data['code']);
         }
+        
+        $data = $tradeRecord_model->orderStatusToServer(array('data' => array('order_no' => $data_obj['order_no'])));
+        if($data['code'] !== EC_OK){
+            Log::error('orderStatusToServer error code='.$data['code']);
+            EC::fail($data['code']);
+        }
+        
         EC::success(EC_OK);
     }
     

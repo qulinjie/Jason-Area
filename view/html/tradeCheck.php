@@ -58,7 +58,7 @@
               </tr>
               <?php foreach ($item['data_list'] as $item_info){?>
               <tr style="background-color: #FFF;">
-                 <td style="display: none;"><?php echo $item_info['id'].'_'.$item_info['itme_no'].'_'.$item_info['bid_price'];?></td>
+                 <td style="display: none;"><?php echo $item_info['order_no'].'_'.$item_info['id'].'_'.$item_info['itme_no'].'_'.$item_info['bid_price'];?></td>
                  <td>&nbsp;<?php echo $item_info['order_no'];?></td>
                  <td><?php echo $item_info['item_factory'];?></td>
                  <td><?php echo $item_info['item_name'];?></td>
