@@ -11,6 +11,7 @@ $(document).on('click', '#for-loadCustInfo-btn', function(event){
 	            	alert(result.msg + '(' + result.code + ')');
 	            }else {
 	            	alert(result.msg);
+	            	window.location.reload();
 	            }
 	        },
 	        'json'
