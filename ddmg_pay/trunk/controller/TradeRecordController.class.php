@@ -395,7 +395,7 @@ class TradeRecordController extends BaseController {
             Log::error('record had delete . is_delete=' . $data_obj['is_delete']);
             EC::fail(EC_RED_EXP);
         }
-        if( TradeRecordModel::$_status_waiting != $data_obj['order_status'] ) {
+        if( TradeRecordModel::$_status_waiting == $data_obj['order_status'] ) {
             Log::error('record status is exception . status=' . $data_obj['order_status']);
             EC::fail(EC_RED_EXP);
         }
