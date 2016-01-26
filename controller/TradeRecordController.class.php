@@ -827,8 +827,8 @@ class TradeRecordController extends BaseController {
         $params_trade['BUYER_SIT_NO'] = $buyer_sit_no; // 付款方席位号
         $params_trade['SELLER_SIT_NO'] = $seller_sit_no; // 收款方席位号
         $params_trade['FUNC_CODE'] = BcsTradeModel::$_FUNC_CODE_FINISH; // 功能号
-//         $params_trade['TX_AMT'] = $order_sum_amount; // 交易金额
-        $params_trade['TX_AMT'] = 2; // 交易金额 // TODO for test
+        $params_trade['TX_AMT'] = $order_sum_amount; // 交易金额
+        //$params_trade['TX_AMT'] = 2; // 交易金额 // TODO for test
         $params_trade['SVC_AMT'] = BcsTradeModel::$_SVC_AMT_0; // 买方佣金金额
         $params_trade['BVC_AMT'] = BcsTradeModel::$_BVC_AMT_0; // 卖方佣金金额
         $params_trade['CURR_COD'] = BcsTradeModel::$_CURR_COD_RMB; // 币别
