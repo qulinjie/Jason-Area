@@ -100,7 +100,7 @@
             </div>
             <?php }?>
             <div class="four">
-            <sapn style="padding-right: 339px;">合计：<em><?php echo number_format($item['order_bid_amount'],2);?></em>元</sapn>
+            <sapn style="padding-right: 275px;">合计：<em><?php echo number_format($item['order_bid_amount'],2);?></em>元</sapn>
             &nbsp;
             <span style="padding-right: 30px;">
             <em><?php echo number_format(array_sum(array_column($item['list'], 'item_amount_send')),2);?></em>元</span>
