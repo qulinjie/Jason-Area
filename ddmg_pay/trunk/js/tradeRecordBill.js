@@ -280,7 +280,6 @@ $(document).on('click', '#add-check-new', function(event){
 	            $("#add-check-hint").html(result.msg + '(' + result.code + ')' + ',请刷新页面').fadeIn();
 	        } else {
 	        	$('#info-check-trade').html(result.data.tradeRecord_check);
-	        	window.location.reload();
 	        }
 	    },
 	    'json'
