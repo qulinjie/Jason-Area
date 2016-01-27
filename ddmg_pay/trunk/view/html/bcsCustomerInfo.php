@@ -155,9 +155,9 @@
 	       </span>
 	    </div>
 	  </div>
-	  
+	  <!-- 
 	  <button type="button" class="btn btn-primary" id="for-loadCustInfo-btn">更新客户信息（测试）</button>
-	  
+	   -->
 	</div>
   </div>
 </div>
