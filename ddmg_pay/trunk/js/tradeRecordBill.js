@@ -329,11 +329,13 @@ function add_check(){
                 //$("#btn-add-check").html("确定支付");
             }else {
                 $("#info-pay-hint").html(result.msg + ', 关闭...').fadeIn();
-                setTimeout(function(){
+                window.location.reload();
+               /* setTimeout(function(){
                     $("#info-check-modal").modal('hide');
                     $("#btn-add-check").removeAttr('disabled');
+                   
                     //$("#btn-add-check").html("确定支付");
-                }, 500);
+                }, 500);*/
             }
         },
         'json'
