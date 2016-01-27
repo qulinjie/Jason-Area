@@ -268,7 +268,7 @@ class TradeRecordController extends BaseController {
                 Log::error('registerNet update tradeRecord status error');
                 EC::fail(EC_UPD_FAI);
             }else{           
-                $params = array('check_status' => TradeRecordModel::$_check_status_y,'id' => $data['data'][0]['id'],'user_id' => $data['data'][0]['user_id']);
+                $params = array('check_status' => TradeRecordModel::$_check_status_y,'id' => $data['data'][0]['id'],'user_id' => $data['data'][0]['user_id'],'check_timestamp' => date('Y-m-d H:i:s'));
                 $data = $this->model('tradeRecord')->update($params);
                 if($data['code'] !== EC_OK){
                     Log::error('registerNet update tradeRecord status error');
