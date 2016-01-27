@@ -80,20 +80,26 @@
                 <span class="dj">单价（元/ 吨）</span>
                 <span class="dg">订购量（吨）</span>
                 <span class="je">订单金额（元）</span>
+                <span class="sfn">实提数量（件）</span>
+                <span class="sfw">实提重量（吨）</span>
+                <span class="sfje">实提金额（元）</span>
             </div>
             <?php foreach ($item['list'] as $v){?>
             <div class="three">
                 <span class="dh"><?php echo $v['order_no'];?></span>
                 <span class="pm"><?php echo $v['item_name'];?></span>
-                <span class="gg"><?php echo $v['item_type'];?></span>
-                <span class="cz"><?php echo $v['item_size'];?></span>
+                <span class="gg"><?php echo $v['item_size'];?></span>
+                <span class="cz"><?php echo $v['item_type'];?></span>                
                 <span class="jh"><?php echo $v['item_delivery_addr'];?></span>
                 <span class="dj"><?php echo number_format($v['item_price'],2);?></span>
                 <span class="dg"><?php echo $v['item_weight'];?></span>
                 <span class="je"><?php echo number_format($v['item_amount'],2);?></span>
+                <span class="sfn"><?php echo $v['item_count_send'];?></span>
+                <span class="sfw"><?php echo number_format($v['item_weight_send'],3);?></span>
+                <span class="sfje"><?php echo number_format($v['item_amount_send'],2);?></span>
             </div>
             <?php }?>
-            <div class="four">合计：<em><?php echo number_format($item['order_bid_amount'],2);?></em>元</div>
+            <div class="four">合计：<em><?php echo number_format($item['order_bid_amount'],2);?></em>元 &nbsp;<em><?php echo number_format(array_sum(array_column($item['list'], 'item_amount_send')),2);?></em>元</div>
       </div>
     <?php }?>
     </span>
