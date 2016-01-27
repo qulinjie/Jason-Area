@@ -72,7 +72,7 @@
                 <span class="dh">公司电话：<?php echo $item['partner_company_tel'];?></span>
             </div>
             <div class="two">
-                <span class="dh">订单号</span>
+                <!-- span class="dh">订单号</span-->
                 <span class="pm">品名</span>
                 <span class="gg">规格</span>
                 <span class="cz">材质</span>
@@ -86,7 +86,7 @@
             </div>
             <?php foreach ($item['list'] as $v){?>
             <div class="three">
-                <span class="dh"><?php echo $v['order_no'];?></span>
+                <!-- span class="dh"><?php echo $v['order_no'];?></span-->
                 <span class="pm"><?php echo $v['item_name'];?></span>
                 <span class="gg"><?php echo $v['item_size'];?></span>
                 <span class="cz"><?php echo $v['item_type'];?></span>                
