@@ -82,7 +82,7 @@ return array(
     
         // BCS-str
         'MCH_NO' => 8001529592,
-        'pay_user_id' => 1021,
+        'pay_user_id' =>1022, //1021,
         // BCS-end
     
     'private_key'	=>	'-----BEGIN PRIVATE KEY-----
