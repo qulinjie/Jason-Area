@@ -116,6 +116,10 @@ $(document).ready(function(){
 		$("#entity-search-status").val("-1");
 	}
 	
+	
+	// 更新金额
+	$.post(BASE_PATH + 'bcsCustomer/loadInfo', {},function(result){},'json');
+	
 	/**************str--更新****************/
 	$(document).on('click', '#entity-loadInfo-btn', function(event){
 		var user_id =  $(this).parent().parent().parent().children().get(1).textContent;
