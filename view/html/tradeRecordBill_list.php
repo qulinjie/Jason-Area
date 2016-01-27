@@ -99,7 +99,13 @@
                 <span class="sfje"><?php echo number_format($v['item_amount_send'],2);?></span>
             </div>
             <?php }?>
-            <div class="four">合计：<em><?php echo number_format($item['order_bid_amount'],2);?></em>元 &nbsp;<em><?php echo number_format(array_sum(array_column($item['list'], 'item_amount_send')),2);?></em>元</div>
+            <div class="four">
+            <sapn style="padding-right: 339px;">合计：<em><?php echo number_format($item['order_bid_amount'],2);?></em>元</sapn>
+            &nbsp;
+            <span style="padding-right: 30px;">
+            <em><?php echo number_format(array_sum(array_column($item['list'], 'item_amount_send')),2);?></em>元</span>
+            &nbsp;&nbsp;&nbsp;&nbsp;
+            </div>
       </div>
     <?php }?>
     </span>
