@@ -153,6 +153,9 @@ $(function () {
         /**********************************index end*********************************************/
     } else {
         /**********************************login start*********************************************/
+    	$('#getPinCode').click(function(){
+    		this.src = BASE_PATH + 'user/getPinCode?r=' + Math.random();
+    	});
         $('#password,#account,#pinCode').on('keydown', function (event) {
             if (event.which == 13) {
                 $('#loginBtn').click();
