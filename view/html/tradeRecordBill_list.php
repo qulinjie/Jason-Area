@@ -52,17 +52,19 @@
             <span class="sj"><?php echo $item['order_timestamp'];?></span>
             <span class="mj"><?php echo $item['user_id'];?></span>
             <span class="je"><?php echo number_format($item['order_bid_amount'],2);?></span>
-            <span class="xm" style="left: 760px;"><?php echo $item['pay_timestamp'];?></span>
-            <span class="xm" style="left: 910px;"><?php echo (TradeRecordModel::$_send_status_n == $item['send_status'])?'冻结':'正常';?></span>
-            <span class="fk" style="left: 1017px;">
-                <?php if( TradeRecordModel::$_send_status_n == $item['send_status'] ){ ?> <!-- 未 确认发货 ，才能 登记实发 (发货状态 1-未发货 2-已发货) -->
+            <span class="xm" style="left: 760px;top:19px;"><?php echo $item['pay_timestamp'];?></span>
+            <span class="xm" style="left: 910px;top:19px;"><?php echo (TradeRecordModel::$_send_status_n == $item['send_status'])?'冻结':'正常';?></span>
+            <span class="fk" style="left: 1017px;top:19px;">
+                <?php if( TradeRecordModel::$_send_status_n == $item['send_status'] ){ ?> <!-- 未确认发货  -->
                 <span><a id="add-check-new" href="#" data-toggle="modal"	data-keyboard="false" data-backdrop="static">登记实发</a></span>
-                <?php } else { echo '-'; } ?>
+                <?php } else { echo '已登记实发'; } ?>
             </span>
-            <span class="jf" style="left: 1097px;">
-                <?php if( TradeRecordModel::$_check_status_y == $item['check_status'] ){ ?> <!-- 已 登记实发 ，才能 确认发货  (实提登记状态 1-未登记 2-已登记) -->
-                <span><a id="entity-changeStatus-btn" href="#" data-toggle="modal" data-keyboard="false" data-backdrop="static" style="margin-left: 5px;">确认发货</a></span>
-                <?php } else { echo '-'; } ?>
+            <span class="jf" style="left: 1097px;top:19px;">
+                <?php if(TradeRecordModel::$_check_status_y == $item['check_status']){?>
+                    <?php if(TradeRecordModel::$_send_status_n == $item['send_status']){ ?> <!-- 先登记实发  未确认发货  -->
+                        <span><a id="entity-changeStatus-btn" href="#" data-toggle="modal" data-keyboard="false" data-backdrop="static" style="margin-left: 5px;">确认发货</a></span>
+                    <?php } else { echo '已确认发货'; } ?>
+                <?php }else{ echo '-';}?>    
             </span>
        </div>
        <div class="information" style="width:1198px;">

@@ -55,7 +55,7 @@
             <span class="phone"><?php echo $item['partner_tel']; ?></span>
             <?php if($item['order_status']==TradeRecordModel::$_status_waiting){ ?>
                 <span class="fk"><span><a id="add-pay-new" href="#" data-toggle="modal"	data-keyboard="false" data-backdrop="static">付款</a></span></span>
-                <span class="jf"><span><a id="entity-changeStatus-btn" href="#" data-toggle="modal" data-keyboard="false" data-backdrop="static" style="margin-left: 5px;">拒付</a></span></span>
+                <!--<span class="jf"><span><a id="entity-changeStatus-btn" href="#" data-toggle="modal" data-keyboard="false" data-backdrop="static" style="margin-left: 5px;">拒付</a></span></span>-->
             <?php }else if($item['order_status']==TradeRecordModel::$_status_paid) { ?>
                 <span class="fk">已付</span>
             <?php } else if($item['order_status']==TradeRecordModel::$_status_refuse) { ?>
