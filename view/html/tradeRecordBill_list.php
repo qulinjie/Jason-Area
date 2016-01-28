@@ -82,7 +82,7 @@
                 <span class="je">订单金额（元）</span>
                 <span class="sfn">实提数量（件）</span>
                 <span class="sfw">实提重量（吨）</span>
-                <span class="sfje">实提金额（元）</span>
+                <span class="sfje">应收金额（元）</span>
             </div>
             <?php foreach ($item['list'] as $v){?>
             <div class="three">
@@ -99,13 +99,7 @@
                 <span class="sfje"><?php echo number_format($v['item_amount_send'],2);?></span>
             </div>
             <?php }?>
-            <div class="four">
-            <sapn style="padding-right: 275px;">合计：<em><?php echo number_format($item['order_bid_amount'],2);?></em>元</sapn>
-            &nbsp;
-            <span style="padding-right: 30px;">
-            <em><?php echo number_format(array_sum(array_column($item['list'], 'item_amount_send')),2);?></em>元</span>
-            &nbsp;&nbsp;&nbsp;&nbsp;
-            </div>
+            <div class="four">合计：<em style="margin-right:272px;"><?php echo number_format($item['order_bid_amount'],2);?><span style="color: #000;">元</span></em> &nbsp;<em style="margin-right:26px;"><?php echo number_format(array_sum(array_column($item['list'], 'item_amount_send')),2);?><span style="color: #000;">元</span></em></div>
       </div>
     <?php }?>
     </span>
