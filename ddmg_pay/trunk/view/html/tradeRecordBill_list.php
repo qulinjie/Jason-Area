@@ -50,7 +50,7 @@
             <span style="display:none"><?php echo $item['id'];?><input type="hidden" value="<?php echo $item['order_status'];?>"></span>
             <span class="odd"><?php echo $item['order_no'];?></span>
             <span class="sj"><?php echo $item['order_timestamp'];?></span>
-            <span class="mj"><?php echo $item['user_id'];?></span>
+            <span class="mj"><?php echo $item['seller_name'];?></span>
             <span class="je"><?php echo number_format($item['order_bid_amount'],2);?></span>
             <span class="xm" style="left: 760px;top:19px;"><?php echo $item['pay_timestamp'];?></span>
             <span class="xm" style="left: 910px;top:19px;"><?php echo (TradeRecordModel::$_send_status_n == $item['send_status'])?'冻结':'正常';?></span>
