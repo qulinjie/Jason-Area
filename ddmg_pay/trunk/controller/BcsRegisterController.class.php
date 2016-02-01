@@ -463,7 +463,7 @@ class BcsRegisterController extends BaseController {
          //临时解决
          if(strstr($data['data'],'DDMG')){
              Log::error('bcsRegister create bank return cert been');
-             $this->model('bcsRegister')->update(['id' => $register_id,'status' => 2]);
+             $this->model('bcsRegister')->update(['id' => $bcsRegister_id,'status' => 2]);
              EC::fail(EC_CERT_BEEN);
          }
          
