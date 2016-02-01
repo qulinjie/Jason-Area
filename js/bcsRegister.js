@@ -141,6 +141,7 @@ $(document).ready(function(){
 	    var CUST_ADDR = $('#add-entity-CUST_ADDR').val();            // 客户地址
 	    var RMRK = $('#add-entity-RMRK').val();                 // 客户备注
 	    var company_name = $("#add-entity-company-name").val();
+	    var user_type = $("#add-entity-user-type").val();
 	    var comment = $("#add-entity-comment").val();
 	    
 	    var hint_html = '';
@@ -189,6 +190,10 @@ $(document).ready(function(){
         	hint_html += (hint_html == '' ? '' : '<BR>') + '请填写企业名称 ！' ;
         }
     	
+    	if('-1' == user_type ){
+        	hint_html += (hint_html == '' ? '' : '<BR>') + '请填写用户类型 ！' ;
+        }
+    	
 	    if(hint_html != ''){
 	        $("#add-entity-hint").html(hint_html).fadeIn();
 	        $("#btn-add-entity").removeAttr('disabled');
@@ -214,6 +219,7 @@ $(document).ready(function(){
 	        	'CUST_ADDR':CUST_ADDR,            // 客户地址
 	        	'RMRK':RMRK,                 // 客户备注
 	        	'company_name' :company_name,
+	        	'user_type' : user_type,
 		        'comment':comment
 	        },
 	        function(result){
@@ -312,6 +318,7 @@ $(document).ready(function(){
 		$('#add-entity-CUST_ADDR').val(data.CUST_ADDR);            // 客户地址
 		$('#add-entity-RMRK').val(data.RMRK);                 // 客户备注
 		$("#add-entity-company-name").val(data.company_name);
+	    $("#add-entity-user-type").val(data.user_type);
 		$("#add-entity-comment").val(data.comment);
 		
 		$('#btn-add-entity').show();
@@ -342,6 +349,7 @@ $(document).ready(function(){
 	    var CUST_ADDR = $('#add-entity-CUST_ADDR').val();            // 客户地址
 	    var RMRK = $('#add-entity-RMRK').val();                 // 客户备注
 	    var company_name = $("#add-entity-company-name").val();
+	    var user_type    =  $("#add-entity-user-type").val();
 	    var comment      = $("#add-entity-comment").val();
 	    
 	    var hint_html = '';
@@ -386,6 +394,9 @@ $(document).ready(function(){
         	hint_html += (hint_html == '' ? '' : '<BR>') + '请填写企业名称 ！' ;
         }
     	
+    	if('-1' == user_type ){
+        	hint_html += (hint_html == '' ? '' : '<BR>') + '请填写用户类型 ！' ;
+        }
     	
 	    if(hint_html != ''){
 	        $("#add-entity-hint").html(hint_html).fadeIn();
@@ -397,6 +408,7 @@ $(document).ready(function(){
 	    $.post(BASE_PATH + 'bcsRegister/update', {
 		    	'id':id,
 		    	'user_id':user_id,
+		    	'user_type': user_type,
 		    	'SIT_NO' :sit_no,
 		    	'account':account,
 		    	'password':password,
