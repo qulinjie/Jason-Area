@@ -185,6 +185,7 @@ class BcsRegisterController extends BaseController {
             'fields' => array(
                 'id',
                 'user_id',
+                'user_type',
                 'MCH_NO',
                 'ACCOUNT_NO',
                 'CUST_CERT_TYPE',
@@ -256,10 +257,11 @@ class BcsRegisterController extends BaseController {
             'CUST_TELE_NUM'        => $this->post('CUST_TELE_NUM'),       // 客户电话号码
             'CUST_ADDR'            => $this->post('CUST_ADDR'),       // 客户地址
             'RMRK'                 => $this->post('RMRK'),           // 客户备注          
-            'comment'              => $this->post('comment')           //管理员备注
+            'comment'              => $this->post('comment'),           //管理员备注
+            'user_type'            => $this->post('user_type')          //用户类型
         ];
                     
-        $filter = ['CUST_CERT_TYPE','CUST_CERT_NO','CUST_NAME','CUST_ACCT_NAME','CUST_SPE_ACCT_NO','CUST_SPE_ACCT_BKTYPE','ENABLE_ECDS','IS_PERSON','account','password','company_name'];
+        $filter = ['CUST_CERT_TYPE','CUST_CERT_NO','CUST_NAME','CUST_ACCT_NAME','CUST_SPE_ACCT_NO','CUST_SPE_ACCT_BKTYPE','ENABLE_ECDS','IS_PERSON','account','password','company_name','user_type'];
         if($params['CUST_SPE_ACCT_BKTYPE'] == '1'){
             $filter[] = 'CUST_SPE_ACCT_BKID';
             $filter[] = 'CUST_SPE_ACCT_BKNAME';
@@ -282,12 +284,12 @@ class BcsRegisterController extends BaseController {
         
         $data = $this->model('user')->create([
             'account'      => $params['account'],
+            'user_type'    => $params['user_type'],
             'password'     => $params['password'],
             'nicename'     => $params['CUST_NAME'],
             'company_name' => $params['company_name'],
             'comment'      => $params['comment'],
             'status'       => 1,
-            'user_type'    => 1,
             'is_delete'    => 1,
             'pay_password' => '',
             'personal_authentication_status' => 3,
@@ -316,7 +318,7 @@ class BcsRegisterController extends BaseController {
        
         $register_id = $data['data']['id'];
         $SIT_NO      = $data['data']['SIT_NO'];
-        unset($params['user_id'],$params['comment'],$params['is_delete'],$params['status'],$params['add_timestamp']);       
+        unset($params['user_id'],$params['comment'],$params['is_delete'],$params['status'],$params['add_timestamp'],$params['user_type']);       
         $params['SIT_NO'] =  $SIT_NO;
         
         $data = $this->model('bank')->registerCustomer($params);
@@ -365,6 +367,7 @@ class BcsRegisterController extends BaseController {
          $filter = [
              'id',
              'user_id',
+             'user_type',
              'company_name',
              'account',
              'MCH_NO',  
@@ -401,7 +404,8 @@ class BcsRegisterController extends BaseController {
              'account'              => $this->post('account'),
              'company_name'         => $this->post('company_name'),
              'comment'              => $this->post('comment'),
-             'password'             => self::decrypt($this->post('password'))
+             'password'             => self::decrypt($this->post('password')),
+             'user_type'            => $this->post('user_type')
          ];
          
          if($params['CUST_SPE_ACCT_BKTYPE'] == '1'){
@@ -426,7 +430,7 @@ class BcsRegisterController extends BaseController {
          $check['code'] !== EC_OK && EC::fail($check['code']);
          $check['data'] && $check['data'][0]['id'] != $params['user_id'] && EC::fail(EC_COMPANY_EST);
         
-         $user = ['id' => $params['user_id'], 'account' => $params['account'],'company_name' => $params['company_name'],'nicename' => $params['CUST_NAME'],'comment' => $params['comment']];
+         $user = ['id' => $params['user_id'], 'account' => $params['account'],'user_type' => $params['user_type'],'company_name' => $params['company_name'],'nicename' => $params['CUST_NAME'],'comment' => $params['comment']];
          $params['password'] && $user['password'] = md5($params['id'].$params['password']);
          
          $data = $this->model('user')->update($user);
@@ -438,7 +442,7 @@ class BcsRegisterController extends BaseController {
          
          //注册到银行
          $bcsRegister_id = $params['id'];
-         unset($params['id'],$params['user_id'],$params['comment']);       
+         unset($params['id'],$params['user_id'],$params['comment'],$params['user_type']);       
          $data = $this->model('bank')->registerCustomer($params);
     
          //临时方案 开始
