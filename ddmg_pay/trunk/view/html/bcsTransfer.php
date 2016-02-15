@@ -13,7 +13,7 @@
 			</div>
 			<div class="modal-body">
 				<form class="form-horizontal">
-				  <input type="hidden" class="form-control" id="info-entity-id" value=""></input>
+				  <input type="hidden" class="form-control" id="info-entity-id" value=""></input>				  
 				  <div class="form-group">
 				    <label for="add-entity-user_id" class="col-sm-2 control-label">用户登录帐号</label>
 				    <div class="col-sm-4">
@@ -135,17 +135,19 @@
   <div class="panel-body">
     <div class="form-inline">
       <div class="form-group">
+      <?php if(!UserController::getLoginUser()){?>
 	    <label for="entity-search-account">用户登录账号</label>
 	    <input type="text" class="form-control" id="entity-search-account" placeholder="用户登录账号">
 	  </div>
       <div class="form-group">
 	    <label for="entity-search-SIT_NO">席位号</label>
 	    <input type="email" class="form-control" id="entity-search-SIT_NO" placeholder="席位号">
-	  </div>
+	  </div>	  
 	  <div class="form-group">
 	    <label for="entity-search-FMS_TRANS_NO">资金监管交易流水号</label>
 	    <input type="email" class="form-control" id="entity-search-FMS_TRANS_NO" placeholder="资金监管交易流水号">
 	  </div>
+	  <?php }?>
 	  <div class="form-group">
 	    <label for="entity-search-time1">交易发送时间</label>
 	    <input type="email" class="form-control form_datetime" id="entity-search-time1" placeholder="注册时间">
