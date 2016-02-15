@@ -135,16 +135,16 @@
 				    </div>
 				  </div>
 				  <div class="form-group">
-				    <label for="add-entity-company-name" class="col-sm-2 control-label">企业名称</label>
+				    <label for="add-entity-company-name" class="col-sm-2 control-label">往来单位</label>
 				    <div class="col-sm-4">
-				      <input class="form-control" id="add-entity-company-name" placeholder="企业名称"></input>
+				      <input class="form-control" id="add-entity-company-name" placeholder="往来单位"></input>
 				    </div>
 				    <label for="add-entity-user-type" class="col-sm-2 control-label">用户类型</label>
 				    <div class="col-sm-4">
 				       <select class="form-control" id="add-entity-user-type">
 				          <option value="-1">请选择</option>
                 	      <option value="1">供应商</option>
-                	      <option value="2">财务</option>
+                	      <option value="2">合伙人</option>
                       </select>
 				    </div>
 				  </div>
