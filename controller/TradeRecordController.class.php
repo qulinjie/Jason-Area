@@ -562,8 +562,8 @@ class TradeRecordController extends BaseController {
 //         Log::error('----------------------------------trade_record_item------------------------------params==>>' . var_export($trade_record_item, true));
         
         $conf = $this->getConfig('conf');
-        // 商户付款ID（大汉账号）
-        $pay_user_id = $conf['pay_user_id'];
+        // 商户付款ID（大汉账号） 当前登陆用户
+        $pay_user_id = $this->getCurrentUserId();
         $user_model = $this->model('user');
         
         foreach ($trade_record_item as $itemKey => $itemVal){
