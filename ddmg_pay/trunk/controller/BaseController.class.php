@@ -252,9 +252,9 @@ abstract class BaseController extends Controller
         foreach (static::filter() as $key => $actList) {
             if (in_array(doit::$params[0], $actList)) {
                 switch ($key) {
-                    /* case 'token': //检查令牌
+                    case 'token': //检查令牌
                         UserController::checkToken($this->post('token'));//默认 post
-                        break; */ 
+                        break; 
                     case 'login': //检查登录
                         !UserController::isLogin() && EC::fail(EC_NOT_LOGIN);
                         break;
