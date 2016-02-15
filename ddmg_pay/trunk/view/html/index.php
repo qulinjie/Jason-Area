@@ -33,7 +33,8 @@
 <input type="hidden" id="isAdminLogin" value="<?php echo AdminController::isLogin();?>"/>
 <input type="hidden" id="view_page_type" value="<?php echo $page_type;?>"/>
 <input type="hidden" id="view_controller" value="<?php echo doit::$controller;?>"/>
-<input type="hidden" id="user_id" value="<?php echo $session->get('loginUser')['id']; ?>" />
+<input type="hidden" id="user_id" value="<?php echo $session->get('_loginUser')['id']; ?>" />
+<input type="hidden" id="user_type" value="<?php echo $session->get('_loginUser')['user_type']; ?>" />
 
 <!-- login-modal -->
 <div class="modal fade" id="admin-login-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" 
@@ -273,15 +274,18 @@
      </div>
      <div class="clear"></div>
      <ul  class="tabs" id="tabs" style="border: 1px solid #E4E4E4;background: #F4F4F4;height: 50px;width: 1200px;margin-left: 358px;">
+    	<?php if(2 == $session->get('_loginUser')['user_type'] ){ ?>
     	<li style="border-bottom: 1px solid #E4E4E4;border-right: 1px solid #E4E4E4;float: left;">
     	   <a href="#" id="order-waiting-list" style="height: 50px;width: 111px;padding: 18px;text-align: center;">待付款</a>
     	</li>
         <li style="border-bottom: 1px solid #E4E4E4;border-right: 1px solid #E4E4E4;float: left;">
             <a href="#" id="order-details-list" style="height: 50px;width: 111px;padding: 18px;text-align: center;">付款明细</a>
         </li>
+        <?php } else if(1 == $session->get('_loginUser')['user_type'] ){ ?>
         <li style="border-bottom: 1px solid #E4E4E4;border-right: 1px solid #E4E4E4;float: left;">
             <a href="<?php echo Router::getBaseUrl();?>tradeRecord/getIndexBill" id="order-bill-list" style="height: 50px;width: 111px;padding: 18px;text-align: center;">收款管理</a>
         </li>
+        <?php } ?>
         <!-- 
         <li style="margin-right:0; border-bottom: 1px solid #E4E4E4;"><a href="#" id="trade-details-list">资金查询</a></li>
         -->
