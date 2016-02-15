@@ -319,6 +319,18 @@ class UserController extends BaseController
         
         return true;
     }
+    
+    public static function isSeller()
+    {
+        $session = self::instance('session');
+        if(!$session->is_set('_loginUser')){
+            $session = self::getLoginUser();
+        }
+        if(1 == $session->get('_loginUser')['user_type'] ){
+            return true;
+        }
+        return false;
+    }
 
     public static function getLoginUser()
     {
