@@ -521,6 +521,14 @@ class TradeRecordController extends BaseController {
             EC::fail(EC_PAR_ERR);
         }
         
+        //获取合伙人ID
+        $partner_info = $this->model('user')->getList(array('user_type' => 2,'account' => $order['tel'] ,'fields' => array('id')));
+        if($partner_info['code'] !== EC_OK){
+            Log::error('create order params  partner not exist!');
+            EC::fail(EC_PAR_ERR);
+        }        
+        $pay_user_id  = $partner_info['data'][0]['id'];
+        
         $trade_record = array();
         $trade_record_item = array();
         $item_bid_amount = array();
@@ -560,10 +568,7 @@ class TradeRecordController extends BaseController {
         }
         
 //         Log::error('----------------------------------trade_record_item------------------------------params==>>' . var_export($trade_record_item, true));
-        
-        $conf = $this->getConfig('conf');
-        // 商户付款ID（大汉账号） 当前登陆用户
-        $pay_user_id = $this->getCurrentUserId();
+        // 商户付款ID（大汉账号） 跟合伙人电话一职
         $user_model = $this->model('user');
         
         foreach ($trade_record_item as $itemKey => $itemVal){
