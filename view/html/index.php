@@ -196,11 +196,10 @@
          <?php	}else if($page_type == 'bcsTradeStatusQuery'){?>
 			    <script src="<?php echo Router::getBaseUrl();?>js/bcsTradeStatusQuery.js"></script>
 			    <?php echo $bcsTradeStatusQuery_html;?>
-          <?php }else {?>
-              	<div class="jumbotron"> <!-- main page -->
-    <!--  			  <h1 class="text-center">大大买钢</h1>  -->
-    <!--              <img alt="品牌企业  实力非凡" src="view/images/cms_banner.jpg" width="100%"></<img> -->
-    			</div>
+         <?php	}else if($page_type == 'bcsCustomerInflow'){?>
+				  <?php echo $bcsCustomerInflow_html;?>
+		  <?php } else if($page_type == 'bcsCustomerIncomePay'){?>
+				  <?php echo $bcsCustomerIncomePay_html;?>
           <?php }?>
         </div>
         
@@ -305,19 +304,13 @@
 
 <div class="account" style="width: 1300px;">
     	<div class="left" style="height: 555px;">
-        	<ul>
-            	<li <?php if(doit::$controller == 'BcsTrade'){?> class="discolor" <?php } ?>>
-        			<a href="<?php echo Router::getBaseUrl();?>bcsTrade/getIndex">交易流水</a>
-        	    </li>
+        	<ul>            	
         	    <li <?php if(doit::$controller == 'BcsCustomer' && doit::$params[0] !='getInflow' && doit::$params[0] !='getIncomePay'){?> class="discolor" <?php } ?>>
         			<a href="<?php echo Router::getBaseUrl();?>bcsCustomer/getInfo">账户信息</a>
         	    </li>
-				<li <?php if(doit::$controller == 'BcsCustomer' && doit::$params[0] =='getInflow'){?> class="discolor" <?php } ?>>
-					<a href="<?php echo Router::getBaseUrl();?>bcsCustomer/getInflow">出入金明细</a>
-				</li>
-				<li <?php if(doit::$controller == 'BcsCustomer' && doit::$params[0] =='getIncomePay'){?> class="discolor" <?php } ?>>
-					<a href="<?php echo Router::getBaseUrl();?>bcsCustomer/getIncomePay">交易明细</a>
-				</li>
+        	    <li <?php if(doit::$controller == 'BcsTransfer'){?> class="discolor" <?php } ?>>
+        			<a href="<?php echo Router::getBaseUrl();?>bcsTransfer/getIndex">出入金</a>
+        	    </li>						
 				<li <?php if(doit::$controller == 'User'){?> class="discolor" <?php } ?>>
 					<a href="<?php echo Router::getBaseUrl();?>user/passwordReset">重置登录密码</a>
 				</li>
@@ -330,12 +323,12 @@
             </ul>
         </div>
         <div class="right">
-        	  <?php if($page_type == 'bcsTrade'){?>
-                    <script src="<?php echo Router::getBaseUrl();?>js/bcsTrade.js"></script>
-                    <?php echo $bcsTrade_html; ?>
-        	  <?php } else if($page_type == 'bcsCustomer'){?>
+                <?php if($page_type == 'bcsCustomer'){?>
         	        <script src="<?php echo Router::getBaseUrl();?>js/bcsCustomerInfo.js"></script>
         		    <?php echo $bcsCustomer_html; ?>
+        	  <?php }else if($page_type == 'bcsTransfer'){?>
+    			<script src="<?php echo Router::getBaseUrl();?>js/bcsTransfer.js"></script>
+		        <?php echo $bcsTransfer_html;?>        	 
         	  <?php } else if($page_type == 'user'){?>
         			<?php echo $password_html; ?>
         	  <?php }else if($page_type == 'message'){?>
@@ -343,10 +336,6 @@
         		    <div id="message-list"><?php echo $message_html;?></div>        	 
         	  <?php }else if($page_type == 'payPassword'){?>
 				  <?php echo $password_html; ?>
-			  <?php	}else if($page_type == 'bcsCustomerInflow'){?>
-				  <?php echo $bcsCustomerInflow_html;?>
-			  <?php } else if($page_type == 'bcsCustomerIncomePay'){?>
-				  <?php echo $bcsCustomerIncomePay_html;?>
 			  <?php }?>			  
         </div>
 </div>
