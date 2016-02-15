@@ -274,10 +274,13 @@ class BcsRegisterController extends BaseController {
         }
         
         //创建账户    
-        $checkComp = $this->model('user')->getList(['company_name' => $params['company_name'] ,'fields' => ['id']]);
-        $checkComp['code'] !== EC_OK && EC::fail($checkComp['code']);        
-        $checkComp['data'] && EC::fail(EC_COMPANY_EST);
-        
+        //供应商验证公司名称唯一
+        if($params['user_type'] == 1){
+            $checkComp = $this->model('user')->getList(['company_name' => $params['company_name'] ,'fields' => ['id']]);
+            $checkComp['code'] !== EC_OK && EC::fail($checkComp['code']);
+            $checkComp['data'] && EC::fail(EC_COMPANY_EST);
+        }
+      
         $checkAccount = $this->model('user')->getList(['account' => $params['account'] ,'fields' => ['id']]);
         $checkAccount['code'] !== EC_OK && EC::fail($checkAccount['code']);
         $checkAccount['data'] && EC::fail(EC_ACCOUNT_EST);
@@ -425,11 +428,13 @@ class BcsRegisterController extends BaseController {
          $check['code'] !== EC_OK && EC::fail($check['code']);
          $check['data'] && $check['data'][0]['id'] != $params['user_id'] && EC::fail(EC_ACCOUNT_EST);     
          
-         //检查公司名称         
-         $check = $this->model('user')->getList(['company_name' => $params['company_name'] ,'fields' => ['id']]);
-         $check['code'] !== EC_OK && EC::fail($check['code']);
-         $check['data'] && $check['data'][0]['id'] != $params['user_id'] && EC::fail(EC_COMPANY_EST);
-        
+         //检查公司名称 
+         if($params['user_type'] == 1){
+             $check = $this->model('user')->getList(['company_name' => $params['company_name'] ,'fields' => ['id']]);
+             $check['code'] !== EC_OK && EC::fail($check['code']);
+             $check['data'] && $check['data'][0]['id'] != $params['user_id'] && EC::fail(EC_COMPANY_EST);
+         }
+         
          $user = ['id' => $params['user_id'], 'account' => $params['account'],'user_type' => $params['user_type'],'company_name' => $params['company_name'],'nicename' => $params['CUST_NAME'],'comment' => $params['comment']];
          $params['password'] && $user['password'] = md5($params['id'].$params['password']);
          
