@@ -28,6 +28,11 @@ class BcsInflowController extends BaseController
 
     private function search($isSearch = false)
     {
+        if(!$isSearch){
+            $bcsInflow_html = $this->render('bcsInflow',array('bcsInflow_list_html' => ''),true);
+            return $this->render('index', array(  'page_type' => 'bcsInflow', 'bcsInflow_html' => $bcsInflow_html ));
+        }
+        
         $params = array(
             'SIT_NO'                => $this->post('SIT_NO'),
             'START_DATE'        => $this->post('START_DATE'),
@@ -53,16 +58,7 @@ class BcsInflowController extends BaseController
         
         Log::notice('bcsInflow<<<<'.var_export($bcs_data));
         $bcsInflow_list_html = $this->render('bcsInflow_list',array('data' => $bcs_data['data']),true);
-        
-        if($isSearch){
-            EC::success(EC_OK,$bcsInflow_list_html);
-        }
-        
-        $bcsInflow_html = $this->render('bcsInflow',array('bcsInflow_list_html' => $bcsInflow_list_html),true);
-      
-        $this->render('index', array(
-            'page_type' => 'bcsInflow',
-            'bcsInflow_html' => $bcsInflow_html
-        ));
+
+        EC::success(EC_OK,$bcsInflow_list_html);
     }
 }
