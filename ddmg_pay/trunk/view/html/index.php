@@ -167,6 +167,12 @@
     			<li <?php if(doit::$controller == 'BcsTransfer'){?> class="active" <?php } ?>>
         			<a href="<?php echo Router::getBaseUrl();?>bcsTransfer/getIndex">出入金</a>
         	    </li>
+        	    <li <?php if(doit::$controller == 'BcsInflow'){?> class="active" <?php } ?>>
+        			<a href="<?php echo Router::getBaseUrl();?>bcsInflow/getIndex">银行出入金</a>
+        	    </li>
+    			<li <?php if(doit::$controller == 'BcsIncomPay'){?> class="active" <?php } ?>>
+        			<a href="<?php echo Router::getBaseUrl();?>bcsIncomPay/getIndex">银行交易明细</a>
+        	    </li>
         	    <li <?php if(doit::$controller == 'BcsTrade' && $page_type == 'bcsTradeStatusQuery'){?> class="active" <?php } ?>>
         			<a href="<?php echo Router::getBaseUrl();?>bcsTrade/tradeStatusQueryIndex">交易状态查询</a>
         	    </li>
@@ -196,13 +202,14 @@
          <?php	}else if($page_type == 'bcsTradeStatusQuery'){?>
 			    <script src="<?php echo Router::getBaseUrl();?>js/bcsTradeStatusQuery.js"></script>
 			    <?php echo $bcsTradeStatusQuery_html;?>
-         <?php	}else if($page_type == 'bcsCustomerInflow'){?>
-				  <?php echo $bcsCustomerInflow_html;?>
-		  <?php } else if($page_type == 'bcsCustomerIncomePay'){?>
-				  <?php echo $bcsCustomerIncomePay_html;?>
+         <?php	}else if($page_type == 'bcsInflow'){?>
+                  <script src="<?php echo Router::getBaseUrl();?>js/bcsInflow.js"></script>
+				  <?php echo $bcsInflow_html;?>
+		  <?php } else if($page_type == 'bcsIncomPay'){?>
+		          <script src="<?php echo Router::getBaseUrl();?>js/bcsIncomPay.js"></script>
+				  <?php echo $bcsIncomPay_html;?>
           <?php }?>
         </div>
-        
       </div>
     </div>
     
