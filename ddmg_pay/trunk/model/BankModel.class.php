@@ -241,7 +241,7 @@ class BankModel extends CSBankSoap
 
 		$requestParms = [];
 		//必填字段
-		foreach(['MCH_NO','SIT_NO','PAGE_NUMBER','PAGE_SIZE'] as $v){
+		foreach(['MCH_NO','PAGE_NUMBER','PAGE_SIZE'] as $v){
 			if (!isset($params[$v]) || !$requestParms[$v] = $params[$v]) {
 				Log::bcsError('customerInflowQuery params required field miss');
 				return false;
