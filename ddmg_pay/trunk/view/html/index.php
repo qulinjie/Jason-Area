@@ -170,9 +170,9 @@
         	    <li <?php if(doit::$controller == 'BcsInflow'){?> class="active" <?php } ?>>
         			<a href="<?php echo Router::getBaseUrl();?>bcsInflow/getIndex">银行出入金</a>
         	    </li>
-    			<li <?php if(doit::$controller == 'BcsIncomPay'){?> class="active" <?php } ?>>
+    			<!--  <li <?php if(doit::$controller == 'BcsIncomPay'){?> class="active" <?php } ?>>
         			<a href="<?php echo Router::getBaseUrl();?>bcsIncomPay/getIndex">银行交易明细</a>
-        	    </li>
+        	    </li>-->
         	    <li <?php if(doit::$controller == 'BcsTrade' && $page_type == 'bcsTradeStatusQuery'){?> class="active" <?php } ?>>
         			<a href="<?php echo Router::getBaseUrl();?>bcsTrade/tradeStatusQueryIndex">交易状态查询</a>
         	    </li>
