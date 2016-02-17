@@ -63,6 +63,6 @@ class BcsInflowController extends BaseController
         
         $bcsInflow_list_html = $this->render('bcsInflow_list',array('data' => $bcs_data['data']),true);
 
-        EC::success(EC_OK,$bcsInflow_list_html);
+        EC::success(EC_OK,array('bcsInflow_list_html' => $bcsInflow_list_html ));
     }
 }
