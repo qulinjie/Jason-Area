@@ -50,6 +50,7 @@ class BcsInflowController extends BaseController
         $params['PAGE_NUMBER']  = $this->post('PAGE_NUMBER',1);
         $params['MCH_NO']           = $this->getConfig('conf')['MCH_NO'];
       
+        Log::error('request data<<<'.var_export($params,true));
         $bcs_data = $this->model('bank')->customerInflowQuery($params);       
         if ($bcs_data['code'] !== 0) {
             Log::bcsError('bcsInflow error code(' . $bcs_data['code'] . ')' . ' msg：' . $bcs_data['msg']);
