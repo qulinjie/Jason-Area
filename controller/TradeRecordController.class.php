@@ -523,8 +523,8 @@ class TradeRecordController extends BaseController {
         
         //获取合伙人ID
         $partner_info = $this->model('user')->getList(array('user_type' => 2,'account' => $order['tel'] ,'fields' => array('id')));
-        if($partner_info['code'] !== EC_OK){
-            Log::error('create order params  partner not exist!');
+        if($partner_info['code'] !== EC_OK || !$partner_info['data']){
+            Log::error('create order  partner not exist!');
             EC::fail(EC_PAR_ERR);
         }        
         $pay_user_id  = $partner_info['data'][0]['id'];
