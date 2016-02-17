@@ -57,7 +57,10 @@ class BcsInflowController extends BaseController
             EC::fail(EC_OTH);
         }
         
-        Log::notice('bcsInflow<<<<'.var_export($bcs_data));
+        if($bcs_data['data']['List'] && !isset($bcs_data['data']['List'][0])){
+            $bcs_data['data']['List'] = array($bcs_data['data']['List']);
+        }
+        
         $bcsInflow_list_html = $this->render('bcsInflow_list',array('data' => $bcs_data['data']),true);
 
         EC::success(EC_OK,$bcsInflow_list_html);
