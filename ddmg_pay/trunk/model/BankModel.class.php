@@ -249,7 +249,7 @@ class BankModel extends CSBankSoap
 		}
 
 		// 非必填字段
-		foreach ( ['START_DATE', 'END_DATE', 'FMS_TRANS_NO', 'MCH_TRANS_NO'] as $v ){
+		foreach ( ['START_DATE', 'END_DATE', 'FMS_TRANS_NO', 'MCH_TRANS_NO','SIT_NO'] as $v ){
 			isset($params[$v]) && $params[$v] && $requestParms[$v] = $params[$v];
 		}
 
