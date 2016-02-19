@@ -337,11 +337,12 @@ class UserController extends BaseController
         $session = self::instance('session');
         if(!$loginUser = $session->get('_loginUser')){
             $data = self::model('user')->getLoginUser();
+            Log::notice("getLoginUser . data = ##" . json_encode($data) . "##");
             if($data['code'] === EC_OK){
                 $session->set('_loginUser',$data['data']);               
                 return $data['data'];
             }else{
-                Log::error('User getLoginUser not login');
+                Log::error('User getLoginUser not login . return empty data . ');
                 return [];
             }
         }
