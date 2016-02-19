@@ -356,7 +356,7 @@ class BcsRegisterController extends BaseController {
         }      
         //临时方案结束
         
-        $ACCOUNT_NO = substr($ACCOUNT_NO,strlen('<ACCOUNT_NO>'),23);
+        $ACCOUNT_NO = substr($ACCOUNT_NO,0,strlen($ACCOUNT_NO)-strlen(strstr($ACCOUNT_NO, '<\/ACCOUNT_NO>')));
         $data = $this->model('bcsRegister')->update(['ACCOUNT_NO' => $ACCOUNT_NO,'id' => $register_id]);
         if($data['code'] !== EC_OK){
             Log::error('bcsRegister create update  ACCOUNT_NO error');
