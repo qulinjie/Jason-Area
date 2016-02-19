@@ -397,7 +397,7 @@ class BcsCustomerController extends BaseController {
         $params['MBR_TELENO'] = empty($bcs_data['MBR_TELENO'])?'':$bcs_data['MBR_TELENO']; // 电话
         $params['MBR_PHONE'] = empty($bcs_data['MBR_PHONE'])?'':$bcs_data['MBR_PHONE']; // 手机号
         $params['ACCT_BAL'] = $bcs_data['ACCT_BAL']; // 余额
-        $params['AVL_BAL'] = $bcs_data['ACCOUNT_NO']; // 可用余额
+        $params['AVL_BAL'] = $bcs_data['AVL_BAL']; // 可用余额
         $params['SIGNED_DATE'] = strval($bcs_data['SIGNED_DATE']); // 开户日期
         $params['ACT_TIME'] = strval($bcs_data['ACT_TIME']); // 签约时间（时间格式：YYYY-MM-DD HH24:MI:SS）
         
