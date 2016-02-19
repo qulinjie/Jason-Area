@@ -61,8 +61,8 @@
 	       </span>
 	    </div>
 	  </div>
-	  <button type="button" class="btn btn-primary" id="for-loadMarketInfo-btn">更新市场信息（测试）</button>
-	  <button type="button" class="btn btn-primary" id="for-loadMarketChildAccount-btn">更新市场子账号信息（测试）</button>
+	  <button type="button" class="btn btn-primary" id="for-loadMarketInfo-btn">更新市场信息</button>
+	  <button type="button" class="btn btn-primary" id="for-loadMarketChildAccount-btn">更新市场子账号信息</button>
 	</div>
   </div>
 </div>
