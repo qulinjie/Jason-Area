@@ -384,8 +384,8 @@ class BcsCustomerController extends BaseController {
         $bcs_data = $bcs_data['data'];
         
         $params['ACCOUNT_NO'] = $bcs_data['ACCOUNT_NO']; // 客户虚拟账号
-        $params['SIT_NO'] = $bcs_data['SIT_NO']; // 客户席位号
-        $params['MBR_STS'] = $bcs_data['MBR_STS']; // 客户状态 1-已注册；2-已签约；3-已注销
+//         $params['SIT_NO'] = $bcs_data['SIT_NO']; // 客户席位号
+        $params['MBR_STS'] = 2;//$bcs_data['MBR_STS']; // 客户状态 1-已注册；2-已签约；3-已注销
         $params['MBR_CERT_TYPE'] = $bcs_data['MBR_CERT_TYPE']; // 会员证件类型
         $params['MBR_CERT_NO'] = $bcs_data['MBR_CERT_NO']; // 会员证件号码
         $params['MBR_NAME'] = $bcs_data['MBR_NAME']; // 会员名称
