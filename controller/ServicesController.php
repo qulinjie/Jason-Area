@@ -82,8 +82,10 @@ class ServicesController extends Controller {
                 Log::bcsError('bank callback update customer info error msg('.$data['msg'].')');
             }
         }else{
-            $customer['user_id']       = $user_id;
+            $customer['user_id']              = $user_id;
             $customer['add_timestamp'] = date('Y-m-d H:i:s');
+            $customer['ACCOUNT_NO']   = $reqData['ACCOUNT_NO'];
+            $customer['SIT_NO']              = $reqData['SIT_NO'];
             $data = $this->model('bcsCustomer')->create($customer);
             if($data['code'] !== EC_OK){
                 Log::bcsError('bank callback create customer info error msg('.$data['msg'].')');
