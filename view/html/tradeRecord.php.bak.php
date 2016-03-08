@@ -34,7 +34,7 @@
 	</div>
 </div>
 
-
+<!--
 <div class="panel panel-primary">
   <div class="panel-body">
     <div class="form-inline">
@@ -42,7 +42,7 @@
 	    <label for="entity-search-order_no">订单号</label>
 	    <input type="text" class="form-control" id="entity-search-order_no" placeholder="订单号">
 	  </div>
-	  <div class="form-group" style="display:none">
+	  <div class="form-group">
 	    <label for="entity-search-time">添加时间</label>
 	    <input type="text" class="form-control form_datetime" id="entity-search-time1" placeholder="添加时间">
 	    -
@@ -55,14 +55,14 @@
 	    <input type="text" class="form-control form_datetime" id="entity-search-order_time2" placeholder="时间">
 	  </div>
 	  <div class="form-group">
-	    <label for="entity-search-seller_name">供应商</label>
-	    <input type="text" class="form-control" id="entity-search-seller_name" placeholder="供应商">
+	    <label for="entity-search-seller_name">卖家</label>
+	    <input type="text" class="form-control" id="entity-search-seller_name" placeholder="卖家">
 	  </div>
 	  <div class="form-group">
 	    <label for="entity-search-seller_conn_name">业务员</label>
 	    <input type="text" class="form-control" id="entity-search-seller_conn_name" placeholder="业务员">
 	  </div>
-	  <div class="form-group" style="display:none">
+	  <div class="form-group">
 	    <label for="entity-search-order_sum_amount">金额</label>
 	    <input type="text" class="form-control" id="entity-search-order_sum_amount1" placeholder="金额">
 	    -
@@ -89,6 +89,29 @@
 	</div>
   </div>
 </div>
+-->
+
+<select id="entity-search-order_status" style="display: none;">
+  <option value="-1">全部</option>
+  <option value="1">待付</option>
+  <option value="2">已付</option>
+  <option value="3">拒付</option>
+</select>
+
+<div class="seek"> 
+    <p class="p1">
+        <span class="dh">单号<input type="text" id="entity-search-order_no"/></span>
+        <span class="sj">时间<input style=" margin-left:6px;" type="text" class="form_datetime" id="entity-search-order_time1"/><b>—</b><input type="text" class="form_datetime" id="entity-search-order_time2"/></span>
+        <span class="mj">供应商<input type="text" id="entity-search-seller_name"/></span>
+    </p>
+    <p class="p2"> 
+        <span class="yw">业务员<input type="text" id="entity-search-seller_conn_name"/></span>
+        <span class="je">金额<input style=" margin-left:6px;" type="text" id="entity-search-order_sum_amount1"/><b>—</b><input type="text" id="entity-search-order_sum_amount2"/></span>
+        <input class="query"  type="button" value="查询" id="entity-search-btn"/>
+    </p>
+    <div class="alert alert-danger  search-list-hint" id="search-list-hint"></div>    
+</div>
+
 
 <div  id="entity-list">
 <?php echo $entity_list_html; ?>

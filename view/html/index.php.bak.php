@@ -226,54 +226,94 @@
 	<script type="text/javascript" src="<?php echo Router::getBaseUrl();?>js/admin.js"></script>
 <?php } else {?>
 
-<nav class="navbar navbar-inverse navbar-fixed-top">
-      <div class="container-fluid">
-        <div class="navbar-header">
-          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-            <span class="sr-only">Toggle navigation</span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </button>
-          <!-- <a class="navbar-brand" href="<?php echo Router::getBaseUrl();?>"></a> 
-          <img alt="运营系统" src="<?php echo Router::getBaseUrl();?>view/images/banner.png" style="margin-top: 10px;"/>-->
-          <div style='color: white;font-size: 24px;margin-top: 6px;'>大大买钢支付管理系统</div>
+<link href="<?php echo Router::getBaseUrl();?>css/index.css" type="text/css" rel="stylesheet" />
+
+<div class="entirety">
+
+    <div class="t1" style="background:#f4f4f4">
+        <div class="top1">
+            <div class="left"><span>您好！</span><span><?php echo  UserController::getLoginUser()['account']; ?></span><span><a href="javascript:void(0);" id="logoutBtn">退出</a></span></div>
+            <div class="right"><span><a href="">大大买钢首页</a></span><span><a href="">大大买钢APP</a></span></div>
         </div>
-        <div id="navbar" class="navbar-collapse collapse">
-          <ul class="nav navbar-nav navbar-right">
-            <li style="color: white;vertical-align:middle;line-height:50px;">
-                <span><?php echo  UserController::getLoginUser()['account']; ?></span>
-            </li>
-            <li style="color: white;vertical-align:middle;line-height:50px;">
-                &nbsp;&nbsp; <?php echo $session->get('loginUser')['name']; ?>
-            </li>
-<!--             <li><a id="user-chg-pwd-btn" href="#">修改密码</a></li> -->
-            <li style="color: white;vertical-align:middle;line-height:50px;">
-                <span><a href="javascript:void(0);" id="logoutBtn">退出</a></span>
-            </li>
-          </ul>
-          <input type="hidden" id="type-is-admin-tip" value="<?php if( AdminController::isAdmin()){?>1<?php } else {?>2<?php }?>"/>
-          <!-- <form class="navbar-form navbar-right">
-            <input type="text" class="form-control" placeholder="Search...">
-          </form>
-           -->
-        </div>
+    </div>
+    <div class="t2">
+        <div class="top2">
+                <div class="logo"><a href="index.html"><img src="<?php echo Router::getBaseUrl();?>/view/images/logo.png" /></a></div>
+         </div>
       </div>
-    </nav>
-    
-      <!-- 左侧菜单 -->
-      <div class="container-fluid">
-      <div class="row">
-        <div class="col-sm-3 col-md-2 sidebar">
-          <ul id="li-menu-list" class="nav nav-sidebar">
-			<li <?php if(doit::$controller == 'BcsCustomer' && doit::$params[0] !='getInflow' && doit::$params[0] !='getIncomePay'){?> class="discolor" <?php } ?>>
+    <div class="t3">
+            <div class="nav">
+                <ul>
+                    <li <?php if(doit::$controller == 'TradeRecord'){?> class="color" <?php } ?>>
+                        <a href="<?php echo Router::getBaseUrl();?>tradeRecord/getIndex">我的大大付款</a>
+                    </li>
+                    <li <?php if(doit::$controller != 'TradeRecord'){?> class="color" <?php } ?>>
+						<a href="<?php echo Router::getBaseUrl();?>bcsCustomer/getInfo">账户管理</a>
+					</li>
+                </ul>
+            </div>
+     </div>
+     <div class="clear"></div>
+      
+<?php if($page_type == 'tradeRecord'){?>
+     <div class="t4">
+     		<div class="left">
+            	<div class="tx"><img src="<?php echo Router::getBaseUrl();?>/view/images/headerImg.png" /></div>
+                <div class="tm">
+                	<p>账户：<?php echo  UserController::getLoginUser()['account']; ?></p>
+                </div>
+            </div>
+            <div class="right">
+            	<div class="money">
+                    <div class="balance">可用余额</div>
+                    <div class="how"><em><?php echo $bcsCustomerInfo['ACCT_BAL'];?></em><span>元</span>
+                        <!--  
+                        <span>
+                            <a href="">充值</a>
+                            <a href="">提现</a>
+                        </span>
+                        <a href="">查看</a>
+                        -->
+                    </div>
+                </div>
+            </div>
+     </div>
+     <div class="clear"></div>
+     <ul  class="tabs" id="tabs" style="border: 1px solid #E4E4E4;background: #F4F4F4;height: 50px;width: 1200px;margin-left: 358px;">
+    	<?php if(2 == $session->get('_loginUser')['user_type'] ){ ?>
+    	<li style="border-bottom: 1px solid #E4E4E4;border-right: 1px solid #E4E4E4;float: left;">
+    	   <a href="#" id="order-waiting-list" style="height: 50px;width: 111px;padding: 18px;text-align: center;">待付款</a>
+    	</li>
+        <li style="border-bottom: 1px solid #E4E4E4;border-right: 1px solid #E4E4E4;float: left;">
+            <a href="#" id="order-details-list" style="height: 50px;width: 111px;padding: 18px;text-align: center;">付款明细</a>
+        </li>
+        <?php } else if(1 == $session->get('_loginUser')['user_type'] ){ ?>
+        <li style="border-bottom: 1px solid #E4E4E4;border-right: 1px solid #E4E4E4;float: left;">
+            <a href="<?php echo Router::getBaseUrl();?>tradeRecord/getIndexBill" id="order-bill-list" style="height: 50px;width: 111px;padding: 18px;text-align: center;">收款管理</a>
+        </li>
+        <?php } ?>
+        <!-- 
+        <li style="margin-right:0; border-bottom: 1px solid #E4E4E4;"><a href="#" id="trade-details-list">资金查询</a></li>
+        -->
+    </ul>
+     <div class="tab">
+        <ul class="tab_conbox" id="tab_conbox">
+        <?php if(doit::$params[0] =='getIndexBill'){ ?>
+            <script src="<?php echo Router::getBaseUrl();?>js/tradeRecordBill.js"></script>
+            <?php echo $tradeRecordBill_html; ?>
+        <?php } else {?>
+            <script src="<?php echo Router::getBaseUrl();?>js/tradeRecord.js"></script>
+            <?php echo $tradeRecord_html; ?>
+        <?php } ?>
+        </ul>
+    </div>
+<?php } else {?>
+
+<div class="account" style="width: 1300px;">
+    	<div class="left" style="height: 555px;">
+        	<ul>            	
+        	    <li <?php if(doit::$controller == 'BcsCustomer' && doit::$params[0] !='getInflow' && doit::$params[0] !='getIncomePay'){?> class="discolor" <?php } ?>>
         			<a href="<?php echo Router::getBaseUrl();?>bcsCustomer/getInfo">账户信息</a>
-        	    </li>
-        	    <li <?php if(doit::$controller == 'TradeRecord' && doit::$params[0] =='getIndexBill'){?> class="discolor" <?php } ?>>
-        			<a href="<?php echo Router::getBaseUrl();?>tradeRecord/getIndexBill">收款信息</a>
-        	    </li>
-        	    <li <?php if(doit::$controller == 'TradeRecord'){?> class="discolor" <?php } ?>>
-        			<a href="<?php echo Router::getBaseUrl();?>tradeRecord/getIndex">付款信息</a>
         	    </li>
         	    <li <?php if(doit::$controller == 'BcsTransfer'){?> class="discolor" <?php } ?>>
         			<a href="<?php echo Router::getBaseUrl();?>bcsTransfer/getIndex">出入金</a>
@@ -287,23 +327,15 @@
         		<li <?php if(doit::$controller == 'Message'){?> class="discolor" <?php } ?>>
         			  <a href="<?php echo Router::getBaseUrl();?>message/getIndex">消息提醒</a>
         		</li>
-          </ul>
+            </ul>
         </div>
-        
-        <!-- 右侧内容页面 -->
-        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
-          <?php if($page_type == 'bcsCustomer'){?>
+        <div class="right">
+                <?php if($page_type == 'bcsCustomer'){?>
         	        <script src="<?php echo Router::getBaseUrl();?>js/bcsCustomerInfo.js"></script>
         		    <?php echo $bcsCustomer_html; ?>
-        	  <?php }else if($page_type == 'tradeRecordBill'){?>
-        	        <script src="<?php echo Router::getBaseUrl();?>js/tradeRecordBill.js"></script>
-                    <?php echo $tradeRecordBill_html; ?>
-        	  <?php }else if($page_type == 'tradeRecord'){?>
-        	        <script src="<?php echo Router::getBaseUrl();?>js/tradeRecord.js"></script>
-                    <?php echo $tradeRecord_html; ?>
         	  <?php }else if($page_type == 'bcsTransfer'){?>
-    			    <script src="<?php echo Router::getBaseUrl();?>js/bcsTransfer.js"></script>
-		            <?php echo $bcsTransfer_html;?>        	 
+    			<script src="<?php echo Router::getBaseUrl();?>js/bcsTransfer.js"></script>
+		        <?php echo $bcsTransfer_html;?>        	 
         	  <?php } else if($page_type == 'user'){?>
         			<?php echo $password_html; ?>
         	  <?php }else if($page_type == 'message'){?>
@@ -311,25 +343,22 @@
         		    <div id="message-list"><?php echo $message_html;?></div>        	 
         	  <?php }else if($page_type == 'payPassword'){?>
 				  <?php echo $password_html; ?>
-			  <?php }?>
+			  <?php }?>			  
         </div>
-      </div>
-    </div>
-    
-    <div id="footer">
-		<div class="container-fluid">
-			<div class="row">
-				<div class="col-sm-12 col-md-12" id="realfooter" style="overflow-x: hidden;">
-					<p class="text-center" style="width: 118%;">Copyright © 2015 大大买钢 All Rights Reserved</p>
-				</div>
-			</div>
-		</div>
-	</div>
-
+</div>
 <div class="clear"></div>
-<script type="text/javascript" src="<?php echo Router::getBaseUrl();?>js/custom.js"></script>
 
 <?php }?>
+
+    <div class="bottom">
+
+    	<div class="bq">湖南大汉电子商务有限公司 版权所有</div>
+    </div>
+</div> <!-- end class="entirety" -->
+
+<script type="text/javascript" src="<?php echo Router::getBaseUrl();?>js/custom.js"></script>
+
+<?php } ?>
 
 <!-- Just for debugging purposes. Don't actually copy this line! -->
 <!--[if lt IE 9]><script src="<?php echo Router::getBaseUrl();?>js/ie8-responsive-file-warning.js"></script><![endif]-->

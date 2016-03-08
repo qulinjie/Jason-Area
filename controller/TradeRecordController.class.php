@@ -234,7 +234,7 @@ class TradeRecordController extends BaseController {
             $data_info = $data['data'][0];
     
             $view_html = $this->render('tradeRecordBill', array('entity_list_html' => $entity_list_html ), true);
-            $this->render('index', array('page_type' => 'tradeRecord', 'tradeRecordBill_html' => $view_html, 'bcsCustomerInfo' => $data_info) );
+            $this->render('index', array('page_type' => 'tradeRecordBill', 'tradeRecordBill_html' => $view_html, 'bcsCustomerInfo' => $data_info) );
         } else {
             EC::success(EC_OK, array('entity_list_html' => $entity_list_html));
         }
