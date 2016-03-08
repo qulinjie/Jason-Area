@@ -12,11 +12,12 @@ class IndexController extends Controller
         if(AdminController::isAdmin()){
             Log::notice("============================IndexController init =====================================isAdmin=============================");
         } else if(UserController::isLogin()){
-            if( UserController::isSeller() ){
+            /* if( UserController::isSeller() ){
                 $this->redirect($this->getBaseUrl().'tradeRecord/getIndexBill');
             } else {
                 $this->redirect($this->getBaseUrl().'tradeRecord/getIndex');
-            }
+            } */
+            $this->redirect($this->getBaseUrl().'bcsCustomer/getInfo');
         }
     }
     
