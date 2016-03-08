@@ -80,13 +80,80 @@ class CurlModel
 		//exit;
         $httpCode = curl_getinfo( $ch, CURLINFO_HTTP_CODE );
         if ( $httpCode != 200 ) {
-            echo 'curl http query fail! code error, code:' . $httpCode . '<BR>';
+            echo 'curl http query fail! httpCode error, httpCode:' . $httpCode . '<BR>';
             return false;
         }
         curl_close( $ch );
 
 		$this-> saveCURLCookieToRedis( $cookieFile );
         return json_decode( $response, true );
+    }
+    
+    protected function postRequest_nodecode( $url, $data=[], $header=[], $proxy=null, $expire=36000 )
+    {
+        if ( !$url ) return false;
+    
+        $ch = curl_init();
+        curl_setopt( $ch, CURLOPT_URL, $url );
+        // 设置代理
+        if (!is_null($proxy)) {
+            curl_setopt ( $ch, CURLOPT_PROXY, $proxy );
+        }
+        $isSSL = substr($url, 0, 8) == 'https://' ? true : false;
+        if ( $isSSL ) {
+            curl_setopt( $ch, CURLOPT_SSL_VERIFYPEER, 0 );// 对认证证书来源的检查
+            curl_setopt( $ch, CURLOPT_SSL_VERIFYHOST, 1 );// 从证书中检查SSL加密算法是否存在
+        }
+    
+        // 设立临存目录
+        $cookieFile =  $this->getCookieFile();
+        curl_setopt( $ch, CURLOPT_COOKIEJAR, $cookieFile );
+    
+        // 以临存目录名，为redis key尝试获取cookie信息
+        $cookieInfo = $this-> getCURLCookieInfoFromRedis( $cookieFile );
+        curl_setopt($ch, CURLOPT_COOKIE, $cookieInfo);
+    
+    
+        //curl_setopt( $ch, CURLOPT_COOKIEFILE, $cookieFile );
+        //curl_setopt( $ch, CURLOPT_COOKIESESSION, true );
+    
+    
+        // 设置浏览器
+        curl_setopt( $ch, CURLOPT_USERAGENT, $_SERVER['HTTP_USER_AGENT'] );
+        curl_setopt( $ch, CURLOPT_HEADER, 0 );
+    
+        // 不用浏览器？
+        //curl_setopt( $ch, CURLOPT_HEADER, TRUE );
+        //curl_setopt( $ch, CURLOPT_NOBODY, FALSE );
+    
+    
+        // 设置请求header
+        if ( !empty($header) ) {
+            curl_setopt( $ch, CURLOPT_HTTPHEADER, $header );
+        }
+    
+        // POST发送数据
+        curl_setopt( $ch, CURLOPT_POST, true );//发送一个常规的Post请求
+        curl_setopt( $ch,  CURLOPT_POSTFIELDS, $data );//Post提交的数据包
+    
+        // 使用自动跳转
+        curl_setopt( $ch, CURLOPT_FOLLOWLOCATION, 1 );
+        curl_setopt( $ch, CURLOPT_RETURNTRANSFER, true );
+        curl_setopt( $ch, CURLOPT_TIMEOUT, $expire );
+    
+        // 执行发送CURL
+        $response = curl_exec( $ch );
+        //print_r( $response );
+        //exit;
+        $httpCode = curl_getinfo( $ch, CURLINFO_HTTP_CODE );
+        if ( $httpCode != 200 ) {
+            echo 'curl http query fail! httpCode error, httpCode:' . $httpCode . '<BR>';
+            return false;
+        }
+        curl_close( $ch );
+    
+        $this-> saveCURLCookieToRedis( $cookieFile );
+        return $response;
     }
     
 	public function sendRequest( $interface, $data=[] )
@@ -133,6 +200,39 @@ class CurlModel
         return $ret;
     }
     
+    public function sendRequestSpdSign($interface, $data, $signFiag = 's'){
+        //$base_data = array('caller' => 'test', 'callee' => 'ddmg_erp','eventid' => rand() % 10000, 'timestamp' => time());
+        //$base_data['data'] = $data;
+    
+        Log::notice('sendRequestSpdSign====>>>>interface=##' . $interface . '##' . ',signFiag=##' . $signFiag . '##');
+        Log::notice('sendRequestSpdSign====>>>>request_data=##' . $data . '##');
+    
+        $header = array();
+        if( 'v' == $signFiag ){
+            $header[] = 'Content-type: INFOSEC_VERIFY_SIGN/1.0';
+        } else {
+            $header[] = 'Content-type: INFOSEC_SIGN/1.0d';
+        }
+        $ret = self::postRequest_nodecode(CurlModel::getServerSpdSignUrl() . $interface, $data, $header);
+    
+        Log::notice('sendRequestSpdSign====>>>>reponse=##' . $ret . '##');
+        return $ret;
+    }
+    
+    public function sendRequestSpdSend($interface, $data){
+        //$base_data = array('caller' => 'test', 'callee' => 'ddmg_erp','eventid' => rand() % 10000, 'timestamp' => time());
+        //$base_data['data'] = $data;
+    
+        Log::notice('sendRequestSpdSend====>>>>interface=##' . $interface . '##');
+        Log::notice('sendRequestSpdSend====>>>>request_data=##' . $data . '##');
+    
+        $header = array();
+        $header[] = 'Content-type: INFOSEC_SIGN/1.0d';
+        $ret = self::postRequest_nodecode(CurlModel::getServerSpdSendUrl() . $interface, $data, $header);
+    
+        Log::notice('sendRequestSpdSend====>>>>reponse=##' . $ret . '##');
+        return $ret;
+    }
     
 	protected function getCookieFile()
 	{
@@ -266,7 +366,19 @@ class CurlModel
 		return $conn;
 	}
 
-
+	public static function getServerSpdSignUrl(){
+	    $conf_arr = Controller::getConfig('conf');
+	    $ddmg_spd_sign_url = $conf_arr['ddmg_spd_sign_url'];
+	    Log::notice('getServerSpdSignUrl . ddmg_spd_sign_url=' . $ddmg_spd_sign_url);
+	    return $ddmg_spd_sign_url;
+	}
+	
+	public static function getServerSpdSendUrl(){
+	    $conf_arr = Controller::getConfig('conf');
+	    $ddmg_spd_send_url = $conf_arr['ddmg_spd_send_url'];
+	    Log::notice('getServerSpdSendUrl . ddmg_spd_send_url=' . $ddmg_spd_send_url);
+	    return $ddmg_spd_send_url;
+	}
 
 	public function sendRequestErp($interface, $data)
 	{

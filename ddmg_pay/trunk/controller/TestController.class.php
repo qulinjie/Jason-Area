@@ -5,12 +5,13 @@ class TestController extends BaseController
 
     public function handle( $params= [] )
     {
+        /*
         $xml = "<Service><Header><ServiceCode>FMSCUST0005</ServiceCode><ChannelId></ChannelId><ExternalReference>517708544102</ExternalReference><OriginalChannelId></OriginalChannelId><OriginalReference></OriginalReference><RequestTime>20160120144656</RequestTime><TradeDate></TradeDate><Version></Version><RequestBranchCode></RequestBranchCode><RequestOperatorId></RequestOperatorId><RequestOperatorType></RequestOperatorType><TermType></TermType><TermNo></TermNo><RequestType></RequestType><Encrypt></Encrypt><SignData>1C896A86EC1FA400DC4B32CE5291FE4E294D2CD1A04FEF3F4C148B2DBB4C261DA382D6C4AF5C302A2FBAC12A46B73AE917220E7F93FB394324F445CF5BDC489AB67AF430D5AB23C43101686DD2800079C3C6CBBEA85611C467CB194002DC7856C9EA9F4FCA686A50C06BAD8C4A85FCDB69897691D6B6B6A3679B185176E00C6C4F7C8C3A71CC427DB847AE9768366D4802971FF351E342ED00146B94AD5096ACAD086D55D0D0CBAB59202D432D3FE67BED3D2686D7A13B6D4EC1295EE8B32D8C39791EFC40FE6A3A47309DF3BAF139C310338E6B3A81CEBAD556B71D9A1653F7C96C2F04DFBCE50CBDA4590ECD901182CF9633311DCE80CDE9859BD72F6D2ABD</SignData></Header><Body><Request><MCH_NO>8001529592</MCH_NO><SIT_NO>DDMG00212</SIT_NO><ACT_TIME>2016-01-20 14:46:56</ACT_TIME><ACCOUNT_NO>80015295920101010000001</ACCOUNT_NO></Request></Body></Service>";
         $soap = new SoapClient('http://120.25.1.102/ddmg_pay/services/JTService.php?wsdl');
         
          $result = $soap->__call('request', array($xml));//__call('request',[$xml]);
         var_dump($result); 
-     /*    $data = $this->model('bank')->getCustomerInfo('8001529592','DDMG00212');
+         $data = $this->model('bank')->getCustomerInfo('8001529592','DDMG00212');
         var_dump($data);
         exit; */
 		if ( !$params ) {
@@ -27,6 +28,36 @@ class TestController extends BaseController
             case 'testSaop2':
                 $this-> testSaop2();
                 break;
+            case 'spd_sign':
+                $this->spd_sign();
+                break;
+            case 'spd_5144':
+                $this->spd_5144();
+                break;
+            case 'spd_4362':
+                $this->spd_4362();
+                break;
+            case 'spd_4381':
+                $this->spd_4381();
+                break;
+            case 'spd_4363':
+                $this->spd_4363();
+                break;
+            case 'spd_4465':
+                $this->spd_4465();
+                break;
+            case 'spd_5145':
+                $this->spd_5145();
+                break;
+            case 'spd_4662':
+                $this->spd_4662();
+                break;
+            case 'spd_4468':
+                $this->spd_4468();
+                break;
+            case 'spd_4469':
+                $this->spd_4469();
+                break;
             default:
                 Log::error('page not found');
                 EC::page_not_found();
@@ -34,6 +65,326 @@ class TestController extends BaseController
         }
     }
 
+    
+    // str-SPD
+    
+    public function spd_5144(){
+        Log::notice('-------SPD----TestController--------------------spd_5144==>>str');
+        
+        $model = $this->model('test');
+        
+        //1
+        $param = '<body><acctNo>6224080602781</acctNo><virtualAcctNo></virtualAcctNo><beginNumber>1</beginNumber><queryNumber>20</queryNumber></body>';
+        $data = $model->testSpdSign1($param);
+        Log::notice("\r\n\r\n ============111================\r\n\r\n");
+        
+        //2
+        $signature = strval( $data['body']['sign'] );
+        $param = "<?xml version='1.0' encoding='GB2312'?><packet><head>" 
+                    . "<transCode>5144</transCode><signFlag>1</signFlag>" 
+                    . "<masterID>2000040752</masterID><packetID>"
+                    . date('YmdHis',time()) . "</packetID><timeStamp>"
+                    . date('Y-m-d H:i:s',time()) . "</timeStamp></head><body><signature>"
+                    . $signature  . "</signature></body></packet>";
+        $param = (strlen($param) + 6) . '  ' . $param;
+        $data = $model->testSpdSend1($param);
+        Log::notice("\r\n\r\n ============222================\r\n\r\n");
+        
+        //3
+        $param = strval( $data['body']['signature'] );
+        $data = $model->testSpdSign2($param);
+        
+        Log::notice('-------SPD----TestController---------------------spd_5144==>>end');
+        
+        EC::success(EC_OK,$data['body']['sic']);
+    }
+    
+    public function spd_4362(){
+        Log::notice('-------SPD----TestController--------------------spd_4362==>>str');
+    
+        $model = $this->model('test');
+    
+        //1
+        //$param = '<body><acctNo>6224080602781</acctNo><lists name="LoopResult"><list><masterName>大汉长沙张三</masterName><virtualAcctNo>62250806001</virtualAcctNo><rate>0</rate></list><list><masterName>大汉长沙李四</masterName><virtualAcctNo>62250806002</virtualAcctNo><rate>0</rate></list><list><masterName>大汉武汉王五</masterName><virtualAcctNo>62250806003</virtualAcctNo><rate>0</rate></list><list><masterName>大汉徐州周六</masterName><virtualAcctNo>62250806004</virtualAcctNo><rate>0</rate></list></lists></body>';
+        $param = '<body><acctNo>6224080602781</acctNo><lists name="LoopResult"><list><masterName>大汉长沙张三</masterName><virtualAcctNo>62250806001</virtualAcctNo><rate>0</rate></list></lists></body>';
+        $data = $model->testSpdSign1($param);
+        Log::notice("\r\n\r\n ============111================\r\n\r\n");
+    
+        //2
+        $signature = strval( $data['body']['sign'] );
+        $param = "<?xml version='1.0' encoding='GB2312'?><packet><head>"
+            . "<transCode>4362</transCode><signFlag>1</signFlag>"
+                . "<masterID>2000040752</masterID><packetID>"
+                    . date('YmdHis',time()) . "</packetID><timeStamp>"
+                        . date('Y-m-d H:i:s',time()) . "</timeStamp></head><body><signature>"
+                            . $signature  . "</signature></body></packet>";
+        $param = (strlen($param) + 6) . '  ' . $param;
+        $data = $model->testSpdSend1($param);
+        Log::notice("\r\n\r\n ============222================\r\n\r\n");
+    
+        //3
+        $param = strval( $data['body']['signature'] );
+        $data = $model->testSpdSign2($param);
+    
+        Log::notice('-------SPD----TestController---------------------spd_4362==>>end');
+    
+        EC::success(EC_OK,$data['body']['sic']);
+    }
+    
+    public function spd_4381(){
+        Log::notice('-------SPD----TestController--------------------spd_4381==>>str');
+    
+        $model = $this->model('test');
+    
+        //1
+        $param = '<body><acctNo>6224080602781</acctNo><beginNumber>1</beginNumber><queryNumber>20</queryNumber></body>';
+        $data = $model->testSpdSign1($param);
+        Log::notice("\r\n\r\n ============111================\r\n\r\n");
+    
+        //2
+        $signature = strval( $data['body']['sign'] );
+        $param = "<?xml version='1.0' encoding='GB2312'?><packet><head>"
+            . "<transCode>4381</transCode><signFlag>1</signFlag>"
+                . "<masterID>2000040752</masterID><packetID>"
+                    . date('YmdHis',time()) . "</packetID><timeStamp>"
+                        . date('Y-m-d H:i:s',time()) . "</timeStamp></head><body><signature>"
+                            . $signature  . "</signature></body></packet>";
+        $param = (strlen($param) + 6) . '  ' . $param;
+        $data = $model->testSpdSend1($param);
+        Log::notice("\r\n\r\n ============222================\r\n\r\n");
+    
+        //3
+        $param = strval( $data['body']['signature'] );
+        $data = $model->testSpdSign2($param);
+    
+        Log::notice('-------SPD----TestController---------------------spd_4381==>>end');
+    
+        EC::success(EC_OK,$data['body']['sic']);
+    }
+    
+    public function spd_4363(){
+        Log::notice('-------SPD----TestController--------------------spd_4363==>>str');
+    
+        $model = $this->model('test');
+    
+        //1
+        $param = '<body><acctNo>6224080602781</acctNo><virtualAcctNo>12345678901</virtualAcctNo></body>';
+        $data = $model->testSpdSign1($param);
+        Log::notice("\r\n\r\n ============111================\r\n\r\n");
+    
+        //2
+        $signature = strval( $data['body']['sign'] );
+        $param = "<?xml version='1.0' encoding='GB2312'?><packet><head>"
+            . "<transCode>4363</transCode><signFlag>1</signFlag>"
+                . "<masterID>2000040752</masterID><packetID>"
+                    . date('YmdHis',time()) . "</packetID><timeStamp>"
+                        . date('Y-m-d H:i:s',time()) . "</timeStamp></head><body><signature>"
+                            . $signature  . "</signature></body></packet>";
+        $param = (strlen($param) + 6) . '  ' . $param;
+        $data = $model->testSpdSend1($param);
+        Log::notice("\r\n\r\n ============222================\r\n\r\n");
+    
+        //3
+        $param = strval( $data['body']['signature'] );
+        $data = $model->testSpdSign2($param);
+    
+        Log::notice('-------SPD----TestController---------------------spd_4363==>>end');
+    
+        EC::success(EC_OK,$data['body']['sic']);
+    }
+    
+    public function spd_4465(){
+        Log::notice('-------SPD----TestController--------------------spd_4465==>>str');
+    
+        $model = $this->model('test');
+    
+        //1
+        $param = '<body><acctNo>6224080602781</acctNo><shareType>0</shareType><seqNos></seqNos><jnlNoProduceDate></jnlNoProduceDate><beginNumber>1</beginNumber><queryNumber>20</queryNumber></body>';
+        $data = $model->testSpdSign1($param);
+        Log::notice("\r\n\r\n ============111================\r\n\r\n");
+    
+        //2
+        $signature = strval( $data['body']['sign'] );
+        $param = "<?xml version='1.0' encoding='GB2312'?><packet><head>"
+            . "<transCode>4465</transCode><signFlag>1</signFlag>"
+                . "<masterID>2000040752</masterID><packetID>"
+                    . date('YmdHis',time()) . "</packetID><timeStamp>"
+                        . date('Y-m-d H:i:s',time()) . "</timeStamp></head><body><signature>"
+                            . $signature  . "</signature></body></packet>";
+        $param = (strlen($param) + 6) . '  ' . $param;
+        $data = $model->testSpdSend1($param);
+        Log::notice("\r\n\r\n ============222================\r\n\r\n");
+    
+        //3
+        $param = strval( $data['body']['signature'] );
+        $data = $model->testSpdSign2($param);
+    
+        Log::notice('-------SPD----TestController---------------------spd_4465==>>end');
+    
+        EC::success(EC_OK,$data['body']['sic']);
+    }
+    
+    public function spd_5145(){
+        Log::notice('-------SPD----TestController--------------------spd_5145==>>str');
+    
+        $model = $this->model('test');
+    
+        //1
+        $param = '<body><acctNo>6224080602781</acctNo><virtualAcctNo>12345678901</virtualAcctNo><jnlSeqNo></jnlSeqNo><summonsNumber></summonsNumber><transBeginDate></transBeginDate><transEndDate></transEndDate><shareBeginDate>20160101</shareBeginDate><shareEndDate>20160130</shareEndDate><beginNumber>1</beginNumber><queryNumber>20</queryNumber></body>';
+        $data = $model->testSpdSign1($param);
+        Log::notice("\r\n\r\n ============111================\r\n\r\n");
+    
+        //2
+        $signature = strval( $data['body']['sign'] );
+        $param = "<?xml version='1.0' encoding='GB2312'?><packet><head>"
+            . "<transCode>5145</transCode><signFlag>1</signFlag>"
+                . "<masterID>2000040752</masterID><packetID>"
+                    . date('YmdHis',time()) . "</packetID><timeStamp>"
+                        . date('Y-m-d H:i:s',time()) . "</timeStamp></head><body><signature>"
+                            . $signature  . "</signature></body></packet>";
+        $param = (strlen($param) + 6) . '  ' . $param;
+        $data = $model->testSpdSend1($param);
+        Log::notice("\r\n\r\n ============222================\r\n\r\n");
+    
+        //3
+        $param = strval( $data['body']['signature'] );
+        $data = $model->testSpdSign2($param);
+    
+        Log::notice('-------SPD----TestController---------------------spd_5145==>>end');
+    
+        EC::success(EC_OK,$data['body']['sic']);
+    }
+
+    public function spd_4662(){
+        Log::notice('-------SPD----TestController--------------------spd_4662==>>str');
+    
+        $model = $this->model('test');
+    
+        //1
+        $param = '<body><acctNo>6224080602781</acctNo><beginDate>20160101</beginDate><endDate>20160130</endDate><beginNumber>1</beginNumber><queryNumber>5</queryNumber></body>';
+        $data = $model->testSpdSign1($param);
+        Log::notice("\r\n\r\n ============111================\r\n\r\n");
+    
+        //2
+        $signature = strval( $data['body']['sign'] );
+        $param = "<?xml version='1.0' encoding='GB2312'?><packet><head>"
+            . "<transCode>4662</transCode><signFlag>1</signFlag>"
+                . "<masterID>2000040752</masterID><packetID>"
+                    . date('YmdHis',time()) . "</packetID><timeStamp>"
+                        . date('Y-m-d H:i:s',time()) . "</timeStamp></head><body><signature>"
+                            . $signature  . "</signature></body></packet>";
+        $param = (strlen($param) + 6) . '  ' . $param;
+        $data = $model->testSpdSend1($param);
+        Log::notice("\r\n\r\n ============222================\r\n\r\n");
+    
+        //3
+        $param = strval( $data['body']['signature'] );
+        $data = $model->testSpdSign2($param);
+    
+        Log::notice('-------SPD----TestController---------------------spd_4662==>>end');
+    
+        EC::success(EC_OK,$data['body']['sic']);
+    }
+    
+    public function spd_4468(){
+        Log::notice('-------SPD----TestController--------------------spd_4468==>>str');
+    
+        $model = $this->model('test');
+    
+        //1
+        $param = '<body><acctNo>6224080602781</acctNo><beginNumber>1</beginNumber><queryNumber>20</queryNumber></body>';
+        $data = $model->testSpdSign1($param);
+        Log::notice("\r\n\r\n ============111================\r\n\r\n");
+    
+        //2
+        $signature = strval( $data['body']['sign'] );
+        $param = "<?xml version='1.0' encoding='GB2312'?><packet><head>"
+            . "<transCode>4468</transCode><signFlag>1</signFlag>"
+                . "<masterID>2000040752</masterID><packetID>"
+                    . date('YmdHis',time()) . "</packetID><timeStamp>"
+                        . date('Y-m-d H:i:s',time()) . "</timeStamp></head><body><signature>"
+                            . $signature  . "</signature></body></packet>";
+        $param = (strlen($param) + 6) . '  ' . $param;
+        $data = $model->testSpdSend1($param);
+        Log::notice("\r\n\r\n ============222================\r\n\r\n");
+    
+        //3
+        $param = strval( $data['body']['signature'] );
+        $data = $model->testSpdSign2($param);
+    
+        Log::notice('-------SPD----TestController---------------------spd_4468==>>end');
+    
+        EC::success(EC_OK,$data['body']['sic']);
+    }
+    
+    public function spd_4469(){
+        Log::notice('-------SPD----TestController--------------------spd_4469==>>str');
+    
+        $model = $this->model('test');
+    
+        //1
+        $param = '<body><acctNo>6224080602781</acctNo><queryDate>20160104</queryDate><queryNumber>1</queryNumber><beginNumber>5</beginNumber></body>';
+        $data = $model->testSpdSign1($param);
+        Log::notice("\r\n\r\n ============111================\r\n\r\n");
+    
+        //2
+        $signature = strval( $data['body']['sign'] );
+        $param = "<?xml version='1.0' encoding='GB2312'?><packet><head>"
+            . "<transCode>4469</transCode><signFlag>1</signFlag>"
+                . "<masterID>2000040752</masterID><packetID>"
+                    . date('YmdHis',time()) . "</packetID><timeStamp>"
+                        . date('Y-m-d H:i:s',time()) . "</timeStamp></head><body><signature>"
+                            . $signature  . "</signature></body></packet>";
+        $param = (strlen($param) + 6) . '  ' . $param;
+        $data = $model->testSpdSend1($param);
+        Log::notice("\r\n\r\n ============222================\r\n\r\n");
+    
+        //3
+        $param = strval( $data['body']['signature'] );
+        $data = $model->testSpdSign2($param);
+    
+        Log::notice('-------SPD----TestController---------------------spd_4469==>>end');
+    
+        EC::success(EC_OK,$data['body']['sic']);
+    }
+    
+    public function spd_sign(){
+        Log::notice('-------SPD----TestController--------------------spd_sign==>>str');
+    
+        //1
+        $model = $this->model('test');
+        //$param = '<body><acctNo>2000040752</acctNo><virtualAcctNo></virtualAcctNo><beginNumber>1</beginNumber><queryNumber>20</queryNumber></body>';
+        $param = '<body><lists name="acctList"><list><acctNo>6224080400151</acctNo></list></lists></body>';
+        $data = $model->testSpdSign1($param);
+        
+        Log::notice('-------SPD----TestController---------------------spd_sign==>>end');
+        //EC::success(EC_OK,strval($data));
+//         Log::notice('======================>>> result= ##' . json_encode( $data, true ) .'##');
+        
+        //2
+        $signature = strval( $data['body']['sign'] );
+        Log::notice('======11================>>> signature= ##' . strval( $signature ) .'##');
+        
+        $param = "<?xml version='1.0' encoding='GB2312'?><packet><head><transCode>4402</transCode><signFlag>1</signFlag><masterID>2000040752</masterID><packetID>"
+                    . date('YmdHis',time()) . "</packetID><timeStamp>"
+                    . date('Y-m-d H:i:s',time()) . "</timeStamp></head><body><signature>"
+                    . $signature  . "</signature></body></packet>";
+        $param = (strlen($param) + 6) . '  ' . $param;
+        
+        Log::notice('======22================>>> param= ##' . strval( $param ) .'##');
+        $data = $model->testSpdSend1($param);
+        
+        
+        //3
+        $param = strval( $data['body']['signature'] );
+        Log::notice('======33================>>> param= ##' . strval( $param ) .'##');
+        $data = $model->testSpdSign2($param);
+        
+        EC::success(EC_OK,$data['body']['sic']);
+    }
+    
+    // end-SPD
+    
 	public function laiyifa()
 	{
 		//  长沙银行接口MODEL
