@@ -1,4 +1,15 @@
 $(document).ready(function(){
+	$(".form_datetime").datetimepicker({
+		language:  'zh-CN',
+		format: 'yyyy-mm-dd hh:ii',
+		weekStart: 1,
+	    todayBtn:  1,
+		autoclose: 1,
+		todayHighlight: 1,
+		startView: 2,
+		forceParse: 0,
+	    showMeridian: 0
+	});
 
 $(document).on('click', '#entity-search-btn', function(event){
 	search_entity(1);
@@ -251,6 +262,33 @@ $(document).on('click', '#entity-loadInfo-btn', function(event){
 	    );
 });
 /**************end--更新****************/
+
+/**************str--更新浦发虚拟子账户流水****************/
+$(document).on('click', '#entity-loadList-btn', function(event){
+	var objBtn = $(this);
+	objBtn.html('更新中...');
+	
+	$("#operation-entity-hint").html('').fadeOut();
+	$.post(BASE_PATH + 'bcsTrade/spd_loadAccountTradeList', {},
+	        function(result){
+	            if(result.code != 0) {
+            		$("#operation-entity-hint").html(result.msg + '(' + result.code + ')').fadeIn();	
+	            } else {
+	            	if(0==result.code){
+	            		$("#operation-entity-hint").html('更新完成！').fadeIn();
+		            	setTimeout(function(){
+		            		search_entity($("#entity-current-page").html());
+		                }, 1000);
+	            	} else {
+	            		$("#operation-entity-hint").html('更新失败！').fadeIn();
+	            	}
+	            }
+	            objBtn.html('更新浦发虚拟子账户流水');
+	        },
+	        'json'
+	    );
+});
+/**************end--更新浦发虚拟子账户流水****************/
 
 prettyPrint();
 });

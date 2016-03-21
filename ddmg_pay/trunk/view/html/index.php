@@ -54,8 +54,8 @@
 					    <div class="col-sm-1"></div>
 					    <div class="col-sm-10">
 							<input type="hidden" id="login-csrf" value="<?php echo $login_token;?>">
-							<input type="text" id="admin-login-account" class="form-control" placeholder="用户名" autofocus value="13265431549"><br/>
-							<input type="password" id="admin-login-password" class="form-control" placeholder="密码" value="123456"><br/>
+							<input type="text" id="admin-login-account" class="form-control" placeholder="用户名" autofocus value="110001"><br/>
+							<input type="password" id="admin-login-password" class="form-control" placeholder="密码" value="1"><br/>
 							<!--
 							<div class="pincode" style="display:none">
 								<input type="text" id="admin-login-pincode" class="form-control pincode" placeholder="验证码">
@@ -126,10 +126,11 @@
         <div id="navbar" class="navbar-collapse collapse">
           <ul class="nav navbar-nav navbar-right">
             <li style="color: white;vertical-align:middle;line-height:50px;">
-                <?php echo '&nbsp; 管理员'; ?>
+                <?php echo '&nbsp; 管理员 &nbsp;'; echo UserController::getLoginUser()['account']; ?>
             </li>
             <li style="color: white;vertical-align:middle;line-height:50px;">
                 &nbsp;&nbsp; <?php echo $session->get('loginUser')['name']; ?>
+                &nbsp;&nbsp;
             </li>
 <!--             <li><a id="user-chg-pwd-btn" href="#">修改密码</a></li> -->
             <li><a id="amdin-loginOut-btn" href="#">退出</a></li>
@@ -148,7 +149,7 @@
       <div class="row">
         <div class="col-sm-3 col-md-2 sidebar">
           <ul id="li-menu-list" class="nav nav-sidebar">
-    		
+    		      <!--
     			<li <?php if(doit::$controller == 'BcsMarket'){?> class="active" <?php } ?>>
         			<a href="<?php echo Router::getBaseUrl();?>bcsMarket/getInfo">市场信息</a>
         	    </li>
@@ -158,24 +159,27 @@
         	    <li <?php if(doit::$controller == 'BcsRegister'){?> class="active" <?php } ?>>
         			<a href="<?php echo Router::getBaseUrl();?>bcsRegister/getIndex">开户管理</a>
         	    </li>
+        	    -->
         	    <li <?php if(doit::$controller == 'BcsCustomer'){?> class="active" <?php } ?>>
         			<a href="<?php echo Router::getBaseUrl();?>bcsCustomer/getIndex">虚拟卡管理</a>
         	    </li>
     			<li <?php if(doit::$controller == 'BcsTrade' && $page_type != 'bcsTradeStatusQuery'){?> class="active" <?php } ?>>
         			<a href="<?php echo Router::getBaseUrl();?>bcsTrade/getIndex">交易流水</a>
         	    </li>
+        	    <!--
     			<li <?php if(doit::$controller == 'BcsTransfer'){?> class="active" <?php } ?>>
         			<a href="<?php echo Router::getBaseUrl();?>bcsTransfer/getIndex">出入金</a>
         	    </li>
         	    <li <?php if(doit::$controller == 'BcsInflow'){?> class="active" <?php } ?>>
         			<a href="<?php echo Router::getBaseUrl();?>bcsInflow/getIndex">银行出入金</a>
         	    </li>
-    			<!--  <li <?php if(doit::$controller == 'BcsIncomPay'){?> class="active" <?php } ?>>
+    			<li <?php if(doit::$controller == 'BcsIncomPay'){?> class="active" <?php } ?>>
         			<a href="<?php echo Router::getBaseUrl();?>bcsIncomPay/getIndex">银行交易明细</a>
-        	    </li>-->
+        	    </li>
         	    <li <?php if(doit::$controller == 'BcsTrade' && $page_type == 'bcsTradeStatusQuery'){?> class="active" <?php } ?>>
         			<a href="<?php echo Router::getBaseUrl();?>bcsTrade/tradeStatusQueryIndex">交易状态查询</a>
         	    </li>
+        	    -->
           </ul>
         </div>
         
@@ -242,10 +246,11 @@
         <div id="navbar" class="navbar-collapse collapse">
           <ul class="nav navbar-nav navbar-right">
             <li style="color: white;vertical-align:middle;line-height:50px;">
-                <span><?php echo  UserController::getLoginUser()['account']; ?></span>
+                <span><?php echo '&nbsp; 合伙人 &nbsp;'; echo UserController::getLoginUser()['account']; ?></span>
             </li>
             <li style="color: white;vertical-align:middle;line-height:50px;">
-                &nbsp;&nbsp; <?php echo $session->get('loginUser')['name']; ?>
+                &nbsp;&nbsp; <?php echo $session->get('_loginUser')['name']; ?>
+                &nbsp;&nbsp;
             </li>
 <!--             <li><a id="user-chg-pwd-btn" href="#">修改密码</a></li> -->
             <li style="color: white;vertical-align:middle;line-height:50px;">
@@ -266,9 +271,16 @@
       <div class="row">
         <div class="col-sm-3 col-md-2 sidebar">
           <ul id="li-menu-list" class="nav nav-sidebar">
-			<li <?php if(doit::$controller == 'BcsCustomer' && doit::$params[0] !='getInflow' && doit::$params[0] !='getIncomePay'){?> class="discolor" <?php } ?>>
+			    <li <?php if(doit::$controller == 'BcsCustomer' && doit::$params[0] !='getInflow' && doit::$params[0] !='getIncomePay'){?> class="active" <?php } ?>>
         			<a href="<?php echo Router::getBaseUrl();?>bcsCustomer/getInfo">账户信息</a>
         	    </li>
+        	    <li <?php if(doit::$controller == 'BcsTrade'){?> class="active" <?php } ?>>
+        			<a href="<?php echo Router::getBaseUrl();?>bcsTrade/getIndex">收支明细</a>
+        	    </li>
+        	    <li <?php if(doit::$controller == 'TradeRecord'){?> class="active" <?php } ?>>
+        			<a href="<?php echo Router::getBaseUrl();?>tradeRecord/getIndex">申请付款</a>
+        	    </li>
+        	    <!--  
         	    <li <?php if(doit::$controller == 'TradeRecord' && doit::$params[0] =='getIndexBill'){?> class="discolor" <?php } ?>>
         			<a href="<?php echo Router::getBaseUrl();?>tradeRecord/getIndexBill">收款信息</a>
         	    </li>
@@ -287,17 +299,24 @@
         		<li <?php if(doit::$controller == 'Message'){?> class="discolor" <?php } ?>>
         			  <a href="<?php echo Router::getBaseUrl();?>message/getIndex">消息提醒</a>
         		</li>
+        		-->
           </ul>
         </div>
         
         <!-- 右侧内容页面 -->
         <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
-          <?php if($page_type == 'bcsCustomer'){?>
+              <?php if($page_type == 'bcsCustomer'){?>
         	        <script src="<?php echo Router::getBaseUrl();?>js/bcsCustomerInfo.js"></script>
         		    <?php echo $bcsCustomer_html; ?>
+        	  <?php }else if($page_type == 'bcsTrade'){?>
+    			    <script src="<?php echo Router::getBaseUrl();?>js/bcsTrade.js"></script>
+		            <?php echo $bcsTrade_html;?>
         	  <?php }else if($page_type == 'tradeRecordBill'){?>
         	        <script src="<?php echo Router::getBaseUrl();?>js/tradeRecordBill.js"></script>
                     <?php echo $tradeRecordBill_html; ?>
+              <?php }else if($page_type == 'tradeRecord' && doit::$params[0] =='createApply' ){?>
+        	        <script src="<?php echo Router::getBaseUrl();?>js/tradeRecordCreate.js"></script>
+                    <?php echo $tradeRecordCreate_html; ?>
         	  <?php }else if($page_type == 'tradeRecord'){?>
         	        <script src="<?php echo Router::getBaseUrl();?>js/tradeRecord.js"></script>
                     <?php echo $tradeRecord_html; ?>

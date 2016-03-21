@@ -41,6 +41,10 @@ class UserController extends BaseController
             case 'getCert':
                 $this->getCert();
                 break;
+                
+            case 'erp_getList':
+                $this->erp_getList();
+                break;
             default:
                 Log::error('UserController method not exists ' . $params[0]);
                 EC::fail(EC_MTD_NON);
@@ -237,7 +241,7 @@ class UserController extends BaseController
         EC::success(EC_OK);
     }
     
-    private function login()
+    private function login_old()
     {   
         if(IS_POST){
             $tel  = $this->post('account');
@@ -332,6 +336,10 @@ class UserController extends BaseController
         return false;
     }
 
+    //{"userid":"68ff4da6-8dc3-4a60-805a-6fbd609518b9","usercode":"110002","username":"\u674e\u56db","loginid":"110002",
+    //"mobile":"18073215757","email":"hisyz@qq.com","is_buyer":1,"is_seller":1,"is_partner":1,"is_manager":1,"is_bank":1,"is_ddmg":1,
+    //"is_paymanage":2,"managerid":null,"erp_czydm":"0138","erp_ygdm":"0138","erp_fgsdm":"007","erp_fgsmc":null,"erp_bmdm":"012",
+    //"erp_bmmc":null,"user_id":"110002","account":"110002","name":"\u674e\u56db"}
     public static function getLoginUser()
     {
         $session = self::instance('session');
@@ -376,4 +384,44 @@ class UserController extends BaseController
         ];
     }
 
+    
+    private function login()
+    {
+        if(IS_POST){
+            $account  = $this->post('account');
+            $password  = $this->post('password');
+            $code = $this->post('pinCode');
+            (!$account || !$password) && EC::fail(EC_PAR_BAD);
+    
+//             $pinCode = self::instance('pincode');
+//             !$pinCode->check($code) && EC::fail(EC_PINCODE_ERR);
+    
+            $data = $this->model('user')->erp_login(['loginid' => $account, 'userpwd' => $password]);
+            $data['code'] !== EC_OK && EC::fail($data['code']);
+    
+            $session = $this->instance('session');
+            $session->set('_loginUser',$data['data']);
+             
+            EC::success(EC_OK);
+        }
+        self::isLogin() && $this->redirect(Router::getBaseUrl());
+        $this->render('login');
+    }
+    
+    public function erp_getList(){
+        $user_model = $this->model('user');
+        $params = array();
+        $params['page'] = 1;
+        $params['rows'] = 1000;
+        $params['is_paymanage'] = '2';
+        $data = $user_model->erp_getList($params);
+        
+        if(EC_OK_ERP != $data['code'] ){
+            Log::error('erp_getList failed . code=' . $data['code'] . ',msg=' . $data['msg']);
+            EC::fail(EC_ERPE_FAI);
+        }
+        Log::notice('erp_getList success . data=' . json_encode($data['data']) );
+        EC::success(EC_OK, $data['data']['data']);
+    }
+    
 }

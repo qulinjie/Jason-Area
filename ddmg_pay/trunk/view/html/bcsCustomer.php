@@ -3,58 +3,46 @@
  * bcsRegister_list_html
  */
 ?>
-<div class="modal fade" id="add-bcsRegister-modal">
+<div class="modal fade" id="add-entity-modal">
 	<div class="modal-dialog" style="width: 800px;">
 		<div class="modal-content">
 			<div class="modal-header">
 				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 					<span aria-hidden="true">&times;</span>
 				</button>
-				<h4 class="modal-title" id="info_bcsRegister_title">虚拟卡号</h4>
+				<h4 class="modal-title" id="info_customer_title">开户</h4>
 			</div>
 			<div class="modal-body">
 				<form class="form-horizontal">
-				    <input type="hidden" class="form-control" id="info-bcsRegister-id" value=""></input>
+				    <input type="hidden" class="form-control" id="info-customer-id" value=""></input>
 				  <div class="form-group">
-				    <label for="add-bcsRegister-tel" class="col-sm-2 control-label">手机号</label>
+				    <label for="add-entity-account" class="col-sm-2 control-label">用户登录账号</label>
 				    <div class="col-sm-9">
-				      <input class="form-control" id="add-bcsRegister-tel" placeholder="手机号"></input>
-				    </div>
-				  </div>
-				  <div class="form-group">
-				    <label for="add-bcsRegister-name" class="col-sm-2 control-label">姓名</label>
-				    <div class="col-sm-9">
-				      <input class="form-control" id="add-bcsRegister-name" placeholder="姓名"></input>
-				    </div>
-				  </div>
-				  <div class="form-group">
-				    <label for="add-bcsRegister-time" class="col-sm-2 control-label">通话时间</label>
-				    <div class="col-sm-9">
-				      <input class="form-control" id="add-bcsRegister-time" placeholder="通话时间"></input>
-				    </div>
-				  </div>
-				  <div class="form-group">
-				    <label for="add-bcsRegister-status" class="col-sm-2 control-label">状态</label>
-				    <div class="col-sm-9">
-				      <select class="form-control" id="add-bcsRegister-status">
-                	      <option value="1">记录</option>
-                	      <option value="2">待处理</option>
-                	      <option value="3">处理完成</option>
+				      <select class="form-control" id="add-entity-account">
                       </select>
 				    </div>
 				  </div>
 				  <div class="form-group">
-				    <label for="add-bcsRegister-remark" class="col-sm-2 control-label">备注</label>
+				    <label for="add-entity-bankType" class="col-sm-2 control-label">银行</label>
 				    <div class="col-sm-9">
-				      <input class="form-control" id="add-bcsRegister-remark" placeholder="备注"></input>
+				      <select class="form-control" id="add-entity-bankType">
+				            <option value="2">浦发银行</option>
+                      </select>
 				    </div>
 				  </div>
-				  <div class="alert alert-danger" id="add-bcsRegister-hint"></div>
+				  <div class="form-group">
+				    <label for="add-entity-ACCOUNT_NO" class="col-sm-2 control-label">虚拟账户</label>
+				    <div class="col-sm-9">
+				      <select class="form-control" id="add-entity-ACCOUNT_NO">
+                      </select>
+				    </div>
+				  </div>
+				  <div class="alert alert-danger" id="add-entity-hint"></div>
 				</form>
 			</div>
 			<div class="modal-footer">
 				<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-				<button type="button" class="btn btn-primary" id="btn-add-bcsRegister">确定</button>
+				<button type="button" class="btn btn-primary" id="btn-add-entity">确定</button>
 			</div>
 		</div>
 		<!-- /.modal-content -->
@@ -100,6 +88,11 @@
 	  <div class="alert alert-danger search-list-hint" id="operation-entity-hint"></div>
 	</div>
   </div>
+</div>
+
+<div id="add-button-group" style="padding-bottom: 2px;">
+	<a id="add-entity-new" class="btn btn-primary" href="#" data-toggle="modal" data-keyboard="false" data-backdrop="static">新增</a>
+	<a id="entity-loadList-btn" class="btn btn-primary" href="#">更新浦发虚拟子账户</a>
 </div>
 
 <div  id="entity-list">

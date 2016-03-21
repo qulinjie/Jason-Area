@@ -45,6 +45,9 @@ class TradeRecordModel extends CurlModel {
     public function create($params = array()){
         return self::sendRequest('tradeRecord/create', $params);
     }
+    public function create_add($params = array()){
+        return self::sendRequest('tradeRecord/create_add', $params);
+    }
     
     public function pay($params = array()){
         return self::sendRequest('tradeRecord/pay', $params);
@@ -54,4 +57,17 @@ class TradeRecordModel extends CurlModel {
     public function orderStatusToServer($params = array()) {
         return self::sendRequestServer('order/paystatus',$params);
     }
+    
+    public function getNextId($params = array()){
+        return self::sendRequest('tradeRecord/getNextId', $params);
+    }
+    
+    public function erp_getOrderBuyList($params = array()){
+        return self::sendRequestErp('api/pub/OrderService/PostOrder_BuyOrderList/',$params);
+    }
+    
+    public function erp_getOrderBuyInfo($params = array()){
+        return self::sendRequestErp('api/pub/OrderService/PostOrder_BuyOrderInfo/',$params);
+    }
+    
 }

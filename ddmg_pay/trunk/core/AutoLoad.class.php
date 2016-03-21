@@ -38,6 +38,7 @@ class AutoLoad {
     'CurlModel'         => 'core/CurlModel.class.php',
     'ErpSoap'           => 'core/ErpSoap.class.php',
     'CSBankSoap'        => 'core/CSBankSoap.class.php',
+    'SPDBankCurl'       => 'core/SPDBankCurl.class.php',
     'db_mysqli'         => 'core/db/db_mysqli.class.php',
     'db_mysql'          => 'core/db/db_mysql.class.php',
     'db_pdo'            => 'core/db/db_pdo.class.php',

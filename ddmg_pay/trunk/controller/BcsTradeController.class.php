@@ -42,6 +42,10 @@ class BcsTradeController extends BaseController {
                 case 'tradeStatusQuery':
                     $this->tradeStatusQuery();
                     break;
+                    
+                case 'spd_loadAccountTradeList':
+                    $this->spd_loadAccountTradeList();
+                    break;
                 default:
                     Log::error('page not found . ' . $params[0]);
                     EC::fail(EC_MTD_NON);
@@ -50,7 +54,7 @@ class BcsTradeController extends BaseController {
         }
     }
     
-    protected function searchList($isIndex = false) {
+    protected function searchList_old($isIndex = false) {
         $current_page = Request::post('page');
         $seller_name = Request::post('seller_name'); // 收款方
         $time1 = Request::post('time1');
@@ -149,7 +153,7 @@ class BcsTradeController extends BaseController {
     
         $data_list = $data['data'];
         
-        // 用户账号 	用户名称 	用户公司名称
+        /* // 用户账号 	用户名称 	用户公司名称
         if(!empty($data_list)){
             $s_user_id_list = array(); // 收款方
             $b_user_id_list = array(); // 付款方
@@ -196,8 +200,86 @@ class BcsTradeController extends BaseController {
                 }
             }
             
-        }
+        } */
         
+        $entity_list_html = $this->render('bcsTrade_list', array('data_list' => $data_list, 'current_page' => $current_page, 'total_page' => $total_page), true);
+        if($isIndex) {
+            $view_html = $this->render('bcsTrade', array('entity_list_html' => $entity_list_html ), true);
+            $this->render('index', array('page_type' => 'bcsTrade', 'bcsTrade_html' => $view_html));
+        } else {
+            EC::success(EC_OK, array('entity_list_html' => $entity_list_html));
+        }
+    }
+    
+    protected function searchList($isIndex = false) {
+        $current_page = Request::post('page');
+        $seller_name = Request::post('seller_name'); // 收款方
+        $time1 = Request::post('time1');
+        $time2 = Request::post('time2');
+        $order_no = Request::post('order_no');
+        $status = Request::post('status');
+        $amount1 = Request::post('amount1');
+        $amount2 = Request::post('amount2');
+        $FMS_TRANS_NO = Request::post('FMS_TRANS_NO');
+        $b_account = Request::post('b_account');
+        $s_account = Request::post('s_account');
+    
+        $bcsTrade_model = $this->model('bcsTrade');
+        $user_model = $this->model('user');
+        $bcsCustomer_model = $this->model('bcsCustomer');
+        
+        $user_id = self::getCurrentUserId();
+        $ACCOUNT_NO = '';
+        if(AdminController::isAdmin()){
+            
+        } else {
+            $customer = array();
+            $customer['user_id'] = $user_id;
+            $info_data = $bcsCustomer_model->getInfo($customer);
+            if(EC_OK != $info_data['code']){
+                Log::error("getInfo failed . virtualAcctNo-ACCOUNT_NO=" . $customer['ACCOUNT_NO'] . ',code='. $info_data['code'] . ',msg=' . $info_data['msg'] );
+                EC::fail($info_data['code']);
+            }
+            $ACCOUNT_NO = $info_data['data'][0]['ACCOUNT_NO'];
+        }
+    
+        $params  = array();
+        foreach ([ 'b_user_id', 'seller_name', 'time1', 'time2', 'order_no', 'status',
+            'FMS_TRANS_NO', 'seller_name', 'amount1', 'amount2', 'ACCOUNT_NO'] as $val){
+            if($$val) $params[$val] = $$val;
+        }
+    
+//         $params['debitCreditFlag'] = strval($inout);
+        
+        $data_cnt = $bcsTrade_model->searchCnt($params);
+        if(EC_OK != $data_cnt['code']){
+            Log::error("searchCnt failed . ");
+            EC::fail($data_cnt['code']);
+        }
+    
+        $cnt = $data_cnt['data'];
+    
+        $conf = $this->getConfig('conf');
+        $page_cnt = $conf['page_count_default'];
+    
+        $total_page = ($cnt % $page_cnt) ? (integer)($cnt / $page_cnt) + 1 : $cnt / $page_cnt;
+    
+        if(!$current_page || 0 >= $current_page) {
+            $current_page = 1;
+        } if($current_page > $total_page) {
+            $current_page = $total_page;
+        }
+    
+        $params['current_page'] = $current_page;
+        $params['page_count'] = $page_cnt;
+        $data = $bcsTrade_model->searchList($params);
+        if(EC_OK != $data['code']){
+            Log::error("searchList failed . ");
+            EC::fail($data['code']);
+        }
+    
+        $data_list = $data['data'];
+    
         $entity_list_html = $this->render('bcsTrade_list', array('data_list' => $data_list, 'current_page' => $current_page, 'total_page' => $total_page), true);
         if($isIndex) {
             $view_html = $this->render('bcsTrade', array('entity_list_html' => $entity_list_html ), true);
@@ -517,6 +599,97 @@ class BcsTradeController extends BaseController {
         }
     
         EC::success(EC_OK, $data);
+    }
+ 
+    protected function spd_loadAccountTradeList() {
+        $virtualAcctNo = Request::post('virtualAcctNo');
+    
+        $spdBank_model = $this->model('spdBank');
+        $conf = $this->getConfig('conf');
+    
+        $params = array();
+        $params['beginNumber'] = 1;
+        $params['queryNumber'] = 20;
+        
+        //TODO for test
+        $params['virtualAcctNo'] = '62250806009'; // 虚账号
+        $params['shareBeginDate'] = '20160301'; // 分摊开始日期
+//         $params['shareBeginDate'] = date('Ymd',time()); // 分摊开始日期
+        $params['shareEndDate'] = date('Ymd',time()); // 分摊结束日期
+        $params['jnlSeqNo'] = ''; // 业务流水号 交易流水号
+        $params['summonsNumber'] = ''; // 流水号的组内序号
+        $params['transBeginDate'] = ''; // 交易开始日期 交易流水产生时间
+        $params['transEndDate'] = ''; // 交易结束日期 交易流水结束时间
+        
+        if( !empty($virtualAcctNo) ) {
+            $params['virtualAcctNo'] = $virtualAcctNo;
+        }
+    
+        $totalNumber = 0 ;
+        do {
+            $data = $spdBank_model->queryAccountTransferAmount($params);
+            Log::notice('spd_loadAccountTradeList ==== >>> data=##' . json_encode($data) . "##");
+    
+            $totalNumber = $data['body']['totalNumber'];
+            $data_lists = $data['body']['lists']['list'];
+    
+            $this->addAccountTradeList($data_lists);
+            $params['beginNumber'] = $params['beginNumber'] + $params['queryNumber'] ;
+        } while ( $totalNumber >= $params['beginNumber']);
+    
+        EC::success(EC_OK);
+    }
+    
+    private function addAccountTradeList($data_lists = array()){
+        if(empty($data_lists)){
+            Log::notice("addAccountTradeList data_lists is empty . ");
+            return ;
+        }
+    
+        $bcsTrade_model = $this->model('bcsTrade');
+        foreach($data_lists as $obj ){
+            Log::notice("addAccountTradeList ===========================>> data = ##" . json_encode($obj) . "##" );
+            $trade = array();
+            $trade['record_bank_type'] = 2; // 1-bcs长沙银行 2-psd浦发银行
+            $trade['ACCOUNT_NO'] = $obj['virtualAcctNo']; // 虚账号
+            $trade['MCH_TRANS_NO'] = $obj['tellerJnlNo']; // 柜员流水号
+            $trade['accountBalance'] = $obj['accountBalance']; // 帐户余额
+            
+            $info_data = $bcsTrade_model->getInfo($trade);
+            if(EC_OK != $info_data['code']){
+                Log::error("getInfo failed . virtualAcctNo-ACCOUNT_NO=" . $trade['ACCOUNT_NO'] . ',code='. $info_data['code'] . ',msg=' . $info_data['msg'] );
+                continue;
+            }
+//             Log::notice("addAccountTradeList ================122==========>> data = ##" . json_encode($info_data) . "##" );
+//             exit;
+    
+            $trade['SELLER_SIT_NO'] = $obj['virtualAcctName']; // 虚账户名称
+            $trade['debitCreditFlag'] = $obj['debitCreditFlag']; // 借贷标志
+            $trade['TX_AMT'] = $obj['transAmount']; // 交易金额
+            $trade['shareDate'] = $obj['shareDate']; // 分摊日期
+            $transTime = (6 == strlen( strval($obj['transTime']) ) ) ? strval($obj['transTime']) : "0" . strval($obj['transTime']);
+            $trade['TRANS_TIME'] = date("Y-m-d h:i:s",strtotime( strval($obj['transDate']) . $transTime ) ); // 交易日期 +交易时间
+            $trade['comment'] = $obj['summaryCode']; // 摘要代码
+            $trade['oppositeAcctNo'] = $obj['oppositeAcctNo']; // 对方帐号
+            $trade['oppositeAcctName'] = $obj['oppositeAcctName']; // 对方名称
+            $trade['status'] = 1; // 交易发送状态 1-成功 2-失败 3-未知
+    
+            $info_data = $info_data['data'][0];
+            if( !empty($info_data) ){
+                $trade['id'] = $info_data['id'];
+                $upd_data = $bcsTrade_model->update($trade);
+                if(EC_OK != $upd_data['code']){
+                    Log::error("getInfo failed . virtualAcctNo-ACCOUNT_NO=" . $trade['ACCOUNT_NO'] . ',code='. $upd_data['code'] . ',msg=' . $upd_data['msg'] );
+                    continue;
+                }
+            } else {
+                $data_rs = $bcsTrade_model->create_add($trade);
+                if($data_rs['code'] !== EC_OK){
+                    Log::error('addAccountTradeList . create bcsCustomer error . code='. $data_rs['code'] . ',msg=' . $data_rs['msg'] );
+                }
+            }
+            Log::notice('addAccountTradeList ==== >>> add-data=##' . $obj['virtualAcctName'] . "##");
+        }
     }
     
 }

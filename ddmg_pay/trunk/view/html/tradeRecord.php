@@ -4,7 +4,7 @@
  */
 ?>
 
-<div class="modal fade" id="info-pay-modal">
+<div class="modal fade" id="add-entity-modal">
 	<div class="modal-dialog" style="width: 1100px;">
 		<div class="modal-content">
 			<div class="modal-header">
@@ -34,6 +34,7 @@
 	</div>
 </div>
 
+<h1 class="page-header">申请付款</h1>
 
 <div class="panel panel-primary">
   <div class="panel-body">
@@ -88,6 +89,10 @@
 	  <div class="alert alert-danger  search-list-hint" id="search-list-hint"></div>
 	</div>
   </div>
+</div>
+
+<div id="add-button-group" style="padding-bottom: 2px;">
+	<a id="add-entity-new" class="btn btn-primary" href="<?php echo Router::getBaseUrl();?>tradeRecord/createApply" >申请付款</a>
 </div>
 
 <div  id="entity-list">

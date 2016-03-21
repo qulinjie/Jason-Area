@@ -1,6 +1,7 @@
 <?php
 
 define('EC_OK', 0);
+define('EC_OK_ERP', 1);
 define('EC_DB_CNT', 1);
 define('EC_OTH_TKN', 2);
 define('EC_NOT_LOGIN', 3);
@@ -66,6 +67,8 @@ define('EC_UPL_FILE_TYPE_ERR',402);
 define('EC_BCS_TRADE_REPE',501);
 define('EC_SIT_NO_NON',601);
 
+define('EC_ERPE_FAI',701);
+
 define('EC_NOT_SIGN','801');
 define('EC_ARY_CANCEL','802');
 define('EC_BLE_LESS','803');
@@ -78,6 +81,8 @@ class EC extends Base {
 	public static $_errMsg = array(
 			
 			EC_OK			=>	'success',
+	        EC_OK_ERP	    =>	'success',
+	        EC_ERPE_FAI		=>	'与ERP系统通讯失败',
 			EC_DB_CNT		=>	'connect to database failed',
 			EC_OTH_TKN		=>	'token error, please retry later',
 			EC_NOT_LOGIN	=>	'not login',

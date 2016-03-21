@@ -25,6 +25,10 @@ class BcsCustomerModel extends CurlModel {
         return self::sendRequest('bcsCustomer/update', $params);
     }
     
+    public function updateBild($params = array()){
+        return self::sendRequest('bcsCustomer/updateBild', $params);
+    }
+    
     public function getInfo($params = array()){
         return self::sendRequest('bcsCustomer/getInfo', $params);
     }

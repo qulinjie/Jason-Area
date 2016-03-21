@@ -34,21 +34,38 @@
 <?php }else{?>
 <div class="panel panel-default">
 <div class="panel-heading" id="search-head-div">付款列表</div>
-  <div class="panel-body" style="width: 1500px;overflow-x: hidden;">
-		<table class="table table-hover" id="data-list-table" style="width: 1500px;max-width: 1500px;overflow-x: hidden;">
+  <div class="panel-body" style="width: 1500px;overflow-x: scroll;">
+		<table class="table table-hover" id="data-list-table" style="width: 2000px;max-width: 2000px;overflow-x: scroll;">
 			<thead>
 				<tr>
 					<th style="display:none">id</th>
 					<th>交易流水号</th><!-- 商户交易流水号 -->
+					<!-- 
+					<th>订单号</th>
+					-->
 					<th>收款/付款</th>
 					<th>交易完成时间</th>
+					
 					<th>对方名称</th>
 					<th>对方帐号</th>
+					<!--  
+					<th>收款方</th>
+					<th>收款方登录账号</th>
+					<th>收款方名称</th>
+					
+					<th>付款方</th>
+					<th>付款方登录账号</th>
+					<th>付款方名称</th>
+					-->
 					<th>付款金额</th>
-					<th>结余</th>
+					<th>付款时间</th>
 					<th>状态</th>
 					<th>备注</th>
-					<?php if(AdminController::isLogin()){ echo '<th>操作</th>'; } ?>
+					<!--  
+					<th>资金监管交易流水号</th>
+					<th>银行交易订单编号</th>
+					-->
+					<th>操作</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -56,6 +73,9 @@
 			<tr>
 				<td style="display:none"><?php echo $item['id'];?><input type="hidden" value="<?php echo $item['status'];?>"></td>
 				<td><?php echo $item['MCH_TRANS_NO'];?></td>
+				<!--
+				<td><?php echo $item['order_no'];?></td>
+				-->
 				<td><?php if('1' == strval($item['debitCreditFlag'])) { 
 				            echo '收款'; 
 				        }else if('0' == strval($item['debitCreditFlag'])) { 
@@ -64,25 +84,38 @@
 				            echo '-';
 				        }
 				    ?>
+				
 				<td><?php echo (0 < strtotime($item['TRANS_TIME']))? $item['TRANS_TIME'] : '-';?>
 				
 				<td><?php echo $item['oppositeAcctName'];?></td>
 				<td><?php echo $item['oppositeAcctNo'];?></td>
 				
+				<!--  
+				<td><?php echo $item['seller_name'];?></td>
+				<td><?php echo $item['s_account'];?></td>
+				<td><?php echo $item['s_nicename'];?></td>
+				
+				<td><?php echo $item['b_company_name'];?></td>
+				<td><?php echo $item['b_account'];?></td>
+				<td><?php echo $item['b_nicename'];?></td>
+				-->
+				
 				<td><?php echo number_format($item['TX_AMT'],2);?></td>
-				<td><?php echo number_format($item['accountBalance'],2);?></td>
+				<td><?php echo (0 < strtotime($item['add_timestamp']))? $item['add_timestamp'] : '-';?></td>
 				<td><?php if($item['status']==BcsTradeModel::$_status_success){ echo "成功"; } 
             				else if($item['status']==BcsTradeModel::$_status_failed) { echo "失败"; } 
                             else if($item['status']==BcsTradeModel::$_status_unknown) { echo "未知"; } ?>
 				</td>
 				<td><?php echo $item['comment'];?></td>
-				<?php if(AdminController::isLogin()){?>
+				<!--  
+				<td><?php echo $item['FMS_TRANS_NO'];?></td>
+				<td><?php echo $item['CTRT_NO'];?></td>
+				-->
 				<td>
 					<div class="btn-group" role="group">
 			             <a id="entity-loadInfo-btn" href="#" data-toggle="modal" data-keyboard="false" data-backdrop="static">更新</a>
 					</div>
 				</td>
-				<?php }?>
 			</tr>
 <?php }?>
 		</tbody>

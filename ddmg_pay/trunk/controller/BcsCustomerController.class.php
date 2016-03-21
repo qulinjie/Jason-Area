@@ -34,6 +34,9 @@ class BcsCustomerController extends BaseController {
                 case 'loadInfo':
                     $this->loadInfo();
                     break;
+                case 'spd_loadAccountList':
+                    $this->spd_loadAccountList();
+                    break;
 //                 case 'exportData':
 //                     $this->exportData();
 //                     break;
@@ -45,6 +48,13 @@ class BcsCustomerController extends BaseController {
                     break;
                 case 'getIncomePay': //客户收付款明细查询
                     $this->getIncomePay();
+                    break;
+                    
+                case 'getAllList':
+                    $this->getAllList();
+                    break;
+                case 'updateBind':
+                    $this->updateBind();
                     break;
                 default:
                     Log::error('page not found . ' . $params[0]);
@@ -420,6 +430,76 @@ class BcsCustomerController extends BaseController {
         EC::success(EC_OK);
     }
     
+    protected function spd_loadAccountList() {
+        $virtualAcctNo = Request::post('virtualAcctNo');
+        
+        $spdBank_model = $this->model('spdBank');
+        $conf = $this->getConfig('conf');
+        
+        $params = array();
+        $params['beginNumber'] = 1;
+        $params['queryNumber'] = 20;
+        $params['virtualAcctNo'] = '';
+        
+        if( !empty($virtualAcctNo) ) {
+            $params['virtualAcctNo'] = $virtualAcctNo;
+        }
+        
+        $totalNumber = 0 ;
+        do {
+            $data = $spdBank_model->queryChildAccount($params);
+//             Log::notice('spd_loadAccountList ==== >>> data=##' . json_encode($data) . "##");
+            
+            $totalNumber = $data['body']['totalNumber'];
+            $data_lists = $data['body']['lists']['list'];
+            
+            $this->addCustomerList($data_lists);
+            $params['beginNumber'] = $params['beginNumber'] + $params['queryNumber'] ;
+        } while ( $totalNumber >= $params['beginNumber']);
+        
+        EC::success(EC_OK);
+    }
+    
+    private function addCustomerList($data_lists = array()){
+        if(empty($data_lists)){
+            Log::notice("addCustomerList data_lists is empty . ");
+            return ;
+        }
+        
+        $bcsCustomer_model = $this->model('bcsCustomer');
+        foreach($data_lists as $obj ){
+            $customer = array();
+            $customer['record_bank_type'] = 2; // 1-bcs长沙银行 2-psd浦发银行
+            $customer['ACCOUNT_NO'] = $obj['virtualAcctNo']; // 虚账号
+            
+            $info_data = $bcsCustomer_model->getInfo($customer);
+            if(EC_OK != $info_data['code']){
+                Log::error("getInfo failed . virtualAcctNo-ACCOUNT_NO=" . $customer['ACCOUNT_NO'] . ',code='. $info_data['code'] . ',msg=' . $info_data['msg'] );
+                continue;
+            }
+            
+            $customer['ACCT_BAL'] = $obj['accountBalance']; // 帐户余额
+            $customer['AVL_BAL'] = $obj['accountBalance'];
+            $customer['SIT_NO'] = $obj['virtualAcctName']; // 虚账户名称
+            $customer['MBR_STS'] = 2; // 客户状态 1-已注册；2-已签约；3-已注销
+            
+            $info_data = $info_data['data'][0];
+            if( !empty($info_data) ){
+                $upd_data = $bcsCustomer_model->update($customer);
+                if(EC_OK != $upd_data['code']){
+                    Log::error("getInfo failed . virtualAcctNo-ACCOUNT_NO=" . $customer['ACCOUNT_NO'] . ',code='. $upd_data['code'] . ',msg=' . $upd_data['msg'] );
+                    continue;
+                }
+            } else {
+                $data_rs = $bcsCustomer_model->create($customer);
+                if($data_rs['code'] !== EC_OK){
+                    Log::error('addCustomerList . create bcsCustomer error . code='. $data_rs['code'] . ',msg=' . $data_rs['msg'] );
+                }
+            }
+            Log::notice('addCustomerList ==== >>> add-data=##' . $obj['virtualAcctName'] . "##");
+        }
+    }
+    
     protected function transfer() {
         $amount = Request::post('amount');
         $pwd = Request::post('pwd');
@@ -620,4 +700,38 @@ class BcsCustomerController extends BaseController {
         $incomePay_html = $this->render('bcsCustomerIncomPay',['data' => $data],true);
         $this->render('index',['page_type' => 'bcsCustomerIncomePay' ,'bcsCustomerIncomePay_html' => $incomePay_html]);
     }
+
+    private function getAllList(){
+        $record_bank_type = Request::post('record_bank_type');
+        
+        $bcsCustomer_model = $this->model('bcsCustomer');
+        
+        $params['record_bank_type'] = $record_bank_type;
+        $params['user_id'] = -1;
+        
+        $data = $bcsCustomer_model->searchList($params, null, null);
+        if(EC_OK != $data['code']){
+            EC::fail($data['code']);
+        }
+        EC::success(EC_OK,$data['data']);
+    }
+    
+    private function updateBind(){
+        $account = Request::post('account');
+        $ACCOUNT_NO = Request::post('ACCOUNT_NO');
+    
+        $bcsCustomer_model = $this->model('bcsCustomer');
+    
+        $params = array();
+        $params['user_id'] = $account;
+        $params['ACCOUNT_NO'] = $ACCOUNT_NO;
+        Log::notice("updateBind data ===============================>> params = ##" . json_encode($params) . "##" );
+        
+        $data = $bcsCustomer_model->updateBild($params);
+        if(EC_OK != $data['code']){
+            EC::fail($data['code']);
+        }
+        EC::success(EC_OK,$data['data']);
+    }
+    
 }

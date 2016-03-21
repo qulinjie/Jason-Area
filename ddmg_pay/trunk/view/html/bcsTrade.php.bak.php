@@ -108,20 +108,34 @@
 	    <input type="text" class="form-control" id="entity-search-FMS_TRANS_NO" placeholder="交易流水号">
 	  </div>
 	  <div class="form-group">
-	    <label for="entity-search-seller_name">对方名称</label>
-	    <input type="text" class="form-control" id="entity-search-seller_name" placeholder="对方名称">
+	    <label for="entity-search-order_no">订单号</label>
+	    <input type="text" class="form-control" id="entity-search-order_no" placeholder="订单号">
 	  </div>
 	  <div class="form-group">
-	    <label for="entity-search-s_account">对方帐号</label>
-	    <input type="text" class="form-control" id="entity-search-s_account" placeholder="对方帐号">
+	    <label for="entity-search-seller_name">收款方</label>
+	    <input type="text" class="form-control" id="entity-search-seller_name" placeholder="收款方">
 	  </div>
 	  <div class="form-group">
-	    <label for="entity-search-time">收付款时间</label>
-	    <input type="text" class="form-control form_datetime" id="entity-search-time1" placeholder="时间">
+	    <label for="entity-search-s_account">收款方登录账号</label>
+	    <input type="text" class="form-control" id="entity-search-s_account" placeholder="收款方登录账号">
+	  </div>
+	  <div class="form-group">
+	    <label for="entity-search-b_account">付款方登录账号</label>
+	    <input type="text" class="form-control" id="entity-search-b_account" placeholder="付款方登录账号">
+	  </div>
+	  <div class="form-group">
+	    <label for="entity-search-time">付款时间</label>
+	    <input type="text" class="form-control form_datetime" id="entity-search-time1" placeholder="付款时间">
 	    -
-	    <input type="text" class="form-control form_datetime" id="entity-search-time2" placeholder="时间">
+	    <input type="text" class="form-control form_datetime" id="entity-search-time2" placeholder="付款时间">
 	  </div>
-	  <div class="form-group" style="display:none;">
+	  <div class="form-group">
+	    <label for="entity-search-amount">付款金额</label>
+	    <input type="text" class="form-control" id="entity-search-amount1" placeholder="付款金额">
+	    -
+	    <input type="text" class="form-control" id="entity-search-amount2" placeholder="付款金额">
+	  </div>
+	  <div class="form-group">
 	    <label for="entity-search-status">付款状态</label>
 	    <select class="form-control" id="entity-search-status">
 	      <option value="-1">全部</option>
@@ -145,9 +159,7 @@
 </div>
 
 <div id="add-button-group" style="padding-bottom: 2px;">
-    <?php if(AdminController::isLogin()){ ?>
 	<a id="entity-loadList-btn" class="btn btn-primary" href="#">更新浦发虚拟子账户流水</a>
-	<?php } ?>
 </div>
 
 <div  id="entity-list">

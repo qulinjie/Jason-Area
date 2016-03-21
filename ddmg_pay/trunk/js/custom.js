@@ -181,11 +181,11 @@ $(function () {
                 msg += '请输入密码<br/>';
             }
 
-            if (pinCode == '') {
+            /*if (pinCode == '') {
                 msg += '请输入验证码<br/>';
             } else if (!/^[A-Za-z0-9]{4}$/.test(pinCode)) {
                 msg += '请输入正确的验证码<br/>';
-            }
+            }*/
 
             if (msg) {
                 $(this).removeAttr('disabled');

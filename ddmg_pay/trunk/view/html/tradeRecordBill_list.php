@@ -26,94 +26,97 @@
 	</div>
 </div>
 
+
+<?php if(empty($data_list)){?>
+<div class="alert alert-info" role="alert"><p class="text-center">
+	无记录
+</p></div>
+<?php }else{?>
 <div class="panel panel-default">
-  <div class="panel-body" style="padding: 1px;">
-  
-		<div class="classify" style="width: 1197px;">
-            <span class="dh">单号</span>
-            <span class="sj">下单时间</span>
-            <span class="mj">采购商</span>
-            <span class="je">实收金额（元）</span>
-            <span class="yw" style="left: 760px;">收款时间</span>
-            <span class="yw" style="left: 910px;">收款状态</span>
-            <span class="cz"><span id="order-status-show">操作</span></span>
-       </div>
-    <?php if(empty($data_list)){?>
-    <div class="alert alert-info" role="alert"><p class="text-center">
-    	无记录
-    </p></div>
-    <?php }else{?>
+<div class="panel-heading">列表</div>
+  <div class="panel-body" style="width: 1500px;overflow-x: scroll;">
+		<table class="table table-hover" style="width: 3000px;max-width: 3000px;overflow-x: scroll;">
+			<thead>
+				<tr>
+					<th style="display:none">id</th>
+					<th>单号</th>
+					<th>下单时间</th>
+					<th>采购商</th>
+					<th>实收金额（元）</th>
+					<th>业务员</th>
+					<th>业务员电话</th>
+					<th>收款时间</th>
+					<th>收款状态</th>
+					<th><span id="order-status-show">操作</span></th>
+				</tr>
+			</thead>
+			<tbody>
     <span id="span-trade-order-list">
     <?php foreach ($data_list as $item){?>       
-       
-       <div class="content">
-            <span style="display:none"><?php echo $item['id'];?><input type="hidden" value="<?php echo $item['order_status'];?>"></span>
-            <span class="odd"><?php echo $item['order_no'];?></span>
-            <span class="sj"><?php echo $item['order_timestamp'];?></span>
-            <span class="mj"><?php echo $item['seller_name'];?></span>
-            <span class="je"><?php echo number_format($item['order_bid_amount'],2);?></span>
-            <span class="xm" style="left: 760px;top:19px;"><?php echo $item['pay_timestamp'];?></span>
-            <span class="xm" style="left: 910px;top:19px;"><?php echo (TradeRecordModel::$_send_status_n == $item['send_status'])?'冻结':'正常';?></span>
-            <span class="fk" style="left: 1017px;top:19px;">
+       <tr>
+            <td style="display:none"><?php echo $item['id'];?><input type="hidden" value="<?php echo $item['order_status'];?>"></td>
+            <td><?php echo $item['order_no'];?></td>
+            <td><?php echo $item['order_timestamp'];?></td>
+            <td><?php echo $item['seller_name'];?></td>
+            <td><?php echo number_format($item['order_bid_amount'],2);?></td>
+            <td><?php echo $item['partner_name']; ?></td>
+            <td><?php echo $item['partner_tel']; ?></td>
+            <td><?php echo $item['pay_timestamp'];?></td>
+            <td><?php echo (TradeRecordModel::$_send_status_n == $item['send_status'])?'冻结':'正常';?></td>
+            <td>
                 <?php if( TradeRecordModel::$_send_status_n == $item['send_status'] ){ ?> <!-- 未确认发货  -->
                 <span><a id="add-check-new" href="#" data-toggle="modal"	data-keyboard="false" data-backdrop="static">登记实发</a></span>
                 <?php } else { echo '已登记实发'; } ?>
-            </span>
-            <span class="jf" style="left: 1097px;top:19px;">
+            </td>
+            <td>
                 <?php if(TradeRecordModel::$_check_status_y == $item['check_status']){?>
                     <?php if(TradeRecordModel::$_send_status_n == $item['send_status']){ ?> <!-- 先登记实发  未确认发货  -->
                         <span><a id="entity-changeStatus-btn" href="#" data-toggle="modal" data-keyboard="false" data-backdrop="static" style="margin-left: 5px;">确认发货</a></span>
                     <?php } else { echo '已确认发货'; } ?>
                 <?php }else{ echo '-';}?>    
-            </span>
-       </div>
-       <div class="information" style="width:1198px;">
-            <div class="one">
-                <span class="lx">联系人：<?php echo $item['partner_name']; ?></span>
-                <span class="phone">手机：<?php echo $item['partner_tel']; ?></span>
-                <span class="dh">公司电话：<?php echo $item['partner_company_tel'];?></span>
-            </div>
-            <div class="two">
-                <span class="dh">订单号</span>
-                <span class="pm">品名</span>
-                <span class="gg">规格</span>
-                <span class="cz">材质</span>
-                <span class="jh">交货地</span>
-                <span class="dj">单价（元/ 吨）</span>
-                <span class="dg">订购量（吨）</span>
-                <span class="je">订单金额（元）</span>
-                <span class="sfn">实提数量（件）</span>
-                <span class="sfw">实提重量（吨）</span>
-                <span class="sfje">应收金额（元）</span>
-            </div>
+            </td>
+       </tr>
+       <tr>
+       <td colspan="10">
+           <table style="width: 99%;background-color: #e8e8e8;">
+            <tr>
+                <td>订单号</td>
+                <td>品名</td>
+                <td>规格</td>
+                <td>材质</td>
+                <td>交货地</td>
+                <td>单价（元/ 吨）</td>
+                <td>订购量（吨）</td>
+                <td>订单金额（元）</td>
+                <td>实提数量（件）</td>
+                <td>实提重量（吨）</td>
+                <td>应收金额（元）</td>
+            </tr>
             <?php foreach ($item['list'] as $v){?>
-            <div class="three">
-                <span class="dh"><?php echo $v['order_no'];?></span>
-                <span class="pm"><?php echo $v['item_name'];?></span>
-                <span class="gg"><?php echo $v['item_size'];?></span>
-                <span class="cz"><?php echo $v['item_type'];?></span>                
-                <span class="jh"><?php echo $v['item_delivery_addr'];?></span>
-                <span class="dj"><?php echo number_format($v['item_price'],2);?></span>
-                <span class="dg"><?php echo $v['item_weight'];?></span>
-                <span class="je"><?php echo number_format($v['item_amount'],2);?></span>
-                <span class="sfn"><?php echo $v['item_count_send'];?></span>
-                <span class="sfw"><?php echo number_format($v['item_weight_send'],3);?></span>
-                <span class="sfje"><?php echo number_format($v['item_amount_send'],2);?></span>
-            </div>
-            <?php }?>
-            <div class="four">合计：<em style="margin-right:272px;"><?php echo number_format($item['order_bid_amount'],2);?><span style="color: #000;">元</span></em> &nbsp;<em style="margin-right:26px;"><?php echo number_format(array_sum(array_column($item['list'], 'item_amount_send')),2);?><span style="color: #000;">元</span></em></div>
-      </div>
+            <tr>
+                <td><?php echo $v['order_no'];?></td>
+                <td><?php echo $v['item_name'];?></td>
+                <td><?php echo $v['item_size'];?></td>
+                <td><?php echo $v['item_type'];?></td>                
+                <td><?php echo $v['item_delivery_addr'];?></td>
+                <td><?php echo number_format($v['item_price'],2);?></td>
+                <td><?php echo $v['item_weight'];?></td>
+                <td><?php echo number_format($v['item_amount'],2);?></td>
+                <td><?php echo $v['item_count_send'];?></td>
+                <td><?php echo number_format($v['item_weight_send'],3);?></td>
+                <td><?php echo number_format($v['item_amount_send'],2);?></td>
+            </tr>
+			<?php }?>
+		  </table>
+       </td>
+       </tr>
     <?php }?>
     </span>
-  </div>
-</div>
+</tbody>
+</table>
 
 <nav>
   <ul class="pager" id="entity-pager-ul">
-    <li style="float: left;">
-	    <a class="dq" href="#" id="entity-export-page-btn" style="color: #424242; background: #F2F2F2 none repeat scroll 0% 0%; border: 1px solid #DADADA; border-radius: 0px;">导出当前页</a>
-        <a class="qb" href="#" id="entity-export-all-btn" style="color: #424242; background: #F2F2F2 none repeat scroll 0% 0%; border: 1px solid #DADADA; border-radius: 0px;">导出全部</a>
-    </li>
     <li><a id="entity-list-prev" href="#" <?php if($current_page == 1){?> class="disabled" <?php }?>>上一页</a></li>
     <li><span id="entity-current-page"><?php echo $current_page;?></span> /  <span id="entity-total-page"><?php echo $total_page;?></span></li>
     <li><a id="entity-list-next" href="#" <?php if($current_page == $total_page){?> class="disabled" <?php }?>>下一页</a></li>
