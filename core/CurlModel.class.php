@@ -25,7 +25,9 @@ class CurlModel
 	protected function postRequest( $url, $data=[], $header=[], $proxy=null, $expire=36000 )
 	{
         if ( !$url ) return false;
-
+        Log::notice("postRequest url ===========================>> url = ##" . $url . "##" );
+//         Log::notice("postRequest data ===========================>> data = ##" . json_encode($data) . "##" );
+        
         $ch = curl_init();
         curl_setopt( $ch, CURLOPT_URL, $url );
         // 设置代理
@@ -76,8 +78,10 @@ class CurlModel
     
 		// 执行发送CURL
         $response = curl_exec( $ch );
-		//print_r( $response );
-		//exit;
+//         Log::notice("curl_exec data ===========================>> response = ##" . $response . "##" );
+// 		print_r( $response );
+// 		exit;
+
         $httpCode = curl_getinfo( $ch, CURLINFO_HTTP_CODE );
         if ( $httpCode != 200 ) {
             echo 'curl http query fail! httpCode error, httpCode:' . $httpCode . '<BR>';
@@ -204,18 +208,18 @@ class CurlModel
         //$base_data = array('caller' => 'test', 'callee' => 'ddmg_erp','eventid' => rand() % 10000, 'timestamp' => time());
         //$base_data['data'] = $data;
     
-        Log::notice('sendRequestSpdSign====>>>>interface=##' . $interface . '##' . ',signFiag=##' . $signFiag . '##');
-        Log::notice('sendRequestSpdSign====>>>>request_data=##' . $data . '##');
+        Log::spdNotice('sendRequestSpdSign====>>>>interface=##' . $interface . '##' . ',signFiag=##' . $signFiag . '##');
+        Log::spdNotice('sendRequestSpdSign====>>>>request_data=##' . $data . '##');
     
         $header = array();
         if( 'v' == $signFiag ){
-            $header[] = 'Content-type: INFOSEC_VERIFY_SIGN/1.0';
+            $header[] = 'Content-type: INFOSEC_VERIFY_SIGN/1.0;charset=GB2312';
         } else {
-            $header[] = 'Content-type: INFOSEC_SIGN/1.0d';
+            $header[] = 'Content-type: INFOSEC_SIGN/1.0d;charset=GB2312';
         }
         $ret = self::postRequest_nodecode(CurlModel::getServerSpdSignUrl() . $interface, $data, $header);
     
-        Log::notice('sendRequestSpdSign====>>>>reponse=##' . $ret . '##');
+        Log::spdNotice('sendRequestSpdSign====>>>>reponse=##' . $ret . '##');
         return $ret;
     }
     
@@ -223,14 +227,14 @@ class CurlModel
         //$base_data = array('caller' => 'test', 'callee' => 'ddmg_erp','eventid' => rand() % 10000, 'timestamp' => time());
         //$base_data['data'] = $data;
     
-        Log::notice('sendRequestSpdSend====>>>>interface=##' . $interface . '##');
-        Log::notice('sendRequestSpdSend====>>>>request_data=##' . $data . '##');
+        Log::spdNotice('sendRequestSpdSend====>>>>interface=##' . $interface . '##');
+        Log::spdNotice('sendRequestSpdSend====>>>>request_data=##' . $data . '##');
     
         $header = array();
-        $header[] = 'Content-type: INFOSEC_SIGN/1.0d';
+        $header[] = 'Content-type: INFOSEC_SIGN/1.0d;charset=GB2312';
         $ret = self::postRequest_nodecode(CurlModel::getServerSpdSendUrl() . $interface, $data, $header);
     
-        Log::notice('sendRequestSpdSend====>>>>reponse=##' . $ret . '##');
+        Log::spdNotice('sendRequestSpdSend====>>>>reponse=##' . $ret . '##');
         return $ret;
     }
     
@@ -263,6 +267,16 @@ class CurlModel
 	        EC::fail(EC_DAT_NON);
 	    }
 	    return $config['ddmg_java_url'].$interface;
+	}
+	
+	protected function getUrlErp( $interface )
+	{
+	    $config = Controller::getConfig('conf');
+	    if(!isset($config['ddmg_erp_url']) || !$config['ddmg_erp_url']){
+	        Log::error('config ddmg_erp_url is not exists or is empty');
+	        EC::fail(EC_DAT_NON);
+	    }
+	    return $config['ddmg_erp_url'].$interface;
 	}
 	
 	//大大买刚server
@@ -382,22 +396,19 @@ class CurlModel
 
 	public function sendRequestErp($interface, $data)
 	{
-        $base_data = array('caller' => 'test', 'callee' => 'ddmg_erp','eventid' => rand() % 10000, 'timestamp' => time());
+        $base_data = [ 'caller'=>'ddmg_pay', 'callee'=>'ebLlyZDBSGgp', 'eventid'=>rand(1000,9999), 'timestamp'=>time() ];
         $base_data['data'] = $data;
     
+//         Log::error("\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n");
         Log::error('sendRequestErp====>>>>interface=##' . $interface . '##');
         Log::error('sendRequestErp====>>>>request_data=##' . json_encode($base_data) . '##');
     
-		//getServerErpUrl ==>> http://120.25.1.102:8081/erpinterface/
-        //$ret = self::postRequest(CurlModel::getServerErpUrl() . $interface, json_encode($base_data));
-		//$ret = self::postRequest( 'http://192.168.1.52:8080/erpinterface/' . $interface, json_encode($base_data));
-		$ret = self::postRequest( 'http://120.25.1.102:8081/erpinterface/' . $interface, json_encode($base_data));
-
+        $header[] = 'Content-type: application/json;charset=UTF-8';
+        $ret = self::postRequest(CurlModel::getUrlErp($interface), $base_data, $header);
     
-        Log::error('sendRequestErp====>>>>reponse=##' . $ret . '##');
+        Log::error('sendRequestErp====>>>>reponse=##' . json_encode($ret) . '##');
         return $ret;
     }
-	
 
 	public static function clearCRULRedis(  )
 	{
@@ -414,4 +425,18 @@ class CurlModel
 		self::$_redis = $this->getRedis();
 	}
 
+	// for test
+	public function test_sendRequestServer( $interface, $base_data = [] )
+	{
+	    if ( !$interface ) {
+	        return false;
+	    }
+	    Log::notice("test_sendRequestServer data ================================>> interface = " . $interface . ",request = ##" . json_encode($base_data) . "##" );
+	    $header[] = 'Content-type: application/json;charset=UTF-8';
+	    $ret = $this->postRequest( $interface, $base_data, $header);
+	    Log::notice("test_sendRequestServer data ================================>> response = ##" . json_encode($ret) . "##" );
+	    return $ret;
+	}
+	
+	
 }

@@ -46,6 +46,9 @@ class TestController extends BaseController
             case 'spd_4465':
                 $this->spd_4465();
                 break;
+            case 'spd_4466':
+                $this->spd_4466();
+                break;
             case 'spd_5145':
                 $this->spd_5145();
                 break;
@@ -58,6 +61,22 @@ class TestController extends BaseController
             case 'spd_4469':
                 $this->spd_4469();
                 break;
+            case 'spd_5148':
+                $this->spd_5148();
+                break;
+            case 'spd_EG48':
+                $this->spd_EG48();
+                break;
+            case 'spd_8801':
+                $this->spd_8801();
+                break;
+                
+            case 'test_sr':
+                $this->test_sr();
+                break;
+            case 'test_sr2':
+                $this->test_sr2();
+                break;
             default:
                 Log::error('page not found');
                 EC::page_not_found();
@@ -68,13 +87,16 @@ class TestController extends BaseController
     
     // str-SPD
     
+    //5144虚账户母子关系登记薄查询
     public function spd_5144(){
         Log::notice('-------SPD----TestController--------------------spd_5144==>>str');
         
         $model = $this->model('test');
         
         //1
-        $param = '<body><acctNo>6224080602781</acctNo><virtualAcctNo></virtualAcctNo><beginNumber>1</beginNumber><queryNumber>20</queryNumber></body>';
+        //$param = '<body><acctNo>6224080602781</acctNo><virtualAcctNo></virtualAcctNo><beginNumber>1</beginNumber><queryNumber>20</queryNumber></body>';
+        //$param = '<body><acctNo>6224080600234</acctNo><virtualAcctNo>62250806009</virtualAcctNo><beginNumber>1</beginNumber><queryNumber>20</queryNumber></body>';
+        $param = '<body><acctNo>6224080600234</acctNo><virtualAcctNo></virtualAcctNo><beginNumber>1</beginNumber><queryNumber>20</queryNumber></body>';
         $data = $model->testSpdSign1($param);
         Log::notice("\r\n\r\n ============111================\r\n\r\n");
         
@@ -103,10 +125,19 @@ class TestController extends BaseController
         Log::notice('-------SPD----TestController--------------------spd_4362==>>str');
     
         $model = $this->model('test');
-    
+        
+//         $masterName_unistr = $this->unicode_encode("令狐冲", 'UTF-8', "\\u", '');
+//         Log::notice("\r\n\r\n ============000================\r\n\r\n masterName_unistr令狐冲=##" . $masterName_unistr . "##" . iconv('UTF-8', 'GB2312', "令狐冲"));
+//         exit;
+        
         //1
         //$param = '<body><acctNo>6224080602781</acctNo><lists name="LoopResult"><list><masterName>大汉长沙张三</masterName><virtualAcctNo>62250806001</virtualAcctNo><rate>0</rate></list><list><masterName>大汉长沙李四</masterName><virtualAcctNo>62250806002</virtualAcctNo><rate>0</rate></list><list><masterName>大汉武汉王五</masterName><virtualAcctNo>62250806003</virtualAcctNo><rate>0</rate></list><list><masterName>大汉徐州周六</masterName><virtualAcctNo>62250806004</virtualAcctNo><rate>0</rate></list></lists></body>';
-        $param = '<body><acctNo>6224080602781</acctNo><lists name="LoopResult"><list><masterName>大汉长沙张三</masterName><virtualAcctNo>62250806001</virtualAcctNo><rate>0</rate></list></lists></body>';
+        //$param = '<body><acctNo>6224080600234</acctNo><lists name="LoopResult"><list><masterName>Test-ZhangKui</masterName><virtualAcctNo>62250806002</virtualAcctNo><rate>1</rate></list></lists></body>';
+        //$param = '<body><acctNo>6224080600234</acctNo><lists name="LoopResult"><list><masterName>zhangkui</masterName><virtualAcctNo>62250806005</virtualAcctNo><rate>1</rate></list></lists></body>';
+        //$param = '<body><acctNo>6224080600234</acctNo><lists name="LoopResult"><list><masterName>令狐冲</masterName><virtualAcctNo>62250806008</virtualAcctNo><rate>1</rate></list></lists></body>';
+        
+        $masterName = $this->iconvFunc("刘新辉");
+        $param = '<body><acctNo>6224080600234</acctNo><lists name="LoopResult"><list><masterName>' . $masterName . '</masterName><virtualAcctNo>62250806009</virtualAcctNo><rate>1</rate></list></lists></body>';
         $data = $model->testSpdSign1($param);
         Log::notice("\r\n\r\n ============111================\r\n\r\n");
     
@@ -137,7 +168,8 @@ class TestController extends BaseController
         $model = $this->model('test');
     
         //1
-        $param = '<body><acctNo>6224080602781</acctNo><beginNumber>1</beginNumber><queryNumber>20</queryNumber></body>';
+        //$param = '<body><acctNo>6224080602781</acctNo><beginNumber>1</beginNumber><queryNumber>20</queryNumber></body>';
+        $param = '<body><acctNo>6224080600234</acctNo><beginNumber>21</beginNumber><queryNumber>20</queryNumber></body>';
         $data = $model->testSpdSign1($param);
         Log::notice("\r\n\r\n ============111================\r\n\r\n");
     
@@ -157,6 +189,11 @@ class TestController extends BaseController
         $param = strval( $data['body']['signature'] );
         $data = $model->testSpdSign2($param);
     
+//         header('Content-type:Text/html;charset=UTF-8');
+//         header('Content-type:Text/html;charset=GB2312');
+//         var_export( json_encode($data['body']['sic']) );
+//         var_export($data['body']['sic']);
+//         exit;
         Log::notice('-------SPD----TestController---------------------spd_4381==>>end');
     
         EC::success(EC_OK,$data['body']['sic']);
@@ -168,7 +205,7 @@ class TestController extends BaseController
         $model = $this->model('test');
     
         //1
-        $param = '<body><acctNo>6224080602781</acctNo><virtualAcctNo>12345678901</virtualAcctNo></body>';
+        $param = '<body><acctNo>6224080600234</acctNo><virtualAcctNo>62250806003</virtualAcctNo></body>';
         $data = $model->testSpdSign1($param);
         Log::notice("\r\n\r\n ============111================\r\n\r\n");
     
@@ -199,7 +236,7 @@ class TestController extends BaseController
         $model = $this->model('test');
     
         //1
-        $param = '<body><acctNo>6224080602781</acctNo><shareType>0</shareType><seqNos></seqNos><jnlNoProduceDate></jnlNoProduceDate><beginNumber>1</beginNumber><queryNumber>20</queryNumber></body>';
+        $param = '<body><acctNo>6224080602781</acctNo><shareType>0</shareType><seqNos>999701040001</seqNos><jnlNoProduceDate>20160308</jnlNoProduceDate><beginNumber>1</beginNumber><queryNumber>20</queryNumber></body>';
         $data = $model->testSpdSign1($param);
         Log::notice("\r\n\r\n ============111================\r\n\r\n");
     
@@ -224,13 +261,47 @@ class TestController extends BaseController
         EC::success(EC_OK,$data['body']['sic']);
     }
     
+    public function spd_4466(){
+        Log::notice('-------SPD----TestController--------------------spd_4466==>>str');
+    
+        $model = $this->model('test');
+    
+        //1
+        //$param = '<body><acctNo>6224080602781</acctNo><jnlNoDate>20160309</jnlNoDate><seqNos>999701040001</seqNos><summonsNumber>3</summonsNumber><transAmount>1000</transAmount><debitCreditFlag>1</debitCreditFlag><shareRule>2</shareRule><shareType>1</shareType><summaryCode></summaryCode><lists name="LoopResult"><list><virtualAcctNo>12345678901</virtualAcctNo><transAmount>1000</transAmount></list></lists></body>';
+        $param = '<body><acctNo>6224080600234</acctNo><jnlNoDate>20160314</jnlNoDate><seqNos>999701220001</seqNos><summonsNumber>3</summonsNumber><transAmount>112</transAmount><debitCreditFlag>1</debitCreditFlag><shareRule>2</shareRule><shareType>1</shareType><summaryCode></summaryCode><lists name="LoopResult"><list><virtualAcctNo>62250806009</virtualAcctNo><transAmount>112</transAmount></list></lists></body>';
+        $data = $model->testSpdSign1($param);
+        Log::notice("\r\n\r\n ============111================\r\n\r\n");
+    
+        //2
+        $signature = strval( $data['body']['sign'] );
+        $param = "<?xml version='1.0' encoding='GB2312'?><packet><head>"
+            . "<transCode>4466</transCode><signFlag>1</signFlag>"
+                . "<masterID>2000040752</masterID><packetID>"
+                    . date('YmdHis',time()) . "</packetID><timeStamp>"
+                        . date('Y-m-d H:i:s',time()) . "</timeStamp></head><body><signature>"
+                            . $signature  . "</signature></body></packet>";
+        $param = (strlen($param) + 6) . '  ' . $param;
+        $data = $model->testSpdSend1($param);
+        Log::notice("\r\n\r\n ============222================\r\n\r\n");
+    
+        //3
+        $param = strval( $data['body']['signature'] );
+        $data = $model->testSpdSign2($param);
+    
+        Log::notice('-------SPD----TestController---------------------spd_4466==>>end');
+    
+        EC::success(EC_OK,$data['body']['sic']);
+    }
+    
+    //5145虚账户已分摊交易明细查询
     public function spd_5145(){
         Log::notice('-------SPD----TestController--------------------spd_5145==>>str');
     
         $model = $this->model('test');
     
         //1
-        $param = '<body><acctNo>6224080602781</acctNo><virtualAcctNo>12345678901</virtualAcctNo><jnlSeqNo></jnlSeqNo><summonsNumber></summonsNumber><transBeginDate></transBeginDate><transEndDate></transEndDate><shareBeginDate>20160101</shareBeginDate><shareEndDate>20160130</shareEndDate><beginNumber>1</beginNumber><queryNumber>20</queryNumber></body>';
+        //$param = '<body><acctNo>6224080602781</acctNo><virtualAcctNo>12345678901</virtualAcctNo><jnlSeqNo></jnlSeqNo><summonsNumber></summonsNumber><transBeginDate></transBeginDate><transEndDate></transEndDate><shareBeginDate>20160301</shareBeginDate><shareEndDate>20160330</shareEndDate><beginNumber>1</beginNumber><queryNumber>20</queryNumber></body>';
+        $param = '<body><acctNo>6224080600234</acctNo><virtualAcctNo>62250806009</virtualAcctNo><jnlSeqNo></jnlSeqNo><summonsNumber></summonsNumber><transBeginDate></transBeginDate><transEndDate></transEndDate><shareBeginDate>20160301</shareBeginDate><shareEndDate>20160330</shareEndDate><beginNumber>1</beginNumber><queryNumber>20</queryNumber></body>';
         $data = $model->testSpdSign1($param);
         Log::notice("\r\n\r\n ============111================\r\n\r\n");
     
@@ -251,7 +322,9 @@ class TestController extends BaseController
         $data = $model->testSpdSign2($param);
     
         Log::notice('-------SPD----TestController---------------------spd_5145==>>end');
-    
+//         header('Content-type:Text/html;charset=utf-8');
+//         var_export( $data );
+//         exit;
         EC::success(EC_OK,$data['body']['sic']);
     }
 
@@ -261,7 +334,9 @@ class TestController extends BaseController
         $model = $this->model('test');
     
         //1
-        $param = '<body><acctNo>6224080602781</acctNo><beginDate>20160101</beginDate><endDate>20160130</endDate><beginNumber>1</beginNumber><queryNumber>5</queryNumber></body>';
+        //$param = '<body><acctNo>6224080602781</acctNo><beginDate>20160101</beginDate><endDate>20160130</endDate><beginNumber>1</beginNumber><queryNumber>5</queryNumber></body>';
+        //$param = '<body><acctNo>6224080602781</acctNo><beginDate>20160309</beginDate><endDate>20160309</endDate><beginNumber>1</beginNumber><queryNumber>15</queryNumber></body>';
+        $param = '<body><acctNo>6224080600234</acctNo><beginDate>20160314</beginDate><endDate>20160314</endDate><beginNumber>1</beginNumber><queryNumber>5</queryNumber></body>';
         $data = $model->testSpdSign1($param);
         Log::notice("\r\n\r\n ============111================\r\n\r\n");
     
@@ -292,7 +367,7 @@ class TestController extends BaseController
         $model = $this->model('test');
     
         //1
-        $param = '<body><acctNo>6224080602781</acctNo><beginNumber>1</beginNumber><queryNumber>20</queryNumber></body>';
+        $param = '<body><acctNo>6224080600234</acctNo><beginNumber>41</beginNumber><queryNumber>20</queryNumber></body>';
         $data = $model->testSpdSign1($param);
         Log::notice("\r\n\r\n ============111================\r\n\r\n");
     
@@ -348,6 +423,75 @@ class TestController extends BaseController
         EC::success(EC_OK,$data['body']['sic']);
     }
     
+    public function spd_5148(){
+        Log::notice('测试-------SPD----TestController--------------------spd_5148==>>str');
+        
+        $model = $this->model('test');
+        
+        //1
+        //$param = '<body><electronNumber></electronNumber><appointDate></appointDate><acctNo>6224080602781</acctNo><payerVirAcctNo>12345678901</payerVirAcctNo><payerName>浦发2000046127</payerName><payeeAcctType>0</payeeAcctType><payeeAcctNo>6223635001004485218</payeeAcctNo><payeeAcctName>钟煦镠 </payeeAcctName><payeeBankNo>313585000990</payeeBankNo><payeeBankName>珠海华润银行股份有限公司清算中心</payeeBankName><payeeBankAddress>珠海华润银行股份有限公司清算中心</payeeBankAddress><transAmount>1.2</transAmount><ownItBankFlag>1</ownItBankFlag><remitLocation>1</remitLocation><note>测试虚拟账户转账付款</note><payeeBankSelectFlag>1</payeeBankSelectFlag></body>';
+        
+        $payeeAcctName = $this->iconvFunc("钟煦镠");
+        $payerName = $this->iconvFunc("浦发2000046127");
+        $payeeBankName = $this->iconvFunc("珠海华润银行股份有限公司清算中心");
+        $payeeBankName = $this->iconvFunc("珠海华润银行股份有限公司清算中心");
+        $note = $this->iconvFunc("测试虚拟账户转账付款");
+        
+        $param = '<body><electronNumber></electronNumber><appointDate></appointDate><acctNo>6224080600234</acctNo><payerVirAcctNo>62250806009</payerVirAcctNo><payerName>' . $payerName . '</payerName><payeeAcctType>0</payeeAcctType><payeeAcctNo>6223635001004485218</payeeAcctNo><payeeAcctName>' . $payeeAcctName . '</payeeAcctName><payeeBankNo>313585000990</payeeBankNo><payeeBankName>' . $payeeBankName . '</payeeBankName><payeeBankAddress>' . $payeeBankName . '</payeeBankAddress><transAmount>82.5</transAmount><ownItBankFlag>1</ownItBankFlag><remitLocation>1</remitLocation><note>' . $note . '</note><payeeBankSelectFlag>1</payeeBankSelectFlag></body>';
+        
+        $data = $model->testSpdSign1($param);
+        Log::notice("\r\n\r\n ============111================\r\n\r\n");
+    
+        //2
+        $signature = strval( $data['body']['sign'] );
+        $param = "<?xml version='1.0' encoding='GB2312'?><packet><head>"
+            . "<transCode>5148</transCode><signFlag>1</signFlag>"
+                . "<masterID>2000040752</masterID><packetID>"
+                    . date('YmdHis',time()) . "</packetID><timeStamp>"
+                        . date('Y-m-d H:i:s',time()) . "</timeStamp></head><body><signature>"
+                            . $signature  . "</signature></body></packet>";
+        $param = (strlen($param) + 6) . '  ' . $param;
+        $data = $model->testSpdSend1($param);
+        Log::notice("\r\n\r\n ============222================\r\n\r\n");
+    
+        //3
+        $param = strval( $data['body']['signature'] );
+        $data = $model->testSpdSign2($param);
+    
+        Log::notice('-------SPD----TestController---------------------spd_5148==>>end');
+    
+        EC::success(EC_OK,$data['body']['sic']);
+    }
+    
+    public function spd_EG48(){
+        Log::notice('-------SPD----TestController--------------------spd_EG48==>>str');
+    
+        $model = $this->model('spdBank');
+    
+        $bankName = $this->iconvFunc("珠海华润银行股份有限公司清算中心");
+        
+        //$param = '<body><bankName></bankName><bankNo></bankNo></body>';
+        $param = '<body><bankName>' . $bankName . '</bankName><bankNo></bankNo></body>';
+        $data = $model->curlSpdRequestXml($param,"EG48");
+        
+        Log::notice('-------SPD----TestController---------------------spd_EG48==>>end');
+    
+        EC::success(EC_OK,$data);
+    }
+    
+    public function spd_8801(){
+        Log::notice('-------SPD----TestController--------------------spd_8801==>>str');
+    
+        $model = $this->model('spdBank');
+    
+        $param = '<body><totalNumber>1</totalNumber><totalAmount>10</totalAmount><elecChequeNo>201637095051</elecChequeNo><acctNo>6224080400151</acctNo><acctName></acctName><bespeakDate></bespeakDate><payeeAcctNo>6224080602781</payeeAcctNo><payeeName></payeeName><payeeType>0</payeeType><payeeBankName></payeeBankName><payeeAddress></payeeAddress><amount>1.35</amount><sysFlag>0</sysFlag><remitLocation>0</remitLocation><note>大汉测试3</note><payeeBankSelectFlag>0</payeeBankSelectFlag><payeeBankNo></payeeBankNo></body>';
+        $data = $model->curlSpdRequestXml($param,"8801");
+    
+        Log::notice('-------SPD----TestController---------------------spd_8801==>>end');
+    
+        EC::success(EC_OK,$data);
+    }
+    
     public function spd_sign(){
         Log::notice('-------SPD----TestController--------------------spd_sign==>>str');
     
@@ -381,6 +525,38 @@ class TestController extends BaseController
         $data = $model->testSpdSign2($param);
         
         EC::success(EC_OK,$data['body']['sic']);
+    }
+    
+    public function iconvFunc($param = ''){
+        $result = iconv('UTF-8', 'GB2312', $param);
+        if( empty($result) ) {
+            $result = iconv('UTF-8', 'GBK', $param);
+        }
+        return $result;
+    }
+    
+    
+    public function test_sr(){
+        $interface = "http://test-api.gt-xx.com/api/pub/userservice/PostUser_Login/";
+        $data = array();
+        $data['loginid'] = '110002';
+        $data['userpwd'] = '1';
+        
+        $model = $this->model('test');
+        $data = $model->test_sendRequest($interface, $data);
+        
+        EC::success(EC_OK,$data);
+    }
+    
+    public function test_sr2(){
+        $interface = "http://test-api.gt-xx.com/api/pub/userservice/PostUser_GetList/";
+        $data = array();
+        $data['is_paymanage'] = '2';
+    
+        $model = $this->model('test');
+        $data = $model->test_sendRequest($interface, $data);
+    
+        EC::success(EC_OK,$data);
     }
     
     // end-SPD

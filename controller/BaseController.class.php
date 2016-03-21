@@ -199,7 +199,8 @@ abstract class BaseController extends Controller
     public function getCurrentUserId()
     {
         $loginUser_data = UserController::getLoginUser();
-        $user_id = $loginUser_data['id'];
+//         $user_id = $loginUser_data['id'];
+        $user_id = $loginUser_data['usercode'];
         if (empty($user_id)) {
             Log::error("getLoginUser_dataJson====================>>>loginUser_data=##" . json_encode($loginUser_data) . "##"); // toStirng
         }
@@ -253,7 +254,7 @@ abstract class BaseController extends Controller
             if (in_array(doit::$params[0], $actList)) {
                 switch ($key) {
                     case 'token': //检查令牌
-                        UserController::checkToken($this->post('token'));//默认 post
+//                         UserController::checkToken($this->post('token'));//默认 post
                         break; 
                     case 'login': //检查登录
                         !UserController::isLogin() && EC::fail(EC_NOT_LOGIN);

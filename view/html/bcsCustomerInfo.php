@@ -52,9 +52,11 @@
 	       <span style="vertical-align:middle;line-height:2.5;">
 	           <?php echo $item['ACCT_BAL'];?>
 	       </span>
+	       <?php if( 1 == $item['record_bank_type'] ) { ?>
 	       &nbsp;&nbsp;
 	       <a id="add-transferIn-new" class="btn btn-primary" href="#" data-toggle="modal" data-keyboard="false" data-backdrop="static">转入</a>
 	       <a id="add-transferOut-new" class="btn btn-primary" href="#" data-toggle="modal" data-keyboard="false" data-backdrop="static">转出</a>
+	       <?php } ?>
 	    </div>
 	    <label class="col-sm-2 control-label">可用余额:</label>
 	    <div class="col-sm-3">

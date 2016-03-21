@@ -47,4 +47,7 @@ class BcsTradeModel extends CurlModel {
         return self::sendRequest('bcsTrade/create', $params);
     }
     
+    public function create_add($params = array()){
+        return self::sendRequest('bcsTrade/create_add', $params);
+    }
 }

@@ -98,7 +98,7 @@ class AdminController extends Controller {
         EC::success(EC_OK);
     }
     
-    private function login(){
+    private function login_old(){
         $account	=	Request::post('account');
         $password	=	Request::post('password');
         $pincode	=	Request::post('pincode');
@@ -142,6 +142,26 @@ class AdminController extends Controller {
             EC::fail($data['code']);
         }
     
+        EC::success(EC_OK);
+    }
+    
+    private function login(){
+        $account	=	Request::post('account');
+        $password	=	Request::post('password');
+        
+        $admin_model = $this->model('admin');
+        $data = $admin_model->erp_login(array('loginid' => $account,'userpwd' => $password));
+        
+        Log::notice('login completed . data=====111256===============>>>>=##' . json_encode($data) . '##');
+        
+        if(EC_OK != $data['code']){
+           Log::error('login failed !');
+           EC::fail($data['code']);
+        }
+        
+        Log::notice('login completed . data=##' . json_encode($data) . '##');
+        $loginUser = $data['data'];
+        AdminController::setLoginSession($loginUser);
         EC::success(EC_OK);
     }
     

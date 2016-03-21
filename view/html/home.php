@@ -37,8 +37,8 @@
                         <input type="hidden" id="token" name="token" value="<?php echo UserController::getToken();?>"/>
                     	<input type="text" class="zh"  id="account" name="account" placeholder="账号"  />
                         <input type="password" class="mm" id="password" name="password" placeholder="登录密码" />
-                        <input type="text" class="yz" id="pinCode" name="pinCode" placeholder="验证码" />
-                        <div class="img">
+                        <input type="text" class="yz" id="pinCode" name="pinCode" placeholder="验证码" style="display:none;"/>
+                        <div class="img" style="display:none;">
                             <a href="javascript:void(0);"><img id="getPinCode" src="<?php echo Router::getBaseUrl()?>user/getPinCode"/></a>                      </div>
                         <div class="wj"><!--  <a href="<?php echo Router::getBaseUrl()?>findPassword/account">忘记密码，去找回！</a>--></div>
                         <input type="button" id="loginBtn" class="dl" name="loginBtn" value="登录" />

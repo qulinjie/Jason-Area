@@ -118,7 +118,7 @@ $(document).ready(function(){
 	
 	
 	// 更新金额
-	$.post(BASE_PATH + 'bcsCustomer/loadInfo', {},function(result){},'json');
+	//$.post(BASE_PATH + 'bcsCustomer/loadInfo', {},function(result){},'json');
 	
 	/**************str--更新****************/
 	$(document).on('click', '#entity-loadInfo-btn', function(event){
@@ -149,6 +149,154 @@ $(document).ready(function(){
 	});
 	/**************end--更新****************/
     
+	/**************str--更新浦发虚拟子账户****************/
+	$(document).on('click', '#entity-loadList-btn', function(event){
+		var objBtn = $(this);
+		objBtn.html('更新中...');
+		
+		$("#operation-entity-hint").html('').fadeOut();
+		$.post(BASE_PATH + 'bcsCustomer/spd_loadAccountList', {},
+		        function(result){
+		            if(result.code != 0) {
+	            		$("#operation-entity-hint").html(result.msg + '(' + result.code + ')').fadeIn();	
+		            } else {
+		            	if(0==result.code){
+		            		$("#operation-entity-hint").html('更新完成！').fadeIn();
+			            	setTimeout(function(){
+			            		search_entity($("#entity-current-page").html());
+			                }, 1000);
+		            	} else {
+		            		$("#operation-entity-hint").html('更新失败！').fadeIn();
+		            	}
+		            }
+		            objBtn.html('更新浦发虚拟子账户');
+		        },
+		        'json'
+		    );
+	});
+	/**************end--更新浦发虚拟子账户****************/
+    
+	/**************start--增加****************/
+	function add_entity(){
+		$("#btn-add-entity").attr('disabled', 'disabled');
+	    $("#add-entity-hint").html('').fadeOut();
+	    
+	    var account  = $("#add-entity-account").val();
+	    var ACCOUNT_NO = $("#add-entity-ACCOUNT_NO").val();
+	    var comment = '';
+	    
+	    var hint_html = '';
+    	if( '' == account || '-1' == account){
+        	hint_html += (hint_html == '' ? '' : '<BR>') + '请填写用户登录账号 ！' ;
+        }
+    	
+    	if( '' == ACCOUNT_NO || '-1' == ACCOUNT_NO){
+        	hint_html += (hint_html == '' ? '' : '<BR>') + '请填写虚拟账户 ！' ;
+        }
+    	
+	    if(hint_html != ''){
+	        $("#add-entity-hint").html(hint_html).fadeIn();
+	        $("#btn-add-entity").removeAttr('disabled');
+	        return 0;
+	    }
+	    
+	    $("#btn-add-entity").html("添加中...");
+	    $.post(BASE_PATH + 'bcsCustomer/updateBind', {
+	        	'account':account, 
+	        	'ACCOUNT_NO':ACCOUNT_NO,
+		        'comment':comment
+	        },
+	        function(result){
+	            if(result.code != 0) {
+	                $("#add-entity-hint").html(result.msg + '(' + result.code + ')').fadeIn();
+	                $("#btn-add-entity").removeAttr('disabled');
+	                $("#btn-add-entity").html("确定");
+	            }else {
+	                $("#add-entity-hint").html(result.msg + ', 关闭...').fadeIn();
+	                setTimeout(function(){
+	                    $("#add-entity-modal").modal('hide');
+	                    $("#btn-add-entity").removeAttr('disabled');
+	                    $("#btn-add-entity").html("确定");
+	                    $('#entity-clear-btn').click();
+	                }, 1000);
+	            }
+	        },
+	        'json'
+	    );
+	}
+
+	$(document).on('click', '#add-entity-new', function(event){
+		$('#add-entity-modal').modal('show');
+		$('#add-entity-modal').modal({keyboard: false});
+			
+		$('#btn-add-entity').show();
+		$('#btn-add-entity').unbind("click");
+
+		var title = $('#add-entity-new').text();
+		$('#info_entity_title').html(title);
+		
+		$("#add-entity-hint").html('').fadeOut();
+		
+		clear_entity_field();
+		
+		$("#btn-add-entity").removeAttr('disabled');
+	    $("#btn-add-entity").html("确定");
+	    
+		$('#btn-add-entity').on('click',function(event){
+			add_entity();
+		});
+
+		renderErpUserSelect();
+		renderSpdCardSelect();
+	});
+
+	function clear_entity_field(){
+		$('#info-entity-id').val('');
+		
+		//$('#add-entity-account').empty();
+		$('#add-entity-comment').val('');
+	}
+
+	function renderSpdCardSelect(id){
+		$("#add-entity-ACCOUNT_NO").empty();
+		
+		$("#add-entity-ACCOUNT_NO").append("<option value='-1'>请选择</option>");
+		$.post(BASE_PATH + 'bcsCustomer/getAllList', {"record_bank_type":2},
+				function(result){
+			        if(result.code != 0) {
+			        	Messenger().post(result.msg + '(' + result.code + ')');
+			        } else {
+			        	var data = result['data'];
+			        	for(var i=0;i<data.length;i++){
+			        		$("#add-entity-ACCOUNT_NO").append("<option value='" + data[i].ACCOUNT_NO + "'>" + data[i].ACCOUNT_NO + " " + data[i].SIT_NO + "</option>");
+			        	}
+			        }
+			    },
+			    'json'
+		);
+	}
+	
+	function renderErpUserSelect(id){
+		$("#add-entity-account").empty();
+		
+		$("#add-entity-account").append("<option value='-1'>请选择</option>");
+		$.post(BASE_PATH + 'user/erp_getList', {},
+				function(result){
+			        if(result.code != 0) {
+			        	Messenger().post(result.msg + '(' + result.code + ')');
+			        } else {
+			        	var data = result['data'];
+			        	for(var i=0;i<data.length;i++){
+			        		$("#add-entity-account").append("<option value='" + data[i].usercode + "'>" + data[i].username + " " + data[i].usercode + "</option>");
+			        	}
+			        }
+			    },
+			    'json'
+		);
+	}
+
+	/**************end--增加****************/
+	
     prettyPrint();
 });
 

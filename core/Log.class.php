@@ -41,6 +41,20 @@ class Log extends Base {
         Log::write($message, 'Warning');
         Log::write($message, 'Warning','bcs-'.date('Y-m-d'));
     }
+    
+    public static function spdError($message){
+        Log::write($message);
+        Log::write($message,'Error','spd-'.date('Y-m-d'));
+    }
+    public static function spdNotice($message){
+        Log::write($message, 'Notice');
+        Log::write($message, 'Notice','spd-'.date('Y-m-d'));
+    }
+    public static function spdWarning($message){
+        Log::write($message, 'Warning');
+        Log::write($message, 'Warning','spd-'.date('Y-m-d'));
+    }
+    
     /**
      * 写入日志
      *

@@ -42,8 +42,8 @@
 					<th>时间</th>
 					<th>供应商</th>
 					<th>金额（元）</th>
-					<th>联系人</th>
-					<th>联系人电话</th>
+					<th>业务员</th>
+					<th>业务员电话</th>
 					<th>公司电话</th>
 					<th><span id="order-status-show">操作</span></th>
 				</tr>

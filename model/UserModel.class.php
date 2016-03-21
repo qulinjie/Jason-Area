@@ -44,4 +44,21 @@ class UserModel extends CurlModel
     public function getLoginUser(){
         return self::sendRequest('user/getLoginUser');
     }
+    
+    public function erp_login($params = array()){
+        $url = CurlModel::getUrlErp('api/pub/userservice/PostUser_Login/');
+        $base_data = [ 'caller'=>'ddmg_pay', 'callee'=>'ebLlyZDBSGgp', 'eventid'=>rand(1000,9999), 'timestamp'=>time() ];
+        $base_data['data'] = $params;
+        $base_data['url'] = $url;
+        return self::sendRequest('user/erp_login', $base_data); // 由 payapi 访问 erp 接口。
+    }
+    
+    public function erp_getList($params = array()){
+        return self::sendRequestErp('api/pub/userservice/PostUser_GetList/',$params);
+    }
+    
+    public function erp_getInfo($params = array()){
+        return self::sendRequestErp('api/pub/userservice/PostUser_GetInfo/',$params);
+    }
+    
 }

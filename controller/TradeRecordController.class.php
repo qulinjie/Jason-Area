@@ -53,6 +53,20 @@ class TradeRecordController extends BaseController {
                 case 'exportData':
                     $this->exportData();
                     break;
+                    
+                case 'createApply':
+                    $this->createApply();
+                    break;
+                case 'create_add':
+                    $this->create_add($req_data);
+                    break;
+                    
+                case 'erp_getOrderBuy':
+                    $this->erp_getOrderBuy();
+                    break;
+                case 'erp_getOrderBuyInfo':
+                    $this->erp_getOrderBuyInfo();
+                    break;
                 default:
                     Log::error('page not found . ' . $params[0]);
                     EC::fail(EC_MTD_NON);
@@ -79,9 +93,9 @@ class TradeRecordController extends BaseController {
         $tradeRecord_model = $this->model('tradeRecord');
         $user_id = self::getCurrentUserId();
     
-        if($isIndex && !$order_status) {
-            $order_status = TradeRecordModel::$_status_waiting;
-        }
+//         if($isIndex && !$order_status) {
+//             $order_status = TradeRecordModel::$_status_waiting;
+//         }
         
         $params  = array();
         foreach ([ 'order_no', 'user_id', 'code', 'time1', 'time2', 'type', 'order_status',
@@ -935,5 +949,199 @@ class TradeRecordController extends BaseController {
         
         EC::success(EC_OK);
     }
+    
+    private function createApply(){
+        $data_info = array();
+        
+        $tradeRecord_model = $this->model('tradeRecord');
+        $user_model = $this->model('user');
+        
+        $data = $tradeRecord_model->getNextId(array());
+        Log::notice("response-data ========22===================>> data = ##" . json_encode($data) . "##" );
+        if(EC_OK != $data['code']){
+            Log::error('getNextId Fail!');
+            EC::fail($data['code']);
+        }
+        
+        $data_info['id'] = $data['data'];
+        $data_info['today'] = date('Y-m-d',time());
+        
+//         $loginUser_data = UserController::getLoginUser();
+//         Log::notice("response-data ========33===================>> loginUser_data = ##" . json_encode($loginUser_data) . "##" );
+        
+        $user_id = self::getCurrentUserId();
+        $data = $user_model->erp_getInfo(array('usercode' => $user_id));
+        Log::notice("response-data ========77===================>> loginUser_data = ##" . json_encode($data) . "##" );
+        if(EC_OK_ERP != $data['code']){
+            Log::error('erp_getInfo Fail!');
+            EC::fail($data['code']);
+        }
+        $loginUser_data = $data['data'];
+        
+        $data_info['erp_fgsdm'] = $loginUser_data['erp_fgsdm'];
+        $data_info['erp_bmdm'] = $loginUser_data['erp_bmdm'];
+        $data_info['erp_fgsmc'] = $loginUser_data['erp_fgsmc'];
+        $data_info['erp_bmmc'] = $loginUser_data['erp_bmmc'];
+        $data_info['name'] = $loginUser_data['username'];
+        
+        $view_html = $this->render('tradeRecordCreate', array('data_info' => $data_info), true);
+        $this->render('index', array('page_type' => 'tradeRecord', 'tradeRecordCreate_html' => $view_html) );
+    }
+    
+    public function create_add(){
+        $apply_item = Request::post('order_no_arr'); // 业务单号@;金额
+        $apply_no = Request::post('apply_no'); // 申请单号
+        $seller_name = Request::post('comp_name'); // 收款单位
+        $comp_account = Request::post('comp_account'); // 收款账号
+        $bank_name = Request::post('bank_name'); // 开户行
+        $amount_type = Request::post('amount_type'); // 款项类别
+        $useTodo = Request::post('use'); // 用途
+        $comment = Request::post('comment'); // 备注
+        
+        // ["LDRK002-00000002@;102470.56","LDRK002-00000034@;118743.30"]
+//         Log::notice("response-data ===========================>> data = ##" . json_encode($order_no_arr) . "##" );
+//         exit;
+        
+        $tradeRecord_model = $this->model('tradeRecord');
+        
+        $loginUser_data = UserController::getLoginUser();
+//         Log::notice("response-data ===========================>> data-loginUser_data = ##" . json_encode($loginUser_data) . "##" );
+        
+        $trade_record = array();
+        $trade_record_item = array();
+        
+        $sum_amount = 0;
+        $order_no_str = '';
+        foreach ($apply_item as $itemKey => $itemVal){
+            $arr = explode("@;",$itemVal);
+            $v_order_no = $arr[0];
+            $v_amount = floatval($arr[1]);
+            $order_no_str = $order_no_str . ',' . $v_order_no;
+            $sum_amount = $sum_amount + $v_amount;
+            $trade_record_item[$v_order_no]['order_no'] = $apply_no;
+            $trade_record_item[$v_order_no]['itme_no'] = $v_order_no;
+            $trade_record_item[$v_order_no]['bid_amount'] = $v_amount;
+            $trade_record_item[$v_order_no]['record_type'] = 2;
+        }
+//         Log::notice("response-data ===========================>> data-order_no_str = ##" . $order_no_str . "##" );
+
+        $trade_record['item'] = $trade_record_item;
+        
+        $trade_record['user_id'] = $loginUser_data['usercode'];
+        $trade_record['order_no'] = substr($order_no_str,1);
+        $trade_record['order_bid_amount'] = $sum_amount;
+        
+        $trade_record['apply_no'] = $apply_no;
+        $trade_record['seller_name'] = $seller_name;
+        $trade_record['comp_account'] = $comp_account;
+        $trade_record['bank_name'] = $bank_name;
+        $trade_record['amount_type'] = $amount_type;
+        $trade_record['useTodo'] = $useTodo;
+        $trade_record['comment'] = $comment;
+        $trade_record['record_type'] = 2;
+        $trade_record['order_timestamp'] = date('Y-m-d',time());
+        
+//         Log::notice("response-data ===========================>> data = ##" . json_encode($trade_record) . "##" );
+//         exit;
+        
+        $data = $tradeRecord_model->create_add($trade_record);
+        if(EC_OK != $data['code']){
+            Log::error('create Fail!');
+            EC::fail($data['code']);
+        }
+        EC::success(EC_OK);
+    }
+    
+    public function erp_getOrderBuy(){
+        $current_page = Request::post('page');
+        $time1 = Request::post('time1');
+        $time2 = Request::post('time2');
+        $fphm = Request::post('fphm');
+        $dwmc = Request::post('dwmc');
+        $comp_name = Request::post('comp_name');
+        
+//         Log::notice("response-data ===========================>> erp_getOrderBuy  dwmc=" . $dwmc);
+        $tradeRecord_model = $this->model('tradeRecord');
+        
+        if(!$current_page || 0 >= $current_page) {
+            $current_page = 1;
+        }
+        
+        $BeginDate = date('Y-m-01', strtotime(date("Y-m-d"))); // 当月第一天
+        if(!$time1){
+            $time1 = $BeginDate;
+        }
+        if(!$time2){
+            $time2 = date('Y-m-d', strtotime("$BeginDate +1 month -1 day"));
+        }
+        
+        $conf = $this->getConfig('conf');
+        $page_cnt = $conf['page_count_default'];
+        
+        $params = array();
+        $params['page'] = $current_page;
+        $params['rows'] = $page_cnt;
+        $params['ksrq'] = $time1;
+        $params['jzrq'] = $time2;
+        $params['fphm'] = $fphm;
+        
+        if($comp_name){
+            $params['dwmc'] = $comp_name;
+            $dwmc = $comp_name;
+        }else if($dwmc){
+            $params['dwmc'] = $dwmc . '%';
+        }
+        
+        $data = $tradeRecord_model->erp_getOrderBuyList($params);
+        if(EC_OK_ERP != $data['code']){
+            Log::error('erp_getOrderBuyList Fail!');
+            EC::fail($data['code']);
+        }
+        Log::notice("response-data ===========================>> data = ##" . json_encode($data) . "##" );
+        
+        $data_list = $data['data']['data'];
+        $cnt = $data['data']['records'];
+        
+        $total_page = ($cnt % $page_cnt) ? (integer)($cnt / $page_cnt) + 1 : $cnt / $page_cnt;
+        Log::notice($page_cnt . " -response-data ======================total_page=====>> data = ##" . $total_page. "##cnt="  . $cnt);
+        
+        if(!$current_page || 0 >= $current_page) {
+            $current_page = 1;
+        } if($current_page > $total_page) {
+            $current_page = $total_page;
+        }
+        
+        $params['dwmc'] = $dwmc;
+        if($comp_name){
+            $params['lock'] = true;
+        }
+        
+        $entity_list_html = $this->render('erpOrderBuy_list', array( 'params' => $params, 'data_list' => $data_list, 'current_page' => $current_page, 'total_page' => $total_page), true);
+        EC::success(EC_OK, array('entity_list_html' => $entity_list_html));
+    }
+    
+    public function erp_getOrderBuyInfo(){
+        $fphm = Request::post('fphm');
+        
+        if(!$fphm){
+            Log::error('checkCode params error!');
+            EC::fail(EC_PAR_ERR);
+        }
+        
+        $tradeRecord_model = $this->model('tradeRecord');
+        
+        $params = array();
+        $params['fphm'] = $fphm;
+        
+        $data = $tradeRecord_model->erp_getOrderBuyInfo($params);
+        if(EC_OK_ERP != $data['code']){
+            Log::error('erp_getOrderBuyInfo Fail!');
+            EC::fail($data['code']);
+        }
+        Log::notice("response-data ===========================>> data = ##" . json_encode($data) . "##" );
+        
+        EC::success(EC_OK, $data['data']);
+    }
+    
     
 }

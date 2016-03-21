@@ -39,7 +39,7 @@
 			<thead>
 				<tr>
 					<th style="display:none">id</th>
-					<th style="display:none">user_id</th>
+					<th>用户登录账号</th>
 					<th>席位号</th>
 					<th>虚拟卡号</th>
 					<th>客户名称</th>
@@ -67,7 +67,7 @@
 <?php foreach ($data_list as $item){?>
 			<tr>
 				<td style="display:none"><?php echo $item['id'];?><input type="hidden" value="<?php echo $item['status'];?>"></td>
-				<td style="display:none"><?php echo $item['user_id'];?></td>
+				<td><?php echo ('-1' == $item['user_id']) ? '' : $item['user_id'];?></td>
 				<td><?php echo $item['SIT_NO'];?></td>
 				<td><?php echo $item['ACCOUNT_NO'];?></td>
 				<td><?php echo $item['MBR_NAME'];?></td>
