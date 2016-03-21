@@ -70,4 +70,10 @@ class TradeRecordModel extends CurlModel {
         return self::sendRequestErp('api/pub/OrderService/PostOrder_BuyOrderInfo/',$params);
     }
     
+    public function erp_getOrgNameInfo($params = array()){
+        return self::sendRequestErp('api/pub/ErpService/PostERP_wldw/',$params);
+    }
+    
+    
+    
 }

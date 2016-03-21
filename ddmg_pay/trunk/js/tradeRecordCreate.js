@@ -387,6 +387,33 @@ $(document).on('click', '#for-test-btn', function(event){
 	        'json'
 	    );
 	});
+	
+	$(document).on('click', '#check-entity-bankName', function(event){
+		var bankName = $('#add-entity-bank_name').val(); // 开户行
+		checkBankName(bankName);
+	});
+	
+	function checkBankName(bankName){
+		$.post(BASE_PATH + 'tradeRecord/checkBankName', {
+		        'bankName':bankName
+	        },
+	        function(result){
+	            if(result.code != 0) {
+	                $("#ref-entity-hint").html(result.msg + '(' + result.code + ')').fadeIn();
+	            } else {
+//	            	kk(result);
+	            	if(result.data){
+	            		$("#span_check_failed").fadeOut();
+	            		$("#span_check_success").fadeIn();
+	            	} else {
+	            		$("#span_check_success").fadeOut();
+	            		$("#span_check_failed").fadeIn();
+	            	}
+	            }
+	        },
+	        'json'
+	    );
+	}
 
 	$(document).on('click', '#add-entity-new', function(event){
 		$('#add-entity-modal').modal('show');
@@ -490,6 +517,8 @@ $(document).on('click', '#for-test-btn', function(event){
 		$('#add-entity-amount').val(orderHeader['_cgddje']); // 金额
 		$('#add-entity-full_amount').val(orderHeader['_cgddje']); // 金额
 		$('#add-entity-comp_name_buyer').val(orderDetails['string7_']); // 下游买家
+		
+		getOrgNameInfo($('#add-entity-comp_name').val()); // 根据往来单位，查询付款账户信息。
 	}
 	
 	
@@ -552,7 +581,7 @@ $(document).on('click', '#for-test-btn', function(event){
 	    }
 	    
 	    var full_amount = $('#add-entity-full_amount').val();
-//	    alert(full_amount + '-' + amount + '-' + ( full_amount < amount ));
+	    alert(full_amount + '-' + amount + '-' + ( full_amount < amount ));
 	    if( full_amount < amount ){
 	    	hint_html += (hint_html == '' ? '' : '<BR>') + '填写 金额 不能大于单据金额！' + full_amount;
 	    }
@@ -600,6 +629,26 @@ $(document).on('click', '#for-test-btn', function(event){
 		
 	});
 	/**************end--引用****************/
+	
+	function getOrgNameInfo(dwmc){
+		$.post(BASE_PATH + 'tradeRecord/erp_getOrgNameInfo', {
+		        'dwmc':dwmc
+	        },
+	        function(result){
+	            if(result.code != 0) {
+	                $("#ref-entity-hint").html(result.msg + '(' + result.code + ')').fadeIn();
+	            } else {
+//	            	kk(result);
+//	            	if(result.data){
+	            		// TODO
+	            		$("#ref-entity-hint").html(result.msg + '(' + result.data + ')').fadeIn();
+//	            	} else {
+//	            	}
+	            }
+	        },
+	        'json'
+	    );
+	}
 	
 prettyPrint();
 });

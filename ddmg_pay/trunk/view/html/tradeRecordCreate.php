@@ -62,7 +62,11 @@
 	  <div class="form-group">
 	    <label for="add-entity-bank_name" class="col-sm-2 control-label">开户行</label>
 	    <div class="col-sm-4">
-		    <input type="text" class="form-control" id="add-entity-bank_name" placeholder="">    				   
+		    <input type="text" class="form-control" id="add-entity-bank_name" placeholder=""/>
+		    <a href="#" id="check-entity-bankName">验证开户行</a>
+		    &nbsp;&nbsp;&nbsp;&nbsp;
+		    <span id="span_check_success" style="display: none;" class="glyphicon glyphicon-ok form-control-feedback" aria-hidden="true"><span style="color:blue">验证通过</span></span>
+		    <span id="span_check_failed" style="display: none;" class="glyphicon glyphicon-remove form-control-feedback" aria-hidden="true"><span style="color:red">验证失败</span></span>
 	    </div>
 	    <label for="add-entity-amount" class="col-sm-2 control-label">金额</label>
 	    <div class="col-sm-4">
