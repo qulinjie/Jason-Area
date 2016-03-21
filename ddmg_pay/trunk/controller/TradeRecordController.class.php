@@ -97,9 +97,23 @@ class TradeRecordController extends BaseController {
 //             $order_status = TradeRecordModel::$_status_waiting;
 //         }
         
+        $bcsCustomer_model = $this->model('bcsCustomer');
+        $params  = array();
+        $params['user_id'] = $user_id;
+        $data = $bcsCustomer_model->getInfo($params);
+        if(EC_OK != $data['code']){
+            Log::error("getInfo failed . ");
+            EC::fail($data['code']);
+        }
+        $data_info = $data['data'][0];
+        $ACCOUNT_NO = $data_info['ACCOUNT_NO'];
+        
         $params  = array();
         foreach ([ 'order_no', 'user_id', 'code', 'time1', 'time2', 'type', 'order_status',
-                    'order_time1', 'order_time2', 'seller_name', 'seller_conn_name', 'order_sum_amount1', 'order_sum_amount2' ] as $val){
+                    'order_time1', 'order_time2', 'seller_name', 'seller_conn_name', 'order_sum_amount1', 'order_sum_amount2',
+                    'ACCOUNT_NO'
+                ] as $val)
+        {
             if($$val) $params[$val] = $$val;
         }
     
@@ -143,21 +157,6 @@ class TradeRecordController extends BaseController {
         
         $entity_list_html = $this->render('tradeRecord_list', array('data_list' => $data_list, 'current_page' => $current_page, 'total_page' => $total_page), true);
         if($isIndex) {
-            
-            $bcsCustomer_model = $this->model('bcsCustomer');
-            $user_id = self::getCurrentUserId();
-            
-            $params  = array();
-            $params['user_id'] = $user_id;
-            
-            $data = $bcsCustomer_model->getInfo($params);
-            if(EC_OK != $data['code']){
-                Log::error("getInfo failed . ");
-                EC::fail($data['code']);
-            }
-            
-            $data_info = $data['data'][0];
-            
             $view_html = $this->render('tradeRecord', array('entity_list_html' => $entity_list_html ), true);
             $this->render('index', array('page_type' => 'tradeRecord', 'tradeRecord_html' => $view_html, 'bcsCustomerInfo' => $data_info) );
         } else {
@@ -1006,6 +1005,15 @@ class TradeRecordController extends BaseController {
         
         $loginUser_data = UserController::getLoginUser();
 //         Log::notice("response-data ===========================>> data-loginUser_data = ##" . json_encode($loginUser_data) . "##" );
+        $user_id = $loginUser_data['usercode'];
+        $bcsCustomer_model = $this->model('bcsCustomer');
+        
+        $user_info_data = $bcsCustomer_model->getInfo(array('user_id' => $user_id));
+        if(EC_OK != $user_info_data['code']){
+            Log::error("getInfo failed . ");
+            EC::fail($user_info_data['code']);
+        }
+        $ACCOUNT_NO = $user_info_data['data'][0]['ACCOUNT_NO'];
         
         $trade_record = array();
         $trade_record_item = array();
@@ -1026,8 +1034,8 @@ class TradeRecordController extends BaseController {
 //         Log::notice("response-data ===========================>> data-order_no_str = ##" . $order_no_str . "##" );
 
         $trade_record['item'] = $trade_record_item;
-        
-        $trade_record['user_id'] = $loginUser_data['usercode'];
+        $trade_record['ACCOUNT_NO'] = $ACCOUNT_NO;
+        $trade_record['user_id'] = $user_id;
         $trade_record['order_no'] = substr($order_no_str,1);
         $trade_record['order_bid_amount'] = $sum_amount;
         
