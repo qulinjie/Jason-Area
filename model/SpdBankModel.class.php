@@ -40,6 +40,9 @@ class SpdBankModel extends SPDBankCurl
     }
     
     public function iconvFunc($param = ''){
+        if( empty($param) ) {
+            return "";
+        }
         $result = iconv('UTF-8', 'GB2312', $param);
         if( empty($result) ) {
             $result = iconv('UTF-8', 'GBK', $param);
@@ -130,9 +133,45 @@ class SpdBankModel extends SPDBankCurl
         
         $bodyXmlStr = $this->constructBody($requestParms);
         
-        Log::notice('end-queryAccountTransferAmount ==== >>> bodyXmlStr=##' . strval($bodyXmlStr) . '##');
+        Log::notice('end-queryBankNumberByName ==== >>> bodyXmlStr=##' . strval($bodyXmlStr) . '##');
         return $this->curlSpdRequestXml($bodyXmlStr,$transCode);
     }
+    
+    /**
+     * 5148虚账户发起转账
+     * @param unknown $params
+     */
+    public function sendTransferTrade($params = array()){
+        Log::notice('str-sendTransferTrade ==== >>> params=' . json_encode($params) );
+    
+        $transCode = "5148";
+        $requestParms = [];
+    
+        $requestParms['electronNumber'] = "";//$params['electronNumber']; // 电子凭证号
+        $requestParms['appointDate'] = "";//$params['appointDate']; // 指定日期 不输入时表示实时，输入日期为当天时也表示实时
+        $requestParms['payerVirAcctNo'] = $params['payerVirAcctNo']; // 付款人虚账号
+        $requestParms['payerName'] = $this->iconvFunc($params['payerName']); // 付款人名称
+        $requestParms['payeeAcctType'] = "0";//$params['payeeAcctType']; // 收款人账户类型 0-对公账号 1-卡 2-活期一本通 3-定期一本通 4-定期存折 5-存单 6-国债 9-其他账号
+        $requestParms['payeeAcctNo'] = $params['payeeAcctNo']; // 收款人账号
+        $requestParms['payeeAcctName'] = $this->iconvFunc($params['payeeAcctName']); // 收款人中文名
+        $requestParms['payeeBankNo'] = $params['payeeBankNo']; // 支付号 【收款账号行号】
+        $requestParms['ownItBankFlag'] = $params['ownItBankFlag']; // 本行/它行标志 0：表示本行 1：表示它行
+        $requestParms['payeeBankName'] = $this->iconvFunc($params['payeeBankName']); // 收款行名称 跨行转账时必须输入(即本行/它行标志为1：表示它行)
+        $requestParms['payeeBankAddress'] = $this->iconvFunc($params['payeeBankAddress']); // 收款行地址 跨行转账时必须输入(即本行/它行标志为1：表示它行)
+        $requestParms['remitLocation'] = $params['remitLocation']; // 同城异地标志 0：同城 1：异地 跨行转账时必须输入(即本行/它行标志为1：表示它行)
+        $requestParms['transAmount'] = $params['transAmount']; // 交易金额
+        $requestParms['note'] = $this->iconvFunc($params['note']); // 附言 如果跨行转账，附言请不要超过42字节（汉字21个）
+        $requestParms['payeeBankSelectFlag'] = "1";//$params['payeeBankSelectFlag']; // 收款行速选标志 新增字段（可不用） 1-速选 当同城异地标志为“异地”时才能生效
+    
+        $conf_arr = Controller::getConfig('conf');
+        $requestParms['acctNo'] = $conf_arr['ddmg_spd_acctNo']; // 实账号 母实子虚的母账号，银企直连签约账号
+        
+        $bodyXmlStr = $this->constructBody($requestParms);
+    
+        Log::notice('end-sendTransferTrade ==== >>> bodyXmlStr=##' . strval($bodyXmlStr) . '##');
+        return $this->curlSpdRequestXml($bodyXmlStr,$transCode);
+    }
+    
     
     
 }
