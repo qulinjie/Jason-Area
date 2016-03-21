@@ -437,7 +437,7 @@ class TestController extends BaseController
         $payeeBankName = $this->iconvFunc("珠海华润银行股份有限公司清算中心");
         $note = $this->iconvFunc("测试虚拟账户转账付款");
         
-        $param = '<body><electronNumber></electronNumber><appointDate></appointDate><acctNo>6224080600234</acctNo><payerVirAcctNo>62250806009</payerVirAcctNo><payerName>' . $payerName . '</payerName><payeeAcctType>0</payeeAcctType><payeeAcctNo>6223635001004485218</payeeAcctNo><payeeAcctName>' . $payeeAcctName . '</payeeAcctName><payeeBankNo>313585000990</payeeBankNo><payeeBankName>' . $payeeBankName . '</payeeBankName><payeeBankAddress>' . $payeeBankName . '</payeeBankAddress><transAmount>82.5</transAmount><ownItBankFlag>1</ownItBankFlag><remitLocation>1</remitLocation><note>' . $note . '</note><payeeBankSelectFlag>1</payeeBankSelectFlag></body>';
+        $param = '<body><electronNumber></electronNumber><appointDate></appointDate><acctNo>6224080600234</acctNo><payerVirAcctNo>62250806009</payerVirAcctNo><payerName>' . $payerName . '</payerName><payeeAcctType>0</payeeAcctType><payeeAcctNo>6223635001004485218</payeeAcctNo><payeeAcctName>' . $payeeAcctName . '</payeeAcctName><payeeBankNo>313585000990</payeeBankNo><payeeBankName>' . $payeeBankName . '</payeeBankName><payeeBankAddress>' . $payeeBankName . '</payeeBankAddress><transAmount>12.5</transAmount><ownItBankFlag>1</ownItBankFlag><remitLocation>1</remitLocation><note>' . $note . '</note><payeeBankSelectFlag>1</payeeBankSelectFlag></body>';
         
         $data = $model->testSpdSign1($param);
         Log::notice("\r\n\r\n ============111================\r\n\r\n");

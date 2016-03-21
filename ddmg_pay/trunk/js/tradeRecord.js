@@ -405,7 +405,18 @@ function renderTableEvent() {
 	});
 }
 
-
+$(document).on('click', '#test_send_pay', function(event){
+	$.post(BASE_PATH + 'tradeRecord/test_sendTransferTrade', {},
+	        function(result){
+	            if(result.code != 0) {
+	                $("#search-list-hint").html(result.msg + '(' + result.code + ')').fadeIn();
+	            }else {
+	            	$("#search-entity-hint").html(result.msg + ', 关闭...').fadeIn();
+	            }
+	        },
+	        'json'
+	    );
+});
 
 prettyPrint();
 });

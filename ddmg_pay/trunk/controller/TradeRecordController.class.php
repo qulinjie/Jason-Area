@@ -74,6 +74,9 @@ class TradeRecordController extends BaseController {
                     $this->erp_getOrgNameInfo();
                     break;
                     
+                case 'test_sendTransferTrade':
+                    $this->test_sendTransferTrade();
+                    break;
                 default:
                     Log::error('page not found . ' . $params[0]);
                     EC::fail(EC_MTD_NON);
@@ -1190,6 +1193,32 @@ class TradeRecordController extends BaseController {
         Log::notice("response-data ===========================>> data = ##" . json_encode($data) . "##" );
     
         EC::success(EC_OK, $data['data']);
+    }
+    
+    public function test_sendTransferTrade(){
+        $spdBank_model = $this->model('spdBank');
+    
+        $params = array();
+        
+        $params['payerVirAcctNo'] = '62250806009'; // 付款人虚账号
+        $params['payerName'] = '刘新辉'; // 付款人名称
+        
+        $params['payeeAcctNo'] = '6223635001004485218'; // 收款人账号
+        $params['payeeAcctName'] = '钟煦镠'; // 收款人中文名
+        
+        $params['ownItBankFlag'] = '1';// 本行/它行标志 0：表示本行 1：表示它行
+        $params['remitLocation'] = '1'; // 同城异地标志 0：同城 1：异地 跨行转账时必须输入(即本行/它行标志为1：表示它行)
+        $params['payeeBankName'] = '珠海华润银行股份有限公司清算中心'; // 收款行名称 跨行转账时必须输入(即本行/它行标志为1：表示它行)
+        $params['payeeBankAddress'] = '珠海华润银行股份有限公司清算中心'; // 收款行地址 跨行转账时必须输入(即本行/它行标志为1：表示它行)
+        $params['payeeBankNo'] = '313585000990'; // 支付号 【收款账号行号】
+        
+        $params['transAmount'] = '1.5'; // 交易金额
+        $params['note'] = '测试虚账户付款'; // 附言 如果跨行转账，附言请不要超过42字节（汉字21个）
+        
+        $data = $spdBank_model->sendTransferTrade($params);
+        Log::notice("response-data ===========test_sendTransferTrade================>> data = ##" . json_encode($data) . "##" );
+        $data = $data['body'];
+        EC::success(EC_OK, $data);
     }
     
 }
