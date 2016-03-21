@@ -39,6 +39,14 @@ class SpdBankModel extends SPDBankCurl
         return $xml;
     }
     
+    public function iconvFunc($param = ''){
+        $result = iconv('UTF-8', 'GB2312', $param);
+        if( empty($result) ) {
+            $result = iconv('UTF-8', 'GBK', $param);
+        }
+        return $result;
+    }
+    
     /**
      * 5144虚账户母子关系登记薄查询
      * @param unknown $params
@@ -100,6 +108,28 @@ class SpdBankModel extends SPDBankCurl
         
         $bodyXmlStr = $this->constructBody($requestParms);
     
+        Log::notice('end-queryAccountTransferAmount ==== >>> bodyXmlStr=##' . strval($bodyXmlStr) . '##');
+        return $this->curlSpdRequestXml($bodyXmlStr,$transCode);
+    }
+    
+    /**
+     * EG48网银支付行名行号表查询
+     * @param unknown $params
+     * @return string
+     */
+    public function queryBankNumberByName($params = array()){
+        Log::notice('str-queryBankNumberByName ==== >>> params=' . json_encode($params) );
+        
+        $transCode = "EG48";
+        $requestParms = [];
+        
+        $bankName = $this->iconvFunc($params['bankName']);
+        Log::notice('str-queryBankNumberByName ==== >>> params-bankName=' . $bankName );
+        
+        $requestParms['bankName'] = $bankName;
+        
+        $bodyXmlStr = $this->constructBody($requestParms);
+        
         Log::notice('end-queryAccountTransferAmount ==== >>> bodyXmlStr=##' . strval($bodyXmlStr) . '##');
         return $this->curlSpdRequestXml($bodyXmlStr,$transCode);
     }

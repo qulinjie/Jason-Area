@@ -58,7 +58,10 @@ class TradeRecordController extends BaseController {
                     $this->createApply();
                     break;
                 case 'create_add':
-                    $this->create_add($req_data);
+                    $this->create_add();
+                    break;
+                case 'checkBankName':
+                    $this->checkBankName();
                     break;
                     
                 case 'erp_getOrderBuy':
@@ -67,6 +70,10 @@ class TradeRecordController extends BaseController {
                 case 'erp_getOrderBuyInfo':
                     $this->erp_getOrderBuyInfo();
                     break;
+                case 'erp_getOrgNameInfo':
+                    $this->erp_getOrgNameInfo();
+                    break;
+                    
                 default:
                     Log::error('page not found . ' . $params[0]);
                     EC::fail(EC_MTD_NON);
@@ -1060,6 +1067,17 @@ class TradeRecordController extends BaseController {
         EC::success(EC_OK);
     }
     
+    public function checkBankName(){
+        $bankName = Request::post('bankName');
+        
+        $spdBank_model = $this->model('spdBank');
+        
+        $data = $spdBank_model->queryBankNumberByName(array('bankName'=>$bankName));
+        Log::notice("response-data ===========checkBankName================>> data = ##" . json_encode($data) . "##" );
+        $data_lists = $data['body']['lists']['list'];
+        EC::success(EC_OK, !empty($data_lists));
+    }
+    
     public function erp_getOrderBuy(){
         $current_page = Request::post('page');
         $time1 = Request::post('time1');
@@ -1151,5 +1169,27 @@ class TradeRecordController extends BaseController {
         EC::success(EC_OK, $data['data']);
     }
     
+    public function erp_getOrgNameInfo(){
+        $dwmc = Request::post('dwmc'); // 单位名称
+    
+        if(!$dwmc){
+            Log::error('checkCode params error!');
+            EC::fail(EC_PAR_ERR);
+        }
+    
+        $tradeRecord_model = $this->model('tradeRecord');
+    
+        $params = array();
+        $params['dwmc'] = $dwmc;
+    
+        $data = $tradeRecord_model->erp_getOrgNameInfo($params);
+        if(EC_OK_ERP != $data['code']){
+            Log::error('erp_getOrgNameInfo Fail!');
+            EC::fail($data['code']);
+        }
+        Log::notice("response-data ===========================>> data = ##" . json_encode($data) . "##" );
+    
+        EC::success(EC_OK, $data['data']);
+    }
     
 }
