@@ -706,6 +706,7 @@ class BcsCustomerController extends BaseController {
         
         $bcsCustomer_model = $this->model('bcsCustomer');
         
+        $params = array();
         $params['record_bank_type'] = $record_bank_type;
         $params['user_id'] = -1;
         

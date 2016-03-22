@@ -146,7 +146,7 @@
 
 <div id="add-button-group" style="padding-bottom: 2px;">
     <?php if(AdminController::isLogin()){ ?>
-	<a id="entity-loadList-btn" class="btn btn-primary" href="#">更新浦发虚拟子账户流水</a>
+	<a id="entity-loadList-btn" class="btn btn-primary" href="#">更新流水</a>
 	<?php } ?>
 </div>
 
