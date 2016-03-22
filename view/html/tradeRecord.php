@@ -34,7 +34,9 @@
 	</div>
 </div>
 
-<h1 class="page-header">申请付款</h1>
+<h1 class="page-header">
+<?php if($is_admin){ ?>付款审批<?php }else{ ?>申请付款<?php } ?>
+</h1>
 
 <div class="panel panel-primary">
   <div class="panel-body">
@@ -91,10 +93,12 @@
   </div>
 </div>
 
+<?php if(!$is_admin){ ?>
 <div id="add-button-group" style="padding-bottom: 2px;">
 	<a id="add-entity-new" class="btn btn-primary" href="<?php echo Router::getBaseUrl();?>tradeRecord/createApply" >申请付款</a>
 	<a id="test_send_pay" class="btn btn-primary" href="#" >测试付款</a>
 </div>
+<?php } ?>
 
 <div  id="entity-list">
 <?php echo $entity_list_html; ?>

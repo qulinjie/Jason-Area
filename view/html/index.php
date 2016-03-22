@@ -166,6 +166,9 @@
     			<li <?php if(doit::$controller == 'BcsTrade' && $page_type != 'bcsTradeStatusQuery'){?> class="active" <?php } ?>>
         			<a href="<?php echo Router::getBaseUrl();?>bcsTrade/getIndex">交易流水</a>
         	    </li>
+        	    <li <?php if(doit::$controller == 'TradeRecord'){?> class="active" <?php } ?>>
+        			<a href="<?php echo Router::getBaseUrl();?>tradeRecord/getIndex">付款审批</a>
+        	    </li>
         	    <!--
     			<li <?php if(doit::$controller == 'BcsTransfer'){?> class="active" <?php } ?>>
         			<a href="<?php echo Router::getBaseUrl();?>bcsTransfer/getIndex">出入金</a>
@@ -200,6 +203,9 @@
           <?php }else if($page_type == 'bcsTrade'){?>
     			<script src="<?php echo Router::getBaseUrl();?>js/bcsTrade.js"></script>
 		        <?php echo $bcsTrade_html;?>
+		  <?php }else if($page_type == 'tradeRecord'){?>
+    			<script src="<?php echo Router::getBaseUrl();?>js/tradeRecord.js"></script>
+		        <?php echo $tradeRecord_html;?>
           <?php }else if($page_type == 'bcsTransfer'){?>
     			<script src="<?php echo Router::getBaseUrl();?>js/bcsTransfer.js"></script>
 		        <?php echo $bcsTransfer_html;?>

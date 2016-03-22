@@ -1,8 +1,4 @@
-<?php 
-/**
- * bcsCustomerInfo.php
- */
-?>
+
 <div class="modal fade" id="add-entity-modal">
 	<div class="modal-dialog" style="width: 1200px;">
 		<div class="modal-content">
@@ -26,20 +22,11 @@
 	</div>
 </div>
 
-<h1 class="page-header">增加申请付款单</h1>
-
 <div class="panel panel-primary">
 
   <div class="panel-body">
     <div class="form-horizontal">
        <input type="hidden" id="info-entity-id" value=""></input>
-       
-       <input type="hidden" id="info-entity-comp_name" value=""></input>
-       <input type="hidden" id="add-entity-fphm" value=""></input><!-- 业务单号-发票号码 -->
-       <input type="hidden" id="add-entity-full_amount" value=""></input><!-- 采购单金娥  -->
-       <input type="hidden" id="add-entity-comp_name_buyer" value=""></input><!-- 下游买家 -->
-       <input type="hidden" id="add-entity-erp_fgsdm" value="<?php echo $data_info['erp_fgsdm'];?>"></input>
-       <input type="hidden" id="add-entity-erp_bmdm" value="<?php echo $data_info['erp_bmdm'];?>"></input>
        
        <div class="form-group">
 	    <label for="add-entity-apply_no" class="col-sm-2 control-label">申请单号</label>
@@ -48,49 +35,46 @@
 	    </div>
 	    <label for="add-entity-apply_data" class="col-sm-2 control-label">申请日期</label>
 	    <div class="col-sm-4">
-	        <input type="text" class="form-control form_datetime" readonly="readonly" id="add-entity-apply_data" placeholder="" value="<?php echo $data_info['today'];?>"></input>
+	        <input type="text" class="form-control form_datetime" readonly="readonly" id="add-entity-order_timestamp" placeholder="" value="<?php echo $data_info['order_timestamp'];?>"></input>
 	    </div>	
 	  </div>
 	  <div class="form-group">
 	    <label for="add-entity-comp_name" class="col-sm-2 control-label">收款单位</label>
 	    <div class="col-sm-4">
-		    <input type="text" class="form-control" readonly="readonly" id="add-entity-comp_name" placeholder="">    				   
+		    <input type="text" class="form-control" readonly="readonly" id="add-entity-seller_name" placeholder="" value="<?php echo $data_info['seller_name'];?>">    				   
 	    </div>
 	    <label for="add-entity-comp_account" class="col-sm-2 control-label">收款账号</label>
 	    <div class="col-sm-4">
-	        <input type="text" class="form-control" id="add-entity-comp_account" placeholder=""></input>
+	        <input type="text" class="form-control" readonly="readonly" id="add-entity-comp_account" placeholder="" value="<?php echo $data_info['comp_account'];?>"></input>
 	    </div>	
 	  </div>
 	  <div class="form-group">
 	    <label for="add-entity-bank_name" class="col-sm-2 control-label">开户行</label>
 	    <div class="col-sm-4">
-		    <input type="text" class="form-control" id="add-entity-bank_name" placeholder=""/>
-		    <a href="#" id="check-entity-bankName">验证开户行</a>
-		    &nbsp;&nbsp;&nbsp;&nbsp;
-		    <span id="span_check_success" style="display: none;" class="glyphicon glyphicon-ok form-control-feedback" aria-hidden="true"><span style="color:blue">验证通过</span></span>
-		    <span id="span_check_failed" style="display: none;" class="glyphicon glyphicon-remove form-control-feedback" aria-hidden="true"><span style="color:red">验证失败</span></span>
+		    <input type="text" class="form-control" readonly="readonly" id="add-entity-bank_name" placeholder="" value="<?php echo $data_info['bank_name'];?>">    				   
 	    </div>
 	    <label for="add-entity-amount" class="col-sm-2 control-label">金额</label>
 	    <div class="col-sm-4">
-	        <input type="text" class="form-control" id="add-entity-amount" placeholder=""></input>
+	        <input type="text" class="form-control" readonly="readonly" id="add-entity-order_bid_amount" placeholder="" value="<?php echo $data_info['order_bid_amount'];?>"></input>
 	    </div>	
 	  </div>
 	  <div class="form-group">
 	    <label for="add-entity-amount_type" class="col-sm-2 control-label">款项类别</label>
 	    <div class="col-sm-4">
-	        <select class="form-control" id="add-entity-amount_type">
+	        <!-- <select class="form-control" id="add-entity-amount_type">
               <option value="货款">货款</option>
-            </select>
+            </select> -->
+	        <input type="text" class="form-control" readonly="readonly" id="add-entity-amount_type" placeholder="" value="<?php echo $data_info['amount_type'];?>"></input>
 	    </div>
 	    <label for="add-entity-use" class="col-sm-2 control-label">用途</label>
 	    <div class="col-sm-4">
-		    <input type="text" class="form-control" id="add-entity-use" placeholder="">    				   
+		    <input type="text" class="form-control" readonly="readonly" id="add-entity-useTodo" placeholder="" value="<?php echo $data_info['useTodo'];?>">    				   
 	    </div>	
 	  </div>
 	  <div class="form-group">
 	    <label for="add-entity-pwd" class="col-sm-2 control-label">备注</label>
 	    <div class="col-sm-4">
-	        <input type="text" class="form-control" id="add-entity-comment" placeholder=""></input>
+	        <input type="text" class="form-control" readonly="readonly" id="add-entity-comment" placeholder="" value="<?php echo $data_info['comment'];?>"></input>
 	    </div>
 	    <label for="add-entity-account" class="col-sm-2 control-label">申请人</label>
 	    <div class="col-sm-4">
@@ -108,12 +92,7 @@
 	    </div>
 	  </div>
 	  <div class="alert alert-danger search-list-hint" id="ref-entity-hint"></div>
-	  
-	  <div id="add-button-group" style="padding-bottom: 2px;">
-        	<a id="add-entity-new" class="btn btn-primary" href="#" >查询采购单</a>
-        	<a id="add-entity-ref" class="btn btn-primary" href="#" >引用</a>
-        </div>
-        
+	    
       <p class="text-center"></p>
         
 	  <div class="panel-body">
@@ -123,12 +102,21 @@
 					<th>业务单号</th>
 					<th>申请金额</th>
 					<th>下游买家</th>
-					<th>备注</th>
-					<th>操作</th>
+					<th>备注</th>					
 				</tr>
 			</thead>
 			<tbody>
-		</tbody>
+			<?php if(isset($data_info['data_list'])){ foreach ($data_info['data_list'] as $item){ ?>
+			<tr>
+	            <td style="display:none"><?php echo $item['id'];?></td>
+	            <td><?php echo $item['itme_no'];?></td>	            
+	            <td><?php echo number_format($item['item_price'],2);?></td>
+	            <td><?php echo $item['itme_comp_name_buyer']; ?></td>
+	            <td><?php echo $item['comment'];?></td>	            
+	       </tr>
+	       <?php } }?>
+			
+			</tbody>
 		</table>
   </div>
   
@@ -136,9 +124,11 @@
   
       <div class="alert alert-danger" id="add-entity-hint" style="display: none;"></div>
   
-	  <div id="add-button-group" style="padding-bottom: 2px;">
-    	<a id="add-entity-create" class="btn btn-primary" href="#">提交申请</a>
-    	<a id="add-entity-cancel" class="btn btn-primary" href="<?php echo Router::getBaseUrl();?>tradeRecord/getIndex">取消</a>
+	  <div id="add-button-group" class="modal-footer">
+    	<a id="add-entity-audit1" class="btn btn-primary" href="#">审批通过</a>
+    	<a id="add-entity-audit2" class="btn btn-primary" href="#">审批不通过</a>
+    	<!-- <a id="add-entity-cancel" class="btn btn-primary" href="<?php echo Router::getBaseUrl();?>tradeRecord/getIndex">取消</a>-->
+      	<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
       </div>
 
 	</div>
