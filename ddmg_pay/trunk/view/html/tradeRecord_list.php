@@ -67,7 +67,7 @@
 					<th>申请金额（元）</th>
 					<th>款项类别</th>
 					<th>业务单号</th>
-					<th>状态</th>
+					<th>审批状态</th>
 					<th>机构</th>
 					<th><span id="order-status-show">操作</span></th>
 				</tr>
