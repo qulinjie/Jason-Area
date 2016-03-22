@@ -88,7 +88,7 @@
                     else { echo $item['apply_status'] ;}
                 ?>
             </td>
-            <td><?php echo $item['comment']; ?></td>
+            <td><?php echo $item['erp_fgsmc']; ?></td>
             <td> 
             <?php if($is_admin && 1==$item['apply_status']){ ?>
             	<a id="audit-entity-<?php echo $item['id'];?>" value="<?php echo $item['id'];?>" class="audit-entity" href="#" data-toggle="modal" data-keyboard="false" data-backdrop="static">审批</a>
