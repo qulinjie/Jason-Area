@@ -31,7 +31,7 @@
        <div class="form-group">
 	    <label for="add-entity-apply_no" class="col-sm-2 control-label">申请单号</label>
 	    <div class="col-sm-4">
-		    <input type="text" class="form-control" readonly="readonly" id="add-entity-apply_no" placeholder="" value="<?php echo $data_info['id'];?>" />    				   
+		    <input type="text" class="form-control" readonly="readonly" id="add-entity-apply_no" placeholder="" value="<?php echo $data_info['apply_no'];?>" />    				   
 	    </div>
 	    <label for="add-entity-apply_data" class="col-sm-2 control-label">申请日期</label>
 	    <div class="col-sm-4">
