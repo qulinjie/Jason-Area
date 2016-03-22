@@ -504,7 +504,7 @@ $(document).on('click', '#add-entity-audit2', function(event){
 });
 
 function auditOneTradRecord(apply_status){	
-	var apply_no = $("#info-entity-id").val();	
+	var id = $("#info-entity-id").val();	
 	$.post(BASE_PATH + 'tradeRecord/auditOneTradRecord', {    		
 	        'id':id,
 	        'apply_status':apply_status
