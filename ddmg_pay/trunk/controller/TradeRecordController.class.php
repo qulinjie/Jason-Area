@@ -1212,8 +1212,7 @@ class TradeRecordController extends BaseController {
         Log::notice("response-data ===========================>> data = ##" . json_encode($data) . "##" );
         
         EC::success(EC_OK, $data['data']);
-    }
-    
+    }    
 
     protected function auditOneTradRecord(){
     	$id = Request::post('id');
@@ -1227,8 +1226,9 @@ class TradeRecordController extends BaseController {
     	
     	$params = array();
     	$params['id'] = $id;
-    	$params['apply_status'] = $apply_status;
-    	 	
+    	$params['apply_status'] = $apply_status; //审批状态  1待审批  2审批通过 3审批驳回
+    	$params['apply_timestamp'] = date('Y-m-d H:i:s',time());
+    	//修改审批状态
     	$tradeRecord_model = $this->model('tradeRecord');
     	$data = $tradeRecord_model->auditOneTradRecord($params);
     	if(EC_OK_ERP != $data['code']){
@@ -1236,8 +1236,38 @@ class TradeRecordController extends BaseController {
     		EC::fail($data['code']);
     	}
     	
+    	//对审批通过的进行付款
+    	if(2 == $apply_status){
+    		$this->sendTransferTrade($id);
+    	}
+    	
     	Log::notice("response-data ===========================>> data = ##" . json_encode($data) . "##" );
     	EC::success(EC_OK, $data['data']);
+    }        
+   
+    /**
+    * 对已审核且待付款的采购单进行付款
+    * @date: 2016-3-22 下午8:02:56
+    * @author: lw
+    * @param: id
+    * @return:
+    */
+    protected function sendTransferTrade($id){
+    	
+    	Log::notice("sendTransferTrade ===========================>> id=" .$id );
+    	
+    	//根据id查单的数据    	
+    	$tradeRecord_model = $this->model('tradeRecord');    	
+    	$data = $tradeRecord_model->getInfo(array('id' => $id));
+    	if(empty($data)) {
+    		Log::error('getInfo empty !');
+    		EC::fail(EC_RED_EMP);
+    	}
+    	
+    	if($data['']){
+    		
+    	}
+    	
     }
 
     public function erp_getOrgNameInfo(){
