@@ -5,6 +5,29 @@
  */
 ?>
 
+<div class="modal fade" id="audit-entity-modal">
+	<div class="modal-dialog" style="width: 1200px;">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+				<h4 class="modal-title" id="audit_entity_title">付款审批</h4>
+			</div>
+			
+			<div class="modal-body">
+				<form class="form-horizontal" id="audit-entity-form">
+				  <div id="audit-entity-list"></div>
+				</form>
+			</div>
+			<div class="modal-footer" style="display: none;">
+				<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+				<button type="button" class="btn btn-primary" id="btn-audit-entity">确定</button>
+			</div>
+		</div>
+	</div>
+</div>
+
 <div class="modal fade" id="confirm-entity-modal">
 	<div class="modal-dialog">
 		<div class="modal-content">
@@ -30,7 +53,7 @@
 <div class="alert alert-info" role="alert"><p class="text-center">
 	无记录
 </p></div>
-<?php }else{?>
+<?php }else{ ?>
 <div class="panel panel-default">
 <div class="panel-heading">列表</div>
   <div class="panel-body">
@@ -66,7 +89,12 @@
                 ?>
             </td>
             <td><?php echo $item['comment']; ?></td>
-            <td><a href="#">审批</a></td>
+            <td> 
+            <?php if($is_admin && 1==$item['apply_status']){ ?>
+            	<a id="audit-entity-<?php echo $item['id'];?>" value="<?php echo $item['id'];?>" class="audit-entity" href="#" data-toggle="modal" data-keyboard="false" data-backdrop="static">审批</a>
+            <?php }else{ ?> 
+            	- 
+            <?php }?></td>
        </tr>
     <?php }?>
 		</tbody>
