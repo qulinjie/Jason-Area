@@ -283,7 +283,7 @@ $(document).on('click', '#entity-loadList-btn', function(event){
 	            		$("#operation-entity-hint").html('更新失败！').fadeIn();
 	            	}
 	            }
-	            objBtn.html('更新浦发虚拟子账户流水');
+	            objBtn.html('更新流水');
 	        },
 	        'json'
 	    );
