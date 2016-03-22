@@ -601,6 +601,7 @@ class BcsTradeController extends BaseController {
         EC::success(EC_OK, $data);
     }
  
+    // 更新浦发银行账户流水信息列表
     protected function spd_loadAccountTradeList() {
         $virtualAcctNo = Request::post('virtualAcctNo');
     
@@ -608,21 +609,27 @@ class BcsTradeController extends BaseController {
         $conf = $this->getConfig('conf');
         $bcsCustomer_model = $this->model('bcsCustomer');
         
-        $params = array();
-        $params['record_bank_type'] = 2;
-        $params['user_id'] = -1;
-        $data = $bcsCustomer_model->searchList($params, null, null);
-        if(EC_OK != $data['code']){
-            Log::error("searchList bcsCustomer falied .");
-            EC::fail($data['code']);
+        $data_lists = array();
+        if( empty($virtualAcctNo) ) {
+            $params = array();
+            $params['record_bank_type'] = 2;
+            $params['user_id'] = -1;
+            $data = $bcsCustomer_model->searchList($params, null, null);
+            if(EC_OK != $data['code']){
+                Log::error("searchList bcsCustomer falied .");
+                EC::fail($data['code']);
+            }
+//             Log::notice("response-data ========bcsCustomer-list===================>> data = ##" . json_encode($data) . "##" );
+//             exit;
+            $data_lists = $data['data'];
+        } else {
+            $data_lists[] = array('ACCOUNT_NO'=>$virtualAcctNo);
         }
-//         Log::notice("response-data ========bcsCustomer-list===================>> data = ##" . json_encode($data) . "##" );
-//         exit;
-
-        $data_lists = $data['data'];
+        
+        
         foreach($data_lists as $obj ){
             $ACCOUNT_NO = $obj['ACCOUNT_NO'];
-            Log::notice("response-data ===========================>> data-ACCOUNT_NO = ##" . $ACCOUNT_NO . "##" );
+            Log::notice("response-data-str ===========================>> data-ACCOUNT_NO = ##" . $ACCOUNT_NO . "##" );
             
             $params = array();
             $params['beginNumber'] = 1;
@@ -638,10 +645,6 @@ class BcsTradeController extends BaseController {
             $params['transBeginDate'] = ''; // 交易开始日期 交易流水产生时间
             $params['transEndDate'] = ''; // 交易结束日期 交易流水结束时间
             
-            if( !empty($virtualAcctNo) ) {
-                $params['virtualAcctNo'] = $virtualAcctNo;
-            }
-            
             $totalNumber = 0 ;
             do {
                 $data = $spdBank_model->queryAccountTransferAmount($params);
@@ -656,7 +659,7 @@ class BcsTradeController extends BaseController {
                 // 延时2秒执行。
                 sleep(2); // 延时2秒
             } while ( $totalNumber >= $params['beginNumber']);
-            
+            Log::notice("response-data-end ===========================>> data-ACCOUNT_NO = ##" . $ACCOUNT_NO . "##" );
         }
     
         EC::success(EC_OK);
@@ -667,7 +670,17 @@ class BcsTradeController extends BaseController {
             Log::notice("addAccountTradeList data_lists is empty . ");
             return ;
         }
-    
+        
+//         Log::notice("addAccountTradeList =================111==========>> data-data_lists = ##" . json_encode($data_lists) . "##" );
+        if(!empty($data_lists['acctNo'])) {
+            $data_lists_temp = array();
+            $data_lists_temp[] = $data_lists;
+//             Log::notice("addAccountTradeList =================222==========>> data-data_lists = ##" . json_encode($data_lists_temp) . "##" );
+            $data_lists = $data_lists_temp;
+        }
+//         Log::notice("addAccountTradeList =================333==========>> data-data_lists = ##" . json_encode($data_lists) . "##" );
+//         exit;
+        
         $bcsTrade_model = $this->model('bcsTrade');
         foreach($data_lists as $obj ){
             Log::notice("addAccountTradeList ===========================>> data = ##" . json_encode($obj) . "##" );
@@ -708,6 +721,7 @@ class BcsTradeController extends BaseController {
                 $data_rs = $bcsTrade_model->create_add($trade);
                 if($data_rs['code'] !== EC_OK){
                     Log::error('addAccountTradeList . create bcsCustomer error . code='. $data_rs['code'] . ',msg=' . $data_rs['msg'] );
+                    continue;
                 }
             }
             Log::notice('addAccountTradeList ==== >>> add-data=##' . $obj['virtualAcctName'] . "##");

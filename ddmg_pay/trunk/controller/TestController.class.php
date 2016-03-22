@@ -261,6 +261,7 @@ class TestController extends BaseController
         EC::success(EC_OK,$data['body']['sic']);
     }
     
+    // 4466母实子虚账户收入支出分摊
     public function spd_4466(){
         Log::notice('-------SPD----TestController--------------------spd_4466==>>str');
     
@@ -268,7 +269,8 @@ class TestController extends BaseController
     
         //1
         //$param = '<body><acctNo>6224080602781</acctNo><jnlNoDate>20160309</jnlNoDate><seqNos>999701040001</seqNos><summonsNumber>3</summonsNumber><transAmount>1000</transAmount><debitCreditFlag>1</debitCreditFlag><shareRule>2</shareRule><shareType>1</shareType><summaryCode></summaryCode><lists name="LoopResult"><list><virtualAcctNo>12345678901</virtualAcctNo><transAmount>1000</transAmount></list></lists></body>';
-        $param = '<body><acctNo>6224080600234</acctNo><jnlNoDate>20160314</jnlNoDate><seqNos>999701220001</seqNos><summonsNumber>3</summonsNumber><transAmount>112</transAmount><debitCreditFlag>1</debitCreditFlag><shareRule>2</shareRule><shareType>1</shareType><summaryCode></summaryCode><lists name="LoopResult"><list><virtualAcctNo>62250806009</virtualAcctNo><transAmount>112</transAmount></list></lists></body>';
+        //$param = '<body><acctNo>6224080600234</acctNo><jnlNoDate>20160314</jnlNoDate><seqNos>999701220001</seqNos><summonsNumber>3</summonsNumber><transAmount>112</transAmount><debitCreditFlag>1</debitCreditFlag><shareRule>2</shareRule><shareType>1</shareType><summaryCode></summaryCode><lists name="LoopResult"><list><virtualAcctNo>62250806009</virtualAcctNo><transAmount>112</transAmount></list></lists></body>';
+        $param = '<body><acctNo>6224080600234</acctNo><jnlNoDate>20160322</jnlNoDate><seqNos>999701590001</seqNos><summonsNumber>3</summonsNumber><transAmount>1000.23</transAmount><debitCreditFlag>1</debitCreditFlag><shareRule>2</shareRule><shareType>1</shareType><summaryCode></summaryCode><lists name="LoopResult"><list><virtualAcctNo>62250806009</virtualAcctNo><transAmount>1000.23</transAmount></list></lists></body>';
         $data = $model->testSpdSign1($param);
         Log::notice("\r\n\r\n ============111================\r\n\r\n");
     
@@ -293,7 +295,7 @@ class TestController extends BaseController
         EC::success(EC_OK,$data['body']['sic']);
     }
     
-    //5145虚账户已分摊交易明细查询
+    // 5145虚账户已分摊交易明细查询
     public function spd_5145(){
         Log::notice('-------SPD----TestController--------------------spd_5145==>>str');
     
@@ -301,7 +303,7 @@ class TestController extends BaseController
     
         //1
         //$param = '<body><acctNo>6224080602781</acctNo><virtualAcctNo>12345678901</virtualAcctNo><jnlSeqNo></jnlSeqNo><summonsNumber></summonsNumber><transBeginDate></transBeginDate><transEndDate></transEndDate><shareBeginDate>20160301</shareBeginDate><shareEndDate>20160330</shareEndDate><beginNumber>1</beginNumber><queryNumber>20</queryNumber></body>';
-        $param = '<body><acctNo>6224080600234</acctNo><virtualAcctNo>62250806009</virtualAcctNo><jnlSeqNo></jnlSeqNo><summonsNumber></summonsNumber><transBeginDate></transBeginDate><transEndDate></transEndDate><shareBeginDate>20160301</shareBeginDate><shareEndDate>20160330</shareEndDate><beginNumber>1</beginNumber><queryNumber>20</queryNumber></body>';
+        $param = '<body><acctNo>6224080600234</acctNo><virtualAcctNo>62250806009</virtualAcctNo><jnlSeqNo></jnlSeqNo><summonsNumber></summonsNumber><transBeginDate></transBeginDate><transEndDate></transEndDate><shareBeginDate>20160322</shareBeginDate><shareEndDate>20160330</shareEndDate><beginNumber>1</beginNumber><queryNumber>20</queryNumber></body>';
         $data = $model->testSpdSign1($param);
         Log::notice("\r\n\r\n ============111================\r\n\r\n");
     
@@ -328,6 +330,7 @@ class TestController extends BaseController
         EC::success(EC_OK,$data['body']['sic']);
     }
 
+    // 4662母账户未分摊明细查询
     public function spd_4662(){
         Log::notice('-------SPD----TestController--------------------spd_4662==>>str');
     
@@ -336,7 +339,7 @@ class TestController extends BaseController
         //1
         //$param = '<body><acctNo>6224080602781</acctNo><beginDate>20160101</beginDate><endDate>20160130</endDate><beginNumber>1</beginNumber><queryNumber>5</queryNumber></body>';
         //$param = '<body><acctNo>6224080602781</acctNo><beginDate>20160309</beginDate><endDate>20160309</endDate><beginNumber>1</beginNumber><queryNumber>15</queryNumber></body>';
-        $param = '<body><acctNo>6224080600234</acctNo><beginDate>20160314</beginDate><endDate>20160314</endDate><beginNumber>1</beginNumber><queryNumber>5</queryNumber></body>';
+        $param = '<body><acctNo>6224080600234</acctNo><beginDate>20160322</beginDate><endDate>20160322</endDate><beginNumber>1</beginNumber><queryNumber>5</queryNumber></body>';
         $data = $model->testSpdSign1($param);
         Log::notice("\r\n\r\n ============111================\r\n\r\n");
     

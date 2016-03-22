@@ -147,6 +147,34 @@ $(document).ready(function(){
 		        'json'
 		    );
 	});
+	
+	$(document).on('click', '#entity-loadInfo-btn2', function(event){
+		var user_id =  $(this).parent().parent().parent().children().get(1).textContent;
+		var ACCOUNT_NO =  $(this).parent().parent().parent().children().get(3).textContent;
+		
+		var objBtn = $(this);
+		objBtn.html('更新中...');
+		
+		$("#operation-entity-hint").html('').fadeOut();
+		$.post(BASE_PATH + 'bcsTrade/spd_loadAccountTradeList', {'virtualAcctNo':ACCOUNT_NO},
+		        function(result){
+		            if(result.code != 0) {
+	            		$("#operation-entity-hint").html(result.msg + '(' + result.code + ')').fadeIn();	
+		            } else {
+		            	if(0==result.code){
+		            		$("#operation-entity-hint").html('更新完成！').fadeIn();
+			            	setTimeout(function(){
+			            		search_entity($("#entity-current-page").html());
+			                }, 1000);
+		            	} else {
+		            		$("#operation-entity-hint").html('更新失败！').fadeIn();
+		            	}
+		            }
+		            objBtn.html('更新');
+		        },
+		        'json'
+		    );
+	});
 	/**************end--更新****************/
     
 	/**************str--更新浦发虚拟子账户****************/

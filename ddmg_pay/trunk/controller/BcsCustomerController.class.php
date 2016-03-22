@@ -430,6 +430,7 @@ class BcsCustomerController extends BaseController {
         EC::success(EC_OK);
     }
     
+    // 更新浦发银行账户列表
     protected function spd_loadAccountList() {
         $virtualAcctNo = Request::post('virtualAcctNo');
         
