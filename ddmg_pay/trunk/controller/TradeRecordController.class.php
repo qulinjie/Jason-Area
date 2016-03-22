@@ -1216,7 +1216,7 @@ class TradeRecordController extends BaseController {
     
 
     protected function auditOneTradRecord(){
-    	$id = Request::post('apply_no');
+    	$id = Request::post('id');
     	$apply_status = Request::post('apply_status');    	
     	Log::notice("request-data ===========================>> id=" .$id . "apply_status=" . $apply_status . "##" );
     	
