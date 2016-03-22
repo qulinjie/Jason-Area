@@ -486,26 +486,56 @@ function loadOneAuditTradRecord(id){
 }
 
 $(document).on('click', '#add-entity-audit1', function(event){
-	auditOneTradRecord(1);
+	if(confirm("确定审批通过吗？")){
+		$("#add-entity-audit1").html("提交中...");
+		$("#add-entity-audit1").attr('disabled', 'disabled');
+		$("#add-entity-audit2").attr('disabled', 'disabled');
+		auditOneTradRecord(2);
+	}	
 });
 
-$(document).on('click', '#add-entity-audit2', function(event){
-	auditOneTradRecord(2);
+$(document).on('click', '#add-entity-audit2', function(event){	
+	if(confirm("确定审批驳回吗？")){
+		$("#add-entity-audit2").html("提交中...");
+		$("#add-entity-audit1").attr('disabled', 'disabled');
+		$("#add-entity-audit2").attr('disabled', 'disabled');
+		auditOneTradRecord(3);
+	}	
 });
 
-function auditOneTradRecord(status){
-	$apply_no = $("#add-entity-apply_no").val();
+function auditOneTradRecord(apply_status){	
+	var apply_no = $("#add-entity-apply_no").val();	
 	$.post(BASE_PATH + 'tradeRecord/auditOneTradRecord', {    		
-        'apply_no':apply_no,
-        'status':status
-    },
-    function(result){        	
-        if(result.code != 0) {
-            $("#search-entity-hint").html(result.msg + '(' + result.code + ')').fadeIn();
-        }else {
-            $("#audit-entity-list").html(result.data.entity_list_html);           
-        }
-    },
-    'json'
-);
+	        'apply_no':apply_no,
+	        'apply_status':apply_status
+	    },
+	    function(result){	    	
+	        if(result.code != 0) {	        	
+	            $("#add-entity-hint").html(result.msg + '(' + result.code + ')').fadeIn();
+	            if(apply_status == 2){
+	            	$("#add-entity-audit1").html("审批通过");
+	            }else{
+	            	$("#add-entity-audit2").html("审批驳回");	            		            	
+	            }
+	            $("#add-entity-audit2").removeAttr('disabled');
+	            $("#add-entity-audit1").removeAttr('disabled');	            
+	        }else {	            
+	        	$("#add-entity-hint").html(result.msg + ', 关闭...').fadeIn();
+                setTimeout(function(){
+                	$('#add-entity-cancel').click();                	
+                	window.location.reload();
+                }, 1000);
+	        }
+	    },
+	    'json'
+	);
 }
+
+function writeObj(obj){ 
+	var description = ""; 
+	for(var i in obj){ 
+		var property=obj[i]; 
+		description+=i+" = "+property+"\n"; 
+	} 
+	alert(description); 
+} 
