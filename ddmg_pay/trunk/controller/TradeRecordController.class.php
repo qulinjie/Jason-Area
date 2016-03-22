@@ -34,10 +34,13 @@ class TradeRecordController extends BaseController {
                     
                 case 'getInfo':
                     $this->getInfo();
-                    break;
+                    break;                
                 case 'getInfoCheck':
                     $this->getInfo(true);
                     break;
+                case 'getOneTrandRecord':
+                    $this->getInfo();
+                    break;    
                 case 'changeStatus':
                     $this->changeStatus();
                     break;
@@ -69,7 +72,7 @@ class TradeRecordController extends BaseController {
                     break;
                 case 'erp_getOrderBuyInfo':
                     $this->erp_getOrderBuyInfo();
-                    break;
+                    break;              
                 case 'erp_getOrgNameInfo':
                     $this->erp_getOrgNameInfo();
                     break;
@@ -77,6 +80,11 @@ class TradeRecordController extends BaseController {
                 case 'test_sendTransferTrade':
                     $this->test_sendTransferTrade();
                     break;
+
+                case 'auditOneTradRecord':
+                    $this->auditOneTradRecord();
+                    break;
+                    	
                 default:
                     Log::error('page not found . ' . $params[0]);
                     EC::fail(EC_MTD_NON);
@@ -126,6 +134,15 @@ class TradeRecordController extends BaseController {
         {
             if($$val) $params[$val] = $$val;
         }
+        
+        $is_admin = AdminController::isAdmin();
+        //非管理员必须要求user_id
+        if(!$is_admin){
+        	if(!isset($params['user_id'])){
+        		Log::error("searchList failed . ");
+        		EC::fail(EC_PAR_ERR);
+        	}
+        }
     
         $data_cnt = $tradeRecord_model->searchCnt($params);
         if(EC_OK != $data_cnt['code']){
@@ -165,9 +182,9 @@ class TradeRecordController extends BaseController {
             $data_list[$key]['list'] = $data['data'] ? $data['data'] : [];
         }
         
-        $entity_list_html = $this->render('tradeRecord_list', array('data_list' => $data_list, 'current_page' => $current_page, 'total_page' => $total_page), true);
+        $entity_list_html = $this->render('tradeRecord_list', array('is_admin' => $is_admin, 'data_list' => $data_list, 'current_page' => $current_page, 'total_page' => $total_page), true);
         if($isIndex) {
-            $view_html = $this->render('tradeRecord', array('entity_list_html' => $entity_list_html ), true);
+            $view_html = $this->render('tradeRecord', array('is_admin' => $is_admin, 'entity_list_html' => $entity_list_html ), true);
             $this->render('index', array('page_type' => 'tradeRecord', 'tradeRecord_html' => $view_html, 'bcsCustomerInfo' => $data_info) );
         } else {
             EC::success(EC_OK, array('entity_list_html' => $entity_list_html));
@@ -494,15 +511,19 @@ class TradeRecordController extends BaseController {
     
         $tradeRecord_model = $this->model('tradeRecord');
         $tradeRecordItem_model = $this->model('tradeRecordItem');
-        $user_id = self::getCurrentUserId();
+        $is_admin = AdminController::isAdmin();
     
         $params  = array();
         $params['id'] = $id;
-        if($isCheck){
-            $params['seller_id'] = $user_id;
-        } else {
-            $params['user_id'] = $user_id;
-        }
+        
+        if(!$is_admin){
+        	$user_id = self::getCurrentUserId();
+	        if($isCheck){
+	            $params['seller_id'] = $user_id;
+	        } else {
+	            $params['user_id'] = $user_id;
+	        }
+        }        
         
         $data = $tradeRecord_model->getInfo($params);
         if(EC_OK != $data['code']){
@@ -518,12 +539,18 @@ class TradeRecordController extends BaseController {
         }
         $data_info['data_list'] = $data_item['data'];
         Log::notice('data_info-----------------------------------params==>>' . var_export($data_info, true));
-        if($isCheck){
-            $entity_list_html = $this->render('tradeCheck', array('item' => $data_info), true);
-            EC::success(EC_OK, array('tradeRecord_check' => $entity_list_html));
-        } else {
-            $entity_list_html = $this->render('tradePay', array('item' => $data_info), true);
-            EC::success(EC_OK, array('tradeRecord_pay' => $entity_list_html));
+        if(!$is_admin){
+	        if($isCheck){
+	            $entity_list_html = $this->render('tradeCheck', array('item' => $data_info), true);
+	            EC::success(EC_OK, array('tradeRecord_check' => $entity_list_html));
+	        } else {
+	            $entity_list_html = $this->render('tradePay', array('item' => $data_info), true);
+	            EC::success(EC_OK, array('tradeRecord_pay' => $entity_list_html));
+	        }
+        }else{
+        	//用于后台付款审批
+        	$entity_list_html = $this->render('tradeRecordAudit', array('data_info' => $data_info), true);
+        	EC::success(EC_OK, array('entity_list_html' => $entity_list_html));
         }
     }
     
@@ -991,7 +1018,7 @@ class TradeRecordController extends BaseController {
         $data_info['erp_bmdm'] = $loginUser_data['erp_bmdm'];
         $data_info['erp_fgsmc'] = $loginUser_data['erp_fgsmc'];
         $data_info['erp_bmmc'] = $loginUser_data['erp_bmmc'];
-        $data_info['name'] = $loginUser_data['username'];
+        $data_info['erp_username'] = $loginUser_data['username'];
         
         $view_html = $this->render('tradeRecordCreate', array('data_info' => $data_info), true);
         $this->render('index', array('page_type' => 'tradeRecord', 'tradeRecordCreate_html' => $view_html) );
@@ -1005,8 +1032,15 @@ class TradeRecordController extends BaseController {
         $bank_name = Request::post('bank_name'); // 开户行
         $amount_type = Request::post('amount_type'); // 款项类别
         $useTodo = Request::post('use'); // 用途
-        $comment = Request::post('comment'); // 备注
+        $comment = Request::post('comment'); // 备注        
+        $comp_name_buyer = Request::post('comp_name_buyer'); // 下游买家
         
+        $erp_fgsdm = Request::post('erp_fgsdm'); // erp_分公司代码
+        $erp_bmdm = Request::post('erp_bmdm'); // erp_部门代码
+        $erp_fgsmc = Request::post('erp_fgsmc'); // erp_分公司名称
+        $erp_bmmc = Request::post('erp_bmmc'); // erp_部门名称
+        $erp_username = Request::post('erp_username'); // erp_用户名
+                
         // ["LDRK002-00000002@;102470.56","LDRK002-00000034@;118743.30"]
 //         Log::notice("response-data ===========================>> data = ##" . json_encode($order_no_arr) . "##" );
 //         exit;
@@ -1034,12 +1068,14 @@ class TradeRecordController extends BaseController {
             $arr = explode("@;",$itemVal);
             $v_order_no = $arr[0];
             $v_amount = floatval($arr[1]);
+            $v_comp_name_buyer = $arr[2];
             $order_no_str = $order_no_str . ',' . $v_order_no;
             $sum_amount = $sum_amount + $v_amount;
             $trade_record_item[$v_order_no]['order_no'] = $apply_no;
             $trade_record_item[$v_order_no]['itme_no'] = $v_order_no;
             $trade_record_item[$v_order_no]['bid_amount'] = $v_amount;
             $trade_record_item[$v_order_no]['record_type'] = 2;
+            $trade_record_item[$v_order_no]['itme_comp_name_buyer'] = $v_comp_name_buyer;
         }
 //         Log::notice("response-data ===========================>> data-order_no_str = ##" . $order_no_str . "##" );
 
@@ -1057,7 +1093,13 @@ class TradeRecordController extends BaseController {
         $trade_record['useTodo'] = $useTodo;
         $trade_record['comment'] = $comment;
         $trade_record['record_type'] = 2;
-        $trade_record['order_timestamp'] = date('Y-m-d',time());
+        $trade_record['order_timestamp'] = date('Y-m-d',time());        
+        
+        $trade_record['erp_fgsdm'] = $erp_fgsdm;
+        $trade_record['erp_bmdm'] = $erp_bmdm;
+        $trade_record['erp_fgsmc'] = $erp_fgsmc;
+        $trade_record['erp_bmmc'] = $erp_bmmc;
+        $trade_record['erp_username'] = $erp_username;        
         
 //         Log::notice("response-data ===========================>> data = ##" . json_encode($trade_record) . "##" );
 //         exit;
@@ -1172,6 +1214,33 @@ class TradeRecordController extends BaseController {
         EC::success(EC_OK, $data['data']);
     }
     
+
+    protected function auditOneTradRecord(){
+    	$id = Request::post('id');
+    	$status = Request::post('status');
+    	
+    	if(empty($id) || empty($status)){
+    		Log::error('id or status params error!');
+    		EC::fail(EC_PAR_ERR);
+    	}
+    	
+    	$params = array();
+    	$params['id'] = $id;
+    	$params['status'] = $status;
+    	
+    	Log::notice("request-data ===========================>> data = ##" . var_dump($params, true) . "##" );
+    	    	
+    	$tradeRecord_model = $this->model('tradeRecord');
+    	$data = $tradeRecord_model->auditOneTradRecord($params);
+    	if(EC_OK_ERP != $data['code']){
+    		Log::error('auditOneTradRecord Fail!');
+    		EC::fail($data['code']);
+    	}
+    	Log::notice("response-data ===========================>> data = ##" . json_encode($data) . "##" );
+    	
+    	EC::success(EC_OK, $data['data']);
+    }
+
     public function erp_getOrgNameInfo(){
         $dwmc = Request::post('dwmc'); // 单位名称
     
