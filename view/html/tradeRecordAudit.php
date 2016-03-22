@@ -26,7 +26,7 @@
 
   <div class="panel-body">
     <div class="form-horizontal">
-       <input type="hidden" id="info-entity-id" value=""></input>
+       <input type="hidden" id="info-entity-id" value="<?php echo $data_info['id'];?>"></input>
        
        <div class="form-group">
 	    <label for="add-entity-apply_no" class="col-sm-2 control-label">申请单号</label>
