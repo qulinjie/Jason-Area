@@ -449,3 +449,63 @@ function showDetailInfo_delay(o,id){
 	}, 100);
 }
 
+$(document).on('click', '.audit-entity', function(event){	
+	
+	$('#audit-entity-modal').modal('show');
+	$('#audit-entity-modal').modal({keyboard: false});
+		
+	$('#btn-audit-entity').show();
+	$('#btn-audit-entity').unbind("click");
+	
+	var title = $('#audit-entity-new').text();
+	$('#info_entity_title').html(title);
+	
+	$("#audit-entity-hint").html('').fadeOut();
+	
+	var id = $(this).attr("id").replace('audit-entity-', '');	
+	loadOneAuditTradRecord(id);
+});
+
+function loadOneAuditTradRecord(id){	
+	$('#audit-entity-list').html("<div style='width:100%;text-align:center;'><img alt='正在加载数据...' src='" + BASE_PATH + "view/images/tips_loading.gif'/></div>");
+	//查找
+    $.post(BASE_PATH + 'tradeRecord/getOneTrandRecord', {    		
+	        'id':id
+        },
+        function(result){        	
+            if(result.code != 0) {
+                $("#search-entity-hint").html(result.msg + '(' + result.code + ')').fadeIn();
+            }else {
+                $("#audit-entity-list").html(result.data.entity_list_html);
+                //renderDatetime();
+                //entitySetSelectedPage();
+            }
+        },
+        'json'
+    );
+}
+
+$(document).on('click', '#add-entity-audit1', function(event){
+	auditOneTradRecord(1);
+});
+
+$(document).on('click', '#add-entity-audit2', function(event){
+	auditOneTradRecord(2);
+});
+
+function auditOneTradRecord(status){
+	$apply_no = $("#add-entity-apply_no").val();
+	$.post(BASE_PATH + 'tradeRecord/auditOneTradRecord', {    		
+        'apply_no':apply_no,
+        'status':status
+    },
+    function(result){        	
+        if(result.code != 0) {
+            $("#search-entity-hint").html(result.msg + '(' + result.code + ')').fadeIn();
+        }else {
+            $("#audit-entity-list").html(result.data.entity_list_html);           
+        }
+    },
+    'json'
+);
+}
