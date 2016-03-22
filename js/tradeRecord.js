@@ -418,37 +418,8 @@ $(document).on('click', '#test_send_pay', function(event){
 	    );
 });
 
-prettyPrint();
-});
 
-function kk(obj){
-	var tt = '';
-	jQuery.each(obj, function(i, val) {  
-	    tt = tt + " | " + i + "=" + val;  
-	});
-	alert(tt);
-}
-
-function showDetailInfo(o,id){
-	var info = $('#info_tr_'+id);
-	if( 'none' == info.css('display')){
-		info.fadeIn();
-	} else {
-		info.hide();
-	}
-}
-
-var stopPropagation = false;
-function showDetailInfo_delay(o,id){
-	setTimeout(function(){ 
-		if(stopPropagation){
-			stopPropagation = false;
-		} else {
-			showDetailInfo(o,id);
-		}
-	}, 100);
-}
-
+/**************start--付款审批****************/
 $(document).on('click', '.audit-entity', function(event){	
 	
 	$('#audit-entity-modal').modal('show');
@@ -530,3 +501,41 @@ function auditOneTradRecord(apply_status){
 	    'json'
 	);
 }
+
+/**************end--付款审批****************/
+
+
+prettyPrint();
+});
+
+function kk(obj){
+	var tt = '';
+	jQuery.each(obj, function(i, val) {  
+	    tt = tt + " | " + i + "=" + val;  
+	});
+	alert(tt);
+}
+
+function showDetailInfo(o,id){
+	var info = $('#info_tr_'+id);
+	if( 'none' == info.css('display')){
+		info.fadeIn();
+	} else {
+		info.hide();
+	}
+}
+
+var stopPropagation = false;
+function showDetailInfo_delay(o,id){
+	setTimeout(function(){ 
+		if(stopPropagation){
+			stopPropagation = false;
+		} else {
+			showDetailInfo(o,id);
+		}
+	}, 100);
+}
+
+
+
+
