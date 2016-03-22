@@ -523,19 +523,10 @@ function auditOneTradRecord(apply_status){
 	        	$("#add-entity-hint").html(result.msg + ', 关闭...').fadeIn();
                 setTimeout(function(){
                 	$('#add-entity-cancel').click();                	
-                	window.location.reload();
+                	search_entity($("#entity-current-page").html());
                 }, 1000);
 	        }
 	    },
 	    'json'
 	);
 }
-
-function writeObj(obj){ 
-	var description = ""; 
-	for(var i in obj){ 
-		var property=obj[i]; 
-		description+=i+" = "+property+"\n"; 
-	} 
-	alert(description); 
-} 
