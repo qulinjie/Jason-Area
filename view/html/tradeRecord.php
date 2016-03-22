@@ -96,7 +96,7 @@
 <?php if(!$is_admin){ ?>
 <div id="add-button-group" style="padding-bottom: 2px;">
 	<a id="add-entity-new" class="btn btn-primary" href="<?php echo Router::getBaseUrl();?>tradeRecord/createApply" >申请付款</a>
-	<a id="test_send_pay" class="btn btn-primary" href="#" >测试付款</a>
+<!-- 	<a id="test_send_pay" class="btn btn-primary" href="#" >测试付款</a> -->
 </div>
 <?php } ?>
 

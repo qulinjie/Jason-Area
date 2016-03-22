@@ -581,7 +581,7 @@ $(document).on('click', '#for-test-btn', function(event){
 	    }
 	    
 	    var full_amount = $('#add-entity-full_amount').val();
-	    alert(full_amount + '-' + amount + '-' + ( full_amount < amount ));
+//	    alert(full_amount + '-' + amount + '-' + ( full_amount < amount ));
 	    if( full_amount < amount ){
 	    	hint_html += (hint_html == '' ? '' : '<BR>') + '填写 金额 不能大于单据金额！' + full_amount;
 	    }
