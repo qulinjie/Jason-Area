@@ -1216,28 +1216,27 @@ class TradeRecordController extends BaseController {
     
 
     protected function auditOneTradRecord(){
-    	$id = Request::post('id');
-    	$status = Request::post('status');
+    	$id = Request::post('apply_no');
+    	$apply_status = Request::post('apply_status');    	
+    	Log::notice("request-data ===========================>> id=" .$id . "apply_status=" . $apply_status . "##" );
     	
-    	if(empty($id) || empty($status)){
-    		Log::error('id or status params error!');
+    	if(empty($id) || empty($apply_status)){
+    		Log::error('id or apply_status params error!');
     		EC::fail(EC_PAR_ERR);
     	}
     	
     	$params = array();
     	$params['id'] = $id;
-    	$params['status'] = $status;
-    	
-    	Log::notice("request-data ===========================>> data = ##" . var_dump($params, true) . "##" );
-    	    	
+    	$params['apply_status'] = $apply_status;
+    	 	
     	$tradeRecord_model = $this->model('tradeRecord');
     	$data = $tradeRecord_model->auditOneTradRecord($params);
     	if(EC_OK_ERP != $data['code']){
     		Log::error('auditOneTradRecord Fail!');
     		EC::fail($data['code']);
     	}
-    	Log::notice("response-data ===========================>> data = ##" . json_encode($data) . "##" );
     	
+    	Log::notice("response-data ===========================>> data = ##" . json_encode($data) . "##" );
     	EC::success(EC_OK, $data['data']);
     }
 
