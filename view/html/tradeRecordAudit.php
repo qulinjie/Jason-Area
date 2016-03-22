@@ -128,7 +128,7 @@
     	<a id="add-entity-audit1" class="btn btn-primary" href="#">审批通过</a>
     	<a id="add-entity-audit2" class="btn btn-primary" href="#">审批驳回</a>
     	<!-- <a id="add-entity-cancel" class="btn btn-primary" href="<?php echo Router::getBaseUrl();?>tradeRecord/getIndex">取消</a>-->
-      	<button id="add-entity-cancel" type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+      	<button id="add-entity-cancel" type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
       </div>
 
 	</div>
