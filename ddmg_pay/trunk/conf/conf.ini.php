@@ -9,8 +9,8 @@ return array(
 		'ddmg_payapi_timeout' => '',
         'ddmg_server_url'     => 'http://127.0.0.1/ddmg_server/index.php/',
         'ddmg_server_timeout' => '',
-        'ddmg_spd_sign_url'	  =>    'http://192.168.0.102:4437/',
-        'ddmg_spd_send_url'	  =>	'http://192.168.0.102:5777/',
+        'ddmg_spd_sign_url'	  =>    'http://192.168.0.113:4437/',
+        'ddmg_spd_send_url'	  =>	'http://192.168.0.113:5777/',
         'ddmg_spd_masterID'	  =>	'2000040752',
         'ddmg_spd_acctNo'	  =>	'6224080600234',
 
