@@ -1266,15 +1266,16 @@ class TradeRecordController extends BaseController {
     	if(empty($data) || !is_array($data) || EC_OK != $data['code'] || !isset($data['data'])) {
     		Log::error('getInfo empty !');
     		EC::fail($data['code']);
-    	}
-    	    	
-    	$data = $data['data'][0];		
+    	}    	    	
+    	$data = $data['data'][0];    		
     	//Log::write(var_export($data, true), 'debug', 'debug-'.date('Y-m-d'));
+    	
     	//判断是否已审批通过
     	if(2 != intval($data['apply_status'])){    		
     		Log::error('audit did not pass!');
     		EC::fail(EC_TRADE_TF_NO_AS);
-    	}    	
+    	}
+    	    	
     	//判断是否已付款  order_status 订单交易状态 1-待付款 2-已付款 3-拒付',
     	if(!in_array(intval($data['order_status']), array(1,2,3))){
     		Log::error('the order status is error!');
@@ -1287,22 +1288,29 @@ class TradeRecordController extends BaseController {
     		EC::fail(EC_TRADE_TF_OS_ERR_3);
     	}
     	
-    	EC::success(EC_OK);    	
-    	
+    	//查付款人名称    	   
+    	$params  = array();
+    	$params['user_id'] = $data['user_id'];  
+    	$bcsCustomer_model = $this->model('bcsCustomer');  	
+    	$bcs_data = $bcsCustomer_model->getInfo($params);    	
+    	if(EC_OK != $bcs_data['code']){
+    		Log::error("bcsCustomer getInfo failed . ");
+    		EC::fail($bcs_data['code']);
+    	}
+
+    	//付款
     	$params = array();    	
     	$params['payerVirAcctNo'] = $data['ACCOUNT_NO']; // 付款人虚账号
-    	$params['payerName'] = '刘新辉'; // 付款人名称
-    	
-    	$params['payeeAcctNo'] = '6223635001004485218'; // 收款人账号
-    	$params['payeeAcctName'] = '钟煦镠'; // 收款人中文名
-    	
+    	$params['payerName'] = '刘新辉'; // 付款人名称   
+    	 	
+    	$params['payeeAcctNo'] = $data['comp_account']; // 收款人账号
+    	$params['payeeAcctName'] = $data['seller_name']; // 收款人中文名    	
     	$params['ownItBankFlag'] = '1';// 本行/它行标志 0：表示本行 1：表示它行
     	$params['remitLocation'] = '1'; // 同城异地标志 0：同城 1：异地 跨行转账时必须输入(即本行/它行标志为1：表示它行)
-    	$params['payeeBankName'] = '珠海华润银行股份有限公司清算中心'; // 收款行名称 跨行转账时必须输入(即本行/它行标志为1：表示它行)
-    	$params['payeeBankAddress'] = '珠海华润银行股份有限公司清算中心'; // 收款行地址 跨行转账时必须输入(即本行/它行标志为1：表示它行)
-    	$params['payeeBankNo'] = '313585000990'; // 支付号 【收款账号行号】
-    	
-    	$params['transAmount'] = '1.5'; // 交易金额
+    	$params['payeeBankName'] = $data['seller_name']; // 收款行名称 跨行转账时必须输入(即本行/它行标志为1：表示它行)
+    	$params['payeeBankAddress'] = $data['seller_name']; // 收款行地址 跨行转账时必须输入(即本行/它行标志为1：表示它行)    	
+    	$params['payeeBankNo'] = '313585000990'; // 支付号 【收款账号行号】    	
+    	$params['transAmount'] = $data['order_bid_amount']; // 交易金额
     	$params['note'] = '测试虚账户付款'; // 附言 如果跨行转账，附言请不要超过42字节（汉字21个）
     	
    		$spdBank_model = $this->model('spdBank');
@@ -1314,11 +1322,11 @@ class TradeRecordController extends BaseController {
    		$params = array();
    		$params['id'] = $id;
    		$params['order_status'] = 2; //订单交易状态 1-待付款 2-已付款 3-拒付',
-   		$params['order_timestamp'] = date('Y-m-d H:i:s',time());
+   		$params['pay_timestamp'] = date('Y-m-d H:i:s',time());
    		$tradeRecord_model = $this->model('tradeRecord');
-   		$data = $tradeRecord_model->updata($params);
+   		$data = $tradeRecord_model->update($params);
    		if(EC_OK != $data['code']){
-   			Log::error('auditOneTradRecord Fail!');
+   			Log::error('update order status fail!');
    			EC::fail($data['code']);
    		}
    		
