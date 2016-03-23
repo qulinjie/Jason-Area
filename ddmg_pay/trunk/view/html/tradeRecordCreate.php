@@ -35,6 +35,8 @@
        <input type="hidden" id="info-entity-id" value=""></input>
        
        <input type="hidden" id="info-entity-comp_name" value=""></input>
+       <input type="hidden" id="add-entity-bank_no" value=""></input><!-- （已验证的）银行行号 -->
+       <input type="hidden" id="add-entity-bank_name_checked" value=""></input><!-- （已验证的）银行名称 -->
        <input type="hidden" id="add-entity-fphm" value=""></input><!-- 业务单号-发票号码 -->
        <input type="hidden" id="add-entity-full_amount" value=""></input><!-- 采购单金娥  -->
        <input type="hidden" id="add-entity-comp_name_buyer" value=""></input><!-- 下游买家 -->
@@ -65,15 +67,34 @@
 	    <label for="add-entity-bank_name" class="col-sm-2 control-label">开户行</label>
 	    <div class="col-sm-4">
 		    <input type="text" class="form-control" id="add-entity-bank_name" placeholder=""/>
+		    <div id="div_data_bank" class="citydatadiv" style="display: none;"><ul></ul></div>
 		    <a href="#" id="check-entity-bankName">验证开户行</a>
 		    &nbsp;&nbsp;&nbsp;&nbsp;
-		    <span id="span_check_success" style="display: none;" class="glyphicon glyphicon-ok form-control-feedback" aria-hidden="true"><span style="color:blue">验证通过</span></span>
-		    <span id="span_check_failed" style="display: none;" class="glyphicon glyphicon-remove form-control-feedback" aria-hidden="true"><span style="color:red">验证失败</span></span>
+		    <span id="span_check_success" style="display: none;color: blue;" class="glyphicon glyphicon-ok form-control-feedback" aria-hidden="true"><span style="color:blue">验证通过</span></span>
+		    <span id="span_check_failed" style="display: none;color: red;" class="glyphicon glyphicon-remove form-control-feedback" aria-hidden="true"><span style="color:red">验证失败</span></span>
 	    </div>
 	    <label for="add-entity-amount" class="col-sm-2 control-label">金额</label>
 	    <div class="col-sm-4">
 	        <input type="text" class="form-control" id="add-entity-amount" placeholder=""></input>
 	    </div>	
+	  </div>
+	  <div class="form-group">
+	    <label for="add-entity-bank_flag" class="col-sm-2 control-label">同行/跨行</label>
+	    <div class="col-sm-4">
+	        <select class="form-control" id="add-entity-bank_flag">
+              <option value="0">同行</option>
+              <option value="1">跨行</option>
+            </select>
+	    </div>
+	    <span id="span_local_flag" style="display: none;">
+	    <label for="add-entity-local_flag" class="col-sm-2 control-label">同城/异地</label>
+	    <div class="col-sm-4">
+	        <select class="form-control" id="add-entity-local_flag">
+              <option value="0">同城</option>
+              <option value="1">异地</option>
+            </select>
+	    </div>
+	    </span>
 	  </div>
 	  <div class="form-group">
 	    <label for="add-entity-amount_type" class="col-sm-2 control-label">款项类别</label>

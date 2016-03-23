@@ -34,14 +34,15 @@
 <?php }else{?>
 <div class="panel panel-default">
 <div class="panel-heading">列表</div>
-  <div class="panel-body" style="width: 1500px;overflow-x: scroll;">
-		<table class="table table-hover" style="width: 3000px;max-width: 3000px;overflow-x: scroll;">
+  <div class="panel-body">
+		<table class="table table-hover">
 			<thead>
 				<tr>
 					<th style="display:none">id</th>
 					<th>用户登录账号</th>
 					<th>席位号</th>
 					<th>虚拟卡号</th>
+					<!--  
 					<th>客户名称</th>
 					<th>证件号码</th>
 					<th>证件类型</th>
@@ -53,12 +54,15 @@
 					<th>客户电话号码</th>
 					<th>客户地址</th>
 					<th>客户状态</th>
+					-->
 					<th>余额</th>
 					<th>可用余额</th>
+					<!--
 					<th>注册时间</th>
 					<th>开户日期</th>
 					<th>签约时间</th>
 					<th>解约时间</th>
+					-->
 					<th>备注</th>
 					<th>操作</th>
 				</tr>
@@ -70,6 +74,7 @@
 				<td><?php echo ('-1' == $item['user_id']) ? '' : $item['user_id'];?></td>
 				<td><?php echo $item['SIT_NO'];?></td>
 				<td><?php echo $item['ACCOUNT_NO'];?></td>
+				<!--
 				<td><?php echo $item['MBR_NAME'];?></td>
 				<td><?php echo $item['MBR_CERT_NO'];?></td>
 				<td><?php echo $item['MBR_CERT_TYPE'];?></td>
@@ -81,12 +86,15 @@
 				<td><?php echo $item['MBR_TELENO'];?></td>
 				<td><?php echo $item['MBR_ADDR'];?></td>
 				<td><?php echo (1== $item['MBR_STS'])?'已注册':((2== $item['MBR_STS'])?'已签约':'已注销');?></td>
+				-->
 				<td><?php echo $item['ACCT_BAL'];?></td>
 				<td><?php echo $item['AVL_BAL'];?></td>
+				<!--
 				<td><?php echo $item['add_timestamp'];?></td>
 				<td><?php echo (0 < strtotime($item['SIGNED_DATE']))? $item['SIGNED_DATE'] : '-';?></td>
 				<td><?php echo (0 < strtotime($item['ACT_TIME']))? $item['ACT_TIME'] : '-';?></td>
 				<td><?php echo (0 < strtotime($item['cancel_TIME']))? $item['cancel_TIME'] : '-';?></td>
+				-->
 				<td><?php echo empty($item['comment'])?'-':$item['comment'];?></td>
 				<td>
 					<div class="btn-group" role="group">

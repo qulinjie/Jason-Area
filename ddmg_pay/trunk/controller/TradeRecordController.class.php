@@ -1122,8 +1122,8 @@ class TradeRecordController extends BaseController {
         
         $data = $spdBank_model->queryBankNumberByName(array('bankName'=>$bankName));
         Log::notice("response-data ===========checkBankName================>> data = ##" . json_encode($data) . "##" );
-        $data_lists = $data['body']['lists']['list'];
-        EC::success(EC_OK, !empty($data_lists));
+        $data = $data['body']['lists']['list'];
+        EC::success(EC_OK, $data);
     }
     
     public function erp_getOrderBuy(){
@@ -1343,9 +1343,9 @@ class TradeRecordController extends BaseController {
             Log::error('erp_getOrgNameInfo Fail!');
             EC::fail($data['code']);
         }
-        Log::notice("response-data ===========================>> data = ##" . json_encode($data) . "##" );
+        Log::notice("response-data =============OrgName==============>> data = ##" . json_encode($data) . "##" );
     
-        EC::success(EC_OK, $data['data']);
+        EC::success(EC_OK, $data['data']['data']);
     }
     
     public function test_sendTransferTrade(){
