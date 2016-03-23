@@ -76,6 +76,12 @@ define('EC_BLE_LESS','803');
 define('EC_ACCOUNT_EST',901);
 define('EC_COMPANY_EST',902);
 define('EC_CERT_BEEN' , 903);
+
+define('EC_TRADE_TF_NO_AS',1001);
+define('EC_TRADE_TF_OS_ERR', 1002);
+define('EC_TRADE_TF_OS_ERR_2', 1003);
+define('EC_TRADE_TF_OS_ERR_3' , 1004);
+
 class EC extends Base {
 
 	public static $_errMsg = array(
@@ -154,6 +160,11 @@ class EC extends Base {
 	       EC_ACCOUNT_EST     => '帐号已存在',
 	       EC_COMPANY_EST     => '公司已存在',
 	       EC_CERT_BEEN        => '证件已被占用',
+			
+			EC_TRADE_TF_NO_AS      => '审批未通过',
+			EC_TRADE_TF_OS_ERR     => '订单状态异常',
+			EC_TRADE_TF_OS_ERR_2   => '订单已付款',
+			EC_TRADE_TF_OS_ERR_3   => '订单已拒付',
 	    
 	);
 	public static function load(){
