@@ -32,6 +32,7 @@
 	无记录
 </p></div>
 <?php }else{?>
+<?php $isAdmin = AdminController::isLogin(); ?>
 <div class="panel panel-default">
 <div class="panel-heading" id="search-head-div">付款列表</div>
   <div class="panel-body" style="width: 1500px;overflow-x: hidden;">
@@ -39,6 +40,7 @@
 			<thead>
 				<tr>
 					<th style="display:none">id</th>
+					<?php if($isAdmin){ echo '<th>虚拟账号</th>'; } ?>
 					<th>交易流水号</th><!-- 商户交易流水号 -->
 					<th>收款/付款</th>
 					<th>交易完成时间</th>
@@ -48,13 +50,14 @@
 					<th>结余</th>
 					<th>状态</th>
 					<th>备注</th>
-					<?php if(AdminController::isLogin()){ echo '<th>操作</th>'; } ?>
+					<?php if($isAdmin){ echo '<th>操作</th>'; } ?>
 				</tr>
 			</thead>
 			<tbody>
 <?php foreach ($data_list as $item){?>
 			<tr>
 				<td style="display:none"><?php echo $item['id'];?><input type="hidden" value="<?php echo $item['status'];?>"></td>
+				<?php if($isAdmin){ echo '<td>' . $item['ACCOUNT_NO'] . '</td>'; } ?>
 				<td><?php echo $item['MCH_TRANS_NO'];?></td>
 				<td><?php if('1' == strval($item['debitCreditFlag'])) { 
 				            echo '收款'; 
@@ -76,10 +79,14 @@
                             else if($item['status']==BcsTradeModel::$_status_unknown) { echo "未知"; } ?>
 				</td>
 				<td><?php echo $item['comment'];?></td>
-				<?php if(AdminController::isLogin()){?>
+				<?php if($isAdmin){?>
 				<td>
 					<div class="btn-group" role="group">
-			             <a id="entity-loadInfo-btn" href="#" data-toggle="modal" data-keyboard="false" data-backdrop="static">更新</a>
+			           <?php if( 1 == $item[record_bank_type] ){ ?>
+    			       <a id="entity-loadInfo-btn" href="#" data-toggle="modal" data-keyboard="false" data-backdrop="static">更新</a>
+    			       <?php } else if( 2 == $item[record_bank_type] ){ ?>
+    			       -
+    			       <?php } ?>
 					</div>
 				</td>
 				<?php }?>

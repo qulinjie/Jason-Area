@@ -388,12 +388,27 @@ $(document).on('click', '#for-test-btn', function(event){
 	    );
 	});
 	
+	// 验证开户行
 	$(document).on('click', '#check-entity-bankName', function(event){
 		var bankName = $('#add-entity-bank_name').val(); // 开户行
 		checkBankName(bankName);
 	});
 	
 	function checkBankName(bankName){
+		if(!bankName || '' == bankName ){
+			return ;
+		}
+		$("#span_check_failed").hide();
+		$("#span_check_success").hide();
+		
+		if( '' != $('#add-entity-bank_no').val() && bankName == $('#add-entity-bank_name_checked').val() ) {
+			$("#span_check_success").fadeIn();
+    		$("#span_check_failed").fadeOut();
+    		return ;
+		}
+		
+		$('#add-entity-bank_no').val('');
+		$('#add-entity-bank_name_checked').val('');
 		$.post(BASE_PATH + 'tradeRecord/checkBankName', {
 		        'bankName':bankName
 	        },
@@ -403,11 +418,15 @@ $(document).on('click', '#for-test-btn', function(event){
 	            } else {
 //	            	kk(result);
 	            	if(result.data){
-	            		$("#span_check_failed").fadeOut();
 	            		$("#span_check_success").fadeIn();
+	            		$("#span_check_failed").fadeOut();
+	            		$('#add-entity-bank_no').val(result.data['bankNo']);
+	            		$('#add-entity-bank_name_checked').val(result.data['bankName']);
 	            	} else {
 	            		$("#span_check_success").fadeOut();
 	            		$("#span_check_failed").fadeIn();
+	            		$('#add-entity-bank_no').val('');
+	            		$('#add-entity-bank_name_checked').val('');
 	            	}
 	            }
 	        },
@@ -541,6 +560,8 @@ $(document).on('click', '#for-test-btn', function(event){
 			$('#add-entity-amount_type').removeAttr('disabled'); // 款项类别
 			$('#add-entity-comment').removeAttr('disabled'); // 备注
 			$('#add-entity-use').removeAttr('disabled'); // 用途
+			$('#add-entity-bank_flag').removeAttr('disabled'); // 同行/跨行
+			$('#add-entity-local_flag').removeAttr('disabled'); // 同城/异地
 		}
 		
 	});
@@ -591,6 +612,14 @@ $(document).on('click', '#for-test-btn', function(event){
 	    }
 	    if( !bank_name || '' == bank_name ){
 	    	hint_html += (hint_html == '' ? '' : '<BR>') + '请填写 开户行！' ;
+	    } else {
+	    	if( '' == $('#add-entity-bank_no').val() || bank_name != $('#add-entity-bank_name_checked').val() ){
+		    	hint_html += (hint_html == '' ? '' : '<BR>') + '请验证 开户行！' ;
+		    	$('#check-entity-bankName').click(); // 验证开户行
+		    	/*setTimeout(function(){
+		    		$('#add-entity-ref').click();
+                }, 2000);*/
+		    }
 	    }
 	    
 	    if(hint_html != ''){
@@ -626,6 +655,8 @@ $(document).on('click', '#for-test-btn', function(event){
 		$('#add-entity-amount_type').attr('disabled', 'disabled'); // 款项类别
 		$('#add-entity-comment').attr('disabled', 'disabled'); // 备注
 		$('#add-entity-use').attr('disabled', 'disabled'); // 用途
+		$('#add-entity-bank_flag').attr('disabled', 'disabled'); // 同行/跨行
+		$('#add-entity-local_flag').attr('disabled', 'disabled'); // 同城/异地
 		
 	});
 	/**************end--引用****************/
@@ -638,17 +669,86 @@ $(document).on('click', '#for-test-btn', function(event){
 	            if(result.code != 0) {
 	                $("#ref-entity-hint").html(result.msg + '(' + result.code + ')').fadeIn();
 	            } else {
-//	            	kk(result);
-//	            	if(result.data){
-	            		// TODO
-	            		$("#ref-entity-hint").html(result.msg + '(' + result.data + ')').fadeIn();
+//	            	kk(result.data[0]);
+	            	if(result.data){ // undefined
+//	            		$("#ref-entity-hint").html(result.msg + '(' + result.data + ')').fadeIn();
+	            		renderBankSelectLi(result.data);
 //	            	} else {
-//	            	}
+	            	}
 	            }
 	        },
 	        'json'
 	    );
 	}
+	
+	$('#add-entity-bank_name').bind('focus',function(event){
+		var bankObj = $("#div_data_bank li");
+		if(0 ==  bankObj.length){
+			return false;
+		}
+		if('readonly' != $('#add-entity-bank_name').attr('readonly') ){
+			$("#div_data_bank").fadeIn();
+		}
+	});
+	
+	$('#add-entity-bank_name').bind('blur',function(event){
+		$('#check-entity-bankName').click(); // 验证开户行
+		$("#div_data_bank").fadeOut();
+	});
+	
+	$('#div_data_bank').bind('mouseout',function(event){
+		$("#div_data_bank").fadeOut();
+	});
+	
+	var bank_account_list = new Array();
+	function renderBankSelectLi(dataList){
+		var width = $("#add-entity-bank_name").css('width');
+		$("#div_data_bank").css("width",width);
+		$("#div_data_bank").fadeOut();
+		
+		bank_account_list = new Array(); // 清空数据
+		var objUl = $("#div_data_bank ul");
+		objUl.html('');
+		for(var j=0;j<dataList.length;j++){
+			bank_account_list.push(dataList[j]['zh'])
+			var li = "<li>" + dataList[j]['khh'] + "</li>";
+			objUl.append(li);
+		}
+		
+		var bankObj = $("#div_data_bank li");
+		if(0 ==  bankObj.length){
+			return false;
+		}
+		bankObj.each(function(i,e){
+			bankObj[i].style.cursor="pointer";
+			e.onmouseover = function(e){
+				bankObj[i].style.backgroundColor="#3399FF";
+			};
+			e.onmouseout = function(e){
+				bankObj[i].style.backgroundColor="white";
+			};
+			e.onclick = function(e){
+				if('readonly' != $("#add-entity-bank_name").attr('readonly') ){
+					var selVal = $(bankObj[i]).text();
+					$("#add-entity-bank_name").val(selVal);
+					if(bank_account_list[i]){
+						$("#add-entity-comp_account").val(bank_account_list[i]);
+					}
+					$('#check-entity-bankName').click(); // 验证开户行
+				}
+				$("#div_data_bank").fadeOut();
+			};
+		});
+	}
+	
+	// 同行/跨行
+	$('#add-entity-bank_flag').on('change',function(event){
+		if('1' == $('#add-entity-bank_flag').val() ){
+			$('#span_local_flag').css("display","block");
+		} else {
+			$('#span_local_flag').css("display","none");
+		}
+	});
 	
 prettyPrint();
 });

@@ -461,10 +461,16 @@ class BcsCustomerController extends BaseController {
         EC::success(EC_OK);
     }
     
-    private function addCustomerList($data_lists = array()){
+    public function addCustomerList($data_lists = array()){
         if(empty($data_lists)){
             Log::notice("addCustomerList data_lists is empty . ");
             return ;
+        }
+        
+        if(!empty($data_lists['acctNo'])) {
+            $data_lists_temp = array();
+            $data_lists_temp[] = $data_lists;
+            $data_lists = $data_lists_temp;
         }
         
         $bcsCustomer_model = $this->model('bcsCustomer');
@@ -495,6 +501,7 @@ class BcsCustomerController extends BaseController {
                 $data_rs = $bcsCustomer_model->create($customer);
                 if($data_rs['code'] !== EC_OK){
                     Log::error('addCustomerList . create bcsCustomer error . code='. $data_rs['code'] . ',msg=' . $data_rs['msg'] );
+                    continue;
                 }
             }
             Log::notice('addCustomerList ==== >>> add-data=##' . $obj['virtualAcctName'] . "##");

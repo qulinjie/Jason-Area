@@ -131,3 +131,29 @@ body {
 .form-group {
 	margin-top: 5px;
 }
+
+
+div.citydatadiv{
+	display: none;
+	border: 1px solid; 
+	border-color:#CCC; 
+	border-top-style: none; 
+	padding-left: 0px; 
+	position:absolute; 
+	z-index:99;
+/* 	width:93%;  */
+	background-color:white;
+}
+div.citydatadiv ul{
+	padding-left: 6px;
+	list-style-type: none;
+} 
+div.citydatadiv a {
+	width:100%;
+	color:black;
+	text-decoration:none;
+}
+div.citydatadiv a:hover {
+	color:red;
+	text-decoration:none;
+}

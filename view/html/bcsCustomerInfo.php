@@ -72,13 +72,16 @@
 	           <?php echo $item['ACCOUNT_NO'];?>
 	       </span>
 	    </div>
+	    <!--
 	    <label class="col-sm-2 control-label">会员证件类型:</label>
 	    <div class="col-sm-3">
 	       <span style="vertical-align:middle;line-height:2.5;">
 	           <?php echo $item['MBR_CERT_TYPE'];?>
 	       </span>
 	    </div>
+	    -->
 	  </div>
+	  <!--  
 	  <div class="form-group">
 	    <label class="col-sm-2 control-label">会员证件号码:</label>
 	    <div class="col-sm-3">
@@ -157,6 +160,7 @@
 	       </span>
 	    </div>
 	  </div>
+	  -->
 	  <!-- 
 	  <button type="button" class="btn btn-primary" id="for-loadCustInfo-btn">更新客户信息（测试）</button>
 	   -->
