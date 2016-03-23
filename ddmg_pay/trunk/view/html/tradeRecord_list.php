@@ -68,6 +68,7 @@
 					<th>款项类别</th>
 					<th>业务单号</th>
 					<th>审批状态</th>
+					<th>支付状态</th>
 					<th>机构</th>
 					<th><span id="order-status-show">操作</span></th>
 				</tr>
@@ -88,18 +89,23 @@
                     else { echo $item['apply_status'] ;}
                 ?>
             </td>
+            <td><?php if(1==$item['order_status']){ echo '待付' ;}
+                    else if(2==$item['order_status']){ echo '已付' ;}
+                    else if(3==$item['order_status']){ echo '拒付' ;}
+                    else { echo $item['order_status'] ;}
+                ?>
+            </td>
             <td><?php echo $item['erp_fgsmc']; ?></td>
             <td> 
-            <?php if($is_admin){ ?>            	
+            <?php if($is_admin){ ?>
             	<a id="audit-entity-<?php echo $item['id'];?>" value="<?php echo $item['id'];?>" class="audit-entity" href="#" data-toggle="modal" data-keyboard="false" data-backdrop="static">
-            	<?php
-	            	if(2==$item['apply_status'] && 1==$item['order_status']){
-	            		echo "付款";
-	            	}elseif(1==$item['apply_status']) {
-	            		echo "审批";
-	            	}
+            	<?php if(2==$item['apply_status'] && 1==$item['order_status']){
+            		echo "付款";
+            	}elseif(1==$item['apply_status']){
+            		echo "审批";
+            	}
             	?>
-            	</a>            	            	
+            	</a>
             <?php }else{ ?> 
             	- 
             <?php }?></td>
