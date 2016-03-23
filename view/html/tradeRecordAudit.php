@@ -120,15 +120,19 @@
 		</table>
   </div>
   
-      <div id="div_submit_info" style="display: none;"></div>
-  
-      <div class="alert alert-danger" id="add-entity-hint" style="display: none;"></div>
-  
-	  <div id="add-button-group" class="modal-footer">
-    	<a id="add-entity-audit1" class="btn btn-primary" href="#">审批通过</a>
-    	<a id="add-entity-audit2" class="btn btn-primary" href="#">审批驳回</a>
-    	<!-- <a id="add-entity-cancel" class="btn btn-primary" href="<?php echo Router::getBaseUrl();?>tradeRecord/getIndex">取消</a>-->
-      	<button id="add-entity-cancel" type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+      <div id="div_submit_info" style="display: none;"></div>  
+      <div class="alert alert-danger" id="add-entity-hint" style="display: none;"></div>  	  
+  	  
+	  <div id="add-button-group" class="modal-footer">	  	
+	    <?php if(1==$data_info['apply_status']){ ?>	  	
+			<a id="add-entity-audit1" class="btn btn-primary" href="#">审批通过</a>
+    		<a id="add-entity-audit2" class="btn btn-primary" href="#">审批驳回</a>    		
+    	<?php }else{ ?>
+    		<button id="add-entity-audit-pass" type="button" class="btn btn-default disabled" data-dismiss="modal">已审批</button>
+       	<?php }?>       	
+    	<a id="add-entity-pay" class="btn btn-primary <?php if(2!=$data_info['apply_status'] || 1!=$data_info['order_status']){echo " hidden";}?>" href="#">付款</a>
+		<!--  <a id="add-entity-cancel" class="btn btn-primary" href="#">关闭</a> -->
+        <button id="add-entity-cancel" type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
       </div>
 
 	</div>
