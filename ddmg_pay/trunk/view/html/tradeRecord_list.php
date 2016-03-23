@@ -67,9 +67,9 @@
 					<th>申请金额（元）</th>
 					<th>款项类别</th>
 					<th>业务单号</th>
-					<th>审批状态</th>
-					<th>支付状态</th>
 					<th>机构</th>
+					<th>审批状态</th>
+					<th>支付状态</th>					
 					<th><span id="order-status-show">操作</span></th>
 				</tr>
 			</thead>
@@ -83,6 +83,7 @@
             <td><?php echo number_format($item['order_bid_amount'],2);?></td>
             <td><?php echo $item['amount_type']; ?></td>
             <td><?php echo $item['order_no'];?></td>
+            <td><?php echo $item['erp_fgsmc']; ?></td>
             <td><?php if(1==$item['apply_status']){ echo '待审批' ;}
                     else if(2==$item['apply_status']){ echo '审批通过' ;}
                     else if(3==$item['apply_status']){ echo '审批驳回' ;}
@@ -94,8 +95,7 @@
                     else if(3==$item['order_status']){ echo '拒付' ;}
                     else { echo $item['order_status'] ;}
                 ?>
-            </td>
-            <td><?php echo $item['erp_fgsmc']; ?></td>
+            </td>            
             <td> 
             <?php if($is_admin){ ?>
             	<a id="audit-entity-<?php echo $item['id'];?>" value="<?php echo $item['id'];?>" class="audit-entity" href="#" data-toggle="modal" data-keyboard="false" data-backdrop="static">
