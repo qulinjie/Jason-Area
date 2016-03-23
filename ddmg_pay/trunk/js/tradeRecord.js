@@ -458,21 +458,36 @@ function loadOneAuditTradRecord(id){
 
 $(document).on('click', '#add-entity-audit1', function(event){
 	if(confirm("确定审批通过吗？")){
-		$("#add-entity-audit1").html("提交中...");
+		$("#add-entity-audit1").html("提交审批中...");
 		$("#add-entity-audit1").attr('disabled', 'disabled');
-		$("#add-entity-audit2").attr('disabled', 'disabled');
+		$("#add-entity-audit2").attr('disabled', 'disabled').hide();
 		auditOneTradRecord(2);
 	}	
 });
 
 $(document).on('click', '#add-entity-audit2', function(event){	
 	if(confirm("确定审批驳回吗？")){
-		$("#add-entity-audit2").html("提交中...");
-		$("#add-entity-audit1").attr('disabled', 'disabled');
+		$("#add-entity-audit2").html("提交审批中...");
+		$("#add-entity-audit1").attr('disabled', 'disabled').hide();
 		$("#add-entity-audit2").attr('disabled', 'disabled');
 		auditOneTradRecord(3);
 	}	
 });
+
+/*var hint_html = '';
+if( !pwd || '' == pwd ){
+	hint_html += (hint_html == '' ? '' : '<BR>') + '请填写支付密码！' ;
+}
+
+if(hint_html != ''){
+    $("#info-pay-hint").html(hint_html).fadeIn();
+    $("#btn-add-pay").removeAttr('disabled');
+    return 0;
+}
+
+pwd = hex2b64(do_encrypt(pwd));
+
+$("#btn-add-pay").html("正在付款...");*/
 
 function auditOneTradRecord(apply_status){	
 	var id = $("#info-entity-id").val();	
@@ -480,9 +495,11 @@ function auditOneTradRecord(apply_status){
 	        'id':id,
 	        'apply_status':apply_status
 	    },
-	    function(result){	    	
+	    function(result){
+	    	var hint_html = '';	 
+	    	$("#add-entity-hint").html('提交审批中...').fadeIn();	
 	        if(result.code != 0) {	        	
-	            $("#add-entity-hint").html(result.msg + '(' + result.code + ')').fadeIn();
+	            $("#add-entity-hint").html('审批操作失败：'+ result.msg + '(' + result.code + ')').fadeIn();
 	            if(apply_status == 2){
 	            	$("#add-entity-audit1").html("审批通过");
 	            }else{
@@ -490,7 +507,18 @@ function auditOneTradRecord(apply_status){
 	            }
 	            $("#add-entity-audit2").removeAttr('disabled');
 	            $("#add-entity-audit1").removeAttr('disabled');	            
-	        }else {	            
+	        }else {	       
+	        	hint_html = $("#add-entity-hint").html();
+	        	hint_html += (hint_html == '' ? '' : '<BR>') + '审批操作：' + result.msg ;
+	        	$("#add-entity-hint").html(hint_html).fadeIn();	
+	        	$("#add-entity-audit1").html("已审批");
+	        	if(apply_status == 2){
+	        		sendTransferTrade1();
+	        		return;
+	        	}else{
+	        		$("#add-entity-audit2").html("已驳回");
+	        	}
+	        	
 	        	$("#add-entity-hint").html(result.msg + ', 关闭...').fadeIn();
                 setTimeout(function(){
                 	$('#add-entity-cancel').click();                	
@@ -502,6 +530,38 @@ function auditOneTradRecord(apply_status){
 	);
 }
 
+$(document).on('click', "#add-entity-pay", function(evnent){
+	sendTransferTrade1();
+});
+
+function sendTransferTrade1(){
+	var id = $("#info-entity-id").val();
+	hint_html = $("#add-entity-hint").html();
+	hint_html += (hint_html == '' ? '' : '<BR>') + '正在付款...' ;
+	$("#add-entity-hint").html(hint_html).fadeIn();
+	$("#add-entity-pay").removeClass("hidden").html("正在付款...").attr('disabled', 'disabled');
+	$.post(BASE_PATH + 'tradeRecord/sendTransferTrade', {    		
+	        'id':id,	        	        
+	    },
+	    function(result2) {
+	    	hint_html = $("#add-entity-hint").html();		        	    	
+	        if(result2.code != 0) {
+	        	hint_html += (hint_html == '' ? '' : '<BR>') + '付款操作失败：'+ result2.msg + '(' + result2.code + ')' ;
+	        	$("#add-entity-hint").html(hint_html).fadeIn();
+	        	$("#add-entity-pay").html("付款").removeAttr('disabled');
+	        }else {
+	        	hint_html += (hint_html == '' ? '' : '<BR>') + '付款操作成功！ <BR> 关闭...' ;
+	        	$("#add-entity-hint").html(hint_html).fadeIn();		        	        	
+	        	$("#add-entity-pay").html("已付款");	        	
+                setTimeout(function(){
+                	$('#add-entity-cancel').click();                	
+                	search_entity($("#entity-current-page").html());
+                }, 1000);
+	        }
+	    },
+	    'json'
+	);	        	
+}
 /**************end--付款审批****************/
 
 
