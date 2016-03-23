@@ -1262,7 +1262,7 @@ class TradeRecordController extends BaseController {
     	//根据id查单的数据    	
     	$tradeRecord_model = $this->model('tradeRecord');    	
     	$data = $tradeRecord_model->getInfo(array('id' => $id));
-    	Log::write(var_export($data, true), 'debug', 'debug-'.date('Y-m-d'));    	
+    	//Log::write(var_export($data, true), 'debug', 'debug-'.date('Y-m-d'));    	
     	if(empty($data) || !is_array($data) || EC_OK != $data['code'] || !isset($data['data'])) {
     		Log::error('getInfo empty !');
     		EC::fail($data['code']);
@@ -1288,20 +1288,22 @@ class TradeRecordController extends BaseController {
     		EC::fail(EC_TRADE_TF_OS_ERR_3);
     	}
     	
-    	//查付款人名称    	   
+    	//查付款人信息    	   
     	$params  = array();
     	$params['user_id'] = $data['user_id'];  
     	$bcsCustomer_model = $this->model('bcsCustomer');  	
     	$bcs_data = $bcsCustomer_model->getInfo($params);    	
-    	if(EC_OK != $bcs_data['code']){
+    	//Log::write("bcs_data==".var_export($bcs_data, true), 'debug', 'debug-'.date('Y-m-d'));    	
+    	if(EC_OK != $bcs_data['code'] || !is_array($bcs_data) || !isset($bcs_data['data'])){
     		Log::error("bcsCustomer getInfo failed . ");
     		EC::fail($bcs_data['code']);
     	}
-
+    	$bcs_data = $bcs_data['data'][0];
+    	    	
     	//付款
     	$params = array();    	
     	$params['payerVirAcctNo'] = $data['ACCOUNT_NO']; // 付款人虚账号
-    	$params['payerName'] = '刘新辉'; // 付款人名称   
+    	$params['payerName'] = $bcs_data['SIT_NO']; // 付款人名称   
     	 	
     	$params['payeeAcctNo'] = $data['comp_account']; // 收款人账号
     	$params['payeeAcctName'] = $data['seller_name']; // 收款人中文名    	
