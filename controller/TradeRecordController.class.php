@@ -84,6 +84,9 @@ class TradeRecordController extends BaseController {
                 case 'auditOneTradRecord':
                     $this->auditOneTradRecord();
                     break;
+                case 'sendTransferTrade':
+                	$this->sendTransferTrade();
+                	break;
                     	
                 default:
                     Log::error('page not found . ' . $params[0]);
@@ -1224,50 +1227,102 @@ class TradeRecordController extends BaseController {
     		EC::fail(EC_PAR_ERR);
     	}
     	
+    	//修改审批状态
     	$params = array();
     	$params['id'] = $id;
     	$params['apply_status'] = $apply_status; //审批状态  1待审批  2审批通过 3审批驳回
     	$params['apply_timestamp'] = date('Y-m-d H:i:s',time());
-    	//修改审批状态
-    	$tradeRecord_model = $this->model('tradeRecord');
-    	$data = $tradeRecord_model->auditOneTradRecord($params);
-    	if(EC_OK_ERP != $data['code']){
+     	$tradeRecord_model = $this->model('tradeRecord');
+    	$data = $tradeRecord_model->auditOneTradRecord($params);    	
+    	if(EC_OK != $data['code']){
     		Log::error('auditOneTradRecord Fail!');
     		EC::fail($data['code']);
     	}
     	
-    	//对审批通过的进行付款
+    	/* //对审批通过的进行付款
     	if(2 == $apply_status){
     		$this->sendTransferTrade($id);
-    	}
+    	} */
     	
     	Log::notice("response-data ===========================>> data = ##" . json_encode($data) . "##" );
     	EC::success(EC_OK, $data['data']);
     }        
    
     /**
-    * 对已审核且待付款的采购单进行付款
-    * @date: 2016-3-22 下午8:02:56
-    * @author: lw
-    * @param: id
-    * @return:
+    * 对已审核且待付款的采购单进行付款  
     */
-    protected function sendTransferTrade($id){
-    	
-    	Log::notice("sendTransferTrade ===========================>> id=" .$id );
+    protected function sendTransferTrade($id = NULL){
+    	$id = ($id == NULL) ? intval(Request::post('id')) : intval($id);    	
+    	Log::notice("sendTransferTrade ===========================>> id=" .$id );    	
+    	if(empty($id)){
+    		Log::error('id empty !');
+    		EC::fail(EC_PAR_ERR);
+    	}
     	
     	//根据id查单的数据    	
     	$tradeRecord_model = $this->model('tradeRecord');    	
     	$data = $tradeRecord_model->getInfo(array('id' => $id));
-    	if(empty($data)) {
+    	Log::write(var_export($data, true), 'debug', 'debug-'.date('Y-m-d'));    	
+    	if(empty($data) || !is_array($data) || EC_OK != $data['code'] || !isset($data['data'])) {
     		Log::error('getInfo empty !');
-    		EC::fail(EC_RED_EMP);
+    		EC::fail($data['code']);
+    	}
+    	    	
+    	$data = $data['data'][0];		
+    	//Log::write(var_export($data, true), 'debug', 'debug-'.date('Y-m-d'));
+    	//判断是否已审批通过
+    	if(2 != intval($data['apply_status'])){    		
+    		Log::error('audit did not pass!');
+    		EC::fail(EC_TRADE_TF_NO_AS);
+    	}    	
+    	//判断是否已付款  order_status 订单交易状态 1-待付款 2-已付款 3-拒付',
+    	if(!in_array(intval($data['order_status']), array(1,2,3))){
+    		Log::error('the order status is error!');
+    		EC::fail(EC_TRADE_TF_OS_ERR);
+    	}elseif (2 == intval($data['order_status'])){
+    		Log::error('the order has been payment!');
+    		EC::fail(EC_TRADE_TF_OS_ERR_2);
+    	}elseif (3 == intval($data['order_status'])){
+    		Log::error('the order was refused to pay!');
+    		EC::fail(EC_TRADE_TF_OS_ERR_3);
     	}
     	
-    	if($data['']){
-    		
-    	}
+    	EC::success(EC_OK);    	
     	
+    	$params = array();    	
+    	$params['payerVirAcctNo'] = $data['ACCOUNT_NO']; // 付款人虚账号
+    	$params['payerName'] = '刘新辉'; // 付款人名称
+    	
+    	$params['payeeAcctNo'] = '6223635001004485218'; // 收款人账号
+    	$params['payeeAcctName'] = '钟煦镠'; // 收款人中文名
+    	
+    	$params['ownItBankFlag'] = '1';// 本行/它行标志 0：表示本行 1：表示它行
+    	$params['remitLocation'] = '1'; // 同城异地标志 0：同城 1：异地 跨行转账时必须输入(即本行/它行标志为1：表示它行)
+    	$params['payeeBankName'] = '珠海华润银行股份有限公司清算中心'; // 收款行名称 跨行转账时必须输入(即本行/它行标志为1：表示它行)
+    	$params['payeeBankAddress'] = '珠海华润银行股份有限公司清算中心'; // 收款行地址 跨行转账时必须输入(即本行/它行标志为1：表示它行)
+    	$params['payeeBankNo'] = '313585000990'; // 支付号 【收款账号行号】
+    	
+    	$params['transAmount'] = '1.5'; // 交易金额
+    	$params['note'] = '测试虚账户付款'; // 附言 如果跨行转账，附言请不要超过42字节（汉字21个）
+    	
+   		$spdBank_model = $this->model('spdBank');
+    	//$data = $spdBank_model->sendTransferTrade($params);
+    	//Log::notice("response-data ===========test_sendTransferTrade================>> data = ##" . json_encode($data) . "##" );
+    	//$data = $data['body'];
+    	
+   		//付款成功后修改付款状态   		
+   		$params = array();
+   		$params['id'] = $id;
+   		$params['order_status'] = 2; //订单交易状态 1-待付款 2-已付款 3-拒付',
+   		$params['order_timestamp'] = date('Y-m-d H:i:s',time());
+   		$tradeRecord_model = $this->model('tradeRecord');
+   		$data = $tradeRecord_model->updata($params);
+   		if(EC_OK != $data['code']){
+   			Log::error('auditOneTradRecord Fail!');
+   			EC::fail($data['code']);
+   		}
+   		
+    	EC::success(EC_OK, $data);
     }
 
     public function erp_getOrgNameInfo(){
