@@ -46,7 +46,7 @@ return array(
 		'smtp_password' => 'Isd!@#user',
 		'smtp_sender' => 'nonreply@xplusplus.cn',
 		
-		'page_count_default' => 5,
+		'page_count_default' => 10,
 		
 		'code_expire'	=> 86400,//one day
 		'code_length'	=> 16,
