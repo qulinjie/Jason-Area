@@ -504,7 +504,7 @@ function auditOneTradRecord(apply_status){
 	        		$("#add-entity-audit2").html("已驳回");
 	        	}
 	        	hint_html = $("#add-entity-hint").html();
-	        	hint_html += (hint_html == '' ? '' : '<BR>') + '审批操作：' + result.msg + ', 关闭...' ;
+	        	hint_html += (hint_html == '' ? '' : '<BR>') + '关闭...' ;
 	        	$("#add-entity-hint").html(hint_html).fadeIn();
                 setTimeout(function(){
                 	$('#add-entity-cancel').click();                	
