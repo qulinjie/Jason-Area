@@ -474,21 +474,6 @@ $(document).on('click', '#add-entity-audit2', function(event){
 	}	
 });
 
-/*var hint_html = '';
-if( !pwd || '' == pwd ){
-	hint_html += (hint_html == '' ? '' : '<BR>') + '请填写支付密码！' ;
-}
-
-if(hint_html != ''){
-    $("#info-pay-hint").html(hint_html).fadeIn();
-    $("#btn-add-pay").removeAttr('disabled');
-    return 0;
-}
-
-pwd = hex2b64(do_encrypt(pwd));
-
-$("#btn-add-pay").html("正在付款...");*/
-
 function auditOneTradRecord(apply_status){	
 	var id = $("#info-entity-id").val();	
 	$.post(BASE_PATH + 'tradeRecord/auditOneTradRecord', {    		
@@ -518,8 +503,9 @@ function auditOneTradRecord(apply_status){
 	        	}else{
 	        		$("#add-entity-audit2").html("已驳回");
 	        	}
-	        	
-	        	$("#add-entity-hint").html(result.msg + ', 关闭...').fadeIn();
+	        	hint_html = $("#add-entity-hint").html();
+	        	hint_html += (hint_html == '' ? '' : '<BR>') + '审批操作：' + result.msg + ', 关闭...' ;
+	        	$("#add-entity-hint").html(hint_html).fadeIn();
                 setTimeout(function(){
                 	$('#add-entity-cancel').click();                	
                 	search_entity($("#entity-current-page").html());
