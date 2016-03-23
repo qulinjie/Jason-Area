@@ -90,13 +90,21 @@
             </td>
             <td><?php echo $item['erp_fgsmc']; ?></td>
             <td> 
-            <?php if($is_admin && 1==$item['apply_status']){ ?>
-            	<a id="audit-entity-<?php echo $item['id'];?>" value="<?php echo $item['id'];?>" class="audit-entity" href="#" data-toggle="modal" data-keyboard="false" data-backdrop="static">审批</a>
+            <?php if($is_admin){ ?>            	
+            	<a id="audit-entity-<?php echo $item['id'];?>" value="<?php echo $item['id'];?>" class="audit-entity" href="#" data-toggle="modal" data-keyboard="false" data-backdrop="static">
+            	<?php
+	            	if(2==$item['apply_status'] && 1==$item['order_status']){
+	            		echo "付款";
+	            	}elseif(1==$item['apply_status']) {
+	            		echo "审批";
+	            	}
+            	?>
+            	</a>            	            	
             <?php }else{ ?> 
             	- 
             <?php }?></td>
-       </tr>
-    <?php }?>
+        </tr>
+    	<?php }?>
 		</tbody>
 		</table>
 		
