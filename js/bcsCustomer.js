@@ -174,10 +174,17 @@ $(document).ready(function(){
 		        },
 		        'json'
 		    );
+		
+		spdLoadAccountInfo(ACCOUNT_NO); // 更新余额
 	});
 	/**************end--更新****************/
     
 	/**************str--更新浦发虚拟子账户****************/
+	
+	function spdLoadAccountInfo(virtualAcctNo){
+		$.post(BASE_PATH + 'bcsCustomer/spd_loadAccountList', {"virtualAcctNo":virtualAcctNo},function(result){},'json');
+	}
+	
 	$(document).on('click', '#entity-loadList-btn', function(event){
 		var objBtn = $(this);
 		objBtn.html('更新中...');

@@ -1,7 +1,20 @@
 $(document).ready(function(){
 
-// 更新金额
-$.post(BASE_PATH + 'bcsCustomer/loadInfo', {},function(result){},'json');
+	
+$(function(){
+	var user_id = $('#user_id').val();
+	if(user_id && ''!= user_id){
+		spdLoadAccountInfo(user_id);
+	}
+});
+
+// 更新余额
+function spdLoadAccountInfo(user_id){
+	$.post(BASE_PATH + 'bcsCustomer/spd_loadAccountList', {"user_id":user_id},function(result){},'json');
+}
+	
+// 更新余额
+//$.post(BASE_PATH + 'bcsCustomer/loadInfo', {},function(result){},'json');
 
 $(document).on('click', '#for-loadCustInfo-btn', function(event){
 	$(this).text('更新中...');

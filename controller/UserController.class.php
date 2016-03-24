@@ -421,7 +421,39 @@ class UserController extends BaseController
             EC::fail(EC_ERPE_FAI);
         }
         Log::notice('erp_getList success . data=' . json_encode($data['data']) );
-        EC::success(EC_OK, $data['data']['data']);
+        $data_lists_user = $data['data']['data'];
+        Log::notice("response-data ==============data_lists_user=============>> data = ##" . json_encode($data_lists_user) . "##" );
+        
+        $bcsCustomer_model = $this->model('bcsCustomer');
+        $params = array();
+        $params['record_bank_type'] = 2;
+        $data = $bcsCustomer_model->searchList($params, null, null);
+        if(EC_OK != $data['code']){
+            EC::fail($data['code']);
+        }
+        $data_lists_card = $data['data'];
+        
+        $user_id_matched = array();
+        foreach ($data_lists_card as $objKey=>$objVal){
+            if( '-1' != $objVal['user_id'] ){
+                $user_id_matched[] = $objVal['user_id'];
+            }
+        }
+        Log::notice("response-data ==============user_id_matched=============>> data = ##" . json_encode($user_id_matched) . "##" );
+        
+        if( !empty($user_id_matched) ){
+            $data_lists_user_tmp = array();
+            foreach ($data_lists_user as $objKey=>$objVal){
+                $usercode= $objVal['usercode'];
+                if(!in_array($usercode,$user_id_matched)){
+                    $data_lists_user_tmp[] = $objVal;
+                }
+            }
+            $data_lists_user = $data_lists_user_tmp;
+        }
+        Log::notice("response-data ==============data_lists_user=============>> data = ##" . json_encode($data_lists_user) . "##" );
+        
+        EC::success(EC_OK, $data_lists_user);
     }
     
 }
