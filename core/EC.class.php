@@ -54,7 +54,10 @@ define('EC_REC_EST', 204);
 define('EC_ADD_REC', 205);
 define('EC_UPD_REC', 206);
 define('EC_LOGIN_PAR_REC', 207);
+define('EC_DATA_EMPTY_ERR', 208);
+define('EC_REC_NOT_EST', 209);
 define('EC_USE_UNA', 220);
+
 
 define('EC_CODE_ERR', 301);
 define('EC_TOKEN_ERR',302);
@@ -80,7 +83,7 @@ define('EC_CERT_BEEN' , 903);
 define('EC_TRADE_TF_NO_AS',1001);
 define('EC_TRADE_TF_OS_ERR', 1002);
 define('EC_TRADE_TF_OS_ERR_2', 1003);
-
+define('EC_TRADE_TF_OS_ERR_3', 1004);
 class EC extends Base {
 
 	public static $_errMsg = array(
@@ -136,6 +139,8 @@ class EC extends Base {
     	    EC_REC_EST		=>	'记录已存在',
     	    EC_ADD_REC		=>	'添加记录错误',
     	    EC_UPD_REC		=>	'修改记录错误',
+			EC_DATA_EMPTY_ERR  =>  '数据空值错误',
+			EC_REC_NOT_EST  =>	'记录不存在',
 	    
 	        EC_CODE_ERR      =>  '授权码验证失败',
 			EC_TOKEN_ERR     =>  '禁止非法访问',
@@ -163,7 +168,7 @@ class EC extends Base {
 			EC_TRADE_TF_NO_AS      => '审批未通过',
 			EC_TRADE_TF_OS_ERR     => '订单状态异常',
 			EC_TRADE_TF_OS_ERR_2   => '订单已付款',			
-	    
+			EC_TRADE_TF_OS_ERR_3   => '订单已付款',
 	);
 	public static function load(){
 		return true;
