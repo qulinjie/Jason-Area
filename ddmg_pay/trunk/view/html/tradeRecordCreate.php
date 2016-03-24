@@ -113,17 +113,17 @@
 	    <div class="col-sm-4">
 	        <input type="text" class="form-control" id="add-entity-comment" placeholder=""></input>
 	    </div>
-	    <label for="add-entity-account" class="col-sm-2 control-label">申请人</label>
+	    <label for="add-entity-erp_username" class="col-sm-2 control-label">申请人</label>
 	    <div class="col-sm-4">
 		    <input type="text" class="form-control" readonly="readonly" id="add-entity-erp_username" placeholder="" value="<?php echo $data_info['erp_username'];?>" />    				   
 	    </div>	
 	  </div>
 	  <div class="form-group">
-	    <label for="add-entity-organization" class="col-sm-2 control-label">机构</label>
+	    <label for="add-entity-erp_fgsmc" class="col-sm-2 control-label">机构</label>
 	    <div class="col-sm-4">
 	        <input type="text" class="form-control" readonly="readonly" id="add-entity-erp_fgsmc" placeholder="" value="<?php echo $data_info['erp_fgsmc'];?>"></input>
 	    </div>
-	    <label for="add-entity-dept" class="col-sm-2 control-label">部门</label>
+	    <label for="add-entity-erp_bmmc" class="col-sm-2 control-label">部门</label>
 	    <div class="col-sm-4">
 	        <input type="text" class="form-control" readonly="readonly" id="add-entity-erp_bmmc" placeholder="" value="<?php echo $data_info['erp_bmmc'];?>"></input>
 	    </div>
