@@ -457,7 +457,7 @@ function loadOneAuditTradRecord(id){
 }
 
 $(document).on('click', '#add-entity-audit1', function(event){
-	if(confirm("确定审批通过吗？")){
+	if(confirm("审批通过会进行付款，您确定通过吗？")){
 		$("#add-entity-audit1").html("提交审批中...");
 		$("#add-entity-audit1").attr('disabled', 'disabled');
 		$("#add-entity-audit2").attr('disabled', 'disabled').hide();
@@ -530,20 +530,35 @@ function sendTransferTrade1(){
 	        'id':id,	        	        
 	    },
 	    function(result2) {
+	    	var is_success = true;
+	    	//kk(result2.data);
 	    	hint_html = $("#add-entity-hint").html();		        	    	
 	        if(result2.code != 0) {
-	        	hint_html += (hint_html == '' ? '' : '<BR>') + '付款操作失败：'+ result2.msg + '(' + result2.code + ')' ;
-	        	$("#add-entity-hint").html(hint_html).fadeIn();
-	        	$("#add-entity-pay").html("付款").removeAttr('disabled');
+	        	hint_html += (hint_html == '' ? '' : '<BR>') + '付款操作失败：'+ result2.msg + '(' + result2.code + ')';
+	        	$("#add-entity-hint").html(hint_html).fadeIn();	        	
+	        	is_success = false;
 	        }else {
-	        	hint_html += (hint_html == '' ? '' : '<BR>') + '付款操作成功！ <BR> 关闭...' ;
-	        	$("#add-entity-hint").html(hint_html).fadeIn();		        	        	
-	        	$("#add-entity-pay").html("已付款");	        	
-                setTimeout(function(){
+	        	jnlSeqNo = result2.data['jnlSeqNo'];
+	        	backhostStatus = result2.data['backhostStatus'];
+	        	backhostDesc = result2.data['backhostDesc'];
+	        	hint_html += (hint_html == '' ? '' : '<BR>') + '付款操作结果：' + backhostDesc + '(流水号[' + jnlSeqNo + '])';
+	        	$("#add-entity-hint").html(hint_html).fadeIn(); 
+	        	if(backhostStatus == 8 || backhostStatus == 9){
+	        		is_success = false;
+	        	}                
+	        }
+	        if(is_success){
+	        	$("#add-entity-pay").html("已付款");	
+	        	hint_html = $("#add-entity-hint").html();
+	        	hint_html += (hint_html == '' ? '' : '<BR>') + '关闭...';
+	            setTimeout(function(){
                 	$('#add-entity-cancel').click();                	
                 	search_entity($("#entity-current-page").html());
-                }, 1000);
+                }, 2000);
+	        }else{
+	        	$("#add-entity-pay").html("付款").removeAttr('disabled');
 	        }
+	        
 	    },
 	    'json'
 	);	        	
