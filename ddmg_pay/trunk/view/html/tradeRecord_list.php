@@ -87,22 +87,29 @@
             <td><?php if(1==$item['apply_status']){ echo '待审批' ;}
                     else if(2==$item['apply_status']){ echo '审批通过' ;}
                     else if(3==$item['apply_status']){ echo '审批驳回' ;}
-                    else { echo $item['apply_status'] ;}
+                    else { echo $item['apply_status'];}
                 ?>
             </td>
-            <td><?php if(1==$item['order_status']){ echo '待付' ;}
-                    else if(2==$item['order_status']){ echo '已付' ;}
-                    else if(3==$item['order_status']){ echo '拒付' ;}
-                    else { echo $item['order_status'] ;}
+            <td><?php if(1==$item['order_status'] && -1==$item['backhost_status']){ echo '待支付' ;}
+                    /* else if(0===$item['backhostStatus']){ echo '待补录' ;}
+                    else if(1==$item['backhostStatus']){ echo '待记帐' ;}
+                    else if(2==$item['backhostStatus']){ echo '待复核' ;}
+                    else if(3==$item['backhostStatus']){ echo '待授权' ;}
+                    else if(4==$item['backhostStatus']){ echo '完成' ;}
+                    else if(8==$item['backhostStatus']){ echo '拒绝' ;}
+                    else if(9==$item['backhostStatus']){ echo '撤销' ;} */
+                    else { echo TradeRecordController::getBackhostStatusByKey($item['backhost_status']);}
                 ?>
             </td>            
             <td> 
             <?php if($is_admin){ ?>
             	<a id="audit-entity-<?php echo $item['id'];?>" value="<?php echo $item['id'];?>" class="audit-entity" href="#" data-toggle="modal" data-keyboard="false" data-backdrop="static">
-            	<?php if(2==$item['apply_status'] && 1==$item['order_status']){
+            	<?php if((2==$item['apply_status'] && 1==$item['order_status'])){
             		echo "付款";
             	}elseif(1==$item['apply_status']){
             		echo "审批";
+            	}else{
+            		
             	}
             	?>
             	</a>

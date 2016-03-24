@@ -130,7 +130,7 @@
     	<?php }else{ ?>
     		<button id="add-entity-audit-pass" type="button" class="btn btn-default disabled" data-dismiss="modal">已审批</button>
        	<?php }?>       	
-    	<a id="add-entity-pay" class="btn btn-primary <?php if(2!=$data_info['apply_status'] || 1!=$data_info['order_status']){echo " hidden";}?>" href="#">付款</a>
+    	<a id="add-entity-pay" class="btn btn-primary <?php echo (2!=$data_info['order_status'] && 2==$data_info['apply_status']) ? "" : " hidden";?>" href="#">付款</a>
 		<!--  <a id="add-entity-cancel" class="btn btn-primary" href="#">关闭</a> -->
         <button id="add-entity-cancel" type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
       </div>
