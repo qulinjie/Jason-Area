@@ -1038,6 +1038,10 @@ class TradeRecordController extends BaseController {
         $comment = Request::post('comment'); // 备注        
         $comp_name_buyer = Request::post('comp_name_buyer'); // 下游买家
         
+        $bank_no = Request::post('bank_no'); // 支付号
+        $bank_flag = Request::post('bank_flag'); //本行/它行标志
+        $local_flag = Request::post('local_flag'); //同城异地标志
+        
         $erp_fgsdm = Request::post('erp_fgsdm'); // erp_分公司代码
         $erp_bmdm = Request::post('erp_bmdm'); // erp_部门代码
         $erp_fgsmc = Request::post('erp_fgsmc'); // erp_分公司名称
@@ -1096,7 +1100,11 @@ class TradeRecordController extends BaseController {
         $trade_record['useTodo'] = $useTodo;
         $trade_record['comment'] = $comment;
         $trade_record['record_type'] = 2;
-        $trade_record['order_timestamp'] = date('Y-m-d',time());        
+        $trade_record['order_timestamp'] = date('Y-m-d',time());  
+        
+        $trade_record['bank_no'] = $bank_no;
+        $trade_record['bank_flag'] = $bank_flag;
+        $trade_record['local_flag'] = $local_flag;
         
         $trade_record['erp_fgsdm'] = $erp_fgsdm;
         $trade_record['erp_bmdm'] = $erp_bmdm;
