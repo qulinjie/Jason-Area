@@ -72,6 +72,9 @@ class SpdBankModel extends SPDBankCurl
         
         $conf_arr = Controller::getConfig('conf');
         $requestParms['acctNo'] = $conf_arr['ddmg_spd_acctNo'];
+        
+        $requestParms['virtualAcctNo'] = $params['virtualAcctNo'];
+        
         $bodyXmlStr = $this->constructBody($requestParms);
         
         Log::notice('end-queryChildAccount ==== >>> bodyXmlStr=##' . strval($bodyXmlStr) . '##');

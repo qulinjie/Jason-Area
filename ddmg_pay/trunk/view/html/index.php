@@ -33,8 +33,9 @@
 <input type="hidden" id="isAdminLogin" value="<?php echo AdminController::isLogin();?>"/>
 <input type="hidden" id="view_page_type" value="<?php echo $page_type;?>"/>
 <input type="hidden" id="view_controller" value="<?php echo doit::$controller;?>"/>
-<input type="hidden" id="user_id" value="<?php echo $session->get('_loginUser')['id']; ?>" />
+<input type="hidden" id="user_id" value="<?php echo empty($session->get('_loginUser')['usercode'])?$session->get('loginUser')['usercode']:$session->get('_loginUser')['usercode']; ?>" />
 <input type="hidden" id="user_type" value="<?php echo $session->get('_loginUser')['user_type']; ?>" />
+<?php //echo json_encode($session->get('_loginUser')); exit;?>
 
 <!-- login-modal -->
 <div class="modal fade" id="admin-login-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" 
@@ -182,6 +183,10 @@
         	    <li <?php if(doit::$controller == 'BcsTrade' && $page_type == 'bcsTradeStatusQuery'){?> class="active" <?php } ?>>
         			<a href="<?php echo Router::getBaseUrl();?>bcsTrade/tradeStatusQueryIndex">交易状态查询</a>
         	    </li>
+        	    
+        	    <li <?php if(doit::$controller == 'SpdInternetBank'){?> class="active" <?php } ?>>
+        			<a href="<?php echo Router::getBaseUrl();?>spdInternetBank/getIndex">行名行号查询</a>
+        	    </li>
         	    -->
           </ul>
         </div>
@@ -215,6 +220,9 @@
          <?php	}else if($page_type == 'bcsInflow'){?>
                   <script src="<?php echo Router::getBaseUrl();?>js/bcsInflow.js"></script>
 				  <?php echo $bcsInflow_html;?>
+		 <?php	}else if($page_type == 'spdInternetBank'){?>
+              <script src="<?php echo Router::getBaseUrl();?>js/spdInternetBank.js"></script>
+			  <?php echo $spdInternetBank_html;?>
 		  <?php } else if($page_type == 'bcsIncomPay'){?>
 		          <script src="<?php echo Router::getBaseUrl();?>js/bcsIncomPay.js"></script>
 				  <?php echo $bcsIncomPay_html;?>

@@ -433,7 +433,9 @@ class BcsCustomerController extends BaseController {
     // 更新浦发银行账户列表
     protected function spd_loadAccountList() {
         $virtualAcctNo = Request::post('virtualAcctNo');
+        $user_id = Request::post('user_id');
         
+        $bcsCustomer_model = $this->model('bcsCustomer');
         $spdBank_model = $this->model('spdBank');
         $conf = $this->getConfig('conf');
         
@@ -444,7 +446,18 @@ class BcsCustomerController extends BaseController {
         
         if( !empty($virtualAcctNo) ) {
             $params['virtualAcctNo'] = $virtualAcctNo;
+        } else if( !empty($user_id) ) {
+            $data = $bcsCustomer_model->getInfo(array('user_id' => $user_id));
+            if(EC_OK != $data['code']){
+                Log::error("getInfo failed . ");
+                EC::fail($data['code']);
+            }
+            $data_info = $data['data'][0];
+            Log::notice("postRequest data ==================data_info=========>> data = ##" . json_encode($data_info) . "##" );
+            $params['virtualAcctNo'] = $data_info['ACCOUNT_NO'];
         }
+        Log::notice("postRequest data ==================params=========>> data = ##" . json_encode($params) . "##" );
+//         exit;
         
         $totalNumber = 0 ;
         do {
