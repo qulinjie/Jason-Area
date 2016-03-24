@@ -80,7 +80,6 @@ define('EC_CERT_BEEN' , 903);
 define('EC_TRADE_TF_NO_AS',1001);
 define('EC_TRADE_TF_OS_ERR', 1002);
 define('EC_TRADE_TF_OS_ERR_2', 1003);
-define('EC_TRADE_TF_OS_ERR_3' , 1004);
 
 class EC extends Base {
 
@@ -163,8 +162,7 @@ class EC extends Base {
 			
 			EC_TRADE_TF_NO_AS      => '审批未通过',
 			EC_TRADE_TF_OS_ERR     => '订单状态异常',
-			EC_TRADE_TF_OS_ERR_2   => '订单已付款',
-			EC_TRADE_TF_OS_ERR_3   => '订单已拒付',
+			EC_TRADE_TF_OS_ERR_2   => '订单已付款',			
 	    
 	);
 	public static function load(){
