@@ -348,6 +348,9 @@ $(document).on('click', '#for-test-btn', function(event){
 	    var amount_type = $('#add-entity-amount_type').val(); // 款项类别
 	    var use = $('#add-entity-use').val(); // 用途
 	    var comment = $('#add-entity-comment').val(); // 备注
+	    var bank_no = $('#add-entity-bank_no').val(); // 支付号
+	    var bank_flag = $('#add-entity-bank_flag').val(); //本行/它行标志
+	    var local_flag = $('#add-entity-local_flag').val(); //同城异地标志
 	    
 	    if(hint_html != ''){
 	        $("#add-entity-hint").html(hint_html).fadeIn();
@@ -369,7 +372,10 @@ $(document).on('click', '#for-test-btn', function(event){
 	        	'bank_name':bank_name,
 	        	'amount_type':amount_type,
 	        	'use':use,
-		        'comment':comment
+		        'comment':comment,
+		        'bank_no':bank_no,
+		        'bank_flag':bank_flag,
+		        'local_flag':local_flag
 	        },
 	        function(result){
 	            if(result.code != 0) {
