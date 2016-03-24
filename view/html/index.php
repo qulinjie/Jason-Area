@@ -38,8 +38,8 @@
 <?php //echo json_encode($session->get('_loginUser')); exit;?>
 
 <!-- login-modal -->
-<div class="modal fade" id="admin-login-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" 
-                                          style="background-image:url(<?php echo Router::getBaseUrl();?>view/images/loginbak.jpg);background-size: 100% 100%; ">
+<div class="modal fade" id="admin-login-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" >
+                                          <!-- style="background-image:url(<?php echo Router::getBaseUrl();?>view/images/loginbak.jpg);background-size: 100% 100%; "> -->
 	<div class="modal-dialog">
 		<div class="modal-content" style="margin-top:52%;">
 			<div class="modal-header" style="text-align: center;">
