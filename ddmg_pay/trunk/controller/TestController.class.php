@@ -71,6 +71,12 @@ class TestController extends BaseController
             case 'spd_8801':
                 $this->spd_8801();
                 break;
+            case 'spd_8924':
+                $this->spd_8924();
+                break;
+            case 'spd_EG30':
+                $this->spd_EG30();
+                break;
                 
             case 'test_sr':
                 $this->test_sr();
@@ -502,6 +508,34 @@ class TestController extends BaseController
     
         EC::success(EC_OK,$data);
     }
+    
+    public function spd_8924(){
+        Log::notice('-------SPD----TestController--------------------spd_8924==>>str');
+    
+        $model = $this->model('spdBank');
+    
+        $param = '<body><acctNo>6224080600234</acctNo><beginDate>20160301</beginDate><endDate>20160303</endDate><queryNumber>20</queryNumber><beginNumber>1</beginNumber><transAmount></transAmount><subAccount></subAccount><subAcctName></subAcctName></body>';
+        $data = $model->curlSpdRequestXml($param,"8924");
+    
+        Log::notice('-------SPD----TestController---------------------spd_8924==>>end');
+    
+        EC::success(EC_OK,$data);
+    }
+    
+    public function spd_EG30(){
+        Log::notice('-------SPD----TestController--------------------spd_EG30==>>str');
+    
+        $model = $this->model('spdBank');
+    
+        $param = '<body><businessNo>SQ20161000037575</businessNo><electronNumber></electronNumber><directMasterID>2000040752</directMasterID></body>';
+        $data = $model->curlSpdRequestXml($param,"EG30");
+    
+        Log::notice('-------SPD----TestController---------------------spd_EG30==>>end');
+    
+        EC::success(EC_OK,$data);
+    }
+    
+    
     
     public function spd_sign(){
         Log::notice('-------SPD----TestController--------------------spd_sign==>>str');

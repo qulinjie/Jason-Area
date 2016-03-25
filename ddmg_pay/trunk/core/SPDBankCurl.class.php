@@ -38,7 +38,9 @@ class SPDBankCurl extends CurlModel {
         $data =  $this->xmlToArray($data);
         
         if("0" != strval( $data['head']['result'] ) ) {
-            return "err-dataSign.数据签名错误。";
+            Log::notice("data = ##" . json_encode($data) . "##" );
+            Log::notice( "result=" . strval( $data['head']['result']) );
+            return "err-dataSign.数据签名错误。returnMsg=" . strval( $data['body']['returnMsg']) ;
         }
         $signature = strval( $data['body']['sign'] );
         
@@ -60,7 +62,9 @@ class SPDBankCurl extends CurlModel {
         $data =  $this->xmlToArray($data);
         
         if("AAAAAAA" != strval( $data['head']['returnCode'] ) ) {
-            return "err-dataExec.数据执行错误。";
+            Log::notice("data = ##" . json_encode($data) . "##" );
+            Log::notice( "returnCode=" . strval( $data['head']['returnCode']) );
+            return "err-dataExec.数据执行错误。returnMsg=" . strval( $data['body']['returnMsg']) ;
         }
         $param = strval( $data['body']['signature'] );
         
@@ -69,7 +73,9 @@ class SPDBankCurl extends CurlModel {
         $data =  $this->xmlToArray($data);
         
         if("0" != strval( $data['head']['result'] ) ) {
-            return "err-dataSignV.数据验签错误。";
+            Log::notice("data = ##" . json_encode($data) . "##" );
+            Log::notice( "result=" . strval( $data['head']['result']) );
+            return "err-dataSignV.数据验签错误。returnMsg=" . strval( $data['body']['returnMsg']) ;
         }
         
         return $data['body']['sic'];
@@ -77,7 +83,19 @@ class SPDBankCurl extends CurlModel {
     
     public function xmlToArray( $xml )
     {
-        return json_decode( json_encode( simplexml_load_string( $xml ) ), true );
+        $obj = array();
+        try {
+//             Log::notice("response-data ===========================>> data-xml = ##" . ($xml) . "##" );
+            preg_match("{<returnMsg>(.*?)</returnMsg>}s",$xml,$matchs);
+            $returnMsg = $matchs[1];
+            if( !empty($returnMsg)){
+                $xml = str_replace($returnMsg, self::iconvFunc($returnMsg), $xml);
+            }
+            $obj = json_decode( json_encode( simplexml_load_string( $xml ) ), true );
+        } catch (Exception $e) {
+            Log::error("xmlToArray err . msg=" . $e->getMessage() );
+        }
+        return $obj;
     }
     
     public function gbk2utf8($str){
@@ -92,4 +110,14 @@ class SPDBankCurl extends CurlModel {
         return $str;
     }
     
+    public function iconvFunc($param = ''){
+        if( empty($param) ) {
+            return "";
+        }
+        $result = iconv('UTF-8', 'GB2312', $param);
+        if( empty($result) ) {
+            $result = iconv('UTF-8', 'GBK', $param);
+        }
+        return $result;
+    }
 }
