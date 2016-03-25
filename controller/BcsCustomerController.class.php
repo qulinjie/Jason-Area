@@ -444,46 +444,52 @@ class BcsCustomerController extends BaseController {
             }
         }
         
-        $bcsCustomer_model = $this->model('bcsCustomer');
-        $spdBank_model = $this->model('spdBank');
-        $conf = $this->getConfig('conf');
-        
-        $params = array();
-        $params['beginNumber'] = 1;
-        $params['queryNumber'] = 20;
-        $params['virtualAcctNo'] = '';
-        
-        if( !empty($virtualAcctNo) ) {
-            $params['virtualAcctNo'] = $virtualAcctNo;
-        } else if( !empty($user_id) ) {
-            $data = $bcsCustomer_model->getInfo(array('user_id' => $user_id));
-            if(EC_OK != $data['code']){
-                Log::error("getInfo failed . ");
-                EC::fail($data['code']);
-            }
-            $data_info = $data['data'][0];
-            Log::notice("postRequest data ==================data_info=========>> data = ##" . json_encode($data_info) . "##" );
-            $params['virtualAcctNo'] = $data_info['ACCOUNT_NO'];
-        }
-        Log::notice("postRequest data ==================params=========>> data = ##" . json_encode($params) . "##" );
-//         exit;
-        
-        $totalNumber = 0 ;
-        do {
-            $data = $spdBank_model->queryChildAccount($params);
-//             Log::notice('spd_loadAccountList ==== >>> data=##' . json_encode($data) . "##");
-            
-            $totalNumber = $data['body']['totalNumber'];
-            $data_lists = $data['body']['lists']['list'];
-            
-            $this->addCustomerList($data_lists);
-            $params['beginNumber'] = $params['beginNumber'] + $params['queryNumber'] ;
-            
-            // 延时2秒执行。
-            sleep(2); // 延时2秒
-        } while ( $totalNumber >= $params['beginNumber']);
-        
+        $this->spd_loadAccountList_exec($virtualAcctNo, $user_id);
+
         EC::success(EC_OK);
+    }
+    
+    public function spd_loadAccountList_exec($virtualAcctNo=NULL, $user_id=NULL){
+    	
+    	$bcsCustomer_model = $this->model('bcsCustomer');
+    	$spdBank_model = $this->model('spdBank');
+    	$conf = $this->getConfig('conf');
+    	
+    	$params = array();
+    	$params['beginNumber'] = 1;
+    	$params['queryNumber'] = 20;
+    	$params['virtualAcctNo'] = '';
+    	
+    	if( !empty($virtualAcctNo) ) {
+    		$params['virtualAcctNo'] = $virtualAcctNo;
+    	} else if( !empty($user_id) ) {
+    		$data = $bcsCustomer_model->getInfo(array('user_id' => $user_id));
+    		if(EC_OK != $data['code']){
+    			Log::error("getInfo failed . ");
+    			EC::fail($data['code']);
+    		}
+    		$data_info = $data['data'][0];
+    		Log::notice("postRequest data ==================data_info=========>> data = ##" . json_encode($data_info) . "##" );
+    		$params['virtualAcctNo'] = $data_info['ACCOUNT_NO'];
+    	}
+    	Log::notice("postRequest data ==================params=========>> data = ##" . json_encode($params) . "##" );
+    	
+    	$totalNumber = 0 ;
+    	do {
+    		$data = $spdBank_model->queryChildAccount($params);
+    		//             Log::notice('spd_loadAccountList ==== >>> data=##' . json_encode($data) . "##");
+    	
+    		$totalNumber = $data['body']['totalNumber'];
+    		$data_lists = $data['body']['lists']['list'];
+    	
+    		$this->addCustomerList($data_lists);
+    		$params['beginNumber'] = $params['beginNumber'] + $params['queryNumber'] ;
+    	
+    		// 延时2秒执行。
+    		sleep(2); // 延时2秒
+    	} while ( $totalNumber >= $params['beginNumber']);    	
+    	
+    	return true;
     }
     
     public function addCustomerList($data_lists = array()){
