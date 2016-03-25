@@ -1408,6 +1408,7 @@ class TradeRecordController extends BaseController {
    			//更新余额
    			$bcsc_params = array();
    			$bcsc_params['virtualAcctNo'] = $ACCOUNT_NO;
+   			$bcsc_params['user_id'] = $data['user_id'];
    			$BcsTradeModel = $this->model('BcsCustomer');
    			$BcsTradeModel->spd_loadAccountList($bcsc_params);
    			   			
