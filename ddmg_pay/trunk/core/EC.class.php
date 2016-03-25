@@ -55,7 +55,6 @@ define('EC_ADD_REC', 205);
 define('EC_UPD_REC', 206);
 define('EC_LOGIN_PAR_REC', 207);
 define('EC_DATA_EMPTY_ERR', 208);
-define('EC_REC_NOT_EST', 209);
 define('EC_USE_UNA', 220);
 
 
@@ -139,8 +138,7 @@ class EC extends Base {
     	    EC_REC_EST		=>	'记录已存在',
     	    EC_ADD_REC		=>	'添加记录错误',
     	    EC_UPD_REC		=>	'修改记录错误',
-			EC_DATA_EMPTY_ERR  =>  '数据空值错误',
-			EC_REC_NOT_EST  =>	'记录不存在',
+			EC_DATA_EMPTY_ERR  =>  '数据空值错误',			
 	    
 	        EC_CODE_ERR      =>  '授权码验证失败',
 			EC_TOKEN_ERR     =>  '禁止非法访问',
