@@ -1083,7 +1083,7 @@ class TradeRecordController extends BaseController {
             $trade_record_item[$v_order_no]['itme_no'] = $v_order_no;
             $trade_record_item[$v_order_no]['bid_amount'] = $v_amount;
             $trade_record_item[$v_order_no]['record_type'] = 2;
-            $trade_record_item[$v_order_no]['itme_comp_name_buyer'] = $v_comp_name_buyer;
+            $trade_record_item[$v_order_no]['item_comp_name_buyer'] = $v_comp_name_buyer;
             $trade_record_item[$v_order_no]['comment'] = $v_comment;
         }
 //         Log::notice("response-data ===========================>> data-order_no_str = ##" . $order_no_str . "##" );
@@ -1115,8 +1115,8 @@ class TradeRecordController extends BaseController {
         $trade_record['erp_bmmc'] = $erp_bmmc;
         $trade_record['erp_username'] = $erp_username;        
         
-//         Log::notice("response-data ===========================>> data = ##" . json_encode($trade_record) . "##" );
-//         exit;
+        //Log::notice("response-data ===========================>> data = ##" . json_encode($trade_record) . "##" );
+        //exit;
         
         $data = $tradeRecord_model->create_add($trade_record);
         if(EC_OK != $data['code']){
