@@ -39,17 +39,6 @@ class SpdBankModel extends SPDBankCurl
         return $xml;
     }
     
-    public function iconvFunc($param = ''){
-        if( empty($param) ) {
-            return "";
-        }
-        $result = iconv('UTF-8', 'GB2312', $param);
-        if( empty($result) ) {
-            $result = iconv('UTF-8', 'GBK', $param);
-        }
-        return $result;
-    }
-    
     /**
      * 5144虚账户母子关系登记薄查询
      * @param unknown $params
