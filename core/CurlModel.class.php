@@ -186,8 +186,8 @@ class CurlModel
         $ret = $this->postRequest( $url, $base_data );
         Log::notice("sendRequest data ================================>> response = ##" . json_encode($ret) . "##" );
         return $ret;
-    }
-    
+    }    
+
     public function sendRequestByJava( $interface, $data=[] )
     {
         if ( !$interface ) {
@@ -282,7 +282,7 @@ class CurlModel
 	    }
 	    return $config['ddmg_pay_url'].$interface;
 	}
-	
+
 	protected function getUrlJava( $interface )
 	{
 	    $config = Controller::getConfig('conf');
