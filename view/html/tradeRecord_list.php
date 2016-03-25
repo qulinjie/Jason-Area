@@ -109,7 +109,7 @@
             	}elseif(1==$item['apply_status']){
             		echo "审批";
             	}else{
-            		
+            		echo "查看";
             	}
             	?>
             	</a>
