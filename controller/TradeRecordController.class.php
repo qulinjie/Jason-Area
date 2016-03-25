@@ -1102,6 +1102,7 @@ class TradeRecordController extends BaseController {
         $trade_record['record_type'] = 2;
         $trade_record['order_timestamp'] = date('Y-m-d',time());  
         
+        $trade_record['order_status'] = 1; //订单交易状态 1-待付款 2-已付款 
         $trade_record['bank_no'] = $bank_no;
         $trade_record['bank_flag'] = $bank_flag;
         $trade_record['local_flag'] = $local_flag;
@@ -1254,7 +1255,23 @@ class TradeRecordController extends BaseController {
     	
     	Log::notice("response-data ===========================>> data = ##" . json_encode($data) . "##" );
     	EC::success(EC_OK, $data['data']);
-    }        
+    }  
+
+    public static function getBackhostStatusByKey($key){
+    	$arr = array(
+    		'0' => '待补录',
+    		'1' => '待记帐',
+    		'2' => '待复核',
+    		'3' => '待授权',
+    		'4' => '完成',
+    		'8' => '拒绝',
+    		'9' => '撤销'
+    	);    	
+    	if(array_key_exists($key, $arr)){
+    		return $arr[$key];
+    	}
+    	return null;    	
+    }
    
     /**
     * 对已审核且待付款的采购单进行付款  
@@ -1269,13 +1286,16 @@ class TradeRecordController extends BaseController {
     	
     	//根据id查单的数据    	
     	$tradeRecord_model = $this->model('tradeRecord');    	
-    	$data = $tradeRecord_model->getInfo(array('id' => $id));
-    	//Log::write(var_export($data, true), 'debug', 'debug-'.date('Y-m-d'));    	
+    	$data = $tradeRecord_model->getInfo(array('id' => $id));        	
     	if(empty($data) || !is_array($data) || EC_OK != $data['code'] || !isset($data['data'])) {
-    		Log::error('getInfo empty !');
-    		EC::fail($data['code']);
+    		Log::error('tradeRecord getInfo empty !');
+    		EC::fail(EC_DAT_NON);
     	}    	    	
-    	$data = $data['data'][0];    		
+    	$data = $data['data'][0];
+    	if(empty($data)) {
+    		Log::error('tradeRecord getInfo empty !');
+    		EC::fail(EC_RED_EMP);
+    	}    		
     	//Log::write(var_export($data, true), 'debug', 'debug-'.date('Y-m-d'));
     	
     	//判断是否已审批通过
@@ -1284,63 +1304,118 @@ class TradeRecordController extends BaseController {
     		EC::fail(EC_TRADE_TF_NO_AS);
     	}
     	    	
-    	//判断是否已付款  order_status 订单交易状态 1-待付款 2-已付款 3-拒付',
-    	if(!in_array(intval($data['order_status']), array(1,2,3))){
-    		Log::error('the order status is error!');
-    		EC::fail(EC_TRADE_TF_OS_ERR);
-    	}elseif (2 == intval($data['order_status'])){
-    		Log::error('the order has been payment!');
+    	//判断是否已付款  order_status 订单交易状态 1-待付款 2-已付款', 记录状态 0-待补录；1-待记帐；2-待复核；3-待授权；4-完成；8-拒绝；9-撤销；
+    	if(2 == intval($data['order_status'])){
+    		Log::error("the order has been payment: order_status={$data['order_status']}!");
     		EC::fail(EC_TRADE_TF_OS_ERR_2);
-    	}elseif (3 == intval($data['order_status'])){
-    		Log::error('the order was refused to pay!');
+    	}
+    	if($data['backhost_status']!=null && in_array($data['backhost_status'], array(0,1,2,3,4))){
+    		Log::error("the order has been payment: backhost_status={$data['backhost_status']}!");
     		EC::fail(EC_TRADE_TF_OS_ERR_3);
     	}
     	
     	//查付款人信息    	   
     	$params  = array();
     	$params['user_id'] = $data['user_id'];  
+    	Log::write("user_id==".$data['user_id'], 'debug', 'debug-'.date('Y-m-d'));
     	$bcsCustomer_model = $this->model('bcsCustomer');  	
     	$bcs_data = $bcsCustomer_model->getInfo($params);    	
+    	
     	//Log::write("bcs_data==".var_export($bcs_data, true), 'debug', 'debug-'.date('Y-m-d'));    	
+    	
     	if(EC_OK != $bcs_data['code'] || !is_array($bcs_data) || !isset($bcs_data['data'])){
     		Log::error("bcsCustomer getInfo failed . ");
-    		EC::fail($bcs_data['code']);
+    		EC::fail(EC_USR_NON);
     	}
     	$bcs_data = $bcs_data['data'][0];
-    	    	
+    	if(empty($bcs_data)) {
+    		Log::error('bcsCustomer getInfo empty !');
+    		EC::fail(EC_RED_EMP);
+    	}    	
+    	$SIT_NO = $bcs_data['SIT_NO']; 
+
+    	$ACCOUNT_NO = $data['ACCOUNT_NO'];
+    	$useTodo = $data['useTodo'];
+    	//附言超过42个字节则截取
+    	if(!empty($useTodo) && ((strlen($useTodo) + mb_strlen($useTodo,'utf-8')) / 2) > 21){
+    		$useTodo = mb_substr($useTodo, 0, 21, 'utf-8');
+    	}
+    	//必要字段值检测是否为空
+    	if(empty($data['ACCOUNT_NO']) || empty($SIT_NO) || empty($data['comp_account']) || empty($data['seller_name']) || empty($data['order_bid_amount'])){
+    		Log::error("Some data in an empty value. ");
+    		EC::fail(EC_DATA_EMPTY_ERR);
+    	}
+
     	//付款
-    	$params = array();    	
-    	$params['payerVirAcctNo'] = $data['ACCOUNT_NO']; // 付款人虚账号
-    	$params['payerName'] = $bcs_data['SIT_NO']; // 付款人名称   
-    	 	
-    	$params['payeeAcctNo'] = $data['comp_account']; // 收款人账号
-    	$params['payeeAcctName'] = $data['seller_name']; // 收款人中文名    	
-    	$params['ownItBankFlag'] = '1';// 本行/它行标志 0：表示本行 1：表示它行
-    	$params['remitLocation'] = '1'; // 同城异地标志 0：同城 1：异地 跨行转账时必须输入(即本行/它行标志为1：表示它行)
-    	$params['payeeBankName'] = $data['seller_name']; // 收款行名称 跨行转账时必须输入(即本行/它行标志为1：表示它行)
-    	$params['payeeBankAddress'] = $data['seller_name']; // 收款行地址 跨行转账时必须输入(即本行/它行标志为1：表示它行)    	
-    	$params['payeeBankNo'] = '313585000990'; // 支付号 【收款账号行号】    	
-    	$params['transAmount'] = $data['order_bid_amount']; // 交易金额
-    	$params['note'] = '测试虚账户付款'; // 附言 如果跨行转账，附言请不要超过42字节（汉字21个）
+    	$params = array();
+    	$params['payerVirAcctNo']   = $ACCOUNT_NO; //Y 付款人虚账号
+    	$params['payerName']        = $SIT_NO; //Y 付款人名称    	
+    	$params['payeeAcctNo']  = $data['comp_account']; //Y 收款人账号
+    	//$params['payeeAcctNo']    = '6223635001004485218'; // 收款人账号
+    	//$params['payeeAcctName'] = $data['seller_name']; //Y 收款人中文名 
+    	$params['payeeAcctName']  = '钟煦镠'; // 收款人中文名
+    		
+    	$params['ownItBankFlag']    = $data['bank_flag'];//Y 本行/它行标志 0：表示本行 1：表示它行   
+		$params['remitLocation']    = $data['local_flag']; // 同城异地标志 0：同城 1：异地 跨行转账时必须输入(即本行/它行标志为1：表示它行)
+    	$params['payeeBankName']    = $data['bank_name']; // 收款行名称 跨行转账时必须输入(即本行/它行标志为1：表示它行)
+    	$params['payeeBankAddress'] = $data['bank_name']; // 收款行地址 跨行转账时必须输入(即本行/它行标志为1：表示它行)   
+    	$params['payeeBankNo']      = $data['bank_no']; // 支付号 【收款账号行号】    	
+    	$params['transAmount']      = '0.5'; //$data['order_bid_amount']; //Y 交易金额
+    	$params['note']             = $useTodo; // 附言 如果跨行转账，附言请不要超过42字节（汉字21个）
     	
-   		$spdBank_model = $this->model('spdBank');
-    	//$data = $spdBank_model->sendTransferTrade($params);
-    	//Log::notice("response-data ===========test_sendTransferTrade================>> data = ##" . json_encode($data) . "##" );
-    	//$data = $data['body'];
+   		//提交付款前记录日志
+    	Log::write("request-data ===sendTransferTrade===>> params = ##" . json_encode($params) . "##", 'Notice', 'stftd-'.date('Y-m-d'));
     	
+    	$sp_data = array();    	
+    	$spdBank_model = $this->model('spdBank');
+    	//$sp_data = $spdBank_model->sendTransferTrade($params);
+    	//$sp_data = $sp_data['body'];    	
+    	
+    	$sp_data['jnlSeqNo'] = '123456789123456789';
+    	$sp_data['backhostStatus'] = 4;
+    	
+    	//付款后记录日志
+    	Log::write("response-data ===sendTransferTrade===>> sp_data = ##" . json_encode($sp_data) . "##", 'Notice', 'stftd-'.date('Y-m-d'));
+    	
+   		$jnl_seq_no = $sp_data['jnlSeqNo']; //业务流水号
+   		$backhost_status = $sp_data['backhostStatus']; //付款后返回的记录状态 0-待补录；1-待记帐；2-待复核；3-待授权；4-完成；8-拒绝；9-撤销；
+   		
    		//付款成功后修改付款状态   		
-   		$params = array();
-   		$params['id'] = $id;
-   		$params['order_status'] = 2; //订单交易状态 1-待付款 2-已付款 3-拒付',
-   		$params['pay_timestamp'] = date('Y-m-d H:i:s',time());
-   		$tradeRecord_model = $this->model('tradeRecord');
-   		$data = $tradeRecord_model->update($params);
-   		if(EC_OK != $data['code']){
+   		$up_params = array();
+   		$up_params['id'] = $id;
+   		if($backhost_status <=4){
+   			$up_params['order_status'] = 2; //订单交易状态 1-待付款 2-已付款 ',
+   		}   		
+   		$up_params['pay_timestamp'] = date('Y-m-d H:i:s',time());
+   		$up_params['jnl_seq_no'] = $jnl_seq_no;
+   		$up_params['backhost_status'] = $backhost_status;
+   		$tradeRecord_model = $this->model('tradeRecord');   		
+   		$tr_data = $tradeRecord_model->update($up_params);
+   		if(EC_OK != $tr_data['code']){
    			Log::error('update order status fail!');
-   			EC::fail($data['code']);
+   			EC::fail($tr_data['code']);
+   		}
+   		$sp_data['backhostDesc'] = self::getBackhostStatusByKey($backhost_status);   		
+
+   		if($backhost_status !=8 && $backhost_status!=9){
+   			
+   			//更新流水
+   			$bcst_params = array();
+   			$bcst_params['virtualAcctNo'] = $ACCOUNT_NO;
+   			$BcsTradeModel = $this->model('BcsTrade');
+   			$BcsTradeModel->spd_loadAccountTradeList($bcst_params);
+   			
+   			//更新余额
+   			$bcsc_params = array();
+   			$bcsc_params['virtualAcctNo'] = $ACCOUNT_NO;
+   			$BcsTradeModel = $this->model('BcsCustomer');
+   			$BcsTradeModel->spd_loadAccountList($bcsc_params);
+   			   			
+   			//更新erp
+   			
    		}
    		
-    	EC::success(EC_OK, $data);
+   		EC::success(EC_OK, $sp_data);
     }
 
     public function erp_getOrgNameInfo(){
