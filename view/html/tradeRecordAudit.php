@@ -57,6 +57,20 @@
 	    <div class="col-sm-4">
 	        <input type="text" class="form-control" readonly="readonly" id="add-entity-order_bid_amount" placeholder="" value="<?php echo $data_info['order_bid_amount'];?>"></input>
 	    </div>	
+	  </div>	  
+	  <div class="form-group">
+	    <label for="add-entity-bank_flag" class="col-sm-2 control-label">同行/跨行</label>
+	    <div class="col-sm-4">	    	      
+        	<input type="text" class="form-control" readonly="readonly" id="add-entity-bank_flag" placeholder="" 
+        		value="<?php echo ($data_info['bank_flag'] ==0) ? '同行' : '跨行';?>"></input>
+	    </div>
+	    <span id="span_local_flag" <?php echo ($data_info['bank_flag'] ==0) ? 'style="display: none;"' : '' ?>>
+	    <label for="add-entity-local_flag" class="col-sm-2 control-label">同城/异地</label>
+	    <div class="col-sm-4">	        
+            <input type="text" class="form-control" readonly="readonly" id="add-entity-local_flag" placeholder="" 
+        		value="<?php echo ($data_info['local_flag'] ==0) ? '同城' : '异地';?>"></input>
+	    </div>
+	    </span>
 	  </div>
 	  <div class="form-group">
 	    <label for="add-entity-amount_type" class="col-sm-2 control-label">款项类别</label>
@@ -129,8 +143,11 @@
     		<a id="add-entity-audit2" class="btn btn-primary" href="#">审批驳回</a>    		
     	<?php }else{ ?>
     		<button id="add-entity-audit-pass" type="button" class="btn btn-default disabled" data-dismiss="modal">已审批</button>
-       	<?php }?>       	
-    	<a id="add-entity-pay" class="btn btn-primary <?php echo (2!=$data_info['order_status'] && 2==$data_info['apply_status']) ? "" : " hidden";?>" href="#">付款</a>
+       	<?php }?>
+       	<?php if(2==$data_info['apply_status'] && 2==$data_info['order_status']){ ?>
+       		<button id="add-entity-pay-pass" type="button" class="btn btn-default disabled" data-dismiss="modal">已付款</button>
+       	<?php }?>
+       	<a id="add-entity-pay" class="btn btn-primary <?php echo (2==$data_info['apply_status'] && 2!=$data_info['order_status']) ? '' : ' hidden'?>" href="#">付款</a>
 		<!--  <a id="add-entity-cancel" class="btn btn-primary" href="#">关闭</a> -->
         <button id="add-entity-cancel" type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
       </div>
