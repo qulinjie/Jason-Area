@@ -124,8 +124,8 @@
 			<tr>
 	            <td style="display:none"><?php echo $item['id'];?></td>
 	            <td><?php echo $item['itme_no'];?></td>	            
-	            <td><?php echo number_format($item['item_price'],2);?></td>
-	            <td><?php echo $item['itme_comp_name_buyer']; ?></td>
+	            <td><?php echo number_format($item['bid_amount'],2);?></td>
+	            <td><?php echo $item['item_comp_name_buyer']; ?></td>
 	            <td><?php echo $item['comment'];?></td>	            
 	       </tr>
 	       <?php } }?>
