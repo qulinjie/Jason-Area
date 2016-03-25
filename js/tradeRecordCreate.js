@@ -644,7 +644,7 @@ $(document).on('click', '#for-test-btn', function(event){
 	    }
 	    
 	    var str = "@;"
-	    var submitInfo = fphm + str + amount + str + comp_name_buyer;
+	    var submitInfo = fphm + str + amount + str + comp_name_buyer + str + comment;
 	    var inputObj = "<input id='V_" + fphm + "' name='input_apply_orders' value='" + submitInfo + "' />";
 	    
 		var trObj = ""
