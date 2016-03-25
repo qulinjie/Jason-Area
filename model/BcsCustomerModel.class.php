@@ -41,4 +41,7 @@ class BcsCustomerModel extends CurlModel {
         return self::sendRequest('bcsCustomer/getList', $params);
     }
     
+    public function spd_loadAccountList($params = array()){
+    	return self::sendRequestSelf('bcsCustomer/spd_loadAccountList', $params);
+    }
 }

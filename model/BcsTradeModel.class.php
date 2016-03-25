@@ -50,4 +50,8 @@ class BcsTradeModel extends CurlModel {
     public function create_add($params = array()){
         return self::sendRequest('bcsTrade/create_add', $params);
     }
+    
+    public function spd_loadAccountTradeList($params = array()){
+    	return self::sendRequestSelf('bcsTrade/spd_loadAccountTradeList', $params);
+    }
 }
