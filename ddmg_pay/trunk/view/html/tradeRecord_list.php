@@ -90,7 +90,9 @@
                     else { echo $item['apply_status'];}
                 ?>
             </td>
-            <td><?php if(1==$item['order_status'] && -1==$item['backhost_status']){ echo '待支付' ;}
+            <td><?php 
+            		if(3==$item['apply_status']){ echo '-';}
+            		elseif(1==$item['order_status'] && -1==$item['backhost_status']){ echo '待支付' ;}
                     /* else if(0===$item['backhostStatus']){ echo '待补录' ;}
                     else if(1==$item['backhostStatus']){ echo '待记帐' ;}
                     else if(2==$item['backhostStatus']){ echo '待复核' ;}
