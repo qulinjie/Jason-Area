@@ -724,14 +724,15 @@ class BcsTradeController extends BaseController {
                     Log::error("getInfo failed . virtualAcctNo-ACCOUNT_NO=" . $trade['ACCOUNT_NO'] . ',code='. $upd_data['code'] . ',msg=' . $upd_data['msg'] );
                     continue;
                 }
+                Log::notice('addAccountTradeList ==== >>> upd-data-end=##' . $obj['virtualAcctName'] . "##");
             } else {
                 $data_rs = $bcsTrade_model->create_add($trade);
                 if($data_rs['code'] !== EC_OK){
                     Log::error('addAccountTradeList . create bcsCustomer error . code='. $data_rs['code'] . ',msg=' . $data_rs['msg'] );
                     continue;
                 }
+                Log::notice('addAccountTradeList ==== >>> add-data-end=##' . $obj['virtualAcctName'] . "##");
             }
-            Log::notice('addAccountTradeList ==== >>> add-data=##' . $obj['virtualAcctName'] . "##");
         }
     }
     
