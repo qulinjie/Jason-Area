@@ -526,14 +526,14 @@ function sendTransferTrade1(){
 	hint_html += (hint_html == '' ? '' : '<BR>') + '正在付款...' ;
 	$("#add-entity-hint").html(hint_html).fadeIn();
 	$("#add-entity-pay").removeClass("hidden").html("正在付款...").attr('disabled', 'disabled');
-	$.post(BASE_PATH + 'tradeRecord/sendTransferTrade', {    		
+	var jqxhr = $.post(BASE_PATH + 'tradeRecord/sendTransferTrade', {    		
 	        'id':id,	        	        
 	    },
 	    function(result2) {
 	    	var is_success = true;
 	    	//kk(result2.data);
-	    	hint_html = $("#add-entity-hint").html();		        	    	
-	        if(result2.code != 0) {
+	    	hint_html = $("#add-entity-hint").html();	    	
+	    	if(result2.code != 0) {
 	        	hint_html += (hint_html == '' ? '' : '<BR>') + '付款操作失败：'+ result2.msg + '(' + result2.code + ')';
 	        	$("#add-entity-hint").html(hint_html).fadeIn();	        	
 	        	is_success = false;
@@ -547,6 +547,7 @@ function sendTransferTrade1(){
 	        		is_success = false;
 	        	}                
 	        }
+	        
 	        if(is_success){
 	        	$("#add-entity-pay").html("已付款");	
 	        	hint_html = $("#add-entity-hint").html();
@@ -561,7 +562,13 @@ function sendTransferTrade1(){
 	        
 	    },
 	    'json'
-	);	        	
+	);	
+	jqxhr.error(function(data, status, e) { 
+		hint_html = $("#add-entity-hint").html();
+    	hint_html += (hint_html == '' ? '' : '<BR>') + '付款操作失败：(' + e + ')';
+        $("#add-entity-hint").html(hint_html).fadeIn();
+		$("#add-entity-pay").html("付款").removeAttr('disabled');
+	});
 }
 /**************end--付款审批****************/
 
