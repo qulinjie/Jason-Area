@@ -478,6 +478,9 @@ class BcsCustomerController extends BaseController {
             
             $this->addCustomerList($data_lists);
             $params['beginNumber'] = $params['beginNumber'] + $params['queryNumber'] ;
+            
+            // 延时2秒执行。
+            sleep(2); // 延时2秒
         } while ( $totalNumber >= $params['beginNumber']);
         
         EC::success(EC_OK);
@@ -514,20 +517,26 @@ class BcsCustomerController extends BaseController {
             
             $info_data = $info_data['data'][0];
             if( !empty($info_data) ){
+                if($info_data['ACCT_BAL'] == $customer['ACCT_BAL']){
+                    Log::notice("Account info is not change . ACCOUNT_NO=" . $customer['ACCOUNT_NO']);
+                    continue;
+                }
                 $upd_data = $bcsCustomer_model->update($customer);
                 if(EC_OK != $upd_data['code']){
                     Log::error("getInfo failed . virtualAcctNo-ACCOUNT_NO=" . $customer['ACCOUNT_NO'] . ',code='. $upd_data['code'] . ',msg=' . $upd_data['msg'] );
                     continue;
                 }
+                Log::notice('addCustomerList ==== >>> upd-data-end=##' . $obj['virtualAcctName'] . "##");
             } else {
                 $data_rs = $bcsCustomer_model->create($customer);
                 if($data_rs['code'] !== EC_OK){
                     Log::error('addCustomerList . create bcsCustomer error . code='. $data_rs['code'] . ',msg=' . $data_rs['msg'] );
                     continue;
                 }
+                Log::notice('addCustomerList ==== >>> add-data-end=##' . $obj['virtualAcctName'] . "##");
             }
-            Log::notice('addCustomerList ==== >>> add-data=##' . $obj['virtualAcctName'] . "##");
-        }
+        } // foreach
+        
     }
     
     protected function transfer() {
