@@ -605,6 +605,13 @@ class BcsTradeController extends BaseController {
     protected function spd_loadAccountTradeList() {
         $virtualAcctNo = Request::post('virtualAcctNo');
     
+        if( empty($virtualAcctNo) ) {
+            $post_data = getPostStr();
+            if(!empty($post_data)){
+                $virtualAcctNo = json_decode($post_data,true)['data']['virtualAcctNo'];
+            }
+        }
+        
         $spdBank_model = $this->model('spdBank');
         $conf = $this->getConfig('conf');
         $bcsCustomer_model = $this->model('bcsCustomer');
