@@ -430,10 +430,19 @@ class BcsCustomerController extends BaseController {
         EC::success(EC_OK);
     }
     
-    // 更新浦发银行账户列表
+    // 更新浦发银行账户(余额)列表
     protected function spd_loadAccountList() {
         $virtualAcctNo = Request::post('virtualAcctNo');
         $user_id = Request::post('user_id');
+        
+        if( empty($virtualAcctNo) || empty($user_id) ) {
+            $post_data = getPostStr();
+            if(!empty($post_data)){
+                $post_data = json_decode($post_data,true)['data'];
+                $virtualAcctNo = $post_data['virtualAcctNo'];
+                $user_id = $post_data['user_id'];
+            }
+        }
         
         $bcsCustomer_model = $this->model('bcsCustomer');
         $spdBank_model = $this->model('spdBank');
