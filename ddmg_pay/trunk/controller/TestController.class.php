@@ -28,6 +28,7 @@ class TestController extends BaseController
             case 'testSaop2':
                 $this-> testSaop2();
                 break;
+                
             case 'spd_sign':
                 $this->spd_sign();
                 break;
@@ -76,6 +77,13 @@ class TestController extends BaseController
                 break;
             case 'test_sr2':
                 $this->test_sr2();
+                break;
+                
+            case 'test_self':
+                $this->test_self();
+                break;
+            case 'test_self_send':
+                $this->test_self_send();
                 break;
             default:
                 Log::error('page not found');
@@ -890,4 +898,55 @@ class TestController extends BaseController
 		return $xml;
 	}
 
+	public function test_self_send(){
+	    $model = $this->model('test');
+	    
+	    $params = array('account'=>'9559988067872');
+	    Log::notice("postRequest data ===========test_self_send================>> data = ##" . json_encode($params) . "##" );
+	    
+	    $data = $model->test_self($params);
+        Log::notice("response-data =============test_self_send==============>> data = ##" . json_encode($data) . "##" );
+	    
+        EC::success(EC_OK);
+	}
+	
+	public function test_self2(){
+	    Log::notice("##\r\n\r\n##");
+	    $post_data = getPostStr();
+// 	    Log::notice("postRequest data ============test_self======11=========>> data-post_data = ##" . $post_data . "## is_string=" . is_string($post_data) );
+// 	    Log::notice("postRequest data ============test_self======22=========>> data-post_data = ##" . json_encode($post_data) . "## is_string=" . is_string(json_encode($post_data)) );
+// 	    Log::notice("postRequest data ============test_self======33=========>> data-post_data = ##" . json_encode(json_decode($post_data)) . "## is_string=" . is_string(json_encode(json_decode($post_data))) );
+	    
+// 	    $post_data = json_decode($post_data);
+// 	    Log::notice("postRequest data ============test_self======44=========>> data-post_data = ##" . $post_data . "##" );
+	    
+// 	    Log::notice("post_data-str=" . str_replace('\"','\'',strval($post_data)));
+// 	    $post_data = json_encode( str_replace('\"','\'',strval($post_data)) );
+	    
+// 	    Log::notice("--------->>>post_data=" . json_decode($post_data,true) );
+
+	    $post_data = json_decode($post_data,true);
+	    Log::notice("postRequest data ===========================>> data = ##" . json_encode($post_data) . "##" );
+	    
+	    $account = $post_data['data']['account'];
+// 	    $account = Request::post('account');
+	    Log::notice("postRequest data ===========test_self=======555=========>> data-account = ##" . $account . "##" );
+	    
+	    $model = $this->model('test');
+	    
+	    EC::success(EC_OK);
+	}
+	
+	public function test_self(){
+	    $post_data = getPostStr();
+	    if(empty($post_data)){
+	        $post_data = array();
+	    } else {
+	       $post_data = json_decode($post_data,true);
+	    }
+	    $account = $post_data['data']['account'];
+	    Log::notice("postRequest data ===========test_self================>> data-account = ##" . $account . "##" );
+	    EC::success(EC_OK);
+	}
+	
 }

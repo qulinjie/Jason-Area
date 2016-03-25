@@ -5,7 +5,7 @@ class SpdBankModel extends SPDBankCurl
     public function curlSpdRequestXml($params = '',$transCode){
         $conf_arr = Controller::getConfig('conf');
         $masterID = $conf_arr['ddmg_spd_masterID'];
-        $packetID = date('YmdHis',time());
+        $packetID = date('YmdHis',time()) . strval(rand(1000,9999));
         return self::curlSpdRequest($params, $transCode, $masterID, $packetID);
     }
     
