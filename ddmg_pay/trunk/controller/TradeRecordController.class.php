@@ -541,7 +541,7 @@ class TradeRecordController extends BaseController {
             EC::fail($data_item['code']);
         }
         $data_info['data_list'] = $data_item['data'];
-        Log::notice('data_info-----------------------------------params==>>' . var_export($data_info, true));
+        //Log::notice('data_info-----------------------------------params==>>' . var_export($data_info, true));
         if(!$is_admin){
 	        if($isCheck){
 	            $entity_list_html = $this->render('tradeCheck', array('item' => $data_info), true);
@@ -1076,6 +1076,7 @@ class TradeRecordController extends BaseController {
             $v_order_no = $arr[0];
             $v_amount = floatval($arr[1]);
             $v_comp_name_buyer = $arr[2];
+            $v_comment = $arr[3];
             $order_no_str = $order_no_str . ',' . $v_order_no;
             $sum_amount = $sum_amount + $v_amount;
             $trade_record_item[$v_order_no]['order_no'] = $apply_no;
@@ -1083,6 +1084,7 @@ class TradeRecordController extends BaseController {
             $trade_record_item[$v_order_no]['bid_amount'] = $v_amount;
             $trade_record_item[$v_order_no]['record_type'] = 2;
             $trade_record_item[$v_order_no]['itme_comp_name_buyer'] = $v_comp_name_buyer;
+            $trade_record_item[$v_order_no]['comment'] = $v_comment;
         }
 //         Log::notice("response-data ===========================>> data-order_no_str = ##" . $order_no_str . "##" );
 
