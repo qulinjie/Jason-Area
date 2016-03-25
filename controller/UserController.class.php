@@ -414,6 +414,7 @@ class UserController extends BaseController
         $params['page'] = 1;
         $params['rows'] = 1000;
         $params['is_paymanage'] = '2';
+        $params['is_partner'] = '1';
         $data = $user_model->erp_getList($params);
         
         if(EC_OK_ERP != $data['code'] ){

@@ -174,6 +174,20 @@ class CurlModel
         return $ret;
     }
     
+    public function sendRequestSelf( $interface, $data=[] )
+    {
+        if ( !$interface ) {
+            return false;
+        }
+        $base_data = [ 'caller'=>'test', 'callee'=>'ddmg_pay', 'eventid'=>rand()%10000, 'timestamp'=>time() ];
+        $base_data['data'] = $data;
+        Log::notice("sendRequest data ================================>> interface = " . $interface . ",request = ##" . json_encode($base_data) . "##" );
+        $url = $this->getUrlSelf( $interface );
+        $ret = $this->postRequest( $url, $base_data );
+        Log::notice("sendRequest data ================================>> response = ##" . json_encode($ret) . "##" );
+        return $ret;
+    }
+    
     public function sendRequestByJava( $interface, $data=[] )
     {
         if ( !$interface ) {
@@ -257,6 +271,16 @@ class CurlModel
 			EC::fail(EC_DAT_NON);
 		}
 		return $config['ddmg_payapi_url'].$interface;
+	}
+	
+	protected function getUrlSelf( $interface )
+	{
+	    $config = Controller::getConfig('conf');
+	    if(!isset($config['ddmg_pay_url']) || !$config['ddmg_pay_url']){
+	        Log::error('config ddmg_pay_url is not exists or is empty');
+	        EC::fail(EC_DAT_NON);
+	    }
+	    return $config['ddmg_pay_url'].$interface;
 	}
 	
 	protected function getUrlJava( $interface )

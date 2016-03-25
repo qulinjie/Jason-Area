@@ -56,5 +56,8 @@ class TestModel extends CurlModel {
         return $data;
     }
     
+    public function test_self($params = array()){
+        return self::sendRequestSelf('test/test_self', $params);
+    }
     
 }
