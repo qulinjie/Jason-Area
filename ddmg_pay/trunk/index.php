@@ -352,14 +352,14 @@ session_redis::init();
 EC::load();
 
 
-/**
- * 加载error code
+
 function getPostStr()
 {
 	$post_data_1 = file_get_contents("php://input");
 	$post_data_2 = $GLOBALS['HTTP_RAW_POST_DATA'];
 	return  ($post_data_1 != '') ? $post_data_1 : $post_data_2;
 }
+/**
 $request_log_obj = new request_log($_SERVER['REQUEST_URI'], getPostStr());
  */
 
