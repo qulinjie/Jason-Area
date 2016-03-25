@@ -612,64 +612,70 @@ class BcsTradeController extends BaseController {
             }
         }
         
-        $spdBank_model = $this->model('spdBank');
-        $conf = $this->getConfig('conf');
-        $bcsCustomer_model = $this->model('bcsCustomer');
-        
-        $data_lists = array();
-        if( empty($virtualAcctNo) ) {
-            $params = array();
-            $params['record_bank_type'] = 2;
-            $params['user_id'] = -1;
-            $data = $bcsCustomer_model->searchList($params, null, null);
-            if(EC_OK != $data['code']){
-                Log::error("searchList bcsCustomer falied .");
-                EC::fail($data['code']);
-            }
-//             Log::notice("response-data ========bcsCustomer-list===================>> data = ##" . json_encode($data) . "##" );
-//             exit;
-            $data_lists = $data['data'];
-        } else {
-            $data_lists[] = array('ACCOUNT_NO'=>$virtualAcctNo);
-        }
-        
-        
-        foreach($data_lists as $obj ){
-            $ACCOUNT_NO = $obj['ACCOUNT_NO'];
-            Log::notice("response-data-str ===========================>> data-ACCOUNT_NO = ##" . $ACCOUNT_NO . "##" );
-            
-            $params = array();
-            $params['beginNumber'] = 1;
-            $params['queryNumber'] = 20;
-            
-            $params['virtualAcctNo'] = $ACCOUNT_NO;//'62250806009'; // 虚账号
-            // for test
-//             $params['shareBeginDate'] = '20160301'; // 分摊开始日期
-            $params['shareBeginDate'] = date('Ymd',time()); // 分摊开始日期
-            $params['shareEndDate'] = date('Ymd',time()); // 分摊结束日期
-            $params['jnlSeqNo'] = ''; // 业务流水号 交易流水号
-            $params['summonsNumber'] = ''; // 流水号的组内序号
-            $params['transBeginDate'] = ''; // 交易开始日期 交易流水产生时间
-            $params['transEndDate'] = ''; // 交易结束日期 交易流水结束时间
-            
-            $totalNumber = 0 ;
-            do {
-                $data = $spdBank_model->queryAccountTransferAmount($params);
-                Log::notice('spd_loadAccountTradeList ==== >>> data=##' . json_encode($data) . "##");
-            
-                $totalNumber = $data['body']['totalNumber'];
-                $data_lists = $data['body']['lists']['list'];
-            
-                $this->addAccountTradeList($data_lists);
-                $params['beginNumber'] = $params['beginNumber'] + $params['queryNumber'] ;
-                
-                // 延时2秒执行。
-                sleep(2); // 延时2秒
-            } while ( $totalNumber >= $params['beginNumber']);
-            Log::notice("response-data-end ===========================>> data-ACCOUNT_NO = ##" . $ACCOUNT_NO . "##" );
-        }
+        $this->spd_loadAccountTradeList_exec($virtualAcctNo);
     
         EC::success(EC_OK);
+    }
+    
+    public function spd_loadAccountTradeList_exec($virtualAcctNo = NULL){
+    	
+    	$spdBank_model = $this->model('spdBank');
+    	$conf = $this->getConfig('conf');
+    	$bcsCustomer_model = $this->model('bcsCustomer');
+    	
+    	$data_lists = array();
+    	if( empty($virtualAcctNo) ) {
+    		$params = array();
+    		$params['record_bank_type'] = 2;
+    		$params['user_id'] = -1;
+    		$data = $bcsCustomer_model->searchList($params, null, null);
+    		if(EC_OK != $data['code']){
+    			Log::error("searchList bcsCustomer falied .");
+    			EC::fail($data['code']);
+    		}
+    		//             Log::notice("response-data ========bcsCustomer-list===================>> data = ##" . json_encode($data) . "##" );
+    		//             exit;
+    		$data_lists = $data['data'];
+    	} else {
+    		$data_lists[] = array('ACCOUNT_NO'=>$virtualAcctNo);
+    	}    	
+    	
+    	foreach($data_lists as $obj ){
+    		$ACCOUNT_NO = $obj['ACCOUNT_NO'];
+    		Log::notice("response-data-str ===========================>> data-ACCOUNT_NO = ##" . $ACCOUNT_NO . "##" );
+    	
+    		$params = array();
+    		$params['beginNumber'] = 1;
+    		$params['queryNumber'] = 20;
+    	
+    		$params['virtualAcctNo'] = $ACCOUNT_NO;//'62250806009'; // 虚账号
+    		// for test
+    		//             $params['shareBeginDate'] = '20160301'; // 分摊开始日期
+    		$params['shareBeginDate'] = date('Ymd',time()); // 分摊开始日期
+    		$params['shareEndDate'] = date('Ymd',time()); // 分摊结束日期
+    		$params['jnlSeqNo'] = ''; // 业务流水号 交易流水号
+    		$params['summonsNumber'] = ''; // 流水号的组内序号
+    		$params['transBeginDate'] = ''; // 交易开始日期 交易流水产生时间
+    		$params['transEndDate'] = ''; // 交易结束日期 交易流水结束时间
+    	
+    		$totalNumber = 0 ;
+    		do {
+    			$data = $spdBank_model->queryAccountTransferAmount($params);
+    			Log::notice('spd_loadAccountTradeList ==== >>> data=##' . json_encode($data) . "##");
+    	
+    			$totalNumber = $data['body']['totalNumber'];
+    			$data_lists = $data['body']['lists']['list'];
+    	
+    			$this->addAccountTradeList($data_lists);
+    			$params['beginNumber'] = $params['beginNumber'] + $params['queryNumber'] ;
+    	
+    			// 延时2秒执行。
+    			sleep(2); // 延时2秒
+    		} while ( $totalNumber >= $params['beginNumber']);
+    		Log::notice("response-data-end ===========================>> data-ACCOUNT_NO = ##" . $ACCOUNT_NO . "##" );
+    	}
+    	
+    	return true;
     }
     
     private function addAccountTradeList($data_lists = array()){
