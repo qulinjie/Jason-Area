@@ -162,7 +162,7 @@
         	    </li>
         	    -->
         	    <li <?php if(doit::$controller == 'BcsCustomer'){?> class="active" <?php } ?>>
-        			<a href="<?php echo Router::getBaseUrl();?>bcsCustomer/getIndex">虚拟卡管理</a>
+        			<a href="<?php echo Router::getBaseUrl();?>bcsCustomer/getIndex">开户管理</a>
         	    </li>
     			<li <?php if(doit::$controller == 'BcsTrade' && $page_type != 'bcsTradeStatusQuery'){?> class="active" <?php } ?>>
         			<a href="<?php echo Router::getBaseUrl();?>bcsTrade/getIndex">交易流水</a>
