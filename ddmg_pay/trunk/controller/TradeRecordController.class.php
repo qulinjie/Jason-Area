@@ -1228,7 +1228,171 @@ class TradeRecordController extends BaseController {
         Log::notice("response-data ===========================>> data = ##" . json_encode($data) . "##" );
         
         EC::success(EC_OK, $data['data']);
-    }    
+    }
+     
+    //付款单同步erp
+    public function erp_syncBillsOfPayment($id = NULL){
+    	
+    	$id = ($id == NULL) ? intval(Request::post('id')) : intval($id);
+    	Log::notice("erp_syncBillsOfPayment ===========================>> id=" .$id );
+    	if(empty($id)){
+    		Log::error('id empty !');
+    		EC::fail(EC_PAR_ERR);
+    	}
+    	 
+    	//根据id查采购单的数据
+    	$tradeRecord_model = $this->model('tradeRecord');
+    	$data = $tradeRecord_model->getInfo(array('id' => $id));
+    	if(empty($data) || !is_array($data) || EC_OK != $data['code'] || !isset($data['data'])) {
+    		Log::error('tradeRecord getInfo empty !');
+    		EC::fail(EC_DAT_NON);
+    	}
+    	$data = $data['data'][0];
+    	if(empty($data)) {
+    		Log::error('tradeRecord getInfo empty !');
+    		EC::fail(EC_RED_EMP);
+    	}
+    	//Log::write(var_export($data, true), 'debug', 'debug2-'.date('Y-m-d'));
+    	 
+    	//判断是否已审批通过
+    	if(2 != intval($data['apply_status'])){
+    		Log::error('audit did not pass!');
+    		EC::fail(EC_TRADE_TF_NO_AS);
+    	}
+    	
+    	//判断是否已付款  order_status 订单交易状态 1-待付款 2-已付款' || 记录状态 0-待补录；1-待记帐；2-待复核；3-待授权；4-完成；8-拒绝；9-撤销；
+    	if(2 != intval($data['order_status'])){
+    		Log::error("the order has not been payment: order_status={$data['order_status']}!");
+    		EC::fail(EC_TRADE_TF_OS_ERR_2);
+    	}
+    	if(true && !in_array($data['backhost_status'], array(0,1,2,3,4))){
+    		Log::error("the order has not been payment: backhost_status={$data['backhost_status']}!");
+    		EC::fail(EC_TRADE_TF_OS_ERR_3);
+    	}
+    	
+    	//判断是否已同步erp
+    	if(2 == $data['is_erp_sync']){
+    		Log::error("the order has been sync erp: is_erp_sync={$data['is_erp_sync']}!");
+    		EC::fail(EC_REC_EST);
+    	}
+    	    	
+    	//查付款人信息
+    	$bcs_params  = array();
+    	$bcs_params['user_id'] = $data['user_id'];
+    	//Log::write("user_id==".$data['user_id'], 'debug', 'debug-'.date('Y-m-d'));
+    	$bcsCustomer_model = $this->model('bcsCustomer');
+    	$bcs_data = $bcsCustomer_model->getInfo($bcs_params);
+    	//Log::write("bcs_data==".var_export($bcs_data, true), 'debug', 'debug-'.date('Y-m-d'));
+    	if(EC_OK != $bcs_data['code'] || !is_array($bcs_data) || !isset($bcs_data['data'])){
+    		Log::error("bcsCustomer getInfo failed . ");
+    		EC::fail(EC_USR_NON);
+    	}
+    	$bcs_data = $bcs_data['data'][0];
+    	if(empty($bcs_data)) {
+    		Log::error('bcsCustomer getInfo empty !');
+    		EC::fail(EC_RED_EMP);
+    	}
+    	
+    	//获取详细订单数据
+    	$tradeRecordItem_model = $this->model('tradeRecordItem');    	
+    	$data_list = $tradeRecordItem_model->searchList(array('trade_record_id' => $data['id']));
+    	if($data_list['code'] !== EC_OK){
+    		Log::error('tradeRecordItem searchList error');
+    	}
+    	$data['list'] = $data_list['data'] ? $data_list['data'] : [];
+    	
+    	//主表：cw_fkd    	 
+    	$params = array();
+    	$params['fphm_'] = $data['apply_no']; //单据号：fphm_
+    	$params['wlflag_'] = 0; //往来标识：wlflag_  固定传‘0’
+    	$params['dwdm_'] = $data['erp_fgsdm']; //单位代码：dwdm_
+    	$params['dwmc_'] = $data['erp_fgsmc']; //单位名称：dwmc_
+    	$params['rq_'] = $data['pay_timestamp']; //日期：rq_
+    	$params['je_'] = $data['order_bid_amount']; //金额：je_
+    	$params['fky_'] = '应号对应的合伙人'; //付款人：fky_  固定传‘应号对应的合伙人’
+    	$params['kxly_'] = $data['amount_type']; //款项类别：kxly_  ,如：货款、
+    	$params['bmmc_'] = $data['erp_bmmc']; //部门名称：bmmc_
+    	$params['ywy_'] = $bcs_data['SIT_NO']; //业务员：ywy_
+    	$params['gszh_'] = $data['comp_account']; //公司帐户：gszh_（浦发银行帐号）
+    	$params['gskhh_'] = $data['bank_name']; //开户银行：gskhh_（浦发银行）
+    	$params['fgs_'] = $data['seller_name']; //机构：fgs_
+    	$params['czy_'] = !empty(self::getCurrentUserId()) ? self::getCurrentUserId() : ''; //操作员：czy_
+    	$params['sh_'] = $data['apply_status']; //审核标识：sh_
+    	$params['sysdjlx_'] = 'fkd'; //单据类型：sysdjlx_ 固定传‘fkd’
+		$params['list'] = array();
+    	//明细表：cw_skdmx
+    	foreach($data['list'] as $item){
+	    	$params2 = array();
+	    	$params2['fphm_'] = $item['itme_no']; //单据号:
+	    	$params2['xh_'] = $item['order_no']; //序号
+	    	$params2['je_'] = $item['bid_amount']; //金额
+	    	$params2['jsfs_'] = '网银'; //结算方式：固定传‘网银’
+	    	$params2['cgfgs_'] = $data['erp_fgsmc']; //Xsfgs_:cgfgs_  等于合伙人分公司
+	    	$params2['cgbm_'] = $data['erp_bmmc']; //Xsbm_： cgbm_等于合伙人部门
+	    	$params2['fkdph_'] = $data['jnl_seq_no'] . '-' .$item['itme_no']; //收款单批号：fkdph_  8位流水+单据号；如00000001CWSKD002-00000020
+	    	$params2['sysrq_'] = date("Y-m-d H:i:s"); //系统日期：sysrq_ 
+    		$params['list'][] = $params2;
+    	}
+    	//Log::write(var_export($params, true), 'debug', 'debug22-'.date('Y-m-d'));
+    	//exit();
+    	/* Log::notice("request-data ============>> data = ##" . json_encode($params) . "##" );
+    	$tradeRecord_model = $this->model('tradeRecord');
+    	$res_data = $tradeRecord_model->erp_syncBillsOfPayment($params);
+    	if(EC_OK_ERP != $res_data['code']){
+    		Log::error('erp_syncBillsOfPayment Fail!');
+    		EC::fail($res_data['code']);
+    	}
+    	Log::notice("response-data ============>> data = ##" . json_encode($res_data) . "##" );
+    	 */
+    	//修改同步状态
+    	$up_params = array(); 
+    	$up_params['id'] = $data['id'];   	
+    	$up_params['is_erp_sync'] = 2; //付款单是否同步 1否 2同步
+    	$up_params['erp_sync_timestamp'] = date('Y-m-d H:i:s',time()); 
+    	$tradeRecord_model = $this->model('tradeRecord');
+    	$tr_data = $tradeRecord_model->update($up_params);
+    	if(EC_OK != $tr_data['code']){
+    		Log::error('update order status fail!');
+    		EC::fail($tr_data['code']);
+    	}
+    	
+    	EC::success(EC_OK);
+    }
+    
+    //收款单同步erp
+    public function erp_syncBillsOfCollection($id = NULL){
+    	$id = ($id == NULL) ? intval(Request::post('id')) : intval($id);
+    	/* //主表：cw_skd
+    	$params['fphm_'] = ; //单据号
+    	$params['wlflag_'] = 1; //往来标识：  固定传‘1’
+    	$params['dwdm_'] = ; //单位代码
+    	$params['dwmc_'] = ; //单位名称
+    	$params['rq_'] = ; //日期
+    	$params['je_'] = ; //金额
+    	$params['sky_'] = ; //收款人  固定传‘应号对应的合伙人’
+    	$params['kxly_'] = ; //款项类别,如：货款、
+    	$params['bmmc_'] = ; //部门名称
+    	$params['ywy_'] = ; //业务员
+    	$params['gszh_'] = ; //公司帐户（浦发银行帐号）
+    	$params['gskhh_'] = ; //开户银行（浦发银行）
+    	$params['fgs_'] = ; //机构
+    	$params['czy_'] = ; //操作员
+    	$params['sh_'] = ; //审核标识
+    	$params['sysdjlx_'] = 'skd'; //单据类型： 固定传‘skd’
+    	 
+    	//明细表：cw_skdmx
+    	$params2['fphm_'] = ; //单据号:
+    	$params2['xh_'] = ; //序号
+    	$params2['je_'] = ; //金额
+    	$params2['jsfs_'] = '网银'; //结算方式：固定传‘网银’
+    	$params2['xsfgs_'] = ; //Xsfgs_:xsfgs_  等于合伙人分公司
+    	$params2['xsbm_'] = ; //Xsbm_： xsbm_等于合伙人部门
+    	$params2['skdph_'] = ; //收款单批号：skdph_  8位流水+单据号；如00000001CWSKD002-00000020
+    	$params2['sysrq_'] = ; //系统日期：sysrq_
+    	*/
+       
+       
+    }
 
     protected function auditOneTradRecord(){
     	$id = Request::post('id');
@@ -1327,7 +1491,7 @@ class TradeRecordController extends BaseController {
     	//查付款人信息    	   
     	$params  = array();
     	$params['user_id'] = $data['user_id'];  
-    	Log::write("user_id==".$data['user_id'], 'debug', 'debug-'.date('Y-m-d'));
+    	//Log::write("user_id==".$data['user_id'], 'debug', 'debug-'.date('Y-m-d'));
     	$bcsCustomer_model = $this->model('bcsCustomer');  	
     	$bcs_data = $bcsCustomer_model->getInfo($params); 
     	//Log::write("bcs_data==".var_export($bcs_data, true), 'debug', 'debug-'.date('Y-m-d'));    	
