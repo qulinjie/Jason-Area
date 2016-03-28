@@ -343,7 +343,7 @@ class UserController extends BaseController
     public static function getLoginUser()
     {
         $session = self::instance('session');
-        $loginUser = empty($session->get('loginUser')) ? $session->get('_loginUser') : $session->get('loginUser');
+        $loginUser = !empty($session->get('loginUser')) ? $session->get('loginUser') : $session->get('_loginUser');
         if(!$loginUser){
             $data = self::model('user')->getLoginUser();
             Log::notice("getLoginUser . data = ##" . json_encode($data) . "##");
