@@ -147,6 +147,10 @@ class TradeRecordController extends BaseController {
         		Log::error("searchList failed . ");
         		EC::fail(EC_PAR_ERR);
         	}
+        }else{
+        	if(isset($params['user_id'])){	
+        		unset($params['user_id']);
+        	}
         }
     
         $data_cnt = $tradeRecord_model->searchCnt($params);
@@ -1357,42 +1361,7 @@ class TradeRecordController extends BaseController {
     	}
     	
     	EC::success(EC_OK);
-    }
-    
-    //收款单同步erp
-    public function erp_syncBillsOfCollection($id = NULL){
-    	$id = ($id == NULL) ? intval(Request::post('id')) : intval($id);
-    	/* //主表：cw_skd
-    	$params['fphm_'] = ; //单据号
-    	$params['wlflag_'] = 1; //往来标识：  固定传‘1’
-    	$params['dwdm_'] = ; //单位代码
-    	$params['dwmc_'] = ; //单位名称
-    	$params['rq_'] = ; //日期
-    	$params['je_'] = ; //金额
-    	$params['sky_'] = ; //收款人  固定传‘应号对应的合伙人’
-    	$params['kxly_'] = ; //款项类别,如：货款、
-    	$params['bmmc_'] = ; //部门名称
-    	$params['ywy_'] = ; //业务员
-    	$params['gszh_'] = ; //公司帐户（浦发银行帐号）
-    	$params['gskhh_'] = ; //开户银行（浦发银行）
-    	$params['fgs_'] = ; //机构
-    	$params['czy_'] = ; //操作员
-    	$params['sh_'] = ; //审核标识
-    	$params['sysdjlx_'] = 'skd'; //单据类型： 固定传‘skd’
-    	 
-    	//明细表：cw_skdmx
-    	$params2['fphm_'] = ; //单据号:
-    	$params2['xh_'] = ; //序号
-    	$params2['je_'] = ; //金额
-    	$params2['jsfs_'] = '网银'; //结算方式：固定传‘网银’
-    	$params2['xsfgs_'] = ; //Xsfgs_:xsfgs_  等于合伙人分公司
-    	$params2['xsbm_'] = ; //Xsbm_： xsbm_等于合伙人部门
-    	$params2['skdph_'] = ; //收款单批号：skdph_  8位流水+单据号；如00000001CWSKD002-00000020
-    	$params2['sysrq_'] = ; //系统日期：sysrq_
-    	*/
-       
-       
-    }
+    }        
 
     protected function auditOneTradRecord(){
     	$id = Request::post('id');
@@ -1518,7 +1487,7 @@ class TradeRecordController extends BaseController {
     		EC::fail(EC_DATA_EMPTY_ERR);
     	}
 
-    	//付款    	
+    	//付款给银行    	
     	try { 
     		$params = array();
 	    	$params['payerVirAcctNo']   = $ACCOUNT_NO; //Y 付款人虚账号
