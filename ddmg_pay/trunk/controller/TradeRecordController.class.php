@@ -104,13 +104,15 @@ class TradeRecordController extends BaseController {
         $time2 = Request::post('time2');
         $type = Request::post('type');
         $order_status = Request::post('order_status');
+        $apply_status = Request::post('apply_status');
         $order_time1 = Request::post('order_time1');
         $order_time2 = Request::post('order_time2');
         $seller_name = Request::post('seller_name');
         $seller_conn_name = Request::post('seller_conn_name');
         $order_sum_amount1 = Request::post('order_sum_amount1');
-        $order_sum_amount2 = Request::post('order_sum_amount2');
-    
+        $order_sum_amount2 = Request::post('order_sum_amount2');        
+        $backhost_status = Request::post('backhost_status');
+        
         $tradeRecord_model = $this->model('tradeRecord');
         $user_id = self::getCurrentUserId();
     
@@ -130,8 +132,8 @@ class TradeRecordController extends BaseController {
         $ACCOUNT_NO = $data_info['ACCOUNT_NO'];
         
         $params  = array();
-        foreach ([ 'order_no', 'user_id', 'code', 'time1', 'time2', 'type', 'order_status',
-                    'order_time1', 'order_time2', 'seller_name', 'seller_conn_name', 'order_sum_amount1', 'order_sum_amount2',
+        foreach ([ 'order_no', 'user_id', 'code', 'time1', 'time2', 'type', 'order_status', 'apply_status',
+                    'backhost_status', 'order_time1', 'order_time2', 'seller_name', 'seller_conn_name', 'order_sum_amount1', 'order_sum_amount2',
                     'ACCOUNT_NO'
                 ] as $val)
         {
@@ -1257,9 +1259,9 @@ class TradeRecordController extends BaseController {
     	
     	Log::notice("response-data ===========================>> data = ##" . json_encode($data) . "##" );
     	EC::success(EC_OK, $data['data']);
-    }  
+    }
 
-    public static function getBackhostStatusByKey($key){
+    public static function getBackhostStatus(){
     	$arr = array(
     		'0' => '待补录',
     		'1' => '待记帐',
@@ -1268,7 +1270,12 @@ class TradeRecordController extends BaseController {
     		'4' => '完成',
     		'8' => '拒绝',
     		'9' => '撤销'
-    	);    	
+    	); 
+    	return $arr;
+    }
+
+    public static function getBackhostStatusByKey($key){
+    	$arr = self::getBackhostStatus();
     	if(array_key_exists($key, $arr)){
     		return $arr[$key];
     	}
