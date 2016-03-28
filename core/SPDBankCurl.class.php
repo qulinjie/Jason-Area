@@ -68,6 +68,7 @@ class SPDBankCurl extends CurlModel {
         }
         $param = strval( $data['body']['signature'] );
         
+        // 3.验签
         $data = self::sendRequestSpdSign('', $param, 'v');
         $data = $this->gbk2utf8( $data );
         $data =  $this->xmlToArray($data);
@@ -88,7 +89,7 @@ class SPDBankCurl extends CurlModel {
 //             Log::notice("response-data ===========================>> data-xml = ##" . ($xml) . "##" );
             preg_match("{<returnMsg>(.*?)</returnMsg>}s",$xml,$matchs);
             $returnMsg = $matchs[1];
-            if( !empty($returnMsg)){
+            if( !empty($returnMsg) ){
                 $xml = str_replace($returnMsg, self::iconvFunc($returnMsg), $xml);
             }
             $obj = json_decode( json_encode( simplexml_load_string( $xml ) ), true );
