@@ -198,7 +198,7 @@ abstract class BaseController extends Controller
 
     public function getCurrentUserId()
     {
-        $loginUser_data = UserController::getLoginUser();
+        $loginUser_data = UserController::getLoginUser();        
 //         $user_id = $loginUser_data['id'];
         $user_id = $loginUser_data['usercode'];
         $loginUser_data['id'] = $user_id;
