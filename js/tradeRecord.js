@@ -79,9 +79,13 @@ function search_entity(page){
 	var seller_name = $("#entity-search-seller_name").val();
 	var seller_conn_name = $("#entity-search-seller_conn_name").val();
 	var order_sum_amount1 = $("#entity-search-order_sum_amount1").val();
-	var order_sum_amount2 = $("#entity-search-order_sum_amount2").val();
+	var order_sum_amount2 = $("#entity-search-order_sum_amount2").val();	
+	var apply_status = $("#entity-search-apply_status").val();
+	var backhost_status = $("#entity-search-backhost_status").val();	
 	
 	if(-1 == order_status) { order_status =""; }
+	if(-1 == apply_status) { apply_status =""; }
+	if(-1 == backhost_status) { backhost_status =""; }
 	
 	var spanLoading = $('#span-trade-order-list');
 	spanLoading.html("<div style='width:100%;text-align:center;height:" + spanLoading.height() + "px;'><img alt='正在加载数据...' src='" + BASE_PATH + "view/images/tips_loading.gif'/></div>");
@@ -98,6 +102,8 @@ function search_entity(page){
 	    	'seller_conn_name':seller_conn_name,
 	    	'order_sum_amount1':order_sum_amount1,
 	    	'order_sum_amount2':order_sum_amount2,
+	    	'apply_status':apply_status,
+	    	'backhost_status':backhost_status,
 	        'page':page
         },
         function(result){
@@ -125,6 +131,8 @@ function search_clearFields(){
 	$("#entity-search-seller_conn_name").val("");
 	$("#entity-search-order_sum_amount1").val("");
 	$("#entity-search-order_sum_amount2").val("");
+	$("#entity-search-apply_status").val("-1");
+	$("#entity-search-backhost_status").val("-1");
 }
 
 /**************start--导出数据****************/
@@ -420,6 +428,20 @@ $(document).on('click', '#test_send_pay', function(event){
 
 
 /**************start--付款审批****************/
+
+$(".form_datetime").datetimepicker({
+	language:  'zh-CN',
+	format: 'yyyy-mm-dd',
+	minView: "month",
+	weekStart: 1,
+    todayBtn:  1,
+	autoclose: 1,
+	todayHighlight: 1,
+	startView: 2,
+	forceParse: 0,
+    showMeridian: 0
+});
+
 $(document).on('click', '.audit-entity', function(event){	
 	
 	$('#audit-entity-modal').modal('show');
