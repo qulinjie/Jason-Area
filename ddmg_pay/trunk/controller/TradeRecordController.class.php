@@ -1502,7 +1502,7 @@ class TradeRecordController extends BaseController {
 	    	$params['payeeBankName']    = $data['bank_name']; // 收款行名称 跨行转账时必须输入(即本行/它行标志为1：表示它行)
 	    	$params['payeeBankAddress'] = $data['bank_name']; // 收款行地址 跨行转账时必须输入(即本行/它行标志为1：表示它行)   
 	    	$params['payeeBankNo']      = $data['bank_no']; // 支付号 【收款账号行号】    	
-	    	$params['transAmount']      = '0.5'; //$data['order_bid_amount']; //Y 交易金额
+	    	$params['transAmount']      = '1.0'; //$data['order_bid_amount']; //Y 交易金额
 	    	$params['note']             = $useTodo; // 附言 如果跨行转账，附言请不要超过42字节（汉字21个）
 	    	   	
 	   		//提交付款前记录日志
@@ -1510,11 +1510,11 @@ class TradeRecordController extends BaseController {
 	    	
 	    	$sp_data = array();    	
 	    	$spdBank_model = $this->model('spdBank');
-	    	//$sp_data = $spdBank_model->sendTransferTrade($params);
-	    	//$sp_data = $sp_data['body'];    	
+	    	$sp_data = $spdBank_model->sendTransferTrade($params);
+	    	$sp_data = $sp_data['body'];    	
 	    	
-	    	$sp_data['jnlSeqNo'] = '123456789123456789';
-	    	$sp_data['backhostStatus'] = 4;
+	    	//$sp_data['jnlSeqNo'] = '123456789123456789';
+	    	//$sp_data['backhostStatus'] = 4;
 	    	$jnl_seq_no = $sp_data['jnlSeqNo']; //业务流水号
 	   		$backhost_status = $sp_data['backhostStatus']; //付款后返回的记录状态 0-待补录；1-待记帐；2-待复核；3-待授权；4-完成；8-拒绝；9-撤销；
 
