@@ -519,10 +519,11 @@ $(document).on('click', '#for-test-btn', function(event){
 		});
 	}
 	
-	$(document).on('click', '#td_a_fphm', function(event){
-		var fphm =  $(this).text();
+	$(document).on('click', '.entity-search-select', function(event){
+//		var fphm =  $(this).text();
 //		alert(fphm);
 //		return false;
+		var fphm = $(this).attr("id").replace('entity-search-select-', '');
 		
 		//查找
 	    $.post(BASE_PATH + 'tradeRecord/erp_getOrderBuyInfo', {
