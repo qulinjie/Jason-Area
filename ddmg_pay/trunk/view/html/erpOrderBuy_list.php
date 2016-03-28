@@ -42,6 +42,7 @@
 			<thead>
 				<tr>
 					<th style="display:none">id</th>
+					<th>操作</th>
 					<th>业务单号</th>
 					<th>单位名称</th>
 					<th>日期</th>
@@ -54,6 +55,9 @@
     <?php foreach ($data_list as $item){?>       
        <tr>
             <td style="display:none"><?php echo $item['fphm_'];?><input type="hidden" value="<?php echo $item['order_status'];?>"></td>
+            <td> 	      
+	  			<a id="entity-search-select-<?php echo $item['fphm_'];?>" class="entity-search-select" href="#" data-toggle="modal" data-keyboard="false" data-backdrop="static">选择</a>
+	        </td>
             <td><a href="#" id="td_a_fphm"><?php echo $item['fphm_'];?></a></td>
             <td><?php echo $item['dwmc_'];?></td>
             <td><?php echo date("Y-m-d h:i:s",strtotime($item['rq_']));?></td>
