@@ -84,6 +84,9 @@ class TestController extends BaseController
             case 'test_sr2':
                 $this->test_sr2();
                 break;
+            case 'test_sr3':
+                $this->test_sr3();
+                break;
                 
             case 'test_self':
                 $this->test_self();
@@ -284,7 +287,8 @@ class TestController extends BaseController
         //1
         //$param = '<body><acctNo>6224080602781</acctNo><jnlNoDate>20160309</jnlNoDate><seqNos>999701040001</seqNos><summonsNumber>3</summonsNumber><transAmount>1000</transAmount><debitCreditFlag>1</debitCreditFlag><shareRule>2</shareRule><shareType>1</shareType><summaryCode></summaryCode><lists name="LoopResult"><list><virtualAcctNo>12345678901</virtualAcctNo><transAmount>1000</transAmount></list></lists></body>';
         //$param = '<body><acctNo>6224080600234</acctNo><jnlNoDate>20160314</jnlNoDate><seqNos>999701220001</seqNos><summonsNumber>3</summonsNumber><transAmount>112</transAmount><debitCreditFlag>1</debitCreditFlag><shareRule>2</shareRule><shareType>1</shareType><summaryCode></summaryCode><lists name="LoopResult"><list><virtualAcctNo>62250806009</virtualAcctNo><transAmount>112</transAmount></list></lists></body>';
-        $param = '<body><acctNo>6224080600234</acctNo><jnlNoDate>20160322</jnlNoDate><seqNos>999701590001</seqNos><summonsNumber>3</summonsNumber><transAmount>1000.23</transAmount><debitCreditFlag>1</debitCreditFlag><shareRule>2</shareRule><shareType>1</shareType><summaryCode></summaryCode><lists name="LoopResult"><list><virtualAcctNo>62250806009</virtualAcctNo><transAmount>1000.23</transAmount></list></lists></body>';
+        //$param = '<body><acctNo>6224080600234</acctNo><jnlNoDate>20160322</jnlNoDate><seqNos>999701590001</seqNos><summonsNumber>3</summonsNumber><transAmount>1000.23</transAmount><debitCreditFlag>1</debitCreditFlag><shareRule>2</shareRule><shareType>1</shareType><summaryCode></summaryCode><lists name="LoopResult"><list><virtualAcctNo>62250806009</virtualAcctNo><transAmount>1000.23</transAmount></list></lists></body>';
+        $param = '<body><acctNo>6224080600234</acctNo><jnlNoDate>20160328</jnlNoDate><seqNos>999701650004</seqNos><summonsNumber>3</summonsNumber><transAmount>231.5</transAmount><debitCreditFlag>1</debitCreditFlag><shareRule>2</shareRule><shareType>1</shareType><summaryCode></summaryCode><lists name="LoopResult"><list><virtualAcctNo>62250806009</virtualAcctNo><transAmount>231.5</transAmount></list></lists></body>';
         $data = $model->testSpdSign1($param);
         Log::notice("\r\n\r\n ============111================\r\n\r\n");
     
@@ -317,7 +321,7 @@ class TestController extends BaseController
     
         //1
         //$param = '<body><acctNo>6224080602781</acctNo><virtualAcctNo>12345678901</virtualAcctNo><jnlSeqNo></jnlSeqNo><summonsNumber></summonsNumber><transBeginDate></transBeginDate><transEndDate></transEndDate><shareBeginDate>20160301</shareBeginDate><shareEndDate>20160330</shareEndDate><beginNumber>1</beginNumber><queryNumber>20</queryNumber></body>';
-        $param = '<body><acctNo>6224080600234</acctNo><virtualAcctNo>62250806009</virtualAcctNo><jnlSeqNo></jnlSeqNo><summonsNumber></summonsNumber><transBeginDate></transBeginDate><transEndDate></transEndDate><shareBeginDate>20160322</shareBeginDate><shareEndDate>20160330</shareEndDate><beginNumber>1</beginNumber><queryNumber>20</queryNumber></body>';
+        $param = '<body><acctNo>6224080600234</acctNo><virtualAcctNo>62250806009</virtualAcctNo><jnlSeqNo></jnlSeqNo><summonsNumber></summonsNumber><transBeginDate></transBeginDate><transEndDate></transEndDate><shareBeginDate>20160328</shareBeginDate><shareEndDate>20160330</shareEndDate><beginNumber>1</beginNumber><queryNumber>20</queryNumber></body>';
         $data = $model->testSpdSign1($param);
         Log::notice("\r\n\r\n ============111================\r\n\r\n");
     
@@ -353,7 +357,7 @@ class TestController extends BaseController
         //1
         //$param = '<body><acctNo>6224080602781</acctNo><beginDate>20160101</beginDate><endDate>20160130</endDate><beginNumber>1</beginNumber><queryNumber>5</queryNumber></body>';
         //$param = '<body><acctNo>6224080602781</acctNo><beginDate>20160309</beginDate><endDate>20160309</endDate><beginNumber>1</beginNumber><queryNumber>15</queryNumber></body>';
-        $param = '<body><acctNo>6224080600234</acctNo><beginDate>20160322</beginDate><endDate>20160322</endDate><beginNumber>1</beginNumber><queryNumber>5</queryNumber></body>';
+        $param = '<body><acctNo>6224080600234</acctNo><beginDate>20160328</beginDate><endDate>20160328</endDate><beginNumber>1</beginNumber><queryNumber>5</queryNumber></body>';
         $data = $model->testSpdSign1($param);
         Log::notice("\r\n\r\n ============111================\r\n\r\n");
     
@@ -509,12 +513,13 @@ class TestController extends BaseController
         EC::success(EC_OK,$data);
     }
     
+    // 8924账户明细查询
     public function spd_8924(){
         Log::notice('-------SPD----TestController--------------------spd_8924==>>str');
     
         $model = $this->model('spdBank');
     
-        $param = '<body><acctNo>6224080600234</acctNo><beginDate>20160301</beginDate><endDate>20160303</endDate><queryNumber>20</queryNumber><beginNumber>1</beginNumber><transAmount></transAmount><subAccount></subAccount><subAcctName></subAcctName></body>';
+        $param = '<body><acctNo>6224080600234</acctNo><beginDate>20160329</beginDate><endDate>20160329</endDate><queryNumber>20</queryNumber><beginNumber>1</beginNumber><transAmount></transAmount><subAccount></subAccount><subAcctName></subAcctName></body>';
         $data = $model->curlSpdRequestXml($param,"8924");
     
         Log::notice('-------SPD----TestController---------------------spd_8924==>>end');
@@ -522,6 +527,7 @@ class TestController extends BaseController
         EC::success(EC_OK,$data);
     }
     
+    // EG30网银互联交易结果信息查询
     public function spd_EG30(){
         Log::notice('-------SPD----TestController--------------------spd_EG30==>>str');
     
@@ -604,6 +610,17 @@ class TestController extends BaseController
         EC::success(EC_OK,$data);
     }
     
+    public function test_sr3(){
+        $interface = "http://test-api.gt-xx.com/api/pub/FinanceService/PostCW_SKDCreate/";
+        $data = array();
+        $data['name'] = '大汉电子商务有限公司';
+    
+        $model = $this->model('test');
+        $data = $model->test_sendRequest($interface, $data);
+    
+        EC::success(EC_OK,$data);
+    }
+    
     // end-SPD
     
 	public function laiyifa()
@@ -664,59 +681,6 @@ class TestController extends BaseController
         EC::success(EC_OK,$data);
     }
 
-	public function test()
-	{
-
-		//$JianCai = ['px'=>'普线', 'plzt'=>'盘螺直条', 'xzlw'=>'校直螺纹', 'zgx'=>'准高线', 'gxzt'=>'高线直条', 'jzlwg'=>'精轧螺纹钢', 'jzlm'=>'精轧螺帽', 'llx'=>'冷拉线' ];
-		//$youGang = [ 'py'=>'普圆', 'ty'=>'碳圆' ];
-		//$banCai = [ 'gqg'=>'高强钢', 'xxgb'=>'新兴割板', 'nhb'=>'耐厚板', 'nsb'=>'耐酸板', 'ljb'=>'冷卷板', 'rjb'=>'热卷板', 'mbb'=>'毛边板', 'nmb'=>'耐磨板', 'bjb'=>'包角板', 'lzdlg'=>'冷轧带肋钢', 'rzdlg'=>'热轧带肋钢', 'yxw'=>'压型瓦', 'blw'=>'玻璃瓦', 'cgw'=>'彩钢瓦', 'db'=>'垫板' ];
-		//$guangCai = [ 'fg'=>'方管', 'wfgg'=>'无缝钢管', 'zfgg'=>'直缝钢管', 'jxg'=>'矩形管' ];
-		//$xingCai = [ 'zfgg'=>'直缝钢管' ];
-		//$juancai = [ 'lj'=>'冷卷', 'cg'=>'彩卷', 'dgg'=>'电工钢' ];
-		die( '测试接口' );
-		return false;
-
-		$count = 0;
-		//foreach ( $JianCai as $k=>$v )
-		//foreach ( $youGang as $k=>$v )
-		foreach ( $juancai as $k=>$v )
-		{
-			$data = [];
-			$data['id'] = $this->model( 'id' )->getProductId();
-			if ( !$data['id'] ) {
-				echo $val;
-				exit;
-			}
-			$data['short_name'] = $k;
-			$data['name'] = $v;
-			$data['category_id'] = 12;
-			$data['technic_id'] = '0';
-			$data['sort'] = '9999';
-			$info = $this-> model( 'product' )->createProduct($data);
-			$count++;
-		}
-		var_dump(count( $juancai ));
-		var_dump($count);
-
-	return false;
-
-		$nohave = [];
-		$have = [];
-		foreach ( $category as $k => $c ) {
-			$info = $this-> model( 'product' )->getProduct( 'name like "%'.$c.'%"' );
-			//$info = $this-> model( 'product' )->getProduct( 'name = "'.$c.'"' );
-			if ( !$info ) {
-				$nohave[] = $c;
-			}else{
-				$have[] = $c;
-			}
-		}
-
-		echo '<pre>';
-		//print_r($nohave);
-		print_r($have);
-		echo '</pre>';
-	}
     
 	public function testGet()
 	{

@@ -164,6 +164,32 @@ class SpdBankModel extends SPDBankCurl
         return $this->curlSpdRequestXml($bodyXmlStr,$transCode);
     }
     
+    /**
+     * 8924账户明细查询
+     * @param unknown $params
+     */
+    public function queryAccountTrade($params = array()){
+        Log::notice('str-queryAccountTrade ==== >>> params=' . json_encode($params) );
     
+        $transCode = "8924";
+        $requestParms = [];
+    
+        $requestParms['beginDate'] = $params['beginDate']; // 开始日期
+        $requestParms['endDate'] = $params['endDate']; // 结束日期
+        $requestParms['queryNumber'] = $params['queryNumber']; // 查询的笔数
+        $requestParms['beginNumber'] = $params['beginNumber']; // 查询的起始笔数
+        
+        $requestParms['transAmount'] = $params['transAmount']; // 交易金额
+        $requestParms['subAccount'] = $params['subAccount']; // 对方帐号
+        $requestParms['subAcctName'] = $params['subAcctName']; // 对方户名
+    
+        $conf_arr = Controller::getConfig('conf');
+        $requestParms['acctNo'] = $conf_arr['ddmg_spd_acctNo']; // 实账号 母实子虚的母账号，银企直连签约账号
+    
+        $bodyXmlStr = $this->constructBody($requestParms);
+    
+        Log::notice('end-queryAccountTrade ==== >>> bodyXmlStr=##' . strval($bodyXmlStr) . '##');
+        return $this->curlSpdRequestXml($bodyXmlStr,$transCode);
+    }
     
 }

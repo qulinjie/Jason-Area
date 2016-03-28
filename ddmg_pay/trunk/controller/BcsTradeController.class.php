@@ -640,6 +640,7 @@ class BcsTradeController extends BaseController {
     		$data_lists[] = array('ACCOUNT_NO'=>$virtualAcctNo);
     	}    	
     	
+    	// 循环账号列表
     	foreach($data_lists as $obj ){
     		$ACCOUNT_NO = $obj['ACCOUNT_NO'];
     		Log::notice("response-data-str ===========================>> data-ACCOUNT_NO = ##" . $ACCOUNT_NO . "##" );
@@ -678,6 +679,7 @@ class BcsTradeController extends BaseController {
     	return true;
     }
     
+    // 交易流水
     private function addAccountTradeList($data_lists = array()){
         if(empty($data_lists)){
             Log::notice("addAccountTradeList data_lists is empty . ");
@@ -711,6 +713,9 @@ class BcsTradeController extends BaseController {
 //             Log::notice("addAccountTradeList ================122==========>> data = ##" . json_encode($info_data) . "##" );
 //             exit;
     
+            // 8924账户明细查询
+            $this->queryTradeSerial($obj);
+            
             $trade['SELLER_SIT_NO'] = $obj['virtualAcctName']; // 虚账户名称
             $trade['debitCreditFlag'] = $obj['debitCreditFlag']; // 借贷标志
             $trade['TX_AMT'] = $obj['transAmount']; // 交易金额
@@ -721,7 +726,9 @@ class BcsTradeController extends BaseController {
             $trade['oppositeAcctNo'] = $obj['oppositeAcctNo']; // 对方帐号
             $trade['oppositeAcctName'] = $obj['oppositeAcctName']; // 对方名称
             $trade['status'] = 1; // 交易发送状态 1-成功 2-失败 3-未知
-    
+            $trade['payeeBankNo'] = $obj['payeeBankNo']; // 对方帐号
+            $trade['payeeBankName'] = $obj['payeeBankName']; // 对方户名
+            
             $info_data = $info_data['data'][0];
             if( !empty($info_data) ){
                 $trade['id'] = $info_data['id'];
@@ -741,5 +748,57 @@ class BcsTradeController extends BaseController {
             }
         }
     }
+
+    public function queryTradeSerial( &$obj = array() ){
+        
+        if( !empty($obj['oppositeAcctNo']) && !empty($obj['oppositeAcctName']) ){
+            Log::notice("queryAccountTrade oppositeAcct info is fill . ");
+            return ;
+        }
+        
+        $spdBank_model = $this->model('spdBank');
+        
+        $params = array();
+        $params['beginNumber'] = 1;
+        $params['queryNumber'] = 20;
+        $params['beginDate'] = $obj['transDate']; // 开始日期
+        $params['endDate'] = $obj['transDate']; // 结束日期
+        $params['transAmount'] = $obj['transAmount']; // 交易金额
+        $params['subAccount'] = $obj['oppositeAcctNo']; // 对方帐号
+        $params['subAcctName'] = $obj['oppositeAcctName']; // 对方户名
+        
+        $data = $spdBank_model->queryAccountTrade($params);
+        if(EC_OK != $data['code']){
+            Log::error("spd-queryAccountTrade falied .");
+            return ;
+        }
+        
+        $data_lists = $data['body']['lists']['list'];
+        if(empty($data_lists)){
+            Log::notice("queryAccountTrade data_lists is empty . ");
+            return ;
+        }
+        
+        if(!empty($data_lists['seqNo'])) {
+            $data_lists_temp = array();
+            $data_lists_temp[] = $data_lists;
+            $data_lists = $data_lists_temp;
+        }
+        
+        $tellerJnlNo = $obj['tellerJnlNo']; // 柜员流水号
+        Log::notice("queryAccountTrade=============>>> tellerJnlNo=" . $tellerJnlNo);
+        foreach($data_lists as $objVal ){
+            Log::notice("queryAccountTrade=============>>> seqNo=" . $objVal['seqNo']);
+            if( $tellerJnlNo == $objVal['seqNo'] ){
+                $obj['oppositeAcctNo'] = $objVal['payeeAcctNo']; // 对方账号
+                $obj['oppositeAcctName'] = $objVal['payeeName']; // 对方户名
+                $obj['payeeBankNo'] = $objVal['payeeBankNo']; // 对方行号
+                $obj['payeeBankName'] = $objVal['payeeBankName']; // 对方行名
+                break ;
+            }
+        }
+        
+    }
+    
     
 }
