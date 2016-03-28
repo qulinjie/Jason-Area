@@ -35,49 +35,43 @@
 </div>
 
 <h1 class="page-header">
-<?php if($is_admin){ ?>付款审批<?php }else{ ?>申请付款<?php } ?>
+<?php echo $is_admin ? '付款审批' : '申请付款' ?>
 </h1>
 
 <div class="panel panel-primary">
   <div class="panel-body">
     <div class="form-inline">
-	  <div class="form-group">
-	    <label for="entity-search-order_no">订单号</label>
-	    <input type="text" class="form-control" id="entity-search-order_no" placeholder="订单号">
-	  </div>
-	  <div class="form-group" style="display:none">
-	    <label for="entity-search-time">添加时间</label>
-	    <input type="text" class="form-control form_datetime" id="entity-search-time1" placeholder="添加时间">
+      <div class="form-group">
+	    <label for="entity-search-time">时间</label>
+	    <input type="text" style="width:100px;" class="form-control form_datetime" id="entity-search-order_time1" placeholder="单据日期">
 	    -
-	    <input type="text" class="form-control form_datetime" id="entity-search-time2" placeholder="添加时间">
+	    <input type="text" style="width:100px;" class="form-control form_datetime" id="entity-search-order_time2" placeholder="单据日期">
 	  </div>
 	  <div class="form-group">
-	    <label for="entity-search-order_time">时间</label>
-	    <input type="text" class="form-control form_datetime" id="entity-search-order_time1" placeholder="时间">
-	    -
-	    <input type="text" class="form-control form_datetime" id="entity-search-order_time2" placeholder="时间">
+	    <label for="entity-search-seller_name">单位名称</label>
+	    <input type="text" class="form-control" id="entity-search-seller_name" placeholder="单位名称">
+	  </div>	  
+	  <div class="form-group">
+	    <label for="entity-search-order_no">业务单号</label>
+	    <input type="text" class="form-control" id="entity-search-order_no" placeholder="业务单号">
 	  </div>
 	  <div class="form-group">
-	    <label for="entity-search-seller_name">供应商</label>
-	    <input type="text" class="form-control" id="entity-search-seller_name" placeholder="供应商">
-	  </div>
-	  <div class="form-group">
-	    <label for="entity-search-seller_conn_name">业务员</label>
-	    <input type="text" class="form-control" id="entity-search-seller_conn_name" placeholder="业务员">
-	  </div>
-	  <div class="form-group" style="display:none">
-	    <label for="entity-search-order_sum_amount">金额</label>
-	    <input type="text" class="form-control" id="entity-search-order_sum_amount1" placeholder="金额">
-	    -
-	    <input type="text" class="form-control" id="entity-search-order_sum_amount2" placeholder="金额">
-	  </div>
-	  <div class="form-group">
-	    <label for="entity-search-order_status">状态</label>
-	    <select class="form-control" id="entity-search-order_status">
+	    <label for="entity-search-apply_status">申请状态</label>
+	    <select class="form-control" id="entity-search-apply_status">
 	      <option value="-1">全部</option>
-          <option value="1">待付</option>
-          <option value="2">已付</option>
-          <option value="3">拒付</option>
+	      <option value="1">待审批</option>
+	      <option value="2">审批通过</option>
+	      <option value="3">审批驳回</option>        
+        </select>
+	  </div>
+	  <div class="form-group">
+	    <label for="entity-search-backhost_status">付款状态</label>
+	    <select class="form-control" id="entity-search-backhost_status">
+	      <option value="-1">全部</option>
+          <?php foreach(TradeRecordController::getBackhostStatus() as $key => $value){
+          	    if(0 == $key){$key .= 0; }
+          		echo "<option value=\"".$key."\">".$value."</option>";          	
+          }?>         
         </select>
 	  </div>
 	  <div class="form-group">
