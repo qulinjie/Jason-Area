@@ -26,7 +26,7 @@
 
 <div class="panel panel-primary">
   <div class="panel-body">
-    <div class="form-inline">
+    <div class="form-inline">     
 	  <div class="form-group">
 	    <label for="entity-search-order_no">订单号</label>
 	    <input type="text" class="form-control" id="entity-search-order_no" placeholder="订单号">
