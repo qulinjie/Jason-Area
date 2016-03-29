@@ -61,9 +61,9 @@
 							<div class="pincode" style="display:none">
 								<input type="text" id="admin-login-pincode" class="form-control pincode" placeholder="验证码">
 									<img class="pincode-img" id="login-pincode-img"
-									   src="<?php echo Router::getBaseUrl()?>admin/pincode/xpp<?php echo rand(); ?>"
+									   src="< ?php echo Router::getBaseUrl()?>admin/pincode/xpp< ?php echo rand(); ? >"
 									   alt="点击刷新" class="img-rounded"
-									   onclick="this.src='<?php echo Router::getBaseUrl();?>admin/pincode/xpp' + Math.random();">
+									   onclick="this.src='< ?php echo Router::getBaseUrl();? >admin/pincode/xpp' + Math.random();">
 								<div class="clearfix"></div>
 							</div>
 							<label class="checkbox" style="display:none">
