@@ -172,6 +172,11 @@ class EC extends Base {
 		return true;
 	}
 	public static function fail($errno, $unlock = true){
+	    if( EC_NOT_LOGIN == $errno && $_SERVER['REQUEST_METHOD']!="POST") {
+	        $view = View::getInstance();
+	        $view->render('index', array( 'code' => $errno, 'msg' => self::$_errMsg[$errno] ));
+	        exit(0);
+	    }
 		$response_data = array(
 				'caller' => doit::$caller,
 				'callee' => doit::$callee,
