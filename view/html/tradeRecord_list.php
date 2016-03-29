@@ -104,20 +104,41 @@
                 ?>
             </td>            
             <td> 
-            <?php if($is_admin){ ?>
+            
             	<a id="audit-entity-<?php echo $item['id'];?>" value="<?php echo $item['id'];?>" class="audit-entity" href="#" data-toggle="modal" data-keyboard="false" data-backdrop="static">
-            	<?php if((2==$item['apply_status'] && 1==$item['order_status'])){
-            		echo "付款";
-            	}elseif(1==$item['apply_status']){
-            		echo "审批";
-            	}else{
-            		echo "查看";
-            	}
+            	 <?php             	 
+	            	 /*if((2==$item['apply_status'] && 1==$item['order_status'])){
+	            		echo "付款";
+	            	}elseif(1==$item['apply_status']){
+	            		echo "审批";
+	            	}else{
+	            		echo "查看";
+	            	} */
+	            	//audit_user_id_first audit_user_id_second
+	            	//apply_status 申请状态 1一级待审核 2一级审核通过 3一级审核驳回 4二级待审核 5二级审核通过 6二级审核驳回            	
+	            	//order_status 订单交易状态 1-待付款 2-已付款
+	            	if(!$is_admin && $current_user_id == $item['audit_user_id_first']){
+	            		//一级审批
+	            		if(1==$item['apply_status']){
+	            			echo "审批";
+	            		}else{
+	            			echo "查看";
+	            		}
+	            	}elseif(!$is_admin && $current_user_id == $item['audit_user_id_second']){
+	            		//二级审批
+						if(2==$item['apply_status']){
+							echo "审批";
+						}elseif(5==$item['apply_status'] && 1==$item['order_status']){
+							echo "付款";
+						}else{
+							echo "查看";
+						}
+	            	}else{
+	            		echo "查看";
+	            	}
             	?>
             	</a>
-            <?php }else{ ?> 
-            	- 
-            <?php }?></td>
+            </td>
         </tr>
     	<?php }?>
 		</tbody>

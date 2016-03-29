@@ -137,7 +137,36 @@
       <div id="div_submit_info" style="display: none;"></div>  
       <div class="alert alert-danger" id="add-entity-hint" style="display: none;"></div>  	  
   	  
-	  <div id="add-button-group" class="modal-footer">	  	
+	  <div id="add-button-group" class="modal-footer">	 
+	  	<?php 
+		  	//audit_user_id_first audit_user_id_second
+		  	//apply_status 申请状态 1一级待审核 2一级审核通过 3一级审核驳回 4二级待审核 5二级审核通过 6二级审核驳回
+		  	//order_status 订单交易状态 1-待付款 2-已付款
+		  	
+		  	$html1 = '<a id="add-entity-audit1" class="btn btn-primary" href="#">审批通过</a>
+    				 <a id="add-entity-audit2" class="btn btn-primary" href="#">审批驳回</a>';
+		  	$html2 = '<button id="add-entity-audit-pass" type="button" class="btn btn-default disabled" data-dismiss="modal">已审批</button>';
+		  	$html3 = '<button id="add-entity-pay-pass" type="button" class="btn btn-default disabled" data-dismiss="modal">已付款</button>';
+		  	$html4 = '<a id="add-entity-pay" class="btn btn-primary" href="#">付款</a>';
+		  	
+		  	if(!$is_admin && $current_user_id == $item['audit_user_id_first']){
+		  		//一级审批
+		  		if(1==$item['apply_status']){		  					  			
+					echo $html1;
+		  		}
+		  	}elseif(!$is_admin && $current_user_id == $item['audit_user_id_second']){
+		  		//二级审批
+		  		if(2==$item['apply_status']){
+		  			echo "审批";
+		  		}elseif(5==$item['apply_status'] && 1==$item['order_status']){
+		  			echo "付款";
+		  		}else{
+		  			echo "查看";
+		  		}
+		  	}else{
+		  		echo "查看";
+		  	}	  	
+	  	?> 	
 	    <?php if(1==$data_info['apply_status']){ ?>	  	
 			<a id="add-entity-audit1" class="btn btn-primary" href="#">审批通过</a>
     		<a id="add-entity-audit2" class="btn btn-primary" href="#">审批驳回</a>    		
