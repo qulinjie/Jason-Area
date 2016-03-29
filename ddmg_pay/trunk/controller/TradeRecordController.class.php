@@ -1297,6 +1297,21 @@ class TradeRecordController extends BaseController {
     		EC::fail(EC_RED_EMP);
     	}
     	
+    	//根据供货商单位名查来往单位信息
+    	$ct_params = array();
+    	$ct_params['dwmc'] = '湖南金荣钢贸有限公司';//$data['seller_name'];
+    	$user_model = $this->model('user');
+    	$ct_info_data = $user_model->erp_getContactCompanyInfo($ct_params);
+    	if(EC_OK_ERP != $ct_info_data['code']){
+    		Log::error('erp_getContactCompanyInfo Fail!');
+    		EC::fail($ct_info_data['code']);
+    	}
+    	$ct_info_data = $ct_info_data['data']['data'];
+    	$dwdm = '';
+    	if(!empty($ct_info_data) && isset($ct_info_data[0])){
+    		$dwdm = $ct_info_data[0]['dwdm'];
+    	}
+    	
     	//获取详细订单数据
     	$tradeRecordItem_model = $this->model('tradeRecordItem');    	
     	$data_list = $tradeRecordItem_model->searchList(array('trade_record_id' => $data['id']));
@@ -1309,18 +1324,18 @@ class TradeRecordController extends BaseController {
     	$params = array();
     	$params['fphm_'] = $data['apply_no']; //单据号：fphm_
     	$params['wlflag_'] = 0; //往来标识：wlflag_  固定传‘0’
-    	$params['dwdm_'] = $data['erp_fgsdm']; //单位代码：dwdm_
-    	$params['dwmc_'] = $data['erp_fgsmc']; //单位名称：dwmc_
+    	$params['dwdm_'] = $dwdm; //往来单位代码：dwdm_
+    	$params['dwmc_'] = $data['seller_name']; //往来单位名称：dwmc_
     	$params['rq_'] = $data['pay_timestamp']; //日期：rq_
     	$params['je_'] = $data['order_bid_amount']; //金额：je_
-    	$params['fky_'] = '应号对应的合伙人'; //付款人：fky_  固定传‘应号对应的合伙人’
+    	$params['fky_'] = '应号对应的合伙人'; //$data['user_id'] //付款人：fky_  固定传‘应号对应的合伙人’
     	$params['kxly_'] = $data['amount_type']; //款项类别：kxly_  ,如：货款、
-    	$params['bmmc_'] = $data['erp_bmmc']; //部门名称：bmmc_
+    	$params['bmmc_'] = ''; //部门名称：bmmc_
     	$params['ywy_'] = $bcs_data['SIT_NO']; //业务员：ywy_
     	$params['gszh_'] = $data['comp_account']; //公司帐户：gszh_（浦发银行帐号）
     	$params['gskhh_'] = $data['bank_name']; //开户银行：gskhh_（浦发银行）
-    	$params['fgs_'] = $data['seller_name']; //机构：fgs_
-    	$params['czy_'] = !empty(self::getCurrentUserId()) ? self::getCurrentUserId() : ''; //操作员：czy_
+    	$params['fgs_'] = ''; //机构：fgs_
+    	$params['czy_'] = $data['user_id']; //操作员：czy_
     	$params['sh_'] = $data['apply_status']; //审核标识：sh_
     	$params['sysdjlx_'] = 'fkd'; //单据类型：sysdjlx_ 固定传‘fkd’
 		$params['list'] = array();
@@ -1336,7 +1351,7 @@ class TradeRecordController extends BaseController {
 	    	$params2['fkdph_'] = $data['jnl_seq_no'] . '-' .$item['itme_no']; //收款单批号：fkdph_  8位流水+单据号；如00000001CWSKD002-00000020
 	    	$params2['sysrq_'] = date("Y-m-d H:i:s"); //系统日期：sysrq_ 
     		$params['list'][] = $params2;
-    	}
+    	} 
     	//Log::write(var_export($params, true), 'debug', 'debug22-'.date('Y-m-d'));
     	//exit();
     	/* Log::notice("request-data ============>> data = ##" . json_encode($params) . "##" );
@@ -1353,7 +1368,6 @@ class TradeRecordController extends BaseController {
     	$up_params['id'] = $data['id'];   	
     	$up_params['is_erp_sync'] = 2; //付款单是否同步 1否 2同步
     	$up_params['erp_sync_timestamp'] = date('Y-m-d H:i:s',time()); 
-    	$tradeRecord_model = $this->model('tradeRecord');
     	$tr_data = $tradeRecord_model->update($up_params);
     	if(EC_OK != $tr_data['code']){
     		Log::error('update order status fail!');
