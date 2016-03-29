@@ -146,7 +146,7 @@
 </div>
 
 <div id="add-button-group" style="padding-bottom: 2px;">
-    <?php if(AdminController::isLogin()){ ?>
+    <?php if(AdminController::isLogin() && strval($inout) == ''){ ?>
 	<a id="entity-loadList-btn" class="btn btn-primary" href="#">更新流水</a>
 	<?php } ?>
 </div>

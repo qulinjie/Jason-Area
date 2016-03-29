@@ -1014,8 +1014,11 @@ class TradeRecordController extends BaseController {
 //         $loginUser_data = UserController::getLoginUser();
 //         Log::notice("response-data ========33===================>> loginUser_data = ##" . json_encode($loginUser_data) . "##" );
         
-        $user_id = self::getCurrentUserId();
-        $data = $user_model->erp_getInfo(array('usercode' => $user_id));
+        $loginUser_data = UserController::getLoginUser();
+        $usercode = $loginUser_data['usercode'];
+        $erp_fgsdm = $loginUser_data['erp_fgsdm'];
+        
+        $data = $user_model->erp_getInfo(array('usercode' => $usercode, 'fgsdm' => $erp_fgsdm) );
         Log::notice("response-data ========77===================>> loginUser_data = ##" . json_encode($data) . "##" );
         if(EC_OK_ERP != $data['code']){
             Log::error('erp_getInfo Fail!');
