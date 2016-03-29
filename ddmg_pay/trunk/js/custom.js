@@ -153,9 +153,9 @@ $(function () {
         /**********************************index end*********************************************/
     } else {
         /**********************************login start*********************************************/
-    	$('#getPinCode').click(function(){
-    		this.src = BASE_PATH + 'user/getPinCode?r=' + Math.random();
-    	});
+//    	$('#getPinCode').click(function(){
+//    		this.src = BASE_PATH + 'user/getPinCode?r=' + Math.random();
+//    	});
         $('#password,#account,#pinCode').on('keydown', function (event) {
             if (event.which == 13) {
                 $('#loginBtn').click();
@@ -204,7 +204,7 @@ $(function () {
                     if (result.code != 0) {
                         $('#errorMsg').html(result.msg + '(' + result.code + ')');
                         $("#loginBtn").removeAttr('disabled').html('登录');
-                        $('#getPinCode').click();
+//                        $('#getPinCode').click();
                     } else {
                         $("#errorMsg").html('登录成功');
                         setTimeout(function () {
