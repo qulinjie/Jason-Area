@@ -39,7 +39,8 @@
                         <input type="password" class="mm" id="password" name="password" placeholder="登录密码" />
                         <input type="text" class="yz" id="pinCode" name="pinCode" placeholder="验证码" style="display:none;"/>
                         <div class="img" style="display:none;">
-                            <a href="javascript:void(0);"><img id="getPinCode" src="<?php echo Router::getBaseUrl()?>user/getPinCode"/></a>                      </div>
+                            <!--<a href="javascript:void(0);"><img id="getPinCode" src="< ?php echo Router::getBaseUrl()? >user/getPinCode"/></a> -->                     
+                        </div>
                         <div class="wj"><!--  <a href="<?php echo Router::getBaseUrl()?>findPassword/account">忘记密码，去找回！</a>--></div>
                         <input type="button" id="loginBtn" class="dl" name="loginBtn" value="登录" />
                     </form>
@@ -57,10 +58,10 @@
 <script src="<?php echo Router::getBaseUrl();?>js/base64.js"></script>
 <script src="<?php echo Router::getBaseUrl();?>js/jsbn.js"></script>
 <script src="<?php echo Router::getBaseUrl();?>js/rsa.js"></script>
-<script src="<?php echo Router::getBaseUrl(); ?>js/custom.js"></script>
+<script type="text/javascript" src="<?php echo Router::getBaseUrl(); ?>js/custom.js"></script>
 </body>
 </html>
-<script>
+<script type="text/javascript">
 jQuery(document).ready(function($) {
 	$('.theme-login').click(function(){
 		$('.theme-popover-mask').fadeIn(100);
