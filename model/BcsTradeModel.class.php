@@ -54,4 +54,8 @@ class BcsTradeModel extends CurlModel {
     public function spd_loadAccountTradeList($params = array()){
     	return self::sendRequestSelf('bcsTrade/spd_loadAccountTradeList', $params);
     }
+    
+    public function erp_syncBillsOfCollection($params = array()){
+    	return self::sendRequestErp('',$params);
+    }
 }
