@@ -222,9 +222,9 @@ $(function () {
 
 $(document).ready(function(){
 	
-	$(document).on('click', '#test_showLeftMenu', function(event){
-		showLeftMenu('div-menu-list');
-	});
+//	$(document).on('click', '#test_showLeftMenu', function(event){
+//		showLeftMenu('div-menu-list');
+//	});
 	
 	function showLeftMenu(id){
 		var menu = $('#'+id);
@@ -235,5 +235,4 @@ $(document).ready(function(){
 		}
 	}
 	
-	prettyPrint();
 });
