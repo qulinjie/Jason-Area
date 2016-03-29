@@ -18,6 +18,12 @@ class BcsTradeController extends BaseController {
                 case 'searchList':
                     $this->searchList();
                     break;
+                case 'getIndex_in':
+                    $this->searchList(true,'1');
+                    break;
+                case 'getIndex_out':
+                    $this->searchList(true,'0');
+                    break;
 //                 case 'getInfo':
 //                     $this->getInfo();
 //                     break;
@@ -211,7 +217,7 @@ class BcsTradeController extends BaseController {
         }
     }
     
-    protected function searchList($isIndex = false) {
+    protected function searchList($isIndex = false,$inout = '') {
         $current_page = Request::post('page');
         $seller_name = Request::post('seller_name'); // 收款方
         $time1 = Request::post('time1');
@@ -249,7 +255,12 @@ class BcsTradeController extends BaseController {
             if($$val) $params[$val] = $$val;
         }
     
-//         $params['debitCreditFlag'] = strval($inout);
+        if( 0 == strlen(strval($inout)) ){
+            $inout = Request::post('inout');
+        }
+        if( 0 < strlen(strval($inout)) ){
+            $params['debitCreditFlag'] = strval($inout);
+        }
         
         $data_cnt = $bcsTrade_model->searchCnt($params);
         if(EC_OK != $data_cnt['code']){
@@ -282,8 +293,8 @@ class BcsTradeController extends BaseController {
     
         $entity_list_html = $this->render('bcsTrade_list', array('data_list' => $data_list, 'current_page' => $current_page, 'total_page' => $total_page), true);
         if($isIndex) {
-            $view_html = $this->render('bcsTrade', array('entity_list_html' => $entity_list_html ), true);
-            $this->render('index', array('page_type' => 'bcsTrade', 'bcsTrade_html' => $view_html));
+            $view_html = $this->render('bcsTrade', array('entity_list_html' => $entity_list_html,'inout' => strval($inout) ), true);
+            $this->render('index', array('page_type' => 'bcsTrade', 'bcsTrade_html' => $view_html,'inout' => strval($inout) ));
         } else {
             EC::success(EC_OK, array('entity_list_html' => $entity_list_html));
         }

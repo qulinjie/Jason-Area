@@ -103,6 +103,7 @@
   <div class="panel-heading">查找</div>
   <div class="panel-body">
     <div class="form-inline">
+        <input type="hidden" class="form-control" id="entity-search-inout" value="<?php echo $inout; ?>">
       <div class="form-group">
 	    <label for="entity-search-FMS_TRANS_NO">交易流水号</label>
 	    <input type="text" class="form-control" id="entity-search-FMS_TRANS_NO" placeholder="交易流水号">

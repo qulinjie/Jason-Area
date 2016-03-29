@@ -88,6 +88,7 @@ function search_entity(page){
 	var amount2 = $("#entity-search-amount2").val();
 	var s_account = $("#entity-search-s_account").val();
 	var b_account = $("#entity-search-b_account").val();
+	var inout = $("#entity-search-inout").val();
 	
 	if(-1 == status) { status =""; }
 	
@@ -103,6 +104,7 @@ function search_entity(page){
 	    	'amount2':amount2,
 	    	's_account':s_account,
 	    	'b_account':b_account,
+	    	'inout':inout,
 	        'page':page
         },
         function(result){
