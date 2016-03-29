@@ -78,15 +78,22 @@ class TestController extends BaseController
                 $this->spd_EG30();
                 break;
                 
-            case 'test_sr':
-                $this->test_sr();
+            case 'test_Login':
+                $this->test_Login();
                 break;
-            case 'test_sr2':
-                $this->test_sr2();
+            case 'test_GetList':
+                $this->test_GetList();
                 break;
-            case 'test_sr3':
-                $this->test_sr3();
+            case 'test_SKDCreate':
+                $this->test_SKDCreate();
                 break;
+            case 'test_wldw':
+                $this->test_wldw();
+                break;
+            case 'test_sendsmscode':
+                $this->test_sendsmscode();
+                break;
+                
                 
             case 'test_self':
                 $this->test_self();
@@ -587,8 +594,9 @@ class TestController extends BaseController
     }
     
     
-    public function test_sr(){
-        $interface = "http://test-api.gt-xx.com/api/pub/userservice/PostUser_Login/";
+    public static $erp_url = 'http://test-api.gt-xx.com';
+    public function test_Login(){
+        $interface = self::$erp_url . "/api/pub/userservice/PostUser_Login/";
         $data = array();
         $data['loginid'] = '110002';
         $data['userpwd'] = '1';
@@ -599,8 +607,8 @@ class TestController extends BaseController
         EC::success(EC_OK,$data);
     }
     
-    public function test_sr2(){
-        $interface = "http://test-api.gt-xx.com/api/pub/userservice/PostUser_GetList/";
+    public function test_GetList(){
+        $interface = self::$erp_url . "/api/pub/userservice/PostUser_GetList/";
         $data = array();
         $data['is_paymanage'] = '2';
     
@@ -610,11 +618,42 @@ class TestController extends BaseController
         EC::success(EC_OK,$data);
     }
     
-    public function test_sr3(){
+    public function test_SKDCreate(){
         $interface = "http://test-api.gt-xx.com/api/pub/FinanceService/PostCW_SKDCreate/";
         $data = array();
         $data['name'] = '大汉电子商务有限公司';
     
+        $model = $this->model('test');
+        $data = $model->test_sendRequest($interface, $data);
+    
+        EC::success(EC_OK,$data);
+    }
+    
+    public function test_wldw(){
+        $interface = self::$erp_url . "/api/pub/ErpService/PostERP_wldw/";
+        $data = array();
+        //$data['dwmc'] = '大汉电子商务有限公司';
+        $data['dwmc'] = '成都金万丰钢铁有限公司';
+    
+        $model = $this->model('test');
+        $data = $model->test_sendRequest($interface, $data);
+    
+        EC::success(EC_OK,$data);
+    }
+    
+    public function test_sendsmscode(){
+        $interface = self::$erp_url . "/api/pub/KKunService/PostKKun_sendsmscode/";
+        
+        // 尊敬的客户，【Value1】已提交支付，支付【Value2】为【Value3】，请及时跟进。感谢您的支持【Value4】
+        $data = array();
+        $data['tel'] = '13265431549';
+        $data['codetype'] = '10';
+        
+        $data['value1'] = '大汉电子商务有限公司 ';
+        $data['value2'] = '金额';
+        $data['value3'] = '23000元';
+        $data['value4'] = '!';
+        
         $model = $this->model('test');
         $data = $model->test_sendRequest($interface, $data);
     
