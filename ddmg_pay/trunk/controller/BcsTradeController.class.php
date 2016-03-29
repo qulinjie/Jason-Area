@@ -755,6 +755,7 @@ class BcsTradeController extends BaseController {
                     Log::error('addAccountTradeList . create bcsCustomer error . code='. $data_rs['code'] . ',msg=' . $data_rs['msg'] );
                     continue;
                 }
+                
                 Log::notice('addAccountTradeList ==== >>> add-data-end=##' . $obj['virtualAcctName'] . "##");
             }
         }
@@ -811,6 +812,7 @@ class BcsTradeController extends BaseController {
         
     }
     
+    //收款单同步erp
     public function erp_syncBillsOfCollection($id = NULL){
     	$id = ($id == NULL) ? intval(Request::post('id')) : intval($id);
     	 
@@ -836,6 +838,12 @@ class BcsTradeController extends BaseController {
     	if(1 != $data['debitCreditFlag']){
     		Log::error('the bcsTrade debitCreditFlag is' . $data['debitCreditFlag'] . '!');
     		EC::fail(EC_RED_EXP);
+    	}
+    	
+    	//判断是否已同步erp
+    	if(2 == $data['is_erp_sync']){
+    		Log::error("the bcsTrade has been sync erp: is_erp_sync={$data['is_erp_sync']}!");
+    		EC::fail(EC_REC_EST);
     	}
     	 
     	//查合伙人信息
@@ -911,4 +919,61 @@ class BcsTradeController extends BaseController {
     
     	EC::success(EC_OK);
     }
+    
+    //收款后发送短信给用户
+    public function sendSmsCodeForCollection($ACCOUNT_NO, $payer, $amount){
+    	
+    	if(empty($ACCOUNT_NO) || empty($payer) || empty($amount)){
+    		Log::error('empty args!');
+    		EC::fail(EC_PAR_ERR);
+    	}
+    	
+    	//查合伙人信息
+    	$bcs_params  = array();
+    	$bcs_params['ACCOUNT_NO'] = $ACCOUNT_NO;
+    	$bcsCustomer_model = $this->model('bcsCustomer');
+    	$bcs_data = $bcsCustomer_model->getInfo($bcs_params);
+    	if(EC_OK != $bcs_data['code'] || !is_array($bcs_data) || !isset($bcs_data['data'])){
+    		Log::error("bcsCustomer getInfo failed . ");
+    		EC::fail(EC_USR_NON);
+    	}
+    	$bcs_data = $bcs_data['data'][0];
+    	if(empty($bcs_data)) {
+    		Log::error('bcsCustomer getInfo empty !');
+    		EC::fail(EC_RED_EMP);
+    	}
+    	
+    	//根据user_id查erp接口得到电话等信息    	
+    	$user_data = array();
+    	$user_model = $this->model('user');
+    	$user_data = $user_model->erp_getInfo(array('usercode' => $bcs_data['user_id']));
+    	if(EC_OK_ERP != $user_data['code']){
+    		Log::error('erp_getInfo Fail!');
+    		EC::fail($user_data['code']);
+    	}
+    	$user_data = $user_data['data'];
+    	if(empty($user_data) || !isset($user_data['mobile']) || empty($user_data['mobile'])){
+    		Log::error('mobile is empty!');
+    		EC::fail(EC_DATA_EMPTY_ERR);
+    	}
+    	    		
+    	// 尊敬的客户，【Value1】已提交支付，支付【Value2】为【Value3】，请及时跟进。感谢您的支持【Value4】
+    	$data = array();
+    	$data['tel'] = '13367310112';//$user_data['mobile']; //电话
+    	$data['codetype'] = '10';    
+    	$data['value1'] = $payer; //付款公司名称
+    	$data['value2'] = '金额'; 
+    	$data['value3'] = $amount.'元';
+    	$data['value4'] = '!';
+    
+    	Log::write("user_data==".var_export($user_data, true), 'debug', 'debug123-'.date('Y-m-d'));
+    	 
+    	Log::notice("request-data ============>> data = ##" . json_encode($data) . "##" );
+    	$BcsTrade_model = $this->model('bcsTrade');
+    	$res_data = $BcsTrade_model->erp_sendSmsCode($data);
+    	Log::notice("response-data ============>> res_data = ##" . json_encode($res_data) . "##" );
+    	
+    	EC::success(EC_OK, $res_data);
+    }
+    
 }
