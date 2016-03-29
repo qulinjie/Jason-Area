@@ -43,6 +43,9 @@
        <input type="hidden" id="add-entity-erp_fgsdm" value="<?php echo $data_info['erp_fgsdm'];?>"></input>
        <input type="hidden" id="add-entity-erp_bmdm" value="<?php echo $data_info['erp_bmdm'];?>"></input>
        
+       <input type="hidden" id="add-entity-ACCOUNT_NO" value="<?php echo $data_info['ACCOUNT_NO'];?>"></input><!-- 合伙人虚拟账号  -->
+       <input type="hidden" id="add-entity-record_bank_type" value="<?php echo $data_info['record_bank_type'];?>"></input><!-- 合伙人 开户银行 1-长沙 2-浦发  -->
+       
        <div class="form-group">
 	    <label for="add-entity-apply_no" class="col-sm-2 control-label">申请单号</label>
 	    <div class="col-sm-4">

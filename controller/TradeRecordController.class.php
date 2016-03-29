@@ -998,6 +998,7 @@ class TradeRecordController extends BaseController {
     private function createApply(){
         $data_info = array();
         
+        $bcsCustomer_model = $this->model('bcsCustomer');
         $tradeRecord_model = $this->model('tradeRecord');
         $user_model = $this->model('user');
         
@@ -1031,6 +1032,17 @@ class TradeRecordController extends BaseController {
         $data_info['erp_fgsmc'] = $loginUser_data['erp_fgsmc'];
         $data_info['erp_bmmc'] = $loginUser_data['erp_bmmc'];
         $data_info['erp_username'] = $loginUser_data['username'];
+        
+        
+        $user_info_data = $bcsCustomer_model->getInfo(array('user_id' => $usercode));
+        if(EC_OK != $user_info_data['code']){
+            Log::error("getInfo failed . ");
+        }
+        $user_info_data = $user_info_data['data'][0];
+        if( !empty($user_info_data) ){
+            $data_info['ACCOUNT_NO'] = $user_info_data['ACCOUNT_NO'];
+            $data_info['record_bank_type'] = $user_info_data['record_bank_type'];
+        }
         
         $view_html = $this->render('tradeRecordCreate', array('data_info' => $data_info), true);
         $this->render('index', array('page_type' => 'tradeRecord', 'tradeRecordCreate_html' => $view_html) );
