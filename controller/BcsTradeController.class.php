@@ -811,5 +811,104 @@ class BcsTradeController extends BaseController {
         
     }
     
+    public function erp_syncBillsOfCollection($id = NULL){
+    	$id = ($id == NULL) ? intval(Request::post('id')) : intval($id);
+    	 
+    	Log::notice("erp_syncBillsOfCollection ===========================>> id=" .$id );
+    	if(empty($id)){
+    		Log::error('id empty !');
+    		EC::fail(EC_PAR_ERR);
+    	}
+    	 
+    	//根据id查流水的数据
+    	$bcsTrade_model = $this->model('bcsTrade');
+    	$data = $bcsTrade_model->getInfo(array('id' => $id));
+    	if(empty($data) || !is_array($data) || EC_OK != $data['code'] || !isset($data['data'])) {
+    		Log::error('bcsTrade getInfo empty !');
+    		EC::fail(EC_DAT_NON);
+    	}
+    	$data = $data['data'][0];
+    	if(empty($data)) {
+    		Log::error('bcsTrade getInfo empty !');
+    		EC::fail(EC_RED_EMP);
+    	}
+    	//必须为收款
+    	if(1 != $data['debitCreditFlag']){
+    		Log::error('the bcsTrade debitCreditFlag is' . $data['debitCreditFlag'] . '!');
+    		EC::fail(EC_RED_EXP);
+    	}
+    	 
+    	//查合伙人信息
+    	$params  = array();
+    	$params['ACCOUNT_NO'] = $data['ACCOUNT_NO'];
+    	$bcsCustomer_model = $this->model('bcsCustomer');
+    	$bcs_data = $bcsCustomer_model->getInfo($params);
+    	//Log::write("bcs_data==".var_export($bcs_data, true), 'debug', 'debug-'.date('Y-m-d'));
+    	if(EC_OK != $bcs_data['code'] || !is_array($bcs_data) || !isset($bcs_data['data'])){
+    		Log::error("bcsCustomer getInfo failed . ");
+    		EC::fail(EC_USR_NON);
+    	}
+    	$bcs_data = $bcs_data['data'][0];
+    	if(empty($bcs_data)) {
+    		Log::error('bcsCustomer getInfo empty !');
+    		EC::fail(EC_RED_EMP);
+    	}
+    	 
+    	/*
+    	 "head":{
+    	"dwmc":"某某单位",
+    	"rq":"2016-5-1",
+    	"je":1000,
+    	"usercode":"000017",
+    	"gszh":"43001539061052504886",
+    	"gskhh":"中国建设银行",
+    	"zh":"800222699208866",
+    	"khh":"广州银行东圃支行"
+    	},
+    	"details":[{
+    	"xh":"1",
+    	"je":"11.8"
+    	}]
+    	*/
+    	 
+    	$head = array();
+    	$head['dwmc_'] = $data['oppositeAcctName']; //单位名称
+    	$head['rq'] = $data['TRANS_TIME']; //日期
+    	$head['je'] = $data['TX_AMT']; //金额
+    	$head['usercode'] = $bcs_data['user_id'];
+    	$head['gszh'] = $data['oppositeAcctNo']; //付款公司账号
+    	$head['gskhh'] = $data['oppositeAcctName']; //付款开户行
+    	$head['zh'] = $data['ACCOUNT_NO']; //收款账号
+    	$head['khh'] = $bcs_data['SIT_NO']; //收款开户行
+    	 
+    	$details = array();
+    	$details['xh'] = $data['MCH_TRANS_NO']; //序号
+    	$details['je'] = $data['TX_AMT']; //金额
+    	 
+    	$params = array();
+    	$params['head'] = $head;
+    	$params['details'] = $details;
     
+    	Log::notice("request-data ============>> params = ##" . json_encode($params) . "##" );
+    	$bcsTrade_model = $this->model('bcsTrade');
+    	$res_data = $bcsTrade_model->erp_syncBillsOfCollection($params);
+    	if(EC_OK_ERP != $res_data['code']){
+    		Log::error('erp_syncBillsOfCollection Fail!');
+    		EC::fail($res_data['code']);
+    	}
+    	Log::notice("response-data ============>> res_data = ##" . json_encode($res_data) . "##" );
+    	 
+    	//修改同步状态
+    	$up_params = array();
+    	$up_params['id'] = $data['id'];
+    	$up_params['is_erp_sync'] = 2; //付款单是否同步 1否 2同步
+    	$up_params['erp_sync_timestamp'] = date('Y-m-d H:i:s',time());
+    	$bt_data = $bcsTrade_model->update($up_params);
+    	if(EC_OK != $bt_data['code']){
+    		Log::error('update bcsTrade is_erp_sync status fail!');
+    		EC::fail($bt_data['code']);
+    	}
+    
+    	EC::success(EC_OK);
+    }
 }
