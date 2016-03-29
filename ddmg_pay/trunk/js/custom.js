@@ -220,3 +220,20 @@ $(function () {
 
 });
 
+$(document).ready(function(){
+	
+	$(document).on('click', '#test_showLeftMenu', function(event){
+		showLeftMenu('div-menu-list');
+	});
+	
+	function showLeftMenu(id){
+		var menu = $('#'+id);
+		if( "block" == menu.css("display") ){
+			menu.css("display","none");
+		} else {
+			menu.css("display","block");
+		}
+	}
+	
+	prettyPrint();
+});
