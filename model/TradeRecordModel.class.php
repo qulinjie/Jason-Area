@@ -77,11 +77,7 @@ class TradeRecordModel extends CurlModel {
     public function erp_syncBillsOfPayment($params = array()){
     	return self::sendRequestErp('',$params);
     }
-    
-    public function erp_syncBillsOfCollection($params = array()){
-    	return self::sendRequestErp('',$params);
-    }
-    
+        
     public function auditOneTradRecord($params = array()){
     	return self::sendRequest('tradeRecord/auditOneTradRecord/',$params);
     }
