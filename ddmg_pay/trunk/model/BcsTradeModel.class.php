@@ -55,7 +55,13 @@ class BcsTradeModel extends CurlModel {
     	return self::sendRequestSelf('bcsTrade/spd_loadAccountTradeList', $params);
     }
     
+    //收款单同步erp
     public function erp_syncBillsOfCollection($params = array()){
     	return self::sendRequestErp('',$params);
+    }
+    
+    //短信发送erp
+    public function erp_sendSmsCode($params = array()){
+    	return self::sendRequestErp('/api/pub/KKunService/PostKKun_sendsmscode/',$params);
     }
 }
