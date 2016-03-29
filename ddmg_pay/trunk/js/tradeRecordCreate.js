@@ -718,6 +718,8 @@ $(document).on('click', '#for-test-btn', function(event){
 	});
 	
 	var bank_account_list = new Array();
+	var city_name_list = new Array();
+	var bank_name_list = new Array();
 	function renderBankSelectLi(dataList){
 		var width = $("#add-entity-bank_name").css('width');
 		$("#div_data_bank").css("width",width);
@@ -727,7 +729,9 @@ $(document).on('click', '#for-test-btn', function(event){
 		var objUl = $("#div_data_bank ul");
 		objUl.html('');
 		for(var j=0;j<dataList.length;j++){
-			bank_account_list.push(dataList[j]['zh'])
+			bank_account_list.push(dataList[j]['zh']);
+			city_name_list.push(dataList[j]['cityname']);
+			bank_name_list.push(dataList[j]['bankname']);
 			var li = "<li>" + dataList[j]['khh'] + "</li>";
 			objUl.append(li);
 		}
@@ -750,6 +754,7 @@ $(document).on('click', '#for-test-btn', function(event){
 					$("#add-entity-bank_name").val(selVal);
 					if(bank_account_list[i]){
 						$("#add-entity-comp_account").val(bank_account_list[i]);
+						setBankDomain(i);
 					}
 					$('#check-entity-bankName').click(); // 验证开户行
 				}
@@ -758,9 +763,28 @@ $(document).on('click', '#for-test-btn', function(event){
 		});
 	}
 	
+	function setBankDomain(index){
+//		alert(index);
+		if('2' == $('#add-entity-record_bank_type').val() ){
+			if( '浦发银行' == bank_name_list[index] ){
+				$('#add-entity-bank_flag').val('0'); // 0-同行 1-跨行
+				$('#add-entity-bank_flag').change();
+			} else {
+				$('#add-entity-bank_flag').val('1'); // 0-同行 1-跨行
+				$('#add-entity-bank_flag').change();
+				if( '长沙' == city_name_list[index] ){
+					$('#add-entity-local_flag').val('0'); // 0-同城 1-异地
+				} else {
+					$('#add-entity-local_flag').val('1'); // 0-同城 1-异地
+				}
+			}
+		}
+//		alert(index);
+	}
+	
 	// 同行/跨行
 	$('#add-entity-bank_flag').on('change',function(event){
-		if('1' == $('#add-entity-bank_flag').val() ){
+		if('1' == $('#add-entity-bank_flag').val() ){ // 0-同行 1-跨行
 			$('#span_local_flag').css("display","block");
 		} else {
 			$('#span_local_flag').css("display","none");
