@@ -19,7 +19,12 @@ class TradeRecordController extends BaseController {
                 case 'searchList':
                     $this->searchList();
                     break;
-                    
+                case 'searchListFrist':
+                    $this->searchList(false, 1);
+                   	break;
+                case 'searchListSecond':
+                    $this->searchList(false, 2);
+                    break;
                     // str-收款单
                 case 'getIndexBill':
                     $this->searchListBill(true);
@@ -96,7 +101,7 @@ class TradeRecordController extends BaseController {
         }
     }
     
-    protected function searchList($isIndex = false) {
+    protected function searchList($isIndex = false, $audit_level=NULL) {
         $current_page = Request::post('page');
         $order_no = Request::post('order_no');
         $code = Request::post('code');
@@ -119,7 +124,7 @@ class TradeRecordController extends BaseController {
 //         if($isIndex && !$order_status) {
 //             $order_status = TradeRecordModel::$_status_waiting;
 //         }
-        
+
         $bcsCustomer_model = $this->model('bcsCustomer');
         $params  = array();
         $params['user_id'] = $user_id;
@@ -131,15 +136,6 @@ class TradeRecordController extends BaseController {
         $data_info = $data['data'][0];
         $ACCOUNT_NO = $data_info['ACCOUNT_NO'];
         
-        $params  = array();
-        foreach ([ 'order_no', 'user_id', 'code', 'time1', 'time2', 'type', 'order_status', 'apply_status',
-                    'backhost_status', 'order_time1', 'order_time2', 'seller_name', 'seller_conn_name', 'order_sum_amount1', 'order_sum_amount2',
-                    'ACCOUNT_NO'
-                ] as $val)
-        {
-            if($$val) $params[$val] = $$val;
-        }
-        
         $is_admin = AdminController::isAdmin();
         //非管理员必须要求user_id
         if(!$is_admin){
@@ -147,11 +143,29 @@ class TradeRecordController extends BaseController {
         		Log::error("searchList failed . ");
         		EC::fail(EC_PAR_ERR);
         	}
+        	if(1 == $audit_level){
+        		//一级审核
+        		$params['audit_user_id_first'] =  $params['user_id'];
+        		unset($params['user_id']);
+        	}elseif (2 == $audit_level){
+        		//二级审核
+        		$params['audit_user_id_second'] = $params['user_id'];
+        		unset($params['user_id']);
+        	}
         }else{
-        	if(isset($params['user_id'])){	
+        	if(isset($params['user_id'])){
         		unset($params['user_id']);
         	}
         }
+        
+        $params  = array();
+        foreach ([ 'order_no', 'user_id', 'audit_user_id_first', 'audit_user_id_second', 'code', 'time1', 'time2', 'type', 'order_status', 'apply_status',
+                    'backhost_status', 'order_time1', 'order_time2', 'seller_name', 'seller_conn_name', 'order_sum_amount1', 'order_sum_amount2',
+                    'ACCOUNT_NO'
+                ] as $val)
+        {
+            if($$val) $params[$val] = $$val;
+        }        
     
         $data_cnt = $tradeRecord_model->searchCnt($params);
         if(EC_OK != $data_cnt['code']){
@@ -181,19 +195,19 @@ class TradeRecordController extends BaseController {
         }
     
         $data_list = $data['data'] ? $data['data'] : [];
-        $tradeRecordItem_model = $this->model('tradeRecordItem');
+//        $tradeRecordItem_model = $this->model('tradeRecordItem');
         
-        foreach ($data_list as $key => $val){
-            $data = $tradeRecordItem_model->searchList(array('trade_record_id' => $val['id']));
-            if($data['code'] !== EC_OK){
-                Log::error('tradeRecordItem searchList error');
-            }            
-            $data_list[$key]['list'] = $data['data'] ? $data['data'] : [];
-        }
+//         foreach ($data_list as $key => $val){
+//             $data = $tradeRecordItem_model->searchList(array('trade_record_id' => $val['id']));
+//             if($data['code'] !== EC_OK){
+//                 Log::error('tradeRecordItem searchList error');
+//             }            
+//             $data_list[$key]['list'] = $data['data'] ? $data['data'] : [];
+//         }
         
-        $entity_list_html = $this->render('tradeRecord_list', array('is_admin' => $is_admin, 'data_list' => $data_list, 'current_page' => $current_page, 'total_page' => $total_page), true);
+        $entity_list_html = $this->render('tradeRecord_list', array('is_admin' => $is_admin, 'current_user_id' => $user_id, 'data_list' => $data_list, 'current_page' => $current_page, 'total_page' => $total_page), true);
         if($isIndex) {
-            $view_html = $this->render('tradeRecord', array('is_admin' => $is_admin, 'entity_list_html' => $entity_list_html ), true);
+            $view_html = $this->render('tradeRecord', array('is_admin' => $is_admin, 'current_user_id' => $user_id, 'entity_list_html' => $entity_list_html ), true);
             $this->render('index', array('page_type' => 'tradeRecord', 'tradeRecord_html' => $view_html, 'bcsCustomerInfo' => $data_info) );
         } else {
             EC::success(EC_OK, array('entity_list_html' => $entity_list_html));
@@ -1295,7 +1309,7 @@ class TradeRecordController extends BaseController {
     		EC::fail(EC_REC_EST);
     	}
     	    	
-    	//查付款人信息
+    	//查合伙人信息
     	$bcs_params  = array();
     	$bcs_params['user_id'] = $data['user_id'];
     	//Log::write("user_id==".$data['user_id'], 'debug', 'debug-'.date('Y-m-d'));
@@ -1312,7 +1326,7 @@ class TradeRecordController extends BaseController {
     		EC::fail(EC_RED_EMP);
     	}
     	
-    	//根据供货商单位名查来往单位信息
+    	//根据供货商单位名查erp接口来往单位信息
     	$ct_params = array();
     	$ct_params['dwmc'] = '湖南金荣钢贸有限公司';//$data['seller_name'];
     	$user_model = $this->model('user');
@@ -1392,6 +1406,7 @@ class TradeRecordController extends BaseController {
     	EC::success(EC_OK);
     }        
 
+    //审批付款申请
     protected function auditOneTradRecord(){
     	$id = Request::post('id');
     	$apply_status = Request::post('apply_status');    	
