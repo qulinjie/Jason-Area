@@ -288,11 +288,23 @@
 			    <li <?php if(doit::$controller == 'BcsCustomer' && doit::$params[0] !='getInflow' && doit::$params[0] !='getIncomePay'){?> class="active" <?php } ?>>
         			<a href="<?php echo Router::getBaseUrl();?>bcsCustomer/getInfo">账户信息</a>
         	    </li>
-        	    <li <?php if(doit::$controller == 'BcsTrade'){?> class="active" <?php } ?>>
+        	    <li <?php if(doit::$controller == 'BcsTrade'  && strval($inout) == ''){?> class="active" <?php } ?>>
         			<a href="<?php echo Router::getBaseUrl();?>bcsTrade/getIndex">收支明细</a>
         	    </li>
-        	    <li <?php if(doit::$controller == 'TradeRecord'){?> class="active" <?php } ?>>
+        	    <li>
+        	       <a href="#" style="color: black;font-size: 16px;">收款管理</a>
+        	    </li>
+        	    <li <?php if(doit::$controller == 'BcsTrade' && strval($inout) == '1'){?> class="active" <?php } ?> style="margin-left: 35px;">
+        			<a href="<?php echo Router::getBaseUrl();?>bcsTrade/getIndex_in">收款明细</a>
+        	    </li>
+        	    <li>
+        	       <a href="#" style="color: black;font-size: 16px;">付款管理</a>
+        	    </li>
+        	    <li <?php if(doit::$controller == 'TradeRecord'){?> class="active" <?php } ?> style="margin-left: 35px;">
         			<a href="<?php echo Router::getBaseUrl();?>tradeRecord/getIndex">申请付款</a>
+        	    </li>
+        	    <li <?php if(doit::$controller == 'BcsTrade' && strval($inout) == '0'){?> class="active" <?php } ?> style="margin-left: 35px;">
+        			<a href="<?php echo Router::getBaseUrl();?>bcsTrade/getIndex_out">付款明细</a>
         	    </li>
         	    <!--  
         	    <li <?php if(doit::$controller == 'TradeRecord' && doit::$params[0] =='getIndexBill'){?> class="discolor" <?php } ?>>
