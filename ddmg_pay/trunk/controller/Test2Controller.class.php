@@ -126,7 +126,7 @@ class Test2Controller extends BaseController
         $params = [
             'BANK_CODE'               => '',   // 查询参数（行号） 313551080003
             'BANK_NAME'               => '长沙银行股份有限公司联汇支行',   // 查询参数（行名） 长沙银行股份有限公司联汇支行
-            'IS_VAGUE'               => '0',   // 是否模糊查询 0:不是 1:是
+            'IS_VAGUE'               => '1',   // 是否模糊查询 0:不是 1:是
             'PAGE_SIZE'               => '10',   // 页码条数
             'PAGE_NUMBER'               => '1'   // 查询页码
         ];
@@ -195,7 +195,7 @@ class Test2Controller extends BaseController
     
         $mch_no  = $this->getMCH_NO(); // 商户编号
         $sit_no = 'DDMG1113';
-        $trans_fee = 1.5;
+        $trans_fee = '0';
         
         $data = $bank_model->customerOutflow( $mch_no, $sit_no, $mch_trans_no, $curr_cod, $trans_amt, $trans_fee );
         Log::notice('==== >>> customerOutflow response=##' . json_encode($data) . '##');
