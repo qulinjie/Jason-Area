@@ -89,9 +89,16 @@ function search_entity(page){
 	
 	var spanLoading = $('#span-trade-order-list');
 	spanLoading.html("<div style='width:100%;text-align:center;height:" + spanLoading.height() + "px;'><img alt='正在加载数据...' src='" + BASE_PATH + "view/images/tips_loading.gif'/></div>");
+		
+	var url = 'tradeRecord/searchList';
+	var pathname = window.location.pathname;
+	var start = pathname.indexOf("tradeRecord");
+	if(start > 0){
+		url = pathname.substring(start);		
+	}
 	
     //查找
-    $.post(BASE_PATH + 'tradeRecord/searchList', {
+    $.post(BASE_PATH + url, {
 	    	'order_no':order_no, 
 	    	'time1':time1,
 	    	'time2':time2,
@@ -455,15 +462,17 @@ $(document).on('click', '.audit-entity', function(event){
 	
 	$("#audit-entity-hint").html('').fadeOut();
 	
-	var id = $(this).attr("id").replace('audit-entity-', '');	
-	loadOneAuditTradRecord(id);
+	var v = $(this).attr("id").replace('audit-entity-', '');
+	var arr = v.split('-');
+	loadOneAuditTradRecord(arr[0], arr[1]);
 });
 
-function loadOneAuditTradRecord(id){	
+function loadOneAuditTradRecord(id, audit_level){	
 	$('#audit-entity-list').html("<div style='width:100%;text-align:center;'><img alt='正在加载数据...' src='" + BASE_PATH + "view/images/tips_loading.gif'/></div>");
 	//查找
     $.post(BASE_PATH + 'tradeRecord/getOneTrandRecord', {    		
-	        'id':id
+	        'id':id,
+	        'audit_level':audit_level
         },
         function(result){        	
             if(result.code != 0) {
@@ -478,25 +487,26 @@ function loadOneAuditTradRecord(id){
     );
 }
 
+//apply_status 申请状态 1一级待审核 2一级审核通过 3一级审核驳回 4二级待审核 5二级审核通过 6二级审核驳回
 $(document).on('click', '#add-entity-audit1', function(event){
-	if(confirm("审批通过会进行付款，您确定通过吗？")){
+	if(confirm("您确定通过审批吗？")){
 		$("#add-entity-audit1").html("提交审批中...");
 		$("#add-entity-audit1").attr('disabled', 'disabled');
 		$("#add-entity-audit2").attr('disabled', 'disabled').hide();
-		auditOneTradRecord(2);
+		auditOneTradRecord1(2);
 	}	
 });
 
 $(document).on('click', '#add-entity-audit2', function(event){	
-	if(confirm("确定审批驳回吗？")){
+	if(confirm("您确定审批驳回吗？")){
 		$("#add-entity-audit2").html("提交审批中...");
 		$("#add-entity-audit1").attr('disabled', 'disabled').hide();
 		$("#add-entity-audit2").attr('disabled', 'disabled');
-		auditOneTradRecord(3);
+		auditOneTradRecord1(3);
 	}	
 });
 
-function auditOneTradRecord(apply_status){	
+function auditOneTradRecord1(apply_status){	
 	var id = $("#info-entity-id").val();	
 	$.post(BASE_PATH + 'tradeRecord/auditOneTradRecord', {    		
 	        'id':id,
@@ -506,7 +516,9 @@ function auditOneTradRecord(apply_status){
 	    	var hint_html = '';	 
 	    	$("#add-entity-hint").html('提交审批中...').fadeIn();	
 	        if(result.code != 0) {	        	
-	            $("#add-entity-hint").html('审批操作失败：'+ result.msg + '(' + result.code + ')').fadeIn();
+	        	hint_html = $("#add-entity-hint").html();	            
+	            hint_html += (hint_html == '' ? '' : '<BR>') + '审批操作失败：'+ result.msg + '(' + result.code + ')' ;
+	        	$("#add-entity-hint").html(hint_html).fadeIn();	
 	            if(apply_status == 2){
 	            	$("#add-entity-audit1").html("审批通过");
 	            }else{
@@ -517,11 +529,9 @@ function auditOneTradRecord(apply_status){
 	        }else {	       
 	        	hint_html = $("#add-entity-hint").html();
 	        	hint_html += (hint_html == '' ? '' : '<BR>') + '审批操作：' + result.msg ;
-	        	$("#add-entity-hint").html(hint_html).fadeIn();	
-	        	$("#add-entity-audit1").html("已审批");
+	        	$("#add-entity-hint").html(hint_html).fadeIn();
 	        	if(apply_status == 2){
-	        		sendTransferTrade1();
-	        		return;
+	        		$("#add-entity-audit1").html("已审批");
 	        	}else{
 	        		$("#add-entity-audit2").html("已驳回");
 	        	}
@@ -531,7 +541,69 @@ function auditOneTradRecord(apply_status){
                 setTimeout(function(){
                 	$('#add-entity-cancel').click();                	
                 	search_entity($("#entity-current-page").html());
-                }, 1000);
+                }, 1500);
+	        }
+	    },
+	    'json'
+	);
+}
+
+$(document).on('click', '#add-entity-audit21', function(event){
+	if(confirm("审批通过后会进行付款，您确定通过审批吗？")){
+		$("#add-entity-audit21").html("提交审批中...");
+		$("#add-entity-audit21").attr('disabled', 'disabled');
+		$("#add-entity-audit22").attr('disabled', 'disabled').hide();
+		auditOneTradRecord2(5);
+	}	
+});
+
+$(document).on('click', '#add-entity-audit22', function(event){	
+	if(confirm("您确定审批驳回吗？")){
+		$("#add-entity-audit22").html("提交审批中...");
+		$("#add-entity-audit21").attr('disabled', 'disabled').hide();
+		$("#add-entity-audit22").attr('disabled', 'disabled');
+		auditOneTradRecord2(6);
+	}	
+});
+
+function auditOneTradRecord2(apply_status){	
+	var id = $("#info-entity-id").val();	
+	$.post(BASE_PATH + 'tradeRecord/auditOneTradRecord', {    		
+	        'id':id,
+	        'apply_status':apply_status
+	    },
+	    function(result){
+	    	var hint_html = '';	 
+	    	$("#add-entity-hint").html('提交审批中...').fadeIn();	
+	        if(result.code != 0) {
+	        	hint_html = $("#add-entity-hint").html();	            
+	            hint_html += (hint_html == '' ? '' : '<BR>') + '审批操作失败：'+ result.msg + '(' + result.code + ')' ;
+	        	$("#add-entity-hint").html(hint_html).fadeIn();	
+	            if(apply_status == 5){
+	            	$("#add-entity-audit21").html("审批通过");
+	            }else{
+	            	$("#add-entity-audit22").html("审批驳回");	            		            	
+	            }
+	            $("#add-entity-audit22").removeAttr('disabled');
+	            $("#add-entity-audit21").removeAttr('disabled');	            
+	        }else {	       
+	        	hint_html = $("#add-entity-hint").html();
+	        	hint_html += (hint_html == '' ? '' : '<BR>') + '审批操作：' + result.msg ;
+	        	$("#add-entity-hint").html(hint_html).fadeIn();	
+	        	$("#add-entity-audit21").html("已审批");
+	        	if(apply_status == 5){
+	        		sendTransferTrade1();
+	        		return;
+	        	}else{
+	        		$("#add-entity-audit22").html("已驳回");
+	        	}
+	        	hint_html = $("#add-entity-hint").html();
+	        	hint_html += (hint_html == '' ? '' : '<BR>') + '关闭...' ;
+	        	$("#add-entity-hint").html(hint_html).fadeIn();
+                setTimeout(function(){
+                	$('#add-entity-cancel').click();                	
+                	search_entity($("#entity-current-page").html());
+                }, 1500);
 	        }
 	    },
 	    'json'
@@ -574,10 +646,10 @@ function sendTransferTrade1(){
 	        	$("#add-entity-pay").html("已付款");	
 	        	hint_html = $("#add-entity-hint").html();
 	        	hint_html += (hint_html == '' ? '' : '<BR>') + '关闭...';
-	            setTimeout(function(){
+	            /*setTimeout(function(){
                 	$('#add-entity-cancel').click();                	
                 	search_entity($("#entity-current-page").html());
-                }, 2000);
+                }, 2000);*/
 	        }else{
 	        	$("#add-entity-pay").html("付款").removeAttr('disabled');
 	        }
