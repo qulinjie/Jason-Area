@@ -79,15 +79,19 @@ define('EC_ACCOUNT_EST',901);
 define('EC_COMPANY_EST',902);
 define('EC_CERT_BEEN' , 903);
 
-define('EC_TRADE_TF_NO_AS',1001);
-define('EC_TRADE_TF_OS_ERR', 1002);
-define('EC_TRADE_TF_OS_ERR_2', 1003);
-define('EC_TRADE_TF_OS_ERR_3', 1004);
+define('EC_TRADE_TF_YES_AS', 1000);
+define('EC_TRADE_TF_FRIST_NO_AS',1001);
+define('EC_TRADE_TF_SECOND_NO_AS',1002);
+define('EC_TRADE_TF_OS_ERR', 1003);
+define('EC_TRADE_TF_OS_ERR_2', 1004);
+define('EC_TRADE_TF_OS_ERR_3', 1005);
+define('EC_USER_NO_AUTH', 1006);
+
 class EC extends Base {
 
 	public static $_errMsg = array(
 			
-			EC_OK			=>	'success',
+			EC_OK			=>	'成功',
 	        EC_OK_ERP	    =>	'success',
 	        EC_ERPE_FAI		=>	'与ERP系统通讯失败',
 			EC_DB_CNT		=>	'connect to database failed',
@@ -163,10 +167,14 @@ class EC extends Base {
 	       EC_COMPANY_EST     => '公司已存在',
 	       EC_CERT_BEEN        => '证件已被占用',
 			
-			EC_TRADE_TF_NO_AS      => '审批未通过',
+			EC_TRADE_TF_YES_AS      => '审批已通过',
+			EC_TRADE_TF_FRIST_NO_AS      => '一级审批未通过',
+			EC_TRADE_TF_SECOND_NO_AS      => '二级审批未通过',
 			EC_TRADE_TF_OS_ERR     => '订单状态异常',
 			EC_TRADE_TF_OS_ERR_2   => '订单已付款',			
 			EC_TRADE_TF_OS_ERR_3   => '订单已付款',
+			
+			EC_USER_NO_AUTH => '用户没有该操作权限',
 	);
 	public static function load(){
 		return true;
