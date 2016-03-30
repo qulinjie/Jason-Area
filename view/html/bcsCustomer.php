@@ -51,7 +51,7 @@
 </div>
 <!-- /.modal -->
 
-<h1 class="page-header">虚拟卡管理</h1>
+<h1 class="page-header">开户管理</h1>
 
 <div class="panel panel-primary">
   <div class="panel-heading">查找</div>

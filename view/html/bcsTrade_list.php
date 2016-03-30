@@ -34,7 +34,7 @@
 <?php }else{?>
 <?php $isAdmin = AdminController::isLogin(); ?>
 <div class="panel panel-default">
-<div class="panel-heading" id="search-head-div">付款列表</div>
+<div class="panel-heading" id="search-head-div">列表</div>
   <div class="panel-body" style="width: 1500px;overflow-x: hidden;">
 		<table class="table table-hover" id="data-list-table" style="width: 1500px;max-width: 1500px;overflow-x: hidden;">
 			<thead>
