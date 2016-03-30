@@ -32,6 +32,10 @@ class Test2Controller extends BaseController
             case 'customerOutflow':
                 $this-> customerOutflow();
                 break;
+            case 'customerInflow':
+                $this-> customerInflow();
+                break;
+                
                 
             default:
                 Log::error('page not found');
@@ -160,8 +164,8 @@ class Test2Controller extends BaseController
         EC::success(EC_OK, $data);
     }
 
-    // FMSPAY0002_客户出金
-    public function customerOutflow(){
+    // FMSPAY0012_客户入金
+    public function customerInflow(){
         $user_id = '1111';
         $amount = 132.5;
         $mch_trans_no = 'D' . date('Ymd',time()) . 'T' . date('His',time()) . 'R' . rand(100,999) . 'U' . $user_id;; // 交易流水，需保证唯一性
@@ -179,6 +183,26 @@ class Test2Controller extends BaseController
         EC::success(EC_OK, $data);
     }
     
+    
+    // FMSPAY0002_客户出金
+    public function customerOutflow(){
+        $user_id = '1111';
+        $amount = 130.5;
+        $mch_trans_no = 'D' . date('Ymd',time()) . 'T' . date('His',time()) . 'R' . rand(100,999) . 'U' . $user_id;; // 交易流水，需保证唯一性
+        $curr_cod = BcsTransferModel::$_CURR_COD_RMB; // 币别 目前只支持：01-人民币
+        $trans_amt = floatval($amount);
+    
+        $bank_model = $this->model('bank');
+    
+        $mch_no  = $this->getMCH_NO(); // 商户编号
+        $sit_no = 'DDMG1112';
+        $trans_fee = 1.5;
+        
+        $data = $bank_model->customerOutflow( $mch_no, $sit_no, $mch_trans_no, $curr_cod, $trans_amt, $trans_fee );
+        Log::notice('==== >>> customerOutflow response=##' . json_encode($data) . '##');
+         
+        EC::success(EC_OK, $data);
+    }
     
     
     
