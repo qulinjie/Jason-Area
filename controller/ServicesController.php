@@ -23,6 +23,8 @@ class ServicesController extends Controller {
         preg_match('/<Body>(.*)<\/Body>/is', $xml , $body);
         $reqData = json_decode(json_encode(simplexml_load_string($body[1])),true);
 
+        Log::bcsNotice('bcsBank-callback-request-data============================>>> json= ##' . var_export($reqData ,true) . '##' );
+        
         $keys    = array('MCH_NO','SIT_NO','ACT_TIME','ACCOUNT_NO');
         foreach($keys as $key){
             if(!isset($reqData[$key]) || !$reqData[$key]){
@@ -156,7 +158,7 @@ class ServicesController extends Controller {
         $resXml = preg_replace('/<Body>(.*)<\/Body>/is', '<Body><Response><IS_SUCCESS>'.$title.'</IS_SUCCESS></Response></Body>' , $resXml);
         $resXml = preg_replace('/<SignData>(.*)<\/SignData>/is', '<SignData>'.$this->signData('<Body><Response><IS_SUCCESS>'.$title.'</IS_SUCCESS></Response></Body>') . '</SignData>', $resXml);
 
-        Log::bcsNotice('bcsBank-callback-request-data============================>>> xml= ##' . $resXml . '##');
+        Log::bcsNotice('bcsBank-callback-response-data============================>>> xml= ##' . $resXml . '##');
         return $resXml;
     }
     
