@@ -162,13 +162,14 @@
         	    </li>
         	    -->
         	    
-        	    
-        	    <li <?php if(doit::$controller == 'BcsCustomer'){?> class="active" <?php } ?>>
+        	    <li>
+        	       <a href="#" style="color: black;font-size: 16px;">开户管理</a>
+        	    </li>
+        	    <li <?php if(doit::$controller == 'BcsCustomer'){?> class="active" <?php } ?> style="margin-left: 35px;">
         			<a href="<?php echo Router::getBaseUrl();?>bcsCustomer/getIndex">开户管理</a>
         	    </li>
-        	    
-    			<li <?php if(doit::$controller == 'BcsTrade' && strval($inout) == ''){?> class="active" <?php } ?>>
-        			<a href="<?php echo Router::getBaseUrl();?>bcsTrade/getIndex">收支明细</a>
+        	    <li <?php if(doit::$controller == 'BcsCustomer2'){?> class="active" <?php } ?> style="margin-left: 35px;">
+        			<a href="#">开户申请</a>
         	    </li>
         	    
         	    <li>
@@ -189,6 +190,10 @@
         	    </li>
         	    
         	    
+        	    <li <?php if(doit::$controller == 'BcsTrade' && strval($inout) == ''){?> class="active" <?php } ?>>
+        			<a href="<?php echo Router::getBaseUrl();?>bcsTrade/getIndex">收支明细</a>
+        	    </li>
+        	    
         	    
         	    <!--
     			<li <?php if(doit::$controller == 'BcsTransfer'){?> class="active" <?php } ?>>
@@ -203,11 +208,11 @@
         	    <li <?php if(doit::$controller == 'BcsTrade' && $page_type == 'bcsTradeStatusQuery'){?> class="active" <?php } ?>>
         			<a href="<?php echo Router::getBaseUrl();?>bcsTrade/tradeStatusQueryIndex">交易状态查询</a>
         	    </li>
-        	    
+        	    -->
         	    <li <?php if(doit::$controller == 'SpdInternetBank'){?> class="active" <?php } ?>>
         			<a href="<?php echo Router::getBaseUrl();?>spdInternetBank/getIndex">行名行号查询</a>
         	    </li>
-        	    -->
+        	    
           </ul>
         </div>
         
