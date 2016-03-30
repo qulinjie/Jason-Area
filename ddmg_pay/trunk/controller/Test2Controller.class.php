@@ -147,7 +147,7 @@ class Test2Controller extends BaseController
     public function queryTransferAccountsCost(){
         $params = [
             'AMT'               => '12000',   // 提现金额
-            'SIT_NO'            => 'DDMG1111',   // 付款方席位号
+            'SIT_NO'            => 'DDMG1112',   // 付款方席位号
             'CURR_COD'          => '01'   // 币别 目前只支持：CNY-人民币
         ];
     
@@ -171,7 +171,7 @@ class Test2Controller extends BaseController
         $bank_model = $this->model('bank');
     
         $mch_no  = $this->getMCH_NO(); // 商户编号
-        $sit_no = 'DDMG1112';
+        $sit_no = 'DDMG1111';
         
         $data = $bank_model->customerInflow( $mch_no, $sit_no, $mch_trans_no, $curr_cod, $trans_amt );
         Log::notice('==== >>> customerOutflow response=##' . json_encode($data) . '##');
