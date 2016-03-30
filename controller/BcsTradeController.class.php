@@ -751,10 +751,16 @@ class BcsTradeController extends BaseController {
                 Log::notice('addAccountTradeList ==== >>> upd-data-end=##' . $obj['virtualAcctName'] . "##");
             } else {
                 $data_rs = $bcsTrade_model->create_add($trade);
+                
+                //对收款进行短信发送
+                if( 1 == $trade['debitCreditFlag']){
+                	$this->sendSmsCodeForCollection($trade['ACCOUNT_NO'], $trade['oppositeAcctName'], $trade['TX_AMT']);
+                }
+                
                 if($data_rs['code'] !== EC_OK){
                     Log::error('addAccountTradeList . create bcsCustomer error . code='. $data_rs['code'] . ',msg=' . $data_rs['msg'] );
                     continue;
-                }
+                }                               
                 
                 Log::notice('addAccountTradeList ==== >>> add-data-end=##' . $obj['virtualAcctName'] . "##");
             }
@@ -959,7 +965,7 @@ class BcsTradeController extends BaseController {
     	    		
     	// 尊敬的客户，【Value1】已提交支付，支付【Value2】为【Value3】，请及时跟进。感谢您的支持【Value4】
     	$data = array();
-    	$data['tel'] = '13367310112';//$user_data['mobile']; //电话
+    	$data['tel'] = $user_data['mobile']; //'13367310112'电话
     	$data['codetype'] = '10';    
     	$data['value1'] = $payer; //付款公司名称
     	$data['value2'] = '金额'; 
