@@ -171,7 +171,7 @@ class Test2Controller extends BaseController
         $bank_model = $this->model('bank');
     
         $mch_no  = $this->getMCH_NO(); // 商户编号
-        $sit_no = 'DDMG1111';
+        $sit_no = 'DDMG1112';
         
         $data = $bank_model->customerInflow( $mch_no, $sit_no, $mch_trans_no, $curr_cod, $trans_amt );
         Log::notice('==== >>> customerOutflow response=##' . json_encode($data) . '##');
