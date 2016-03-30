@@ -898,7 +898,7 @@ class BcsTradeController extends BaseController {
     	$head['gszh'] = $data['oppositeAcctNo']; //付款公司账号
     	$head['gskhh'] = $data['payeeBankName']; //付款开户行
     	$head['zh'] = $data['ACCOUNT_NO']; //收款账号
-    	$head['khh'] = $bcs_data['SIT_NO']; //收款开户行
+    	$head['khh'] = '';//$bcs_data['SIT_NO']; //收款开户行
     	 
     	$details = array();
     	$details['xh'] = $data['id']; //序号
