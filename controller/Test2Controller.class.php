@@ -119,12 +119,12 @@ class Test2Controller extends BaseController
         
         $data = $bank_model->queryBankInfo($params);
          
-        $CSBankSoapUrl = $conf['CSBankSoapUrl'];
-        $params = array();
-        $params['wsdlUrl'] = strval($CSBankSoapUrl);
-        $params['xml'] = strval($data[0]);
-        Log::notice('params==createByJava--------------------->>' . var_export($params, true));
-        $data = $bcsRegister_model->createByJava($params);
+//         $CSBankSoapUrl = $conf['CSBankSoapUrl'];
+//         $params = array();
+//         $params['wsdlUrl'] = strval($CSBankSoapUrl);
+//         $params['xml'] = strval($data[0]);
+//         Log::notice('params==createByJava--------------------->>' . var_export($params, true));
+//         $data = $bcsRegister_model->createByJava($params);
         
         EC::success(EC_OK, $data);
     }
