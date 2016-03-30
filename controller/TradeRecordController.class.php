@@ -1343,7 +1343,6 @@ class TradeRecordController extends BaseController {
     		EC::fail(EC_REC_EST);
     	}
     	    	
-    	/*
     	//查合伙人信息
     	$bcs_params  = array();
     	$bcs_params['user_id'] = $data['user_id'];
@@ -1360,7 +1359,7 @@ class TradeRecordController extends BaseController {
     		Log::error('bcsCustomer getInfo empty !');
     		EC::fail(EC_RED_EMP);
     	}
-    	
+    	/*
     	//根据供货商单位名查erp接口来往单位信息
     	$ct_params = array();
     	$ct_params['dwmc'] = '湖南金荣钢贸有限公司';//$data['seller_name'];
@@ -1407,8 +1406,8 @@ class TradeRecordController extends BaseController {
     	$head['rq'] = $data['pay_timestamp']; //日期：rq_
     	$head['je'] = $data['order_bid_amount']; //金额：je_
     	$head['usercode'] = $data['user_id']; 
-    	$head['gszh'] = $data['comp_account']; //公司帐户：gszh_（浦发银行帐号）
-    	$head['gskhh_'] = $data['bank_name']; //开户银行：gskhh_（浦发银行）
+    	$head['gszh'] = $data['ACCOUNT_NO']; //公司帐户：gszh_（浦发银行帐号）
+    	$head['gskhh_'] = ''; //开户银行：gskhh_（浦发银行）
     	$head['zh'] = $data['comp_account']; 
     	$head['khh'] = $data['bank_name'];
     	$params['head'] = $head;
@@ -1423,13 +1422,13 @@ class TradeRecordController extends BaseController {
     	}
     	    	
     	Log::write(var_export($params, true), 'debug', 'fkd-'.date('Y-m-d'));
-    	exit();
+    	//exit();
     	
     	Log::notice("request-data ============>> data = ##" . json_encode($params) . "##" );
     	$tradeRecord_model = $this->model('tradeRecord');
     	$res_data = $tradeRecord_model->erp_syncBillsOfPayment($params);
     	if(EC_OK_ERP != $res_data['code']){
-    		Log::error('erp_syncBillsOfPayment Fail!');
+    		Log::error('erp_syncBillsOfPayment Fail!'. $res_data['msg']);
     		EC::fail($res_data['code']);
     	}
     	Log::notice("response-data ============>> data = ##" . json_encode($res_data) . "##" );
@@ -1439,11 +1438,11 @@ class TradeRecordController extends BaseController {
     	$up_params['id'] = $data['id'];   	
     	$up_params['is_erp_sync'] = 2; //付款单是否同步 1否 2同步
     	$up_params['erp_sync_timestamp'] = date('Y-m-d H:i:s',time()); 
-    	$tr_data = $tradeRecord_model->update($up_params);
-    	if(EC_OK != $tr_data['code']){
-    		Log::error('update order status fail!');
-    		EC::fail($tr_data['code']);
-    	}
+//     	$tr_data = $tradeRecord_model->update($up_params);
+//     	if(EC_OK != $tr_data['code']){
+//     		Log::error('update order status fail!');
+//     		EC::fail($tr_data['code']);
+//     	}
     	
     	EC::success(EC_OK);
     }
