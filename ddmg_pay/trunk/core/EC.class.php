@@ -81,12 +81,14 @@ define('EC_COMPANY_EST',902);
 define('EC_CERT_BEEN' , 903);
 
 define('EC_TRADE_TF_YES_AS', 1000);
-define('EC_TRADE_TF_FRIST_NO_AS',1001);
-define('EC_TRADE_TF_SECOND_NO_AS',1002);
-define('EC_TRADE_TF_OS_ERR', 1003);
-define('EC_TRADE_TF_OS_ERR_2', 1004);
-define('EC_TRADE_TF_OS_ERR_3', 1005);
-define('EC_USER_NO_AUTH', 1006);
+define('EC_TRADE_TF_NO_AS', 1001);
+
+define('EC_TRADE_TF_FRIST_NO_AS',1002);
+define('EC_TRADE_TF_SECOND_NO_AS',1003);
+define('EC_TRADE_TF_OS_ERR', 1004);
+define('EC_TRADE_TF_OS_ERR_2', 1005);
+define('EC_TRADE_TF_OS_ERR_3', 1006);
+define('EC_USER_NO_AUTH', 1007);
 
 class EC extends Base {
 
@@ -170,6 +172,7 @@ class EC extends Base {
 	       EC_CERT_BEEN        => '证件已被占用',
 			
 			EC_TRADE_TF_YES_AS      => '审批已通过',
+			EC_TRADE_TF_NO_AS      => '审批未通过',
 			EC_TRADE_TF_FRIST_NO_AS      => '一级审批未通过',
 			EC_TRADE_TF_SECOND_NO_AS      => '二级审批未通过',
 			EC_TRADE_TF_OS_ERR     => '订单状态异常',
