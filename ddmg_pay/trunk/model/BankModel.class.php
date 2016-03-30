@@ -374,7 +374,7 @@ class BankModel extends CSBankSoap
 	    $requestParms = [];
 	
 	    // 必填字段
-	    $mustFields = ['AMT', 'SIT_NO', 'CURR_COD'];
+	    $mustFields = ['AMT', 'SIT_NO', 'CURR_COD', 'MCH_NO'];
 	    foreach ( $mustFields as $v )
 	    {
 	        // 	        if ( '0'!==strval($registerData[$v]) && !$registerData[$v] ) {
