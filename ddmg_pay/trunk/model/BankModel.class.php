@@ -35,7 +35,9 @@ class BankModel extends CSBankSoap
 		}
 
 		// CUST_SPE_ACCT_BKTYPE为1时必填字段
-		if ( '1'===strval($registerData['CUST_SPE_ACCT_BKTYPE']) ) {
+		Log::notice("postRequest data ===========================>> data-CUST_SPE_ACCT_BKTYPE = ##" . ( '1'===strval($registerData['CUST_SPE_ACCT_BKTYPE']) ) . "##" );
+		Log::notice("postRequest data ===========================>> data-CUST_SPE_ACCT_BKTYPE = ##" . ( '1'==strval($registerData['CUST_SPE_ACCT_BKTYPE']) ) . "##" );
+		if ( '1'==strval($registerData['CUST_SPE_ACCT_BKTYPE']) ) {
 			$shouldCheck = ['CUST_SPE_ACCT_BKID', 'CUST_SPE_ACCT_BKNAME'];
 			foreach ( $shouldCheck as $k ) {
 				if ( !$registerData[$k] ) { // 应该加验证
@@ -45,6 +47,9 @@ class BankModel extends CSBankSoap
 				$requestParms[$v] = $registerData[$v];
 			}
 		}
+		
+		$requestParms['CUST_SPE_ACCT_BKID'] = $registerData['CUST_SPE_ACCT_BKID'];
+		$requestParms['CUST_SPE_ACCT_BKNAME'] = $registerData['CUST_SPE_ACCT_BKNAME'];
 		
 		/*
 		$requestParms['MCH_NO'] = '';					// 商户编号
