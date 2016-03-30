@@ -110,7 +110,7 @@ class Test2Controller extends BaseController
         $bank_model = $this->model('bank');
         
         $MCH_NO = $this->getMCH_NO(); // 商户编号
-        $SIT_NO = 'DDMG1111';
+        $SIT_NO = 'DDMG1112';
         
         $data = $bank_model->getCustomerInfo($MCH_NO,$SIT_NO);
          
