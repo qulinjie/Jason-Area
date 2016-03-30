@@ -81,4 +81,9 @@ class TradeRecordModel extends CurlModel {
     public function auditOneTradRecord($params = array()){
     	return self::sendRequest('tradeRecord/auditOneTradRecord/',$params);
     }
+    
+    public function erp_auditOneTradRecord($params = array()){
+    	return self::sendRequestErp('api/pub/FinanceService/PostCW_FKDAudit',$params);
+    }    
+   
 }
