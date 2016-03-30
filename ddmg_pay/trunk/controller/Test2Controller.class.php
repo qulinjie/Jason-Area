@@ -209,8 +209,8 @@ class Test2Controller extends BaseController
     // FMSPAY0003_客户出入金交易明细查询
     public function customerInflowQuery(){
         $params = [
-            'START_DATE'               => date('Y-m-d',time()),   // 
-            'END_DATE'               => date('Y-m-d',time()),   // 
+            'START_DATE'               => date('Ymd',time()),   // 
+            'END_DATE'               => date('Ymd',time()),   // 
             'PAGE_NUMBER'            => '1',   // 查询页码
             'PAGE_SIZE'          => '10'   // 页码条数
         ];
