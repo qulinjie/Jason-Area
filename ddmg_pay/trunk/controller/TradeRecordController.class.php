@@ -1086,12 +1086,14 @@ class TradeRecordController extends BaseController {
         $apply_item = Request::post('order_no_arr'); // 业务单号@;金额
         $apply_no = Request::post('apply_no'); // 申请单号
         $seller_name = Request::post('comp_name'); // 收款单位
+        $seller_name_code = Request::post('comp_name_code'); // 收款单位代码
         $comp_account = Request::post('comp_account'); // 收款账号
         $bank_name = Request::post('bank_name'); // 开户行
         $amount_type = Request::post('amount_type'); // 款项类别
         $useTodo = Request::post('use'); // 用途
         $comment = Request::post('comment'); // 备注        
         $comp_name_buyer = Request::post('comp_name_buyer'); // 下游买家
+        $comp_name_buyer_code = Request::post('comp_name_buyer_code'); // 下游买家
         
         $bank_no = Request::post('bank_no'); // 支付号
         $bank_flag = Request::post('bank_flag'); //本行/它行标志
@@ -1131,7 +1133,8 @@ class TradeRecordController extends BaseController {
             $v_order_no = $arr[0];
             $v_amount = floatval($arr[1]);
             $v_comp_name_buyer = $arr[2];
-            $v_comment = $arr[3];
+            $v_comp_name_buyer_code = $arr[3];
+            $v_comment = $arr[4];
             $order_no_str = $order_no_str . ',' . $v_order_no;
             $sum_amount = $sum_amount + $v_amount;
             $trade_record_item[$v_order_no]['order_no'] = $apply_no;
@@ -1139,6 +1142,7 @@ class TradeRecordController extends BaseController {
             $trade_record_item[$v_order_no]['bid_amount'] = $v_amount;
             $trade_record_item[$v_order_no]['record_type'] = 2;
             $trade_record_item[$v_order_no]['item_comp_name_buyer'] = $v_comp_name_buyer;
+            $trade_record_item[$v_order_no]['item_comp_name_buyer_code'] = $v_comp_name_buyer_code;
             $trade_record_item[$v_order_no]['comment'] = $v_comment;
         }
 //         Log::notice("response-data ===========================>> data-order_no_str = ##" . $order_no_str . "##" );
@@ -1151,6 +1155,7 @@ class TradeRecordController extends BaseController {
         
         $trade_record['apply_no'] = $apply_no;
         $trade_record['seller_name'] = $seller_name;
+        $trade_record['seller_name_code'] = $seller_name_code;
         $trade_record['comp_account'] = $comp_account;
         $trade_record['bank_name'] = $bank_name;
         $trade_record['amount_type'] = $amount_type;
@@ -1278,6 +1283,8 @@ class TradeRecordController extends BaseController {
             Log::error('erp_getOrderBuyInfo Fail!');
             EC::fail($data['code']);
         }
+        
+        //Log::write(var_export($data, true), 'debug', 'debug1-'.date('Y-m-d'));
         Log::notice("response-data ===========================>> data = ##" . json_encode($data) . "##" );
         
         EC::success(EC_OK, $data['data']);
