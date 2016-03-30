@@ -752,9 +752,13 @@ class BcsTradeController extends BaseController {
             } else {
                 $data_rs = $bcsTrade_model->create_add($trade);
                 
-                //对收款进行短信发送
+                
                 if( 1 == $trade['debitCreditFlag']){
+                	//对收款进行短信发送
                 	$this->sendSmsCodeForCollection($trade['ACCOUNT_NO'], $trade['oppositeAcctName'], $trade['TX_AMT']);
+                
+                	//收款单同步erp
+                	$this->erp_syncBillsOfCollection($trade['MCH_TRANS_NO']);
                 }
                 
                 if($data_rs['code'] !== EC_OK){
@@ -818,19 +822,19 @@ class BcsTradeController extends BaseController {
         
     }
     
-    //收款单同步erp
-    public function erp_syncBillsOfCollection($id = NULL){
-    	$id = ($id == NULL) ? intval(Request::post('id')) : intval($id);
+    //收款单同步erp $MCH_TRANS_NO流水号
+    public function erp_syncBillsOfCollection($MCH_TRANS_NO = NULL){
+    	$MCH_TRANS_NO = ($MCH_TRANS_NO == NULL) ? Request::post('$MCH_TRANS_NO') : $MCH_TRANS_NO;
     	 
-    	Log::notice("erp_syncBillsOfCollection ===========================>> id=" .$id );
-    	if(empty($id)){
-    		Log::error('id empty !');
+    	Log::notice("erp_syncBillsOfCollection ===========================>> MCH_TRANS_NO=" .$MCH_TRANS_NO );
+    	if(empty($MCH_TRANS_NO)){
+    		Log::error('MCH_TRANS_NO empty !');
     		EC::fail(EC_PAR_ERR);
     	}
     	 
-    	//根据id查流水的数据
+    	//根据流水号查流水的数据
     	$bcsTrade_model = $this->model('bcsTrade');
-    	$data = $bcsTrade_model->getInfo(array('id' => $id));
+    	$data = $bcsTrade_model->getInfo(array('debitCreditFlag' => 1, 'MCH_TRANS_NO' => $MCH_TRANS_NO));
     	if(empty($data) || !is_array($data) || EC_OK != $data['code'] || !isset($data['data'])) {
     		Log::error('bcsTrade getInfo empty !');
     		EC::fail(EC_DAT_NON);
@@ -884,31 +888,35 @@ class BcsTradeController extends BaseController {
     	"je":"11.8"
     	}]
     	*/
-    	 
+    	
+    	
     	$head = array();
     	$head['dwmc_'] = $data['oppositeAcctName']; //单位名称
     	$head['rq'] = $data['TRANS_TIME']; //日期
     	$head['je'] = $data['TX_AMT']; //金额
     	$head['usercode'] = $bcs_data['user_id'];
     	$head['gszh'] = $data['oppositeAcctNo']; //付款公司账号
-    	$head['gskhh'] = $data['oppositeAcctName']; //付款开户行
+    	$head['gskhh'] = $data['payeeBankName']; //付款开户行
     	$head['zh'] = $data['ACCOUNT_NO']; //收款账号
     	$head['khh'] = $bcs_data['SIT_NO']; //收款开户行
     	 
     	$details = array();
-    	$details['xh'] = $data['MCH_TRANS_NO']; //序号
+    	$details['xh'] = $data['id']; //序号
     	$details['je'] = $data['TX_AMT']; //金额
     	 
     	$params = array();
     	$params['head'] = $head;
-    	$params['details'] = $details;
+    	$params['details'][] = $details;
     
+    	//Log::write(var_export($params, true), 'debug', 'skd-'.date('Y-m-d'));
+    	//exit();
+    	
     	Log::notice("request-data ============>> params = ##" . json_encode($params) . "##" );
     	$bcsTrade_model = $this->model('bcsTrade');
     	$res_data = $bcsTrade_model->erp_syncBillsOfCollection($params);
     	if(EC_OK_ERP != $res_data['code']){
-    		Log::error('erp_syncBillsOfCollection Fail!');
-    		EC::fail($res_data['code']);
+    		Log::error('erp_syncBillsOfCollection Fail:'.$res_data['msg']);
+    		EC::fail($res_data['msg']);
     	}
     	Log::notice("response-data ============>> res_data = ##" . json_encode($res_data) . "##" );
     	 
