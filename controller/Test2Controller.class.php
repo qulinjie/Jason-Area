@@ -106,11 +106,11 @@ class Test2Controller extends BaseController
     // UPP3009_行名行号查询
     public function queryBankInfo(){
         $params = [
-            'BANK_CODE'               => '313551080003',   // 席位号
-            'BANK_NAME'               => '',   // 席位号
-            'IS_VAGUE'               => '0',   // 席位号
-            'PAGE_SIZE'               => '10',   // 席位号
-            'PAGE_NUMBER'               => '1'   // 席位号
+            'BANK_CODE'               => '',   // 查询参数（行号） 313551080003
+            'BANK_NAME'               => '长沙银行股份有限公司联汇支行',   // 查询参数（行名）
+            'IS_VAGUE'               => '0',   // 是否模糊查询 0:不是 1:是
+            'PAGE_SIZE'               => '10',   // 页码条数
+            'PAGE_NUMBER'               => '1'   // 查询页码
         ];
         
         $bank_model = $this->model('bank');
