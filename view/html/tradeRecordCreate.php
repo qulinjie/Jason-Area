@@ -35,7 +35,7 @@
        <input type="hidden" id="info-entity-id" value=""></input>
        
        <input type="hidden" id="info-entity-comp_name" value=""></input><!-- 收款单位 -->
-       <input type="hidden" id="info-entity-comp_name_code" value=""></input><!-- 收款单位代码 -->
+       <input type="hidden" id="add-entity-comp_name_code" value=""></input><!-- 收款单位代码 -->
        <input type="hidden" id="add-entity-bank_no" value=""></input><!-- （已验证的）银行行号 -->
        <input type="hidden" id="add-entity-bank_name_checked" value=""></input><!-- （已验证的）银行名称 -->
        <input type="hidden" id="add-entity-fphm" value=""></input><!-- 业务单号-发票号码 -->
