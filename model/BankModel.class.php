@@ -390,4 +390,7 @@ class BankModel extends CSBankSoap
 	    return $this-> sendQuery( $ServiceCode, $requestParms, $fetchAll=false );
 	}
 	
+	
+	
+	
 }
