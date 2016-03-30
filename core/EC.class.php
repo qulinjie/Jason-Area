@@ -182,20 +182,21 @@ class EC extends Base {
 		return true;
 	}
 	public static function fail($errno, $unlock = true){
-	    if( EC_NOT_LOGIN == $errno && $_SERVER['REQUEST_METHOD']!="POST") {
+	    
+		if(is_string($errno)){
+			$code = 1;
+			$msg = $errno;
+		}else{
+			$code = $errno;
+			$msg = self::$_errMsg[$errno];
+		}
+		
+		if( EC_NOT_LOGIN == $errno && $_SERVER['REQUEST_METHOD']!="POST") {
 	        $view = View::getInstance();
-	        $view->render('index', array( 'code' => $errno, 'msg' => self::$_errMsg[$errno] ));
+	        $view->render('index', array( 'code' => $code, 'msg' => $msg ));
 	        exit(0);
-	    }
-	    
-	    if(is_string($errno)){
-	    	$code = 1;
-	    	$msg = $errno;
-	    }else{
-	    	$code = $errno;
-	    	$msg = self::$_errMsg[$errno];
-	    }
-	    
+	    }    
+	    	    
 		$response_data = array(
 				'caller' => doit::$caller,
 				'callee' => doit::$callee,
