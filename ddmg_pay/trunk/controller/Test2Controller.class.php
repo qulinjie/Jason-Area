@@ -210,7 +210,7 @@ class Test2Controller extends BaseController
     public function customerInflowQuery(){
         $params = [
             'START_DATE'               => date('Y-m-d',time()),   // 
-            'END_DATE'               => date('Y-m-d h:i:s',time()),   // 
+            'END_DATE'               => date('Y-m-d',time()),   // 
             'PAGE_NUMBER'            => '1',   // 查询页码
             'PAGE_SIZE'          => '10'   // 页码条数
         ];
