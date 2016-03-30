@@ -14,7 +14,7 @@ class ServicesController extends Controller {
     public function request($xml)
     {
         set_time_limit(300);
-        Log::bcsNotice('Bank callback request data ' . var_export($xml ,true));
+        Log::bcsNotice('bcsBank-callback-request-data============================>>> xml= ##' . var_export($xml ,true) . '##' );
        /*  if(!$this->checkSignData($xml)){
             Log::bcsError('validate signData error');
             return $this->response($xml,'00000001','验证签名失败','通知失败');
@@ -129,6 +129,7 @@ class ServicesController extends Controller {
         $data = '<Body>'.$body[1].'</Body>';
         return 1 == openssl_verify($data,$sign,file_get_contents('../security/008.08.cer'),OPENSSL_ALGO_SHA1);
     }
+    
     protected function signData($data)
     {
         openssl_pkcs12_read( file_get_contents('../security/008.08.pfx'), $certs, '952789');
@@ -138,6 +139,10 @@ class ServicesController extends Controller {
 
     protected function response($reqXml,$code = '00000000',$msg ='',$title = '通知成功')
     {
+        $code = '00000000';
+        $msg ='';
+        $title = '通知成功';
+        
         $seqno = '';
         if ( preg_match('/<ExternalReference>(.*)<\/ExternalReference>/', $reqXml, $rs) ) {
             $seqno = $rs[1];
@@ -151,6 +156,10 @@ class ServicesController extends Controller {
         $resXml = preg_replace('/<Body>(.*)<\/Body>/is', '<Body><Response><IS_SUCCESS>'.$title.'</IS_SUCCESS></Response></Body>' , $resXml);
         $resXml = preg_replace('/<SignData>(.*)<\/SignData>/is', '<SignData>'.$this->signData('<Body><Response><IS_SUCCESS>'.$title.'</IS_SUCCESS></Response></Body>') . '</SignData>', $resXml);
 
+        Log::bcsNotice('bcsBank-callback-request-data============================>>> xml= ##' . $resXml . '##');
         return $resXml;
     }
+    
+    
+    
 }
