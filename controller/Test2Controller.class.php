@@ -149,12 +149,12 @@ class Test2Controller extends BaseController
         ];
     
         $bank_model = $this->model('bank');
-        $conf = $this->getConfig('conf');
     
         $params['MCH_NO']  = $this->getMCH_NO(); // 商户编号
         
-        $data = $bank_model->queryBankInfo($params);
+        $data = $bank_model->queryTransferAccountsCost($params);
          
         EC::success(EC_OK, $data);
     }
+
 }
