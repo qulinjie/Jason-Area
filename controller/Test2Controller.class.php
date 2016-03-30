@@ -76,11 +76,11 @@ class Test2Controller extends BaseController
     // FMSCUST0001_客户注册通知
     public function registerCustomer(){
         $params = [
-            'SIT_NO'               => 'DDMG1113',   // 席位号 DDMG1111 DDMG1112
+            'SIT_NO'               => 'DDMG1115',   // 席位号 DDMG1111 DDMG1112 DDMG1113
             'CUST_CERT_TYPE'       => '02',          // 客户证件类型
-            'CUST_CERT_NO'         => '430121198310081576',            // 客户证件号码
-            'CUST_NAME'            => '测试城樑',          // 客户名称
-            'CUST_ACCT_NAME'       => '测试城樑',      // 客户账户名
+            'CUST_CERT_NO'         => '430103770422156',            // 客户证件号码
+            'CUST_NAME'            => '测试虹',          // 客户名称
+            'CUST_ACCT_NAME'       => '测试虹',      // 客户账户名
             'CUST_SPE_ACCT_NO'     => '6223687310880026235',     // 客户结算账户
             'CUST_SPE_ACCT_BKTYPE' => '1',    // 客户结算账户行别 0-长沙银行；1-非长沙银行
             'CUST_SPE_ACCT_BKID'   => '102110005002',	// 客户结算账户行号
@@ -117,7 +117,7 @@ class Test2Controller extends BaseController
         $bank_model = $this->model('bank');
         
         $MCH_NO = $this->getMCH_NO(); // 商户编号
-        $SIT_NO = 'DDMG1113';
+        $SIT_NO = 'DDMG1115';
         
         $data = $bank_model->getCustomerInfo($MCH_NO,$SIT_NO);
          
@@ -218,7 +218,7 @@ class Test2Controller extends BaseController
         $bank_model = $this->model('bank');
     
         $params['MCH_NO']  = $this->getMCH_NO(); // 商户编号
-        $params['SIT_NO']  = 'DDMG1113';
+        $params['SIT_NO']  = 'DDMG1115';
         
         $data = $bank_model->customerInflowQuery($params);
          
