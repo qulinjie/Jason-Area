@@ -35,6 +35,9 @@ class Test2Controller extends BaseController
             case 'customerInflow':
                 $this-> customerInflow();
                 break;
+            case 'customerInflowQuery':
+                $this-> customerInflowQuery();
+                break;
                 
                 
             default:
@@ -203,6 +206,22 @@ class Test2Controller extends BaseController
         EC::success(EC_OK, $data);
     }
     
+    // FMSPAY0003_客户出入金交易明细查询
+    public function customerInflowQuery(){
+        $params = [
+            'START_DATE'               => date('Ymd',time()),   // 
+            'END_DATE'               => date('Ymd',time()),   // 
+            'PAGE_NUMBER'            => '1',   // 查询页码
+            'PAGE_SIZE'          => '10'   // 页码条数
+        ];
     
+        $bank_model = $this->model('bank');
+    
+        $params['MCH_NO']  = $this->getMCH_NO(); // 商户编号
+    
+        $data = $bank_model->customerInflowQuery($params);
+         
+        EC::success(EC_OK, $data);
+    }
     
 }
