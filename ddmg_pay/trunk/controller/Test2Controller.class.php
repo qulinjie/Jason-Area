@@ -152,12 +152,8 @@ class Test2Controller extends BaseController
         $params = [
             'AMT'               => '12000',   // 提现金额
             'SIT_NO'            => 'DDMG1112',   // 付款方席位号
-            'CURR_COD'          => '01'   // 币别 目前只支持：CNY-人民币
+            'CURR_COD'          => 'CNY'   // 币别 目前只支持：CNY-人民币
         ];
-       
-        
-        
-        
         
         $bank_model = $this->model('bank');
     
