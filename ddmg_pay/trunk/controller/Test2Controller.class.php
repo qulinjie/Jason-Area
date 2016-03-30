@@ -64,7 +64,7 @@ class Test2Controller extends BaseController
             'CUST_ACCT_NAME'       => '陈测试进',      // 客户账户名
             'CUST_SPE_ACCT_NO'     => '6223687310880026234',     // 客户结算账户
             'CUST_SPE_ACCT_BKTYPE' => '1',    // 客户结算账户行别 0-长沙银行；1-非长沙银行
-            'CUST_SPE_ACCT_BKID'   => '313585000990',	// 客户结算账户行号
+            'CUST_SPE_ACCT_BKID'   => '31358599',	// 客户结算账户行号
             'CUST_SPE_ACCT_BKNAME' => '珠海华润银行',	// 客户结算账户行名
             'ENABLE_ECDS'          => '1',        // 是否开通电票
             'IS_PERSON'            => '1',          // 是否个人 必填0-否，1-是
