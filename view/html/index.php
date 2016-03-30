@@ -182,8 +182,8 @@
         	    <li>
         	       <a href="#" style="color: black;font-size: 16px;">付款管理</a>
         	    </li>
-        	    <li <?php if(doit::$controller == 'TradeRecord'){?> class="active" <?php } ?> style="margin-left: 35px;">
-        			<a href="<?php echo Router::getBaseUrl();?>tradeRecord/getIndex">付款审批</a>
+        	    <li <?php if(doit::$controller == 'TradeRecord' && strval($audit_level) == '2'){?> class="active" <?php } ?> style="margin-left: 35px;">
+        			<a href="<?php echo Router::getBaseUrl();?>tradeRecord/searchListSecond">付款审批(二级)</a>
         	    </li>
         	    <li <?php if(doit::$controller == 'BcsTrade' && strval($inout) == '0'){?> class="active" <?php } ?> style="margin-left: 35px;">
         			<a href="<?php echo Router::getBaseUrl();?>bcsTrade/getIndex_out">付款明细</a>
@@ -326,13 +326,10 @@
         	    <li>
         	       <a href="#" style="color: black;font-size: 16px;">付款管理</a>
         	    </li>
-        	    <li <?php if(doit::$controller == 'TradeRecord'){?> class="active" <?php } ?> style="margin-left: 35px;">
-        			<a href="<?php echo Router::getBaseUrl();?>tradeRecord/searchListFrist">一级付款审批</a>
-        	    </li>
-        	    <li <?php if(doit::$controller == 'TradeRecord'){?> class="active" <?php } ?> style="margin-left: 35px;">
-        			<a href="<?php echo Router::getBaseUrl();?>tradeRecord/searchListSecond">二级付款审批</a>
-        	    </li>
-        	    <li <?php if(doit::$controller == 'TradeRecord'){?> class="active" <?php } ?> style="margin-left: 35px;">
+        	    <li <?php if(doit::$controller == 'TradeRecord' && strval($audit_level) == '1'){?> class="active" <?php } ?> style="margin-left: 35px;">
+        			<a href="<?php echo Router::getBaseUrl();?>tradeRecord/searchListFrist">付款审批(一级)</a>
+        	    </li>        	    
+        	    <li <?php if(doit::$controller == 'TradeRecord' && strval($audit_level) == '0'){?> class="active" <?php } ?> style="margin-left: 35px;">        	    
         			<a href="<?php echo Router::getBaseUrl();?>tradeRecord/getIndex">申请付款</a>
         	    </li>
         	    <li <?php if(doit::$controller == 'BcsTrade' && strval($inout) == '0'){?> class="active" <?php } ?> style="margin-left: 35px;">
