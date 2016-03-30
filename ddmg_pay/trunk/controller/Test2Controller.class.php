@@ -66,7 +66,7 @@ class Test2Controller extends BaseController
             'CUST_SPE_ACCT_BKTYPE' => '0',    // 客户结算账户行别 0-长沙银行；1-非长沙银行
             'CUST_SPE_ACCT_BKID'   => '',	// 客户结算账户行号
             'CUST_SPE_ACCT_BKNAME' => '',	// 客户结算账户行名
-            'ENABLE_ECDS'          => '',        // 是否开通电票
+            'ENABLE_ECDS'          => '1',        // 是否开通电票
             'IS_PERSON'            => '1',          // 是否个人 必填0-否，1-是
             'CUST_PHONE_NUM'       => '13265431549',      // 客户手机号码
             'CUST_TELE_NUM'        => '13265431549',       // 客户电话号码
