@@ -10,6 +10,10 @@ class Test2Controller extends BaseController
 		} else 
         switch( $params[0] )
         {
+            
+            case 'getMarketInfo':
+                $this-> getMarketInfo();
+                break;
             case 'getMarketBasicInfo':
                 $this-> getMarketBasicInfo();
                 break;
@@ -24,8 +28,20 @@ class Test2Controller extends BaseController
         }
     }
 
-    
     // FMSCUST0007_市场账号信息查询
+    public function getMarketInfo(){
+        $bcsBank_model = $this->model('bank');
+        $conf = $this->getConfig('conf');
+    
+        $mch_no = $conf['MCH_NO'];
+    
+        $bcs_data = $bcsBank_model->getMarketBasicInfo( $mch_no );
+        Log::notice('loadInfo ==== >>> getMarketInfo response=##' . json_encode($bcs_data) . '##');
+    
+        EC::success(EC_OK, $bcs_data);
+    }
+    
+    // FMSCUST0002_市场基本信息查询
     public function getMarketBasicInfo(){
         $bcsBank_model = $this->model('bank');
         $conf = $this->getConfig('conf');
