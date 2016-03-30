@@ -972,7 +972,7 @@ class BcsTradeController extends BaseController {
     	$data['value3'] = $amount.'元';
     	$data['value4'] = '!';
     
-    	Log::write("user_data==".var_export($user_data, true), 'debug', 'debug123-'.date('Y-m-d'));
+    	//Log::write("user_data==".var_export($user_data, true), 'debug', 'debug123-'.date('Y-m-d'));
     	 
     	Log::notice("request-data ============>> data = ##" . json_encode($data) . "##" );
     	$BcsTrade_model = $this->model('bcsTrade');
