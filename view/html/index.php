@@ -165,11 +165,11 @@
         	    <li>
         	       <a href="#" style="color: black;font-size: 16px;">开户管理</a>
         	    </li>
-        	    <li <?php if(doit::$controller == 'BcsCustomer'){?> class="active" <?php } ?> style="margin-left: 35px;">
-        			<a href="<?php echo Router::getBaseUrl();?>bcsCustomer/getIndex">开户管理</a>
-        	    </li>
         	    <li <?php if(doit::$controller == 'BcsCustomer2'){?> class="active" <?php } ?> style="margin-left: 35px;">
         			<a href="#">开户申请</a>
+        	    </li>
+        	    <li <?php if(doit::$controller == 'BcsCustomer'){?> class="active" <?php } ?> style="margin-left: 35px;">
+        			<a href="<?php echo Router::getBaseUrl();?>bcsCustomer/getIndex">开户管理</a>
         	    </li>
         	    
         	    <li>
@@ -189,8 +189,10 @@
         			<a href="<?php echo Router::getBaseUrl();?>bcsTrade/getIndex_out">付款明细</a>
         	    </li>
         	    
-        	    
-        	    <li <?php if(doit::$controller == 'BcsTrade' && strval($inout) == ''){?> class="active" <?php } ?>>
+        	    <li>
+        	       <a href="#" style="color: black;font-size: 16px;">账户查询</a>
+        	    </li>
+        	    <li <?php if(doit::$controller == 'BcsTrade' && strval($inout) == ''){?> class="active" <?php } ?> style="margin-left: 35px;">
         			<a href="<?php echo Router::getBaseUrl();?>bcsTrade/getIndex">收支明细</a>
         	    </li>
         	    
