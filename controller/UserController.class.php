@@ -399,7 +399,12 @@ class UserController extends BaseController
     
             $data = $this->model('user')->erp_login(['loginid' => $account, 'userpwd' => $password]);
             $data['code'] !== EC_OK && EC::fail($data['code']);
-    
+    		
+            //一级和二级审批人的检测
+            if(empty($data['data']['managerid']) || empty($data['data']['fuserid'])){
+            	//EC::fail("登录失败：未设置一级或二级审核人！");
+            }
+            
             $session = $this->instance('session');
             $session->set('_loginUser',$data['data']);
              
