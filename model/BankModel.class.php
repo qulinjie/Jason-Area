@@ -14,6 +14,8 @@ class BankModel extends CSBankSoap
 	{
 		$ServiceCode = 'FMSCUST0001'; // 客户注册通知 
 
+		Log::notice("postRequest data ===========================>> data-registerData = ##" . json_encode($registerData) . "##" );
+		
 		if ( !$registerData || !is_array( $registerData ) ) {
 		    Log::error("param registerData is illegal .");
 			return false;
