@@ -356,5 +356,38 @@ class BankModel extends CSBankSoap
 	    return $this-> sendQuery( $ServiceCode, $requestParms, $fetchAll=false );
 	}
 
-
+    /**
+     * FMSPAY0001_跨行出金手续费查询
+     * @param unknown $registerData
+     */
+	public function queryTransferAccountsCost( $registerData )
+	{
+	    $ServiceCode = 'FMSPAY0001'; // 跨行出金手续费查询
+	
+	    Log::notice("postRequest data ===========================>> data-registerData = ##" . json_encode($registerData) . "##" );
+	
+	    // 	    if ( !$registerData || !is_array( $registerData ) ) {
+	    // 	        Log::error("param registerData is illegal .");
+	    // 	        return false;
+	    // 	    }
+	
+	    $requestParms = [];
+	
+	    // 必填字段
+	    $mustFields = ['AMT', 'SIT_NO', 'CURR_COD'];
+	    foreach ( $mustFields as $v )
+	    {
+	        // 	        if ( '0'!==strval($registerData[$v]) && !$registerData[$v] ) {
+	        // 	            Log::error(' no have $registerData['.$v.'] ');
+	        // 	            return false;
+	        // 	        }
+	        $requestParms[$v] = $registerData[$v];
+	    }
+	
+	    // 	    $requestParms['CUST_PHONE_NUM'] = $registerData['CUST_PHONE_NUM'];
+	    // 	    $requestParms['CUST_TELE_NUM'] = $registerData['CUST_TELE_NUM'];
+	
+	    return $this-> sendQuery( $ServiceCode, $requestParms, $fetchAll=false );
+	}
+	
 }
