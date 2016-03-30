@@ -84,14 +84,12 @@
             <td><?php echo $item['amount_type']; ?></td>
             <td><?php echo $item['order_no'];?></td>
             <td><?php echo $item['erp_fgsmc']; ?></td>
-            <td><?php if(1==$item['apply_status']){ echo '待审批' ;}
-                    else if(2==$item['apply_status']){ echo '审批通过' ;}
-                    else if(3==$item['apply_status']){ echo '审批驳回' ;}
-                    else { echo $item['apply_status'];}
-                ?>
+            <td><?php
+                    echo TradeRecordController::getApplyStatusByKey($item['apply_status'], $audit_level). $item['apply_status'];
+                 ?>
             </td>
             <td><?php 
-            		if(2!=$item['apply_status']){ echo '-';}
+            		if(5!=$item['apply_status']){ echo '-';}
             		elseif(1==$item['order_status'] && -1==$item['backhost_status']){ echo '待支付' ;}
                     /* else if(0===$item['backhostStatus']){ echo '待补录' ;}
                     else if(1==$item['backhostStatus']){ echo '待记帐' ;}
@@ -105,16 +103,8 @@
             </td>            
             <td> 
             
-            	<a id="audit-entity-<?php echo $item['id'];?>" value="<?php echo $item['id'];?>" class="audit-entity" href="#" data-toggle="modal" data-keyboard="false" data-backdrop="static">
-            	 <?php             	 
-	            	 /*if((2==$item['apply_status'] && 1==$item['order_status'])){
-	            		echo "付款";
-	            	}elseif(1==$item['apply_status']){
-	            		echo "审批";
-	            	}else{
-	            		echo "查看";
-	            	} */
-	            	//audit_user_id_first audit_user_id_second
+            	<a id="audit-entity-<?php echo $item['id'];?>-<?php echo $audit_level?>" value="<?php echo $item['id'];?>" class="audit-entity" href="#" data-toggle="modal" data-keyboard="false" data-backdrop="static">
+            	 <?php             
 	            	//apply_status 申请状态 1一级待审核 2一级审核通过 3一级审核驳回 4二级待审核 5二级审核通过 6二级审核驳回            	
 	            	//order_status 订单交易状态 1-待付款 2-已付款
 	            	if(!$is_admin && $current_user_id == $item['audit_user_id_first']){
@@ -124,7 +114,7 @@
 	            		}else{
 	            			echo "查看";
 	            		}
-	            	}elseif(!$is_admin && $current_user_id == $item['audit_user_id_second']){
+	            	}elseif($is_admin && $current_user_id == $item['audit_user_id_second']){
 	            		//二级审批
 						if(2==$item['apply_status']){
 							echo "审批";
@@ -134,10 +124,11 @@
 							echo "查看";
 						}
 	            	}else{
-	            		echo "查看";
+	            		echo "查看2";
 	            	}
             	?>
             	</a>
+            	
             </td>
         </tr>
     	<?php }?>

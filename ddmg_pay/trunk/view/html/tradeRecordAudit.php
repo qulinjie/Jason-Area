@@ -144,29 +144,50 @@
 		  	//order_status 订单交易状态 1-待付款 2-已付款
 		  	
 		  	$html1 = '<a id="add-entity-audit1" class="btn btn-primary" href="#">审批通过</a>
-    				 <a id="add-entity-audit2" class="btn btn-primary" href="#">审批驳回</a>';
-		  	$html2 = '<button id="add-entity-audit-pass" type="button" class="btn btn-default disabled" data-dismiss="modal">已审批</button>';
+    				  <a id="add-entity-audit2" class="btn btn-primary" href="#">审批驳回</a>';
+		  	$html2 = '<a id="add-entity-audit21" class="btn btn-primary" href="#">审批通过</a>
+    				  <a id="add-entity-audit22" class="btn btn-primary" href="#">审批驳回</a>';
+		  	
 		  	$html3 = '<button id="add-entity-pay-pass" type="button" class="btn btn-default disabled" data-dismiss="modal">已付款</button>';
 		  	$html4 = '<a id="add-entity-pay" class="btn btn-primary" href="#">付款</a>';
 		  	
-		  	if(!$is_admin && $current_user_id == $item['audit_user_id_first']){
+		  	$html12 = '<button id="add-entity-audit-yes-pass1" type="button" class="btn btn-default disabled" data-dismiss="modal">一级审批已通过</button>';
+		  	$html25 = '<button id="add-entity-audit-yes-pass2" type="button" class="btn btn-default disabled" data-dismiss="modal">二级审批已通过</button>';
+		  	
+		  	$html13 = '<button id="add-entity-audit-no-pass1" type="button" class="btn btn-default disabled" data-dismiss="modal">一级审批已驳回</button>';
+		  	$html26 = '<button id="add-entity-audit-no-pass2" type="button" class="btn btn-default disabled" data-dismiss="modal">二级审批已驳回</button>';
+		  	
+		  	if(!$is_admin && '1' == strval($audit_level)){
 		  		//一级审批
-		  		if(1==$item['apply_status']){		  					  			
-					echo $html1;
+		  		if(1==$data_info['apply_status']){		  					  			
+					echo $html1; //审批通过/审批驳回 
 		  		}
-		  	}elseif(!$is_admin && $current_user_id == $item['audit_user_id_second']){
+		  		if(2==$data_info['apply_status']){
+		  			echo $html12; //一级审批已通过
+		  		}
+		  	}elseif($is_admin && '2' == strval($audit_level)){
 		  		//二级审批
-		  		if(2==$item['apply_status']){
-		  			echo "审批";
-		  		}elseif(5==$item['apply_status'] && 1==$item['order_status']){
-		  			echo "付款";
-		  		}else{
-		  			echo "查看";
+		  		if(2==$data_info['apply_status'] || 4==$data_info['apply_status']){
+		  			echo $html2; //审批通过/审批驳回 
+		  		}		  		
+		  		if(5==$data_info['apply_status']){
+		  			echo $html25; //二级审批已通过
+		  			if(1==$data_info['order_status']){
+		  				echo $html4; //付款
+		  			}
 		  		}
-		  	}else{
-		  		echo "查看";
+		  	}
+		  	if(3==$data_info['apply_status']){
+		  		echo $html13; //一级审批已驳回
+		  	}
+		  	if(6==$data_info['apply_status']){
+		  		echo $html26; //一级审批已驳回
+		  	}
+		  	if(6==$data_info['apply_status'] && 2==$data_info['order_status']){
+		  		echo $html3;
 		  	}	  	
 	  	?> 	
+	    <!--
 	    <?php if(1==$data_info['apply_status']){ ?>	  	
 			<a id="add-entity-audit1" class="btn btn-primary" href="#">审批通过</a>
     		<a id="add-entity-audit2" class="btn btn-primary" href="#">审批驳回</a>    		
@@ -177,7 +198,8 @@
        		<button id="add-entity-pay-pass" type="button" class="btn btn-default disabled" data-dismiss="modal">已付款</button>
        	<?php }?>
        	<a id="add-entity-pay" class="btn btn-primary <?php echo (2==$data_info['apply_status'] && 2!=$data_info['order_status']) ? '' : ' hidden'?>" href="#">付款</a>
-		<!--  <a id="add-entity-cancel" class="btn btn-primary" href="#">关闭</a> -->
+		  <a id="add-entity-cancel" class="btn btn-primary" href="#">关闭</a> 
+		-->
         <button id="add-entity-cancel" type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
       </div>
 

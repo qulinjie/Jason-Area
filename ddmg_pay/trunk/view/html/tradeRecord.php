@@ -35,7 +35,7 @@
 </div>
 
 <h1 class="page-header">
-<?php echo $is_admin ? '付款审批' : '申请付款' ?>
+<?php echo ('1' != strval($audit_level) && '2' != strval($audit_level)) ? '申请付款' : '付款审批' ?>
 </h1>
 
 <div class="panel panel-primary">
@@ -58,10 +58,10 @@
 	  <div class="form-group">
 	    <label for="entity-search-apply_status">申请状态</label>
 	    <select class="form-control" id="entity-search-apply_status">
-	      <option value="-1">全部</option>
-	      <option value="1">待审批</option>
-	      <option value="2">审批通过</option>
-	      <option value="3">审批驳回</option>        
+	      <option value="-1">全部</option>	       
+	      <?php foreach(TradeRecordController::getApplyStatus() as $key => $value){          	   
+          		echo "<option value=\"".$key."\">".$value."</option>";          	
+          }?>        
         </select>
 	  </div>
 	  <div class="form-group">
@@ -87,7 +87,7 @@
   </div>
 </div>
 
-<?php if(!$is_admin){ ?>
+<?php if('1' != strval($audit_level) && '2' != strval($audit_level)){ ?>
 <div id="add-button-group" style="padding-bottom: 2px;">
 	<a id="add-entity-new" class="btn btn-primary" href="<?php echo Router::getBaseUrl();?>tradeRecord/createApply" >申请付款</a>
 <!-- 	<a id="test_send_pay" class="btn btn-primary" href="#" >测试付款</a> -->
