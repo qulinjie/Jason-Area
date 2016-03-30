@@ -322,6 +322,10 @@ class BankModel extends CSBankSoap
 /********************************  电子票务  ************************************/
 
 	
+	/**
+	 * UPP3009_行名行号查询
+	 * @param unknown $registerData
+	 */
 	public function queryBankInfo( $registerData )
 	{
 	    $ServiceCode = 'UPP3009'; // 行名行号查询
