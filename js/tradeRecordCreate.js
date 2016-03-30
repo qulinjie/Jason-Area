@@ -343,6 +343,7 @@ $(document).on('click', '#for-test-btn', function(event){
 		
 	    var apply_no = $('#add-entity-apply_no').val(); // 申请单号
 	    var comp_name = $('#add-entity-comp_name').val(); // 收款单位
+	    var comp_name_code = $('#add-entity-comp_name_code').val(); // 收款单位
 	    var comp_account = $('#add-entity-comp_account').val(); // 收款账号
 	    var bank_name = $('#add-entity-bank_name').val(); // 开户行
 	    var amount_type = $('#add-entity-amount_type').val(); // 款项类别
@@ -373,6 +374,7 @@ $(document).on('click', '#for-test-btn', function(event){
 	        	'order_no_arr':order_no_arr, 
 	        	'apply_no':apply_no,
 	        	'comp_name':comp_name,
+	        	'comp_name_code':comp_name_code,
 	        	'comp_account':comp_account,
 	        	'bank_name':bank_name,
 	        	'amount_type':amount_type,
@@ -550,9 +552,11 @@ $(document).on('click', '#for-test-btn', function(event){
 		
 		$('#add-entity-fphm').val(orderHeader['fphm_']); // 业务单号-发票号码 
 		$('#add-entity-comp_name').val(orderHeader['dwmc_']); // 收款单位
+		$('#add-entity-comp_name_code').val(orderHeader['dwdm_']); // 收款单位代码
 		$('#add-entity-amount').val(orderHeader['_cgddje']); // 金额
 		$('#add-entity-full_amount').val(orderHeader['_cgddje']); // 金额
 		$('#add-entity-comp_name_buyer').val(orderDetails['string7_']); // 下游买家
+		$('#add-entity-comp_name_buyer_code').val(orderDetails['string8_']); //下游买家代码
 		
 		getOrgNameInfo($('#add-entity-comp_name').val()); // 根据往来单位，查询付款账户信息。
 	}
@@ -605,6 +609,7 @@ $(document).on('click', '#for-test-btn', function(event){
 		
 		var apply_no = $('#add-entity-apply_no').val(); // 申请单号
 		var comp_name = $('#add-entity-comp_name').val(); // 收款单位
+		var comp_name_code = $('#add-entity-comp_name_code').val(); // 收款单位代码
 		var comp_account = $('#add-entity-comp_account').val(); // 收款账号
 		var bank_name = $('#add-entity-bank_name').val(); // 开户行
 		var amount = $('#add-entity-amount').val(); // 申请金额
@@ -612,6 +617,7 @@ $(document).on('click', '#for-test-btn', function(event){
 		var comment = $('#add-entity-comment').val(); // 备注
 		var use = $('#add-entity-use').val(); // 用途
 		var comp_name_buyer = $('#add-entity-comp_name_buyer').val(); // 下游买家
+		var comp_name_buyer_code = $('#add-entity-comp_name_buyer_code').val(); // 下游买家代码
 		
 		var hint_html = '';
 	    if( !amount || '' == amount ){
@@ -620,8 +626,8 @@ $(document).on('click', '#for-test-btn', function(event){
 	    
 	    var full_amount = $('#add-entity-full_amount').val();
 //	    alert(full_amount + '-' + amount + '-' + ( full_amount < amount ));
-	    if( full_amount < amount ){
-	    	hint_html += (hint_html == '' ? '' : '<BR>') + '填写 金额 不能大于单据金额！' + full_amount;
+	    if( parseFloat(amount) > parseFloat(full_amount) ){
+	    	hint_html += (hint_html == '' ? '' : '<BR>') + '填写金额 ' + amount +' 不能大于单据金额 ' + full_amount +'！';
 	    }
 	    
 	    if( !comp_account || '' == comp_account ){
@@ -645,7 +651,7 @@ $(document).on('click', '#for-test-btn', function(event){
 	    }
 	    
 	    var str = "@;"
-	    var submitInfo = fphm + str + amount + str + comp_name_buyer + str + comment;
+	    var submitInfo = fphm + str + amount + str + comp_name_buyer + str + comp_name_buyer_code + str + comment;
 	    var inputObj = "<input id='V_" + fphm + "' name='input_apply_orders' value='" + submitInfo + "' />";
 	    
 		var trObj = ""
