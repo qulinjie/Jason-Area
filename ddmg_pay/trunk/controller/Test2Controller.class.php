@@ -26,6 +26,9 @@ class Test2Controller extends BaseController
             case 'queryBankInfo':
                 $this-> queryBankInfo();
                 break;
+            case 'queryTransferAccountsCost':
+                $this-> queryTransferAccountsCost();
+                break;
                 
             default:
                 Log::error('page not found');
@@ -101,6 +104,14 @@ class Test2Controller extends BaseController
     // FMSCUST0003_客户信息查询
     public function getCustomerInfo(){
         
+        $bank_model = $this->model('bank');
+        
+        $MCH_NO = $this->getMCH_NO(); // 商户编号
+        $SIT_NO = 'DDMG1111';
+        
+        $data = $bank_model->getCustomerInfo($MCH_NO,$SIT_NO);
+         
+        EC::success(EC_OK, $data);
     }
     
     // UPP3009_行名行号查询
@@ -129,4 +140,21 @@ class Test2Controller extends BaseController
         EC::success(EC_OK, $data);
     }
     
+    // FMSPAY0001_跨行出金手续费查询
+    public function queryTransferAccountsCost(){
+        $params = [
+            'AMT'               => '12000',   // 提现金额
+            'SIT_NO'            => 'DDMG1111',   // 付款方席位号
+            'CURR_COD'          => '01'   // 币别 目前只支持：CNY-人民币
+        ];
+    
+        $bank_model = $this->model('bank');
+        $conf = $this->getConfig('conf');
+    
+        $params['MCH_NO']  = $this->getMCH_NO(); // 商户编号
+        
+        $data = $bank_model->queryBankInfo($params);
+         
+        EC::success(EC_OK, $data);
+    }
 }
