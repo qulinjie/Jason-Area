@@ -169,22 +169,22 @@
 		  		//二级审批
 		  		if(2==$data_info['apply_status'] || 4==$data_info['apply_status']){
 		  			echo $html2; //审批通过/审批驳回 
-		  		}		  		
+		  		}
 		  		if(5==$data_info['apply_status']){
 		  			echo $html25; //二级审批已通过
-		  			if(1==$data_info['order_status']){
-		  				echo $html4; //付款
-		  			}
-		  		}
-		  	}
+		  		}		  		
+		  		if(5==$data_info['apply_status'] && 1==$data_info['order_status']){
+		  			echo $html4; //付款
+		  		}		  		
+		  	}		  	
 		  	if(3==$data_info['apply_status']){
 		  		echo $html13; //一级审批已驳回
-		  	}
+		  	}		  	
 		  	if(6==$data_info['apply_status']){
 		  		echo $html26; //一级审批已驳回
 		  	}
-		  	if(6==$data_info['apply_status'] && 2==$data_info['order_status']){
-		  		echo $html3;
+		  	if(5==$data_info['apply_status'] && 2==$data_info['order_status']){
+		  		echo $html3; //已付款
 		  	}	  	
 	  	?> 	
 	    <!--
