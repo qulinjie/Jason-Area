@@ -106,9 +106,9 @@ class Test2Controller extends BaseController
     // UPP3009_行名行号查询
     public function queryBankInfo(){
         $params = [
-            'BANK_CODE'               => '',   // 席位号
-            'BANK_NAME'               => '长沙银行',   // 席位号
-            'IS_VAGUE'               => '1',   // 席位号
+            'BANK_CODE'               => '313551080003',   // 席位号
+            'BANK_NAME'               => '',   // 席位号
+            'IS_VAGUE'               => '0',   // 席位号
             'PAGE_SIZE'               => '10',   // 席位号
             'PAGE_NUMBER'               => '1'   // 席位号
         ];
