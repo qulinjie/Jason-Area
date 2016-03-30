@@ -20,6 +20,12 @@ class Test2Controller extends BaseController
             case 'registerCustomer':
                 $this-> registerCustomer();
                 break;
+            case 'getCustomerInfo':
+                $this-> getCustomerInfo();
+                break;
+            case 'queryBankInfo':
+                $this-> queryBankInfo();
+                break;
                 
             default:
                 Log::error('page not found');
@@ -92,6 +98,35 @@ class Test2Controller extends BaseController
         EC::success(EC_OK, $data);
     }
     
+    // FMSCUST0003_客户信息查询
+    public function getCustomerInfo(){
+        
+    }
     
+    // UPP3009_行名行号查询
+    public function queryBankInfo(){
+        $params = [
+            'BANK_CODE'               => '',   // 席位号
+            'BANK_NAME'               => '长沙银行',   // 席位号
+            'IS_VAGUE'               => '1',   // 席位号
+            'PAGE_SIZE'               => '10',   // 席位号
+            'PAGE_NUMBER'               => '1'   // 席位号
+        ];
+        
+        $bank_model = $this->model('bank');
+        $conf = $this->getConfig('conf');
+        $bcsRegister_model = $this->model('bcsRegister');
+        
+        $data = $bank_model->queryBankInfo($params);
+         
+        $CSBankSoapUrl = $conf['CSBankSoapUrl'];
+        $params = array();
+        $params['wsdlUrl'] = strval($CSBankSoapUrl);
+        $params['xml'] = strval($data[0]);
+        Log::notice('params==createByJava--------------------->>' . var_export($params, true));
+        $data = $bcsRegister_model->createByJava($params);
+        
+        EC::success(EC_OK, $data);
+    }
     
 }

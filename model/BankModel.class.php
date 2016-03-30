@@ -35,22 +35,19 @@ class BankModel extends CSBankSoap
 		}
 
 		// CUST_SPE_ACCT_BKTYPE为1时必填字段
-		Log::notice("postRequest data ===========================>> data-CUST_SPE_ACCT_BKTYPE = ##" . ( '1'===strval($registerData['CUST_SPE_ACCT_BKTYPE']) ) . "##" );
-		Log::notice("postRequest data ===========================>> data-CUST_SPE_ACCT_BKTYPE = ##" . ( '1'==strval($registerData['CUST_SPE_ACCT_BKTYPE']) ) . "##" );
 		if ( '1' == strval($registerData['CUST_SPE_ACCT_BKTYPE']) ) {
 			$shouldCheck = ['CUST_SPE_ACCT_BKID', 'CUST_SPE_ACCT_BKNAME'];
-			foreach ( $shouldCheck as $k ) {
-				if ( !$registerData[$k] ) { // 应该加验证
-					Log::error(' no have $registerData['.$v.'] ');
+			foreach ( $shouldCheck as $v ) {
+				if ( !$registerData[$v] ) { // 应该加验证
+					Log::error(' no have $registerData[' . $v . '] ');
 					return false;
 				}
-				Log::notice("postRequest data ===========================>>k=" . $registerData[$k]);
 				$requestParms[$v] = $registerData[$v];
 			}
 		}
 		
-		$requestParms['CUST_SPE_ACCT_BKID'] = $registerData['CUST_SPE_ACCT_BKID'];
-		$requestParms['CUST_SPE_ACCT_BKNAME'] = $registerData['CUST_SPE_ACCT_BKNAME'];
+// 		$requestParms['CUST_SPE_ACCT_BKID'] = $registerData['CUST_SPE_ACCT_BKID'];
+// 		$requestParms['CUST_SPE_ACCT_BKNAME'] = $registerData['CUST_SPE_ACCT_BKNAME'];
 		$requestParms['CUST_PHONE_NUM'] = $registerData['CUST_PHONE_NUM'];
 		$requestParms['CUST_TELE_NUM'] = $registerData['CUST_TELE_NUM'];
 		
@@ -324,6 +321,36 @@ class BankModel extends CSBankSoap
 
 /********************************  电子票务  ************************************/
 
+	
+	public function queryBankInfo( $registerData )
+	{
+	    $ServiceCode = 'UPP3009'; // 行名行号查询
+	
+	    Log::notice("postRequest data ===========================>> data-registerData = ##" . json_encode($registerData) . "##" );
+	
+// 	    if ( !$registerData || !is_array( $registerData ) ) {
+// 	        Log::error("param registerData is illegal .");
+// 	        return false;
+// 	    }
+	
+	    $requestParms = [];
+	
+	    // 必填字段
+	    $mustFields = ['BANK_CODE', 'BANK_NAME', 'IS_VAGUE', 'PAGE_SIZE', 'PAGE_NUMBER'];
+	    foreach ( $mustFields as $v )
+	    {
+// 	        if ( '0'!==strval($registerData[$v]) && !$registerData[$v] ) {
+// 	            Log::error(' no have $registerData['.$v.'] ');
+// 	            return false;
+// 	        }
+	        $requestParms[$v] = $registerData[$v];
+	    }
+	
+// 	    $requestParms['CUST_PHONE_NUM'] = $registerData['CUST_PHONE_NUM'];
+// 	    $requestParms['CUST_TELE_NUM'] = $registerData['CUST_TELE_NUM'];
+	
+	    return $this-> sendQuery( $ServiceCode, $requestParms, $fetchAll=false );
+	}
 
 
 }
