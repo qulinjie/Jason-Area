@@ -35,7 +35,7 @@ class Test2Controller extends BaseController
     
         $mch_no = $conf['MCH_NO'];
     
-        $bcs_data = $bcsBank_model->getMarketBasicInfo( $mch_no );
+        $bcs_data = $bcsBank_model->getMarketInfo( $mch_no );
         Log::notice('loadInfo ==== >>> getMarketInfo response=##' . json_encode($bcs_data) . '##');
     
         EC::success(EC_OK, $bcs_data);
