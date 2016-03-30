@@ -125,8 +125,8 @@ class Test2Controller extends BaseController
     public function queryBankInfo(){
         $params = [
             'BANK_CODE'               => '',   // 查询参数（行号） 313551080003
-            'BANK_NAME'               => '工商银行',   // 查询参数（行名） 长沙银行股份有限公司联汇支行
-            'IS_VAGUE'               => '1',   // 是否模糊查询 0:不是 1:是
+            'BANK_NAME'               => '长沙银行股份有限公司联汇支行',   // 查询参数（行名） 长沙银行股份有限公司联汇支行
+            'IS_VAGUE'               => '0',   // 是否模糊查询 0:不是 1:是
             'PAGE_SIZE'               => '10',   // 页码条数
             'PAGE_NUMBER'               => '1'   // 查询页码
         ];
@@ -151,7 +151,7 @@ class Test2Controller extends BaseController
     public function queryTransferAccountsCost(){
         $params = [
             'AMT'               => '12000',   // 提现金额
-            'SIT_NO'            => 'DDMG1112',   // 付款方席位号
+            'SIT_NO'            => 'DDMG1113',   // 付款方席位号
             'CURR_COD'          => 'CNY'   // 币别 目前只支持：CNY-人民币
         ];
         
@@ -182,7 +182,6 @@ class Test2Controller extends BaseController
          
         EC::success(EC_OK, $data);
     }
-    
     
     // FMSPAY0002_客户出金
     public function customerOutflow(){
