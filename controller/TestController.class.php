@@ -120,7 +120,7 @@ class TestController extends BaseController
         //1
         //$param = '<body><acctNo>6224080602781</acctNo><virtualAcctNo></virtualAcctNo><beginNumber>1</beginNumber><queryNumber>20</queryNumber></body>';
         //$param = '<body><acctNo>6224080600234</acctNo><virtualAcctNo>62250806009</virtualAcctNo><beginNumber>1</beginNumber><queryNumber>20</queryNumber></body>';
-        $param = '<body><acctNo>6224080600234</acctNo><virtualAcctNo></virtualAcctNo><beginNumber>1</beginNumber><queryNumber>20</queryNumber></body>';
+        $param = '<body><acctNo>66100155260001330</acctNo><virtualAcctNo></virtualAcctNo><beginNumber>1</beginNumber><queryNumber>20</queryNumber></body>';
         $data = $model->testSpdSign1($param);
         Log::notice("\r\n\r\n ============111================\r\n\r\n");
         
@@ -128,7 +128,8 @@ class TestController extends BaseController
         $signature = strval( $data['body']['sign'] );
         $param = "<?xml version='1.0' encoding='GB2312'?><packet><head>" 
                     . "<transCode>5144</transCode><signFlag>1</signFlag>" 
-                    . "<masterID>2000040752</masterID><packetID>"
+//                     . "<masterID>2000040752</masterID><packetID>"
+                    . "<masterID>2012541443</masterID><packetID>"
                     . date('YmdHis',time()) . "</packetID><timeStamp>"
                     . date('Y-m-d H:i:s',time()) . "</timeStamp></head><body><signature>"
                     . $signature  . "</signature></body></packet>";
