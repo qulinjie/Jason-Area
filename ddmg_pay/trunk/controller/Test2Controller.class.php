@@ -75,9 +75,9 @@ class Test2Controller extends BaseController
         $params = [
             'SIT_NO'               => 'DDMG1113',   // 席位号 DDMG1111 DDMG1112
             'CUST_CERT_TYPE'       => '02',          // 客户证件类型
-            'CUST_CERT_NO'         => '460102820428331',            // 客户证件号码
-            'CUST_NAME'            => '测试伟',          // 客户名称
-            'CUST_ACCT_NAME'       => '测试伟',      // 客户账户名
+            'CUST_CERT_NO'         => '430121198310081576',            // 客户证件号码
+            'CUST_NAME'            => '测试城樑',          // 客户名称
+            'CUST_ACCT_NAME'       => '测试城樑',      // 客户账户名
             'CUST_SPE_ACCT_NO'     => '6223687310880026235',     // 客户结算账户
             'CUST_SPE_ACCT_BKTYPE' => '1',    // 客户结算账户行别 0-长沙银行；1-非长沙银行
             'CUST_SPE_ACCT_BKID'   => '102110005002',	// 客户结算账户行号
@@ -151,7 +151,7 @@ class Test2Controller extends BaseController
     public function queryTransferAccountsCost(){
         $params = [
             'AMT'               => '12000',   // 提现金额
-            'SIT_NO'            => 'DDMG1113',   // 付款方席位号
+            'SIT_NO'            => 'DDMG1112',   // 付款方席位号
             'CURR_COD'          => '01'   // 币别 目前只支持：CNY-人民币
         ];
     
