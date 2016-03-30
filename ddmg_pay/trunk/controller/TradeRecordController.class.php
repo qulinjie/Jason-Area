@@ -577,13 +577,15 @@ class TradeRecordController extends BaseController {
         $data_info['data_list'] = $data_item['data'];
         //Log::notice('data_info-----------------------------------params==>>' . var_export($data_info, true));
         $is_tradeRecordAudit = false;
-        if(!$is_admin){
+        if(!$is_admin){        	
 	        if($isCheck){
 	            $entity_list_html = $this->render('tradeCheck', array('item' => $data_info), true);
 	            EC::success(EC_OK, array('tradeRecord_check' => $entity_list_html));
 	        }elseif ('1' == strval($audit_level)){
 	        	$is_tradeRecordAudit = true;
-	        }else {
+	        }elseif(intval($data_info['user_id']) == intval($user_id)){
+        		$is_tradeRecordAudit = true;
+        	}else {
 	            $entity_list_html = $this->render('tradePay', array('item' => $data_info), true);
 	            EC::success(EC_OK, array('tradeRecord_pay' => $entity_list_html));
 	        }
@@ -591,7 +593,7 @@ class TradeRecordController extends BaseController {
         	$is_tradeRecordAudit = true;        	
         }
         if($is_tradeRecordAudit){
-        	//用于后台付款审批
+        	//用于付款审批、查看
         	$entity_list_html = $this->render('tradeRecordAudit', array('data_info' => $data_info, 'is_admin' => $is_admin, 'audit_level' => $audit_level), true);
         	EC::success(EC_OK, array('entity_list_html' => $entity_list_html));
         }
@@ -1116,6 +1118,9 @@ class TradeRecordController extends BaseController {
         $user_id = $loginUser_data['usercode'];
         $bcsCustomer_model = $this->model('bcsCustomer');
         
+        $audit_user_id_first = $loginUser_data['fuserid']; //一级审核人
+        $audit_user_id_second = $loginUser_data['managerid']; //二级审核人
+        
         $user_info_data = $bcsCustomer_model->getInfo(array('user_id' => $user_id));
         if(EC_OK != $user_info_data['code']){
             Log::error("getInfo failed . ");
@@ -1150,6 +1155,8 @@ class TradeRecordController extends BaseController {
         $trade_record['item'] = $trade_record_item;
         $trade_record['ACCOUNT_NO'] = $ACCOUNT_NO;
         $trade_record['user_id'] = $user_id;
+        $trade_record['audit_user_id_first'] = $audit_user_id_first;
+        $trade_record['audit_user_id_second'] = $audit_user_id_second;
         $trade_record['order_no'] = substr($order_no_str,1);
         $trade_record['order_bid_amount'] = $sum_amount;
         
@@ -1162,7 +1169,7 @@ class TradeRecordController extends BaseController {
         $trade_record['useTodo'] = $useTodo;
         $trade_record['comment'] = $comment;
         $trade_record['record_type'] = 2;
-        $trade_record['order_timestamp'] = date('Y-m-d',time());  
+        $trade_record['order_timestamp'] = date('Y-m-d',time()); 
         
         $trade_record['order_status'] = 1; //订单交易状态 1-待付款 2-已付款 
         $trade_record['bank_no'] = $bank_no;
@@ -1315,7 +1322,7 @@ class TradeRecordController extends BaseController {
     	//Log::write(var_export($data, true), 'debug', 'debug2-'.date('Y-m-d'));
     	 
     	//判断是否已审批通过
-    	if(2 != intval($data['apply_status'])){
+    	if(5 != intval($data['apply_status'])){
     		Log::error('audit did not pass!');
     		EC::fail(EC_TRADE_TF_NO_AS);
     	}
@@ -1336,6 +1343,7 @@ class TradeRecordController extends BaseController {
     		EC::fail(EC_REC_EST);
     	}
     	    	
+    	/*
     	//查合伙人信息
     	$bcs_params  = array();
     	$bcs_params['user_id'] = $data['user_id'];
@@ -1366,7 +1374,7 @@ class TradeRecordController extends BaseController {
     	$dwdm = '';
     	if(!empty($ct_info_data) && isset($ct_info_data[0])){
     		$dwdm = $ct_info_data[0]['dwdm'];
-    	}
+    	} */
     	
     	//获取详细订单数据
     	$tradeRecordItem_model = $this->model('tradeRecordItem');    	
@@ -1376,41 +1384,48 @@ class TradeRecordController extends BaseController {
     	}
     	$data['list'] = $data_list['data'] ? $data_list['data'] : [];
     	
-    	//主表：cw_fkd    	 
+    	/* "head":{
+    	"dwdm":"00002247",
+    	"rq":"2016-5-1",
+    	"je":93806.00,
+    	"usercode":"110005",
+    	"gszh":"1901007009200157256",
+    	"gskhh":"中国工商银行",
+    	"zh":"7402710182600006306",
+    	"khh":"中信银行长沙伍家岭支行"
+    	},
+    	"details":[{
+    	"xh":"1",
+    	"je":"1000",
+    	"ywdjh":"TT12345678",
+    	}] */
+
+    	//组织提交参数
     	$params = array();
-    	$params['fphm_'] = $data['apply_no']; //单据号：fphm_
-    	$params['wlflag_'] = 0; //往来标识：wlflag_  固定传‘0’
-    	$params['dwdm_'] = $dwdm; //往来单位代码：dwdm_
-    	$params['dwmc_'] = $data['seller_name']; //往来单位名称：dwmc_
-    	$params['rq_'] = $data['pay_timestamp']; //日期：rq_
-    	$params['je_'] = $data['order_bid_amount']; //金额：je_
-    	$params['fky_'] = '应号对应的合伙人'; //$data['user_id'] //付款人：fky_  固定传‘应号对应的合伙人’
-    	$params['kxly_'] = $data['amount_type']; //款项类别：kxly_  ,如：货款、
-    	$params['bmmc_'] = ''; //部门名称：bmmc_
-    	$params['ywy_'] = $bcs_data['SIT_NO']; //业务员：ywy_
-    	$params['gszh_'] = $data['comp_account']; //公司帐户：gszh_（浦发银行帐号）
-    	$params['gskhh_'] = $data['bank_name']; //开户银行：gskhh_（浦发银行）
-    	$params['fgs_'] = ''; //机构：fgs_
-    	$params['czy_'] = $data['user_id']; //操作员：czy_
-    	$params['sh_'] = $data['apply_status']; //审核标识：sh_
-    	$params['sysdjlx_'] = 'fkd'; //单据类型：sysdjlx_ 固定传‘fkd’
-		$params['list'] = array();
-    	//明细表：cw_skdmx
-    	foreach($data['list'] as $item){
-	    	$params2 = array();
-	    	$params2['fphm_'] = $item['itme_no']; //单据号:
-	    	$params2['xh_'] = $item['order_no']; //序号
-	    	$params2['je_'] = $item['bid_amount']; //金额
-	    	$params2['jsfs_'] = '网银'; //结算方式：固定传‘网银’
-	    	$params2['cgfgs_'] = $data['erp_fgsmc']; //Xsfgs_:cgfgs_  等于合伙人分公司
-	    	$params2['cgbm_'] = $data['erp_bmmc']; //Xsbm_： cgbm_等于合伙人部门
-	    	$params2['fkdph_'] = $data['jnl_seq_no'] . '-' .$item['itme_no']; //收款单批号：fkdph_  8位流水+单据号；如00000001CWSKD002-00000020
-	    	$params2['sysrq_'] = date("Y-m-d H:i:s"); //系统日期：sysrq_ 
-    		$params['list'][] = $params2;
-    	} 
-    	//Log::write(var_export($params, true), 'debug', 'debug22-'.date('Y-m-d'));
-    	//exit();
-    	/* Log::notice("request-data ============>> data = ##" . json_encode($params) . "##" );
+    	$head = array();
+    	$head['dwdm'] = $data['seller_name_code']; //往来单位代码：dwdm_
+    	$head['rq'] = $data['pay_timestamp']; //日期：rq_
+    	$head['je'] = $data['order_bid_amount']; //金额：je_
+    	$head['usercode'] = $data['user_id']; 
+    	$head['gszh'] = $data['comp_account']; //公司帐户：gszh_（浦发银行帐号）
+    	$head['gskhh_'] = $data['bank_name']; //开户银行：gskhh_（浦发银行）
+    	$head['zh'] = $data['comp_account']; 
+    	$head['khh'] = $data['bank_name'];
+    	$params['head'] = $head;
+    	
+    	$params['details'] = array();
+    	foreach ($data['list'] as $item){
+    		$details = array();
+    		$details['xh'] = $item['id'];
+    		$details['je'] = $item['bid_amount'];
+    		$details['ywdjh'] = $item['itme_no'];
+    		$params['details'][] = $details;
+    	}
+    	    	
+    	Log::write(var_export($params, true), 'debug', 'fkd-'.date('Y-m-d'));
+    	exit();
+    	
+    	Log::notice("request-data ============>> data = ##" . json_encode($params) . "##" );
     	$tradeRecord_model = $this->model('tradeRecord');
     	$res_data = $tradeRecord_model->erp_syncBillsOfPayment($params);
     	if(EC_OK_ERP != $res_data['code']){
@@ -1418,7 +1433,7 @@ class TradeRecordController extends BaseController {
     		EC::fail($res_data['code']);
     	}
     	Log::notice("response-data ============>> data = ##" . json_encode($res_data) . "##" );
-    	 */
+    	 /**/
     	//修改同步状态
     	$up_params = array(); 
     	$up_params['id'] = $data['id'];   	
@@ -1485,24 +1500,25 @@ class TradeRecordController extends BaseController {
     	$params = array();
     	$params['head'] = array();
     	$params['head']['usercode'] = $tradeRecord_data['user_id'];
-    	$params['head']['order_bid_amount'] = $tradeRecord_data['order_bid_amount'];
+    	//$params['head']['order_bid_amount'] = $tradeRecord_data['order_bid_amount'];
     	
     	$params['details'] = array();    	
     	foreach ($item_list as $item){
     		$details = array();
-    		$details['xymj'] = $item['item_comp_name_buyer'];
+    		$details['xymjdm'] = $item['item_comp_name_buyer_code'];
     		$details['fkje'] = $item['bid_amount'];
     		$params['details'][] = $details;
     	}
     	
-    	/* Log::notice("request-params  ===>> params = ##" . json_encode($params) . "##" );
+    	Log::write(var_export($params, true), 'debug', 'debug22-'.date('Y-m-d'));
+    	
+    	Log::notice("request-params  ===>> params = ##" . json_encode($params) . "##" );
     	$res_data = $tradeRecord_model->erp_auditOneTradRecord($params);
     	if(EC_OK_ERP != $res_data['code']){
     		Log::error('erp_auditOneTradRecord Fail!');
-    		EC::fail($res_data['code']);
+    		EC::fail($res_data['msg']);
     	}
     	Log::notice("response-params ===>> res_data = ##" . json_encode($res_data) . "##" );
-    	 */
     	
     	return true;
     }
@@ -1569,7 +1585,7 @@ class TradeRecordController extends BaseController {
     	}
     	
     	//调用erp接口查询是否可以通过
-    	$this->erp_auditOneTradRecord($data);
+    	$erp_audit_result = $this->erp_auditOneTradRecord($data);
     	
     	//修改审批状态
     	$params = array();
@@ -1778,7 +1794,7 @@ class TradeRecordController extends BaseController {
    			$this->instance('BcsCustomerController')->spd_loadAccountList_exec($ACCOUNT_NO);
    			   			
    			//同步付款单给erp
-   			   			
+   			$this->erp_syncBillsOfPayment($id);   			
    		}
    		
    		EC::success(EC_OK, $sp_data);
