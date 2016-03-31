@@ -296,7 +296,7 @@ class TestController extends BaseController
         //$param = '<body><acctNo>6224080602781</acctNo><jnlNoDate>20160309</jnlNoDate><seqNos>999701040001</seqNos><summonsNumber>3</summonsNumber><transAmount>1000</transAmount><debitCreditFlag>1</debitCreditFlag><shareRule>2</shareRule><shareType>1</shareType><summaryCode></summaryCode><lists name="LoopResult"><list><virtualAcctNo>12345678901</virtualAcctNo><transAmount>1000</transAmount></list></lists></body>';
         //$param = '<body><acctNo>6224080600234</acctNo><jnlNoDate>20160314</jnlNoDate><seqNos>999701220001</seqNos><summonsNumber>3</summonsNumber><transAmount>112</transAmount><debitCreditFlag>1</debitCreditFlag><shareRule>2</shareRule><shareType>1</shareType><summaryCode></summaryCode><lists name="LoopResult"><list><virtualAcctNo>62250806009</virtualAcctNo><transAmount>112</transAmount></list></lists></body>';
         //$param = '<body><acctNo>6224080600234</acctNo><jnlNoDate>20160322</jnlNoDate><seqNos>999701590001</seqNos><summonsNumber>3</summonsNumber><transAmount>1000.23</transAmount><debitCreditFlag>1</debitCreditFlag><shareRule>2</shareRule><shareType>1</shareType><summaryCode></summaryCode><lists name="LoopResult"><list><virtualAcctNo>62250806009</virtualAcctNo><transAmount>1000.23</transAmount></list></lists></body>';
-        $param = '<body><acctNo>6224080600234</acctNo><jnlNoDate>20160328</jnlNoDate><seqNos>999701650004</seqNos><summonsNumber>3</summonsNumber><transAmount>231.5</transAmount><debitCreditFlag>1</debitCreditFlag><shareRule>2</shareRule><shareType>1</shareType><summaryCode></summaryCode><lists name="LoopResult"><list><virtualAcctNo>62250806009</virtualAcctNo><transAmount>231.5</transAmount></list></lists></body>';
+        $param = '<body><acctNo>6224080600234</acctNo><jnlNoDate>' . date('Ymd',time()) .'</jnlNoDate><seqNos>999701620002</seqNos><summonsNumber>3</summonsNumber><transAmount>231.5</transAmount><debitCreditFlag>1</debitCreditFlag><shareRule>2</shareRule><shareType>1</shareType><summaryCode></summaryCode><lists name="LoopResult"><list><virtualAcctNo>62250806009</virtualAcctNo><transAmount>231.5</transAmount></list></lists></body>';
         $data = $model->testSpdSign1($param);
         Log::notice("\r\n\r\n ============111================\r\n\r\n");
     
@@ -365,7 +365,7 @@ class TestController extends BaseController
         //1
         //$param = '<body><acctNo>6224080602781</acctNo><beginDate>20160101</beginDate><endDate>20160130</endDate><beginNumber>1</beginNumber><queryNumber>5</queryNumber></body>';
         //$param = '<body><acctNo>6224080602781</acctNo><beginDate>20160309</beginDate><endDate>20160309</endDate><beginNumber>1</beginNumber><queryNumber>15</queryNumber></body>';
-        $param = '<body><acctNo>6224080600234</acctNo><beginDate>20160328</beginDate><endDate>20160328</endDate><beginNumber>1</beginNumber><queryNumber>5</queryNumber></body>';
+        $param = '<body><acctNo>6224080600234</acctNo><beginDate>' . date('Ymd',time()) .'</beginDate><endDate>' . date('Ymd',time()) . '</endDate><beginNumber>1</beginNumber><queryNumber>5</queryNumber></body>';
         $data = $model->testSpdSign1($param);
         Log::notice("\r\n\r\n ============111================\r\n\r\n");
     
@@ -594,6 +594,8 @@ class TestController extends BaseController
         return $result;
     }
     
+    // end-SPD
+    
     
     public static $erp_url = 'http://test-api.gt-xx.com';
     public function test_Login(){
@@ -661,50 +663,8 @@ class TestController extends BaseController
         EC::success(EC_OK,$data);
     }
     
-    // end-SPD
     
-	public function laiyifa()
-	{
-		//  长沙银行接口MODEL
-		$BankModel = $this->model( 'Bank' );
-
-
-		/* ===================== 测试获取商户信息 */
-		/*$res = $BankModel->getMarketInfo( 198209 ); // 测试获取商户信息
-		var_dump($res);
-		return '';*/
-
-
-
-
-
-		/* ===================== 测试获取商户信息
-		$res = $BankModel->getMarketInfo( 198209 ); // 测试获取商户信息
-		var_dump($res);
-		return '';
-		 */
-
-		/* ================================= 用户注册通知 */
-		$requestParms = []; 
-		$requestParms['MCH_NO'] = '198209';					// 商户编号
-		$requestParms['CUST_CERT_TYPE'] = '21';			// 客户证件类型
-		$requestParms['CUST_CERT_NO'] = '9800008107';				// 客户证件号码 
-		$requestParms['SIT_NO'] = 'DDMG00007';					// 席位号
-		$requestParms['CUST_NAME'] = '湖南省领导人才资源开发中心';				// 客户名称
-		$requestParms['CUST_ACCT_NAME'] = '湖南省领导人才资源开发中心';			// 客户账户名
-		$requestParms['CUST_SPE_ACCT_NO'] = '800052170901011';			// 客户结算账户
-		$requestParms['CUST_SPE_ACCT_BKTYPE'] = '0';	// 客户结算账户行别  0-长沙银行；1-非长沙银行
-			//$requestParms['CUST_SPE_ACCT_BKID'] = '6214836558162364';	// 客户结算账户行号
-			//$requestParms['CUST_SPE_ACCT_BKNAME'] = '招商银行';	// 客户结算账户行名
-	$requestParms['ENABLE_ECDS'] = '1';				// 是否开通电票
-	$requestParms['IS_PERSON'] = '0';				// 是否个人
-		$res = $BankModel->registerCustomer($requestParms);
-		var_dump($res);
-
-
-
-
-	}
+    
 
     
     public function testSaop1(){
