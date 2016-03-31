@@ -987,7 +987,8 @@ class BcsTradeController extends BaseController {
     	$res_data = $BcsTrade_model->erp_sendSmsCode($data);
     	Log::notice("response-data ============>> res_data = ##" . json_encode($res_data) . "##" );
     	
-    	EC::success(EC_OK, $res_data);
+    	return true;
+    	//EC::success(EC_OK, $res_data);
     }
     
 }
