@@ -1754,8 +1754,8 @@ class TradeRecordController extends BaseController {
 	    	$params['payerName']        = $SIT_NO; //Y 付款人名称    	
 	    	$params['payeeAcctNo']  = $data['comp_account']; //Y 收款人账号
 	    	//$params['payeeAcctNo']    = '6223635001004485218'; // 收款人账号
-	    	//$params['payeeAcctName'] = $data['seller_name']; //Y 收款人中文名 
-	    	$params['payeeAcctName']  = '钟煦镠'; // 收款人中文名
+	    	$params['payeeAcctName'] = $data['seller_name']; //Y 收款人中文名 
+	    	//$params['payeeAcctName']  = '钟煦镠'; // 收款人中文名
 	    		
 	    	$params['ownItBankFlag']    = $data['bank_flag'];//Y 本行/它行标志 0：表示本行 1：表示它行   
 			$params['remitLocation']    = $data['local_flag']; // 同城异地标志 0：同城 1：异地 跨行转账时必须输入(即本行/它行标志为1：表示它行)
