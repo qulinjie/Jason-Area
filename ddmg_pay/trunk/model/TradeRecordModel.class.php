@@ -75,7 +75,7 @@ class TradeRecordModel extends CurlModel {
     }  
 
     public function erp_syncBillsOfPayment($params = array()){
-    	return self::sendRequestErp('api/pub/FinanceService/PostCW_SKDCreate/',$params);
+    	return self::sendRequestErp('api/pub/FinanceService/PostCW_FKDCreate/',$params);
     }
         
     public function auditOneTradRecord($params = array()){
