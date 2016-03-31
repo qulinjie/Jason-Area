@@ -335,6 +335,17 @@ class UserController extends BaseController
         }
         return false;
     }
+    
+    public static function isFUser(){
+    	$session = self::instance('session');
+    	if(!$session->is_set('_loginUser')){
+    		$session = self::getLoginUser();
+    	}
+    	if($session->get('_loginUser')['usercode'] == $session->get('_loginUser')['fuserid'] ){
+    		return true;
+    	}
+    	return false;
+    }
 
     //{"userid":"68ff4da6-8dc3-4a60-805a-6fbd609518b9","usercode":"110002","username":"\u674e\u56db","loginid":"110002",
     //"mobile":"18073215757","email":"hisyz@qq.com","is_buyer":1,"is_seller":1,"is_partner":1,"is_manager":1,"is_bank":1,"is_ddmg":1,
@@ -402,6 +413,7 @@ class UserController extends BaseController
     		
             //一级和二级审批人的检测
             if(empty($data['data']['managerid']) || empty($data['data']['fuserid'])){
+            	Log::notice('login error . data=' . json_encode($data['data']) );
             	EC::fail("登录失败：未设置一级或二级审核人！");
             }
             
