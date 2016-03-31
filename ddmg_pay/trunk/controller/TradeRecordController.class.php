@@ -1304,7 +1304,8 @@ class TradeRecordController extends BaseController {
     	Log::notice("erp_syncBillsOfPayment ===========================>> id=" .$id );
     	if(empty($id)){
     		Log::error('id empty !');
-    		EC::fail(EC_PAR_ERR);
+    		//EC::fail(EC_PAR_ERR);
+    		return false;
     	}
     	 
     	//根据id查采购单的数据
@@ -1312,35 +1313,41 @@ class TradeRecordController extends BaseController {
     	$data = $tradeRecord_model->getInfo(array('id' => $id));
     	if(empty($data) || !is_array($data) || EC_OK != $data['code'] || !isset($data['data'])) {
     		Log::error('tradeRecord getInfo empty !');
-    		EC::fail(EC_DAT_NON);
+    		//EC::fail(EC_DAT_NON);
+    		return false;
     	}
     	$data = $data['data'][0];
     	if(empty($data)) {
     		Log::error('tradeRecord getInfo empty !');
-    		EC::fail(EC_RED_EMP);
+    		//EC::fail(EC_RED_EMP);
+    		return false;
     	}
     	//Log::write(var_export($data, true), 'debug', 'debug2-'.date('Y-m-d'));
     	 
     	//判断是否已审批通过
     	if(5 != intval($data['apply_status'])){
     		Log::error('audit did not pass!');
-    		EC::fail(EC_TRADE_TF_NO_AS);
+    		//EC::fail(EC_TRADE_TF_NO_AS);
+    		return false;
     	}
     	
     	//判断是否已付款  order_status 订单交易状态 1-待付款 2-已付款' || 记录状态 0-待补录；1-待记帐；2-待复核；3-待授权；4-完成；8-拒绝；9-撤销；
     	if(2 != intval($data['order_status'])){
     		Log::error("the order has not been payment: order_status={$data['order_status']}!");
-    		EC::fail(EC_TRADE_TF_OS_ERR_2);
+    		//EC::fail(EC_TRADE_TF_OS_ERR_2);
+    		return false;
     	}
     	if(true && !in_array($data['backhost_status'], array(0,1,2,3,4))){
     		Log::error("the order has not been payment: backhost_status={$data['backhost_status']}!");
-    		EC::fail(EC_TRADE_TF_OS_ERR_3);
+    		//EC::fail(EC_TRADE_TF_OS_ERR_3);
+    		return false;
     	}
     	
     	//判断是否已同步erp
     	if(2 == $data['is_erp_sync']){
     		Log::error("the order has been sync erp: is_erp_sync={$data['is_erp_sync']}!");
-    		EC::fail(EC_REC_EST);
+    		//EC::fail(EC_REC_EST);
+    		return false;
     	}
     	    	
     	//查合伙人信息
@@ -1352,12 +1359,14 @@ class TradeRecordController extends BaseController {
     	//Log::write("bcs_data==".var_export($bcs_data, true), 'debug', 'debug-'.date('Y-m-d'));
     	if(EC_OK != $bcs_data['code'] || !is_array($bcs_data) || !isset($bcs_data['data'])){
     		Log::error("bcsCustomer getInfo failed . ");
-    		EC::fail(EC_USR_NON);
+    		//EC::fail(EC_USR_NON);
+    		return false;
     	}
     	$bcs_data = $bcs_data['data'][0];
     	if(empty($bcs_data)) {
     		Log::error('bcsCustomer getInfo empty !');
-    		EC::fail(EC_RED_EMP);
+    		//EC::fail(EC_RED_EMP);
+    		return false;
     	}
     	/*
     	//根据供货商单位名查erp接口来往单位信息
@@ -1423,28 +1432,31 @@ class TradeRecordController extends BaseController {
     	    	
     	Log::write(var_export($params, true), 'debug', 'fkd-'.date('Y-m-d'));
     	//exit();
-    	
+    	$is_erp_sync = 2;
     	Log::notice("request-data ============>> data = ##" . json_encode($params) . "##" );
     	$tradeRecord_model = $this->model('tradeRecord');
     	$res_data = $tradeRecord_model->erp_syncBillsOfPayment($params);
     	if(EC_OK_ERP != $res_data['code']){
     		Log::error('erp_syncBillsOfPayment Fail!'. $res_data['msg']);
-    		EC::fail($res_data['code']);
+    		//EC::fail($res_data['code']);
+    		$is_erp_sync = 3;
     	}
     	Log::notice("response-data ============>> data = ##" . json_encode($res_data) . "##" );
     	 /**/
     	//修改同步状态
     	$up_params = array(); 
     	$up_params['id'] = $data['id'];   	
-    	$up_params['is_erp_sync'] = 2; //付款单是否同步 1否 2同步
+    	$up_params['is_erp_sync'] = $is_erp_sync; //付款单是否同步 1否 2同步 3同步失败
     	$up_params['erp_sync_timestamp'] = date('Y-m-d H:i:s',time()); 
-//     	$tr_data = $tradeRecord_model->update($up_params);
-//     	if(EC_OK != $tr_data['code']){
-//     		Log::error('update order status fail!');
-//     		EC::fail($tr_data['code']);
-//     	}
+    	$tr_data = $tradeRecord_model->update($up_params);
+    	if(EC_OK != $tr_data['code']){
+    		Log::error('update order status fail!');
+    		//EC::fail($tr_data['code']);
+    		return false;
+    	}
     	
-    	EC::success(EC_OK);
+    	//EC::success(EC_OK);
+    	return true;
     }
 
     
@@ -1741,8 +1753,8 @@ class TradeRecordController extends BaseController {
 	    	$params['payerName']        = $SIT_NO; //Y 付款人名称    	
 	    	$params['payeeAcctNo']  = $data['comp_account']; //Y 收款人账号
 	    	//$params['payeeAcctNo']    = '6223635001004485218'; // 收款人账号
-	    	$params['payeeAcctName'] = $data['seller_name']; //Y 收款人中文名 
-	    	//$params['payeeAcctName']  = '钟煦镠'; // 收款人中文名
+	    	//$params['payeeAcctName'] = $data['seller_name']; //Y 收款人中文名 
+	    	$params['payeeAcctName']  = '钟煦镠'; // 收款人中文名
 	    		
 	    	$params['ownItBankFlag']    = $data['bank_flag'];//Y 本行/它行标志 0：表示本行 1：表示它行   
 			$params['remitLocation']    = $data['local_flag']; // 同城异地标志 0：同城 1：异地 跨行转账时必须输入(即本行/它行标志为1：表示它行)
