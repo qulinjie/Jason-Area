@@ -58,7 +58,7 @@
             <td> 	      
 	  			<a id="entity-search-select-<?php echo $item['fphm_'];?>" class="entity-search-select" href="#" data-toggle="modal" data-keyboard="false" data-backdrop="static">选择</a>
 	        </td>
-            <td><a href="#" id="td_a_fphm"><?php echo $item['fphm_'];?></a></td>
+            <td><!-- <a href="#" id="td_a_fphm"> --><?php echo $item['fphm_'];?><!-- </a> --></td>
             <td><?php echo $item['dwmc_'];?></td>
             <td><?php echo date("Y-m-d h:i:s",strtotime($item['rq_']));?></td>
             <td><?php echo number_format($item['_cgddje'],2);?></td>
