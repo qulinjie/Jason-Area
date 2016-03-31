@@ -97,7 +97,7 @@
 </div>
 <!-- /.modal -->
 
-<h1 class="page-header">交易流水</h1>
+<!-- <h1 class="page-header">交易流水</h1> -->
 
 <div class="panel panel-primary" style="width:100%;">
   <div class="panel-heading">查找</div>
