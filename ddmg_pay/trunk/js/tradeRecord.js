@@ -90,15 +90,17 @@ function search_entity(page){
 	var spanLoading = $('#span-trade-order-list');
 	spanLoading.html("<div style='width:100%;text-align:center;height:" + spanLoading.height() + "px;'><img alt='正在加载数据...' src='" + BASE_PATH + "view/images/tips_loading.gif'/></div>");
 		
-	var url = 'tradeRecord/searchList';
 	var pathname = window.location.pathname;
-	var start = pathname.indexOf("tradeRecord");
-	if(start > 0){
-		url = pathname.substring(start);		
+	var audit_level = '0';
+	if(pathname.indexOf("searchListFrist") > 0){
+		audit_level = '1';		
+	}
+	if(pathname.indexOf("searchListSecond") > 0){
+		audit_level = '2';		
 	}
 	
     //查找
-    $.post(BASE_PATH + url, {
+    $.post(BASE_PATH + 'tradeRecord/searchList', {
 	    	'order_no':order_no, 
 	    	'time1':time1,
 	    	'time2':time2,
@@ -111,9 +113,10 @@ function search_entity(page){
 	    	'order_sum_amount2':order_sum_amount2,
 	    	'apply_status':apply_status,
 	    	'backhost_status':backhost_status,
-	        'page':page
+	        'page':page,
+	        'audit_level':audit_level
         },
-        function(result){
+        function(result){        	
             if(result.code != 0) {
                 $("#search-entity-hint").html(result.msg + '(' + result.code + ')').fadeIn();
             }else {
