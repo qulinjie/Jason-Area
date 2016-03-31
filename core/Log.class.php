@@ -111,6 +111,20 @@ class Log extends Base {
     	Log::write($message, 'Warning','skdx-'.date('Y-m-d'));
     }
     
+    //审核 log 定义三种级别
+    public static function auditError($message){
+    	Log::write($message);
+    	Log::write($message, 'Error','audit-'.date('Y-m-d'));
+    }
+    public static function auditNotice($message){
+    	Log::write($message, 'Notice');
+    	Log::write($message, 'Notice','audit-'.date('Y-m-d'));
+    }
+    public static function auditWarning($message){
+    	Log::write($message, 'Warning');
+    	Log::write($message, 'Warning','audit-'.date('Y-m-d'));
+    }
+    
     /**
      * 写入日志
      *
