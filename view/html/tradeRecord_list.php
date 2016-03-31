@@ -85,7 +85,7 @@
             <td><?php echo $item['order_no'];?></td>
             <td><?php echo $item['erp_fgsmc']; ?></td>
             <td><?php
-                    echo TradeRecordController::getApplyStatusByKey($item['apply_status'], $audit_level). $item['apply_status'];
+                    echo TradeRecordController::getApplyStatusByKey($item['apply_status'], $audit_level);//. $item['apply_status'];
                  ?>
             </td>
             <td><?php 
