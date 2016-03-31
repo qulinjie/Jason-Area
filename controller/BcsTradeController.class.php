@@ -291,12 +291,12 @@ class BcsTradeController extends BaseController {
     
         $data_list = $data['data'];
     
-        $entity_list_html = $this->render('bcsTrade_list', array('data_list' => $data_list, 'current_page' => $current_page, 'total_page' => $total_page), true);
+        $entity_list_html = $this->render('bcsTrade_list', array('data_list' => $data_list, 'current_page' => $current_page, 'total_page' => $total_page,'inout' => strval($inout) ), true);
         if($isIndex) {
             $view_html = $this->render('bcsTrade', array('entity_list_html' => $entity_list_html,'inout' => strval($inout) ), true);
             $this->render('index', array('page_type' => 'bcsTrade', 'bcsTrade_html' => $view_html,'inout' => strval($inout) ));
         } else {
-            EC::success(EC_OK, array('entity_list_html' => $entity_list_html));
+            EC::success(EC_OK, array('entity_list_html' => $entity_list_html ));
         }
     }
     

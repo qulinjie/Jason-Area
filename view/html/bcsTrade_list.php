@@ -47,7 +47,7 @@
 					<th>对方名称</th>
 					<th>对方帐号</th>
 					<th>付款金额</th>
-					<th>结余</th>
+					<?php if(strval($inout) == ''){ echo '<th>结余</th>'; } ?>
 					<th>状态</th>
 					<th>备注</th>
 					<?php if($isAdmin){ echo '<th>操作</th>'; } ?>
@@ -73,7 +73,8 @@
 				<td><?php echo $item['oppositeAcctNo'];?></td>
 				
 				<td><?php echo number_format($item['TX_AMT'],2);?></td>
-				<td><?php echo number_format($item['accountBalance'],2);?></td>
+				<?php if(strval($inout) == ''){ echo '<td>' . number_format($item['accountBalance'],2) . '</td>'; } ?>
+				
 				<td><?php if($item['status']==BcsTradeModel::$_status_success){ echo "成功"; } 
             				else if($item['status']==BcsTradeModel::$_status_failed) { echo "失败"; } 
                             else if($item['status']==BcsTradeModel::$_status_unknown) { echo "未知"; } ?>
