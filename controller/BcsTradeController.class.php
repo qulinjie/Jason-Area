@@ -826,9 +826,9 @@ class BcsTradeController extends BaseController {
     public function erp_syncBillsOfCollection($MCH_TRANS_NO = NULL){
     	$MCH_TRANS_NO = ($MCH_TRANS_NO == NULL) ? Request::post('$MCH_TRANS_NO') : $MCH_TRANS_NO;
     	 
-    	Log::notice("erp_syncBillsOfCollection ===========================>> MCH_TRANS_NO=" .$MCH_TRANS_NO );
+    	Log::skdNotice("erp_syncBillsOfCollection ===>> MCH_TRANS_NO=" .$MCH_TRANS_NO );
     	if(empty($MCH_TRANS_NO)){
-    		Log::error('MCH_TRANS_NO empty !');
+    		Log::skdError('MCH_TRANS_NO empty !');
     		//EC::fail(EC_PAR_ERR);
     		return false;
     	}
@@ -837,26 +837,26 @@ class BcsTradeController extends BaseController {
     	$bcsTrade_model = $this->model('bcsTrade');
     	$data = $bcsTrade_model->getInfo(array('debitCreditFlag' => 1, 'MCH_TRANS_NO' => $MCH_TRANS_NO));
     	if(empty($data) || !is_array($data) || EC_OK != $data['code'] || !isset($data['data'])) {
-    		Log::error('bcsTrade getInfo empty !');
+    		Log::skdError('bcsTrade getInfo empty !');
     		//EC::fail(EC_DAT_NON);
     		return false;
     	}
     	$data = $data['data'][0];
     	if(empty($data)) {
-    		Log::error('bcsTrade getInfo empty !');
+    		Log::skdError('bcsTrade getInfo empty !');
     		//EC::fail(EC_RED_EMP);
     		return false;
     	}
     	//必须为收款
     	if(1 != $data['debitCreditFlag']){
-    		Log::error('the bcsTrade debitCreditFlag is' . $data['debitCreditFlag'] . '!');
+    		Log::skdError('the bcsTrade debitCreditFlag is' . $data['debitCreditFlag'] . '!');
     		//EC::fail(EC_RED_EXP);
     		return false;
     	}
     	
     	//判断是否已同步erp
     	if(2 == $data['is_erp_sync']){
-    		Log::error("the bcsTrade has been sync erp: is_erp_sync={$data['is_erp_sync']}!");
+    		Log::skdError("the bcsTrade has been sync erp: is_erp_sync={$data['is_erp_sync']}!");
     		//EC::fail(EC_REC_EST);
     		return false;
     	}
@@ -868,17 +868,33 @@ class BcsTradeController extends BaseController {
     	$bcs_data = $bcsCustomer_model->getInfo($params);
     	//Log::write("bcs_data==".var_export($bcs_data, true), 'debug', 'debug-'.date('Y-m-d'));
     	if(EC_OK != $bcs_data['code'] || !is_array($bcs_data) || !isset($bcs_data['data'])){
-    		Log::error("bcsCustomer getInfo failed . ");
+    		Log::skdError("bcsCustomer getInfo failed . ");
     		//EC::fail(EC_USR_NON);
     		return false;
     	}
     	$bcs_data = $bcs_data['data'][0];
     	if(empty($bcs_data)) {
-    		Log::error('bcsCustomer getInfo empty !');
+    		Log::skdError('bcsCustomer getInfo empty !');
     		//EC::fail(EC_RED_EMP);
     		return false;
     	}
-    	 
+
+    	//根据对方付款单位名称调用erp接口查该单位代码
+    	$ct_params = array();
+    	$ct_params['dwmc'] = $data['oppositeAcctName'];
+    	$user_model = $this->model('user');
+    	$ct_info_data = $user_model->erp_getContactCompanyInfo($ct_params);
+    	if(EC_OK_ERP != $ct_info_data['code']){
+    		Log::skdError('erp_getContactCompanyInfo Fail!' . $ct_info_data['msg']);
+    		EC::fail($ct_info_data['code']);
+    	}
+    	$ct_info_data = $ct_info_data['data']['data'];
+    	$dwdm = '';
+    	if(!empty($ct_info_data) && isset($ct_info_data[0])){
+    		$dwdm = $ct_info_data[0]['dwdm'];
+    	}
+    	
+    	
     	/*
     	 "head":{
     	"dwmc":"某某单位",
@@ -898,7 +914,7 @@ class BcsTradeController extends BaseController {
     	
     	
     	$head = array();
-    	$head['dwmc_'] = $data['oppositeAcctName']; //单位名称
+    	$head['dwdm'] = $dwdm; //单位名称
     	$head['rq'] = $data['TRANS_TIME']; //日期
     	$head['je'] = $data['TX_AMT']; //金额
     	$head['usercode'] = $bcs_data['user_id'];
@@ -915,19 +931,17 @@ class BcsTradeController extends BaseController {
     	$params['head'] = $head;
     	$params['details'][] = $details;
     
-    	Log::write(var_export($params, true), 'debug', 'skd-'.date('Y-m-d'));
-    	//exit();
+    	Log::skdNotice("request-data ============>> params = ##" . json_encode($params) . "##" );    	    	
     	$is_erp_sync = 2;
-    	Log::notice("request-data ============>> params = ##" . json_encode($params) . "##" );
     	$bcsTrade_model = $this->model('bcsTrade');
     	$res_data = $bcsTrade_model->erp_syncBillsOfCollection($params);
     	if(EC_OK_ERP != $res_data['code']){
-    		Log::error('erp_syncBillsOfCollection Fail:'.$res_data['msg']);
+    		Log::skdError('erp_syncBillsOfCollection Fail:'.$res_data['msg']);
     		//EC::fail($res_data['msg']);
     		//return false;
     		$is_erp_sync = 3;
     	}
-    	Log::notice("response-data ============>> res_data = ##" . json_encode($res_data) . "##" );
+    	Log::skdNotice("response-data ============>> res_data = ##" . json_encode($res_data) . "##" );
     	 
     	//修改同步状态
     	$up_params = array();
@@ -936,7 +950,7 @@ class BcsTradeController extends BaseController {
     	$up_params['erp_sync_timestamp'] = date('Y-m-d H:i:s',time());
     	$bt_data = $bcsTrade_model->update($up_params);
     	if(EC_OK != $bt_data['code']){
-    		Log::error('update bcsTrade is_erp_sync status fail!');
+    		Log::skdError('update bcsTrade is_erp_sync status fail!');
     		//EC::fail($bt_data['code']);
     		return false;
     	}
@@ -949,7 +963,7 @@ class BcsTradeController extends BaseController {
     public function sendSmsCodeForCollection($ACCOUNT_NO, $payer, $amount){
     	
     	if(empty($ACCOUNT_NO) || empty($payer) || empty($amount)){
-    		Log::error('empty args!');
+    		Log::skdxError('empty args!');
     		//EC::fail(EC_PAR_ERR);
     		return false;
     	}
@@ -960,13 +974,13 @@ class BcsTradeController extends BaseController {
     	$bcsCustomer_model = $this->model('bcsCustomer');
     	$bcs_data = $bcsCustomer_model->getInfo($bcs_params);
     	if(EC_OK != $bcs_data['code'] || !is_array($bcs_data) || !isset($bcs_data['data'])){
-    		Log::error("bcsCustomer getInfo failed . ");
+    		Log::skdxError("bcsCustomer getInfo failed . ");
     		//EC::fail(EC_USR_NON);
     		return false;
     	}
     	$bcs_data = $bcs_data['data'][0];
     	if(empty($bcs_data)) {
-    		Log::error('bcsCustomer getInfo empty !');
+    		Log::skdxError('bcsCustomer getInfo empty !');
     		//EC::fail(EC_RED_EMP);
     		return false;
     	}
@@ -976,13 +990,13 @@ class BcsTradeController extends BaseController {
     	$user_model = $this->model('user');
     	$user_data = $user_model->erp_getInfo(array('usercode' => $bcs_data['user_id']));
     	if(EC_OK_ERP != $user_data['code']){
-    		Log::error('erp_getInfo Fail!');
+    		Log::skdxError('erp_getInfo Fail!');
     		//EC::fail($user_data['code']);
     		return false;
     	}
     	$user_data = $user_data['data'];
     	if(empty($user_data) || !isset($user_data['mobile']) || empty($user_data['mobile'])){
-    		Log::error('mobile is empty!');
+    		Log::skdxError('mobile is empty!');
     		//EC::fail(EC_DATA_EMPTY_ERR);
     		return false;
     	}
@@ -992,7 +1006,7 @@ class BcsTradeController extends BaseController {
     	if(！empty($user_data['fuserid']) && $bcs_data['user_id'] != $user_data['fuserid']){
     		$user_data2 = $user_model->erp_getInfo(array('usercode' => $user_data['fuserid']));
     		if(EC_OK_ERP != $user_data2['code']){
-    			Log::error('2 erp_getInfo Fail!');
+    			Log::skdxError('2 erp_getInfo Fail!');
     			//EC::fail($user_data2['code']);
     			return false;
     		}
@@ -1013,10 +1027,10 @@ class BcsTradeController extends BaseController {
     
     	//Log::write("user_data==".var_export($user_data, true), 'debug', 'debug123-'.date('Y-m-d'));
     	 
-    	Log::notice("request-data ============>> data = ##" . json_encode($data) . "##" );
+    	Log::skdxNotice("request-data ============>> data = ##" . json_encode($data) . "##" );
     	$BcsTrade_model = $this->model('bcsTrade');
     	$res_data = $BcsTrade_model->erp_sendSmsCode($data);
-    	Log::notice("response-data ============>> res_data = ##" . json_encode($res_data) . "##" );
+    	Log::skdxNotice("response-data ============>> res_data = ##" . json_encode($res_data) . "##" );
     	
     	return true;
     	//EC::success(EC_OK, $res_data);
