@@ -1197,11 +1197,28 @@ class TradeRecordController extends BaseController {
     public function checkBankName(){
         $bankName = Request::post('bankName');
         
-        $spdBank_model = $this->model('spdBank');
+        if( !$bankName ){
+            Log::error('check params is empty !' . $bankName);
+            EC::fail(EC_PAR_ERR);
+        }
         
-        $data = $spdBank_model->queryBankNumberByName(array('bankName'=>$bankName));
+//         $spdBank_model = $this->model('spdBank');
+//         $data = $spdBank_model->queryBankNumberByName(array('bankName'=>$bankName));
+//         Log::notice("response-data ===========checkBankName================>> data = ##" . json_encode($data) . "##" );
+//         $data = $data['body']['lists']['list'];
+
+        $spdInternetBank_model = $this->model('spdInternetBank');
+        $params = array();
+        $params['bankName'] = $bankName;
+        $data = $spdInternetBank_model->getInfo($params);
         Log::notice("response-data ===========checkBankName================>> data = ##" . json_encode($data) . "##" );
-        $data = $data['body']['lists']['list'];
+        
+        if(EC_OK != $data['code']){
+            Log::error("getInfo failed . ");
+            EC::fail($data['code']);
+        }
+        $data = $data['data'][0];
+        
         EC::success(EC_OK, $data);
     }
     
