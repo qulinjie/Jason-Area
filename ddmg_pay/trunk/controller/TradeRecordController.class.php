@@ -1530,7 +1530,7 @@ class TradeRecordController extends BaseController {
     	
     	if(EC_OK_ERP != $res_data['code']){
     		Log::auditError('erp_auditOneTradRecord Fail!'.$res_data['msg']);
-    		EC::fail($res_data['msg']);
+    		EC::fail("erp审核返回错误：".$res_data['msg']);
     	}  
     	
     	return true;
