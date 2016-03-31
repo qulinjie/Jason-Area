@@ -908,7 +908,7 @@ class BcsTradeController extends BaseController {
     	$params['head'] = $head;
     	$params['details'][] = $details;
     
-    	//Log::write(var_export($params, true), 'debug', 'skd-'.date('Y-m-d'));
+    	Log::write(var_export($params, true), 'debug', 'skd-'.date('Y-m-d'));
     	//exit();
     	
     	Log::notice("request-data ============>> params = ##" . json_encode($params) . "##" );
