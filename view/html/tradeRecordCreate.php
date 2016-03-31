@@ -61,17 +61,17 @@
 	  <div class="form-group">
 	    <label for="add-entity-comp_name" class="col-sm-2 control-label">收款单位</label>
 	    <div class="col-sm-4">
-		    <input type="text" class="form-control" readonly="readonly" id="add-entity-comp_name" placeholder="">    				   
+		    <input type="text" class="form-control" readonly="readonly" id="add-entity-comp_name" placeholder="" />    				   
 	    </div>
 	    <label for="add-entity-comp_account" class="col-sm-2 control-label">收款账号</label>
 	    <div class="col-sm-4">
-	        <input type="text" class="form-control" id="add-entity-comp_account" placeholder=""  value="6223635001004485218"></input>
+	        <input type="text" class="form-control" id="add-entity-comp_account" placeholder="" />
 	    </div>	
 	  </div>
 	  <div class="form-group">
 	    <label for="add-entity-bank_name" class="col-sm-2 control-label">开户行</label>
 	    <div class="col-sm-4">
-		    <input type="text" class="form-control" id="add-entity-bank_name" placeholder=""  value="珠海华润银行股份有限公司清算中心"/>
+		    <input type="text" class="form-control" id="add-entity-bank_name" placeholder=""  />
 		    <div id="div_data_bank" class="citydatadiv" style="display: none;"><ul></ul></div>
 		    <a href="#" id="check-entity-bankName">验证开户行</a>
 		    &nbsp;&nbsp;&nbsp;&nbsp;
