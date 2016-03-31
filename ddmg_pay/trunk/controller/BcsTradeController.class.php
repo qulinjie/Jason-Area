@@ -827,7 +827,7 @@ class BcsTradeController extends BaseController {
     	
     	$MCH_TRANS_NO = ($MCH_TRANS_NO == NULL) ? Request::post('$MCH_TRANS_NO') : $MCH_TRANS_NO;    	 
     	$is_ec = ($is_ec == 0) ? intval(Request::post('is_ec')) : intval($is_ec);
-    	Log::skdNotice("erp_syncBillsOfCollection ===>> MCH_TRANS_NO=" .$MCH_TRANS_NO ."is_ec=".$is_ec);
+    	Log::skdNotice("erp_syncBillsOfCollection ===>> MCH_TRANS_NO=" .$MCH_TRANS_NO ." is_ec=".$is_ec);
     	
     	if(empty($MCH_TRANS_NO)){
     		Log::skdError('MCH_TRANS_NO empty !');
@@ -880,10 +880,13 @@ class BcsTradeController extends BaseController {
     		if($is_ec) EC::fail(EC_RED_EMP);
     		return false;
     	}
+    	
+    	//$data['oppositeAcctName'] = '瑞安市奥利达标准件制造有限公司';
+    	Log::skdNotice(" 单位名称 oppositeAcctName = " . $data['oppositeAcctName']);
 
     	//根据对方付款单位名称调用erp接口查该单位代码
     	$ct_params = array();
-    	$ct_params['dwmc'] = $data['oppositeAcctName'];
+    	$ct_params['dwmc'] = $data['oppositeAcctName']; 
     	$user_model = $this->model('user');
     	$ct_info_data = $user_model->erp_getContactCompanyInfo($ct_params);
     	if(EC_OK_ERP != $ct_info_data['code']){
