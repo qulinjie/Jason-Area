@@ -173,9 +173,9 @@
 		  		if(5==$data_info['apply_status']){
 		  			echo $html25; //二级审批已通过
 		  		}		  		
-		  		if(5==$data_info['apply_status'] && 1==$data_info['order_status']){
+		  		/* if(5==$data_info['apply_status'] && 1==$data_info['order_status']){
 		  			echo $html4; //付款
-		  		}		  		
+		  		} */		  		
 		  	}		  	
 		  	if(3==$data_info['apply_status']){
 		  		echo $html13; //一级审批已驳回
@@ -187,6 +187,8 @@
 		  		echo $html3; //已付款
 		  	}	  	
 	  	?> 	
+	  	<a id="add-entity-pay" class="btn btn-primary <?php echo (5==$data_info['apply_status'] && 2!=$data_info['order_status']) ? '' : ' hidden'?>" href="#">付款</a>
+	  	
 	    <!--
 	    <?php if(1==$data_info['apply_status']){ ?>	  	
 			<a id="add-entity-audit1" class="btn btn-primary" href="#">审批通过</a>
