@@ -326,9 +326,11 @@
         	    <li>
         	       <a href="#" style="color: black;font-size: 16px;">付款管理</a>
         	    </li>
+        	    <?php if(UserController::isFUser()){?>
         	    <li <?php if(doit::$controller == 'TradeRecord' && strval($audit_level) == '1'){?> class="active" <?php } ?> style="margin-left: 35px;">
         			<a href="<?php echo Router::getBaseUrl();?>tradeRecord/searchListFrist">付款审批(一级)</a>
-        	    </li>        	    
+        	    </li>
+        	    <?php }?>        	    
         	    <li <?php if(doit::$controller == 'TradeRecord' && strval($audit_level) == '0'){?> class="active" <?php } ?> style="margin-left: 35px;">        	    
         			<a href="<?php echo Router::getBaseUrl();?>tradeRecord/getIndex">申请付款</a>
         	    </li>
