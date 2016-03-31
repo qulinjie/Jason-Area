@@ -44,7 +44,7 @@ class Log extends Base {
     
     public static function spdError($message){
         Log::write($message);
-        Log::write($message,'Error','spd-'.date('Y-m-d'));
+        Log::write($message, 'Error','spd-'.date('Y-m-d'));
     }
     public static function spdNotice($message){
         Log::write($message, 'Notice');
@@ -53,6 +53,62 @@ class Log extends Base {
     public static function spdWarning($message){
         Log::write($message, 'Warning');
         Log::write($message, 'Warning','spd-'.date('Y-m-d'));
+    }
+    
+    //付款 log 定义三种级别
+    public static function fkError($message){
+    	Log::write($message);
+    	Log::write($message, 'Error','fk-'.date('Y-m-d'));
+    }
+    public static function fkNotice($message){
+    	Log::write($message, 'Notice');
+    	Log::write($message, 'Notice','fk-'.date('Y-m-d'));
+    }
+    public static function fkWarning($message){
+    	Log::write($message, 'Warning');
+    	Log::write($message, 'Warning','fk-'.date('Y-m-d'));
+    }
+    
+    //同步付款单 log 定义三种级别
+    public static function fkdError($message){
+    	Log::write($message);
+    	Log::write($message, 'Error','fkd-'.date('Y-m-d'));
+    }
+    public static function fkdNotice($message){
+    	Log::write($message, 'Notice');
+    	Log::write($message, 'Notice','fkd-'.date('Y-m-d'));
+    }
+    public static function fkdWarning($message){
+    	Log::write($message, 'Warning');
+    	Log::write($message, 'Warning','fkd-'.date('Y-m-d'));
+    }
+    
+    //同步收款单 log 定义三种级别
+    public static function skdError($message){
+    	Log::write($message);
+    	Log::write($message, 'Error','skd-'.date('Y-m-d'));
+    }
+    public static function skdNotice($message){
+    	Log::write($message, 'Notice');
+    	Log::write($message, 'Notice','skd-'.date('Y-m-d'));
+    }
+    public static function skdWarning($message){
+    	Log::write($message, 'Warning');
+    	Log::write($message, 'Warning','skd-'.date('Y-m-d'));
+    }
+    
+    //收款后发送短信 log 定义三种级别
+    public static function skdxError($message){
+    	Log::write($message);
+    	Log::write($message, 'Error','skdx-'.date('Y-m-d'));
+    }
+    public static function skdxNotice($message){
+    	Log::write($message, 'Notice');
+    	Log::write($message, 'Notice','skdx-'.date('Y-m-d'));
+    }
+    public static function skdxWarning($message){
+    	Log::write($message, 'Warning');
+    	Log::write($message, 'Warning','skdx-'.date('Y-m-d'));
     }
     
     /**
