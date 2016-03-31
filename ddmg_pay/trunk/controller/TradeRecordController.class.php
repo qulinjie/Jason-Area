@@ -1302,9 +1302,10 @@ class TradeRecordController extends BaseController {
     public function erp_syncBillsOfPayment($id = NULL){
     	
     	$id = ($id == NULL) ? intval(Request::post('id')) : intval($id);
-    	Log::notice("erp_syncBillsOfPayment ===========================>> id=" .$id );
+    	Log::fkdNotice("erp_syncBillsOfPayment ===>> id=" .$id );
+    	
     	if(empty($id)){
-    		Log::error('id empty !');
+    		Log::fkdError('id empty !');
     		//EC::fail(EC_PAR_ERR);
     		return false;
     	}
@@ -1313,13 +1314,13 @@ class TradeRecordController extends BaseController {
     	$tradeRecord_model = $this->model('tradeRecord');
     	$data = $tradeRecord_model->getInfo(array('id' => $id));
     	if(empty($data) || !is_array($data) || EC_OK != $data['code'] || !isset($data['data'])) {
-    		Log::error('tradeRecord getInfo empty !');
+    		Log::fkdError('tradeRecord getInfo empty !');
     		//EC::fail(EC_DAT_NON);
     		return false;
     	}
     	$data = $data['data'][0];
     	if(empty($data)) {
-    		Log::error('tradeRecord getInfo empty !');
+    		Log::fkdError('tradeRecord getInfo empty !');
     		//EC::fail(EC_RED_EMP);
     		return false;
     	}
@@ -1327,26 +1328,26 @@ class TradeRecordController extends BaseController {
     	 
     	//判断是否已审批通过
     	if(5 != intval($data['apply_status'])){
-    		Log::error('audit did not pass!');
+    		Log::fkdError('audit did not pass!');
     		//EC::fail(EC_TRADE_TF_NO_AS);
     		return false;
     	}
     	
     	//判断是否已付款  order_status 订单交易状态 1-待付款 2-已付款' || 记录状态 0-待补录；1-待记帐；2-待复核；3-待授权；4-完成；8-拒绝；9-撤销；
     	if(2 != intval($data['order_status'])){
-    		Log::error("the order has not been payment: order_status={$data['order_status']}!");
+    		Log::fkdError("the order has not been payment: order_status={$data['order_status']}!");
     		//EC::fail(EC_TRADE_TF_OS_ERR_2);
     		return false;
     	}
     	if(true && !in_array($data['backhost_status'], array(0,1,2,3,4))){
-    		Log::error("the order has not been payment: backhost_status={$data['backhost_status']}!");
+    		Log::fkdError("the order has not been payment: backhost_status={$data['backhost_status']}!");
     		//EC::fail(EC_TRADE_TF_OS_ERR_3);
     		return false;
     	}
     	
     	//判断是否已同步erp
     	if(2 == $data['is_erp_sync']){
-    		Log::error("the order has been sync erp: is_erp_sync={$data['is_erp_sync']}!");
+    		Log::fkdError("the order has been sync erp: is_erp_sync={$data['is_erp_sync']}!");
     		//EC::fail(EC_REC_EST);
     		return false;
     	}
@@ -1359,13 +1360,13 @@ class TradeRecordController extends BaseController {
     	$bcs_data = $bcsCustomer_model->getInfo($bcs_params);
     	//Log::write("bcs_data==".var_export($bcs_data, true), 'debug', 'debug-'.date('Y-m-d'));
     	if(EC_OK != $bcs_data['code'] || !is_array($bcs_data) || !isset($bcs_data['data'])){
-    		Log::error("bcsCustomer getInfo failed . ");
+    		Log::fkdError("bcsCustomer getInfo failed . ");
     		//EC::fail(EC_USR_NON);
     		return false;
     	}
     	$bcs_data = $bcs_data['data'][0];
     	if(empty($bcs_data)) {
-    		Log::error('bcsCustomer getInfo empty !');
+    		Log::fkdError('bcsCustomer getInfo empty !');
     		//EC::fail(EC_RED_EMP);
     		return false;
     	}
@@ -1389,7 +1390,7 @@ class TradeRecordController extends BaseController {
     	$tradeRecordItem_model = $this->model('tradeRecordItem');    	
     	$data_list = $tradeRecordItem_model->searchList(array('trade_record_id' => $data['id']));
     	if($data_list['code'] !== EC_OK){
-    		Log::error('tradeRecordItem searchList error');
+    		Log::fkdError('tradeRecordItem searchList error');
     	}
     	$data['list'] = $data_list['data'] ? $data_list['data'] : [];
     	
@@ -1430,20 +1431,19 @@ class TradeRecordController extends BaseController {
     		$details['ywdjh'] = $item['itme_no'];
     		$params['details'][] = $details;
     	}
-    	    	
-    	Log::write(var_export($params, true), 'debug', 'fkd-'.date('Y-m-d'));
-    	//exit();
-    	$is_erp_sync = 2;
-    	Log::notice("request-data ============>> data = ##" . json_encode($params) . "##" );
+    	
+    	Log::fkdNotice("request-data ============>> data = ##" . json_encode($params) . "##");    	
+    	$is_erp_sync = 2;    	
     	$tradeRecord_model = $this->model('tradeRecord');
     	$res_data = $tradeRecord_model->erp_syncBillsOfPayment($params);
     	if(EC_OK_ERP != $res_data['code']){
-    		Log::error('erp_syncBillsOfPayment Fail!'. $res_data['msg']);
+    		Log::fkdError('erp_syncBillsOfPayment Fail!'. $res_data['msg']);
     		//EC::fail($res_data['code']);
     		$is_erp_sync = 3;
-    	}
-    	Log::notice("response-data ============>> data = ##" . json_encode($res_data) . "##" );
-    	 /**/
+    	}    	
+    	Log::fkdNotice("response-data ============>> data = ##" . json_encode($res_data) . "##");
+    	
+    	/**/
     	//修改同步状态
     	$up_params = array(); 
     	$up_params['id'] = $data['id'];   	
@@ -1451,7 +1451,7 @@ class TradeRecordController extends BaseController {
     	$up_params['erp_sync_timestamp'] = date('Y-m-d H:i:s',time()); 
     	$tr_data = $tradeRecord_model->update($up_params);
     	if(EC_OK != $tr_data['code']){
-    		Log::error('update order status fail!');
+    		Log::fkdError('update order status fail!');
     		//EC::fail($tr_data['code']);
     		return false;
     	}
@@ -1522,15 +1522,19 @@ class TradeRecordController extends BaseController {
     		$params['details'][] = $details;
     	}
     	
-    	Log::write(var_export($params, true), 'debug', 'audit-'.date('Y-m-d'));
+    	$log = "request-params  ===>> params = ##" . json_encode($params) . "##";
+    	Log::write($log, 'notice', 'audit-'.date('Y-m-d'));    	
+    	Log::notice($log);
     	
-    	Log::notice("request-params  ===>> params = ##" . json_encode($params) . "##" );
     	$res_data = $tradeRecord_model->erp_auditOneTradRecord($params);
     	if(EC_OK_ERP != $res_data['code']){
     		Log::error('erp_auditOneTradRecord Fail!'.$res_data['msg']);
     		EC::fail($res_data['msg']);
     	}
-    	Log::notice("response-params ===>> res_data = ##" . json_encode($res_data) . "##" );
+    	
+    	$log = "response-params ===>> res_data = ##" . json_encode($res_data) . "##";
+    	Log::write($log, 'notice', 'audit-'.date('Y-m-d'));
+    	Log::notice($log);
     	
     	return true;
     }
@@ -1674,9 +1678,10 @@ class TradeRecordController extends BaseController {
     protected function sendTransferTrade($id = NULL){
     	    	
     	$id = ($id == NULL) ? intval(Request::post('id')) : intval($id);    	
-    	Log::notice("sendTransferTrade ===========================>> id=" .$id );    	
+    	Log::fkNotice("sendTransferTrade ===>> id=" .$id );    	
+    	
     	if(empty($id)){
-    		Log::error('id empty !');
+    		Log::fkError('id empty !');
     		EC::fail(EC_PAR_ERR);
     	}
     	
@@ -1684,30 +1689,30 @@ class TradeRecordController extends BaseController {
     	$tradeRecord_model = $this->model('tradeRecord');    	
     	$data = $tradeRecord_model->getInfo(array('id' => $id));        	
     	if(empty($data) || !is_array($data) || EC_OK != $data['code'] || !isset($data['data'])) {
-    		Log::error('tradeRecord getInfo empty !');
+    		Log::fkError('tradeRecord getInfo empty !');
     		EC::fail(EC_DAT_NON);
     	}    	    	
     	$data = $data['data'][0];
     	if(empty($data)) {
-    		Log::error('tradeRecord getInfo empty !');
+    		Log::fkError('tradeRecord getInfo empty !');
     		EC::fail(EC_RED_EMP);
     	}    		
     	//Log::write(var_export($data, true), 'debug', 'debug-'.date('Y-m-d'));
     	
     	//判断二级是否已审批通过
     	if(5 != intval($data['apply_status'])){    		
-    		Log::error('second audit did not pass!');
+    		Log::fkError('second audit did not pass!');
     		EC::fail(EC_TRADE_TF_SECOND_NO_AS);
     	}
     	    	
     	//判断是否已付款  
     	//order_status 订单交易状态 1-待付款 2-已付款  backhost_status 记录状态 0-待补录；1-待记帐；2-待复核；3-待授权；4-完成；8-拒绝；9-撤销；
     	if(2 == intval($data['order_status'])){
-    		Log::error("the order has been payment: order_status={$data['order_status']}!");
+    		Log::fkError("the order has been payment: order_status={$data['order_status']}!");
     		EC::fail(EC_TRADE_TF_OS_ERR_2);
     	}
     	if($data['backhost_status']!=null && in_array($data['backhost_status'], array(0,1,2,3,4))){
-    		Log::error("the order has been payment: backhost_status={$data['backhost_status']}!");
+    		Log::fkError("the order has been payment: backhost_status={$data['backhost_status']}!");
     		EC::fail(EC_TRADE_TF_OS_ERR_3);
     	}
     	  
@@ -1719,18 +1724,18 @@ class TradeRecordController extends BaseController {
     	$bcs_data = $bcsCustomer_model->getInfo($params); 
     	//Log::write("bcs_data==".var_export($bcs_data, true), 'debug', 'debug-'.date('Y-m-d'));    	
     	if(EC_OK != $bcs_data['code'] || !is_array($bcs_data) || !isset($bcs_data['data'])){
-    		Log::error("bcsCustomer getInfo failed . ");
+    		Log::fkError("bcsCustomer getInfo failed . ");
     		EC::fail(EC_USR_NON);
     	}
     	$bcs_data = $bcs_data['data'][0];
     	if(empty($bcs_data)) {
-    		Log::error('bcsCustomer getInfo empty !');
+    		Log::fkError('bcsCustomer getInfo empty !');
     		EC::fail(EC_RED_EMP);
     	}
 
     	//账户余额判断
     	if(floatval($data['order_bid_amount']) > floatval($bcs_data['ACCT_BAL'])){
-    		Log::error('order_bid_amount'.$data['order_bid_amount']. '> ACCT_BAL!'.$bcs_data['ACCT_BAL']);
+    		Log::fkError('order_bid_amount'.$data['order_bid_amount']. '> ACCT_BAL!'.$bcs_data['ACCT_BAL']);
     		EC::fail(EC_BLE_LESS);
     	}
     	 	
@@ -1743,7 +1748,7 @@ class TradeRecordController extends BaseController {
     	}
     	//必要字段值检测是否为空
     	if(empty($ACCOUNT_NO) || empty($SIT_NO) || empty($data['comp_account']) || empty($data['seller_name']) || empty($data['order_bid_amount'])){
-    		Log::error("Some data in an empty value. ");
+    		Log::fkError("Some data in an empty value. ");
     		EC::fail(EC_DATA_EMPTY_ERR);
     	}
 
@@ -1766,7 +1771,7 @@ class TradeRecordController extends BaseController {
 	    	$params['note']             = $useTodo; // 附言 如果跨行转账，附言请不要超过42字节（汉字21个）
 	    	   	
 	   		//提交付款前记录日志
-	    	Log::write("request-data ===sendTransferTrade===>> params = ##" . json_encode($params) . "##", 'Notice', 'fk-'.date('Y-m-d'));
+	    	Log::fkNotice("request-data ===sendTransferTrade===>> params = ##" . json_encode($params) . "##");
 	    	
 	    	$sp_data = array();    	
 	    	$spdBank_model = $this->model('spdBank');	    	
@@ -1780,10 +1785,10 @@ class TradeRecordController extends BaseController {
 	   		$backhost_status = $sp_data['backhostStatus']; //付款后返回的记录状态 0-待补录；1-待记帐；2-待复核；3-待授权；4-完成；8-拒绝；9-撤销；
          
 	    	//付款后记录日志
-	    	Log::write("response-data ===sendTransferTrade===>> sp_data = ##" . json_encode($sp_data) . "##", 'Notice', 'fk-'.date('Y-m-d'));
+	    	Log::fkNotice("response-data ===sendTransferTrade===>> sp_data = ##" . json_encode($sp_data) . "##");
 	    		   		
     	}catch (Exception $e){   			
-   			Log::error('sendTransferTrade . e=' . $e->getMessage());
+   			Log::fkError('sendTransferTrade . e=' . $e->getMessage());
    			EC::fail(EC_OPE_FAI);
     	}
    		
@@ -1799,7 +1804,7 @@ class TradeRecordController extends BaseController {
    		$tradeRecord_model = $this->model('tradeRecord');   		
    		$tr_data = $tradeRecord_model->update($up_params);
    		if(EC_OK != $tr_data['code']){
-   			Log::error('update order status fail!');
+   			Log::fkError('update order status fail!');
    			EC::fail($tr_data['code']);
    		}
    		$sp_data['backhostDesc'] = self::getBackhostStatusByKey($backhost_status);   		
