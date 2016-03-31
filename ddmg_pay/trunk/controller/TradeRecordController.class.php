@@ -1298,15 +1298,16 @@ class TradeRecordController extends BaseController {
         EC::success(EC_OK, $data['data']);
     }
      
-    //付款单同步erp
-    public function erp_syncBillsOfPayment($id = NULL){
+    //付款单同步erp $id 
+    public function erp_syncBillsOfPayment($id = NULL, $is_ec = 0){
     	
     	$id = ($id == NULL) ? intval(Request::post('id')) : intval($id);
-    	Log::fkdNotice("erp_syncBillsOfPayment ===>> id=" .$id );
+    	$is_ec = ($is_ec == 0) ? intval(Request::post('is_ec')) : intval($is_ec);
+    	Log::fkdNotice("erp_syncBillsOfPayment ===>> id=" .$id ."is_ec=".$is_ec);
     	
     	if(empty($id)){
     		Log::fkdError('id empty !');
-    		//EC::fail(EC_PAR_ERR);
+    		if($is_ec) EC::fail(EC_PAR_ERR);
     		return false;
     	}
     	 
@@ -1315,13 +1316,13 @@ class TradeRecordController extends BaseController {
     	$data = $tradeRecord_model->getInfo(array('id' => $id));
     	if(empty($data) || !is_array($data) || EC_OK != $data['code'] || !isset($data['data'])) {
     		Log::fkdError('tradeRecord getInfo empty !');
-    		//EC::fail(EC_DAT_NON);
+    		if($is_ec) EC::fail(EC_DAT_NON);
     		return false;
     	}
     	$data = $data['data'][0];
     	if(empty($data)) {
     		Log::fkdError('tradeRecord getInfo empty !');
-    		//EC::fail(EC_RED_EMP);
+    		if($is_ec) EC::fail(EC_RED_EMP);
     		return false;
     	}
     	//Log::write(var_export($data, true), 'debug', 'debug2-'.date('Y-m-d'));
@@ -1329,26 +1330,26 @@ class TradeRecordController extends BaseController {
     	//判断是否已审批通过
     	if(5 != intval($data['apply_status'])){
     		Log::fkdError('audit did not pass!');
-    		//EC::fail(EC_TRADE_TF_NO_AS);
+    		if($is_ec) EC::fail(EC_TRADE_TF_NO_AS);
     		return false;
     	}
     	
     	//判断是否已付款  order_status 订单交易状态 1-待付款 2-已付款' || 记录状态 0-待补录；1-待记帐；2-待复核；3-待授权；4-完成；8-拒绝；9-撤销；
     	if(2 != intval($data['order_status'])){
     		Log::fkdError("the order has not been payment: order_status={$data['order_status']}!");
-    		//EC::fail(EC_TRADE_TF_OS_ERR_2);
+    		if($is_ec) EC::fail(EC_TRADE_TF_OS_ERR_2);
     		return false;
     	}
     	if(true && !in_array($data['backhost_status'], array(0,1,2,3,4))){
     		Log::fkdError("the order has not been payment: backhost_status={$data['backhost_status']}!");
-    		//EC::fail(EC_TRADE_TF_OS_ERR_3);
+    		if($is_ec) EC::fail(EC_TRADE_TF_OS_ERR_3);
     		return false;
     	}
     	
     	//判断是否已同步erp
     	if(2 == $data['is_erp_sync']){
     		Log::fkdError("the order has been sync erp: is_erp_sync={$data['is_erp_sync']}!");
-    		//EC::fail(EC_REC_EST);
+    		if($is_ec) EC::fail(EC_REC_EST);
     		return false;
     	}
     	    	
@@ -1361,13 +1362,13 @@ class TradeRecordController extends BaseController {
     	//Log::write("bcs_data==".var_export($bcs_data, true), 'debug', 'debug-'.date('Y-m-d'));
     	if(EC_OK != $bcs_data['code'] || !is_array($bcs_data) || !isset($bcs_data['data'])){
     		Log::fkdError("bcsCustomer getInfo failed . ");
-    		//EC::fail(EC_USR_NON);
+    		if($is_ec) EC::fail(EC_USR_NON);
     		return false;
     	}
     	$bcs_data = $bcs_data['data'][0];
     	if(empty($bcs_data)) {
     		Log::fkdError('bcsCustomer getInfo empty !');
-    		//EC::fail(EC_RED_EMP);
+    		if($is_ec) EC::fail(EC_RED_EMP);
     		return false;
     	}
     	/*
@@ -1452,11 +1453,11 @@ class TradeRecordController extends BaseController {
     	$tr_data = $tradeRecord_model->update($up_params);
     	if(EC_OK != $tr_data['code']){
     		Log::fkdError('update order status fail!');
-    		//EC::fail($tr_data['code']);
+    		if($is_ec) EC::fail($tr_data['code']);
     		return false;
     	}
     	
-    	//EC::success(EC_OK);
+    	if($is_ec) EC::success(EC_OK);
     	return true;
     }
 
@@ -1523,7 +1524,7 @@ class TradeRecordController extends BaseController {
     	}
     	
     	$log = "request-params  ===>> params = ##" . json_encode($params) . "##";
-    	Log::write($log, 'notice', 'audit-'.date('Y-m-d'));    	
+    	Log::write($log, 'notice', 'erp_audit-'.date('Y-m-d'));    	
     	Log::notice($log);
     	
     	$res_data = $tradeRecord_model->erp_auditOneTradRecord($params);
@@ -1533,7 +1534,7 @@ class TradeRecordController extends BaseController {
     	}
     	
     	$log = "response-params ===>> res_data = ##" . json_encode($res_data) . "##";
-    	Log::write($log, 'notice', 'audit-'.date('Y-m-d'));
+    	Log::write($log, 'notice', 'erp_audit-'.date('Y-m-d'));
     	Log::notice($log);
     	
     	return true;
