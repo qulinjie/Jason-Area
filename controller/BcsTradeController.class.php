@@ -917,21 +917,22 @@ class BcsTradeController extends BaseController {
     
     	Log::write(var_export($params, true), 'debug', 'skd-'.date('Y-m-d'));
     	//exit();
-    	
+    	$is_erp_sync = 2;
     	Log::notice("request-data ============>> params = ##" . json_encode($params) . "##" );
     	$bcsTrade_model = $this->model('bcsTrade');
     	$res_data = $bcsTrade_model->erp_syncBillsOfCollection($params);
     	if(EC_OK_ERP != $res_data['code']){
     		Log::error('erp_syncBillsOfCollection Fail:'.$res_data['msg']);
     		//EC::fail($res_data['msg']);
-    		return false;
+    		//return false;
+    		$is_erp_sync = 3;
     	}
     	Log::notice("response-data ============>> res_data = ##" . json_encode($res_data) . "##" );
     	 
     	//修改同步状态
     	$up_params = array();
     	$up_params['id'] = $data['id'];
-    	$up_params['is_erp_sync'] = 2; //付款单是否同步 1否 2同步
+    	$up_params['is_erp_sync'] = $is_erp_sync; //付款单是否同步 1否 2同步成功 3同步失败
     	$up_params['erp_sync_timestamp'] = date('Y-m-d H:i:s',time());
     	$bt_data = $bcsTrade_model->update($up_params);
     	if(EC_OK != $bt_data['code']){
