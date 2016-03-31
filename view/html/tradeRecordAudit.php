@@ -45,7 +45,7 @@
 	    </div>
 	    <label for="add-entity-comp_account" class="col-sm-2 control-label">收款账号</label>
 	    <div class="col-sm-4">
-	        <input type="text" class="form-control" readonly="readonly" id="add-entity-comp_account" placeholder=""></input>
+	        <input type="text" class="form-control" readonly="readonly" id="add-entity-comp_account" placeholder="" value="<?php echo $data_info['comp_account'];?>"></input>
 	    </div>	
 	  </div>
 	  <div class="form-group">
