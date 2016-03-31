@@ -965,6 +965,7 @@ class BcsTradeController extends BaseController {
     //收款后发送短信给用户
     public function sendSmsCodeForCollection($ACCOUNT_NO, $payer, $amount){
     	
+    	Log::skdxNotice('ACCOUNT_NO='. $ACCOUNT_NO .'payer='. $payer .'amount='. $amount);    	 
     	if(empty($ACCOUNT_NO) || empty($payer) || empty($amount)){
     		Log::skdxError('empty args!');
     		//EC::fail(EC_PAR_ERR);
