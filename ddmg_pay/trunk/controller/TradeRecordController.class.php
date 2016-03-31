@@ -1729,8 +1729,8 @@ class TradeRecordController extends BaseController {
     	}
 
     	//账户余额判断
-    	if(floatval($data['order_bid_amount']) > floatval($params['ACCT_BAL'])){
-    		Log::error('order_bid_amount'.$data['order_bid_amount']. '> ACCT_BAL!'.$params['ACCT_BAL']);
+    	if(floatval($data['order_bid_amount']) > floatval($bcs_data['ACCT_BAL'])){
+    		Log::error('order_bid_amount'.$data['order_bid_amount']. '> ACCT_BAL!'.$bcs_data['ACCT_BAL']);
     		EC::fail(EC_BLE_LESS);
     	}
     	 	
