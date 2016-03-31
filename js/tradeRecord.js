@@ -646,10 +646,10 @@ function sendTransferTrade1(){
 	        	$("#add-entity-pay").html("已付款");	
 	        	hint_html = $("#add-entity-hint").html();
 	        	hint_html += (hint_html == '' ? '' : '<BR>') + '关闭...';
-	            /*setTimeout(function(){
+	            setTimeout(function(){
                 	$('#add-entity-cancel').click();                	
                 	search_entity($("#entity-current-page").html());
-                }, 2000);*/
+                }, 2000);
 	        }else{
 	        	$("#add-entity-pay").html("付款").removeAttr('disabled');
 	        }
