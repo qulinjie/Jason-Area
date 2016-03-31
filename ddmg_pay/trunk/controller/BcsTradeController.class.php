@@ -971,7 +971,7 @@ class BcsTradeController extends BaseController {
     		return false;
     	}
     	
-    	//根据user_id查erp接口得到电话等信息    	
+    	//根据user_id查erp接口得到用户信息    	
     	$user_data = array();
     	$user_model = $this->model('user');
     	$user_data = $user_model->erp_getInfo(array('usercode' => $bcs_data['user_id']));
@@ -985,6 +985,21 @@ class BcsTradeController extends BaseController {
     		Log::error('mobile is empty!');
     		//EC::fail(EC_DATA_EMPTY_ERR);
     		return false;
+    	}
+    	$mobile = $user_data['mobile'];
+    	
+    	//判断是否为大合伙人,如果不是大合伙人，则查大合伙人电话
+    	if(！empty($user_data['fuserid']) && $bcs_data['user_id'] != $user_data['fuserid']){
+    		$user_data2 = $user_model->erp_getInfo(array('usercode' => $user_data['fuserid']));
+    		if(EC_OK_ERP != $user_data2['code']){
+    			Log::error('2 erp_getInfo Fail!');
+    			//EC::fail($user_data2['code']);
+    			return false;
+    		}
+    		$user_data2 = $user_data2['data'];
+    		if(empty($user_data2) && !isset($user_data2['mobile']) && empty($user_data2['mobile'])){
+    			$mobile = $user_data2['mobile'];
+    		}    		
     	}
     	    		
     	// 尊敬的客户，【Value1】已提交支付，支付【Value2】为【Value3】，请及时跟进。感谢您的支持【Value4】
