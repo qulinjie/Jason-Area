@@ -1472,7 +1472,7 @@ class TradeRecordController extends BaseController {
     public function erp_auditOneTradRecord($tradeRecord_data){
     	
     	if(empty($tradeRecord_data) && !is_int($tradeRecord_data) && !is_array($tradeRecord_data)){
-    		Log::error('tradeRecord_data params error!');
+    		Log::auditError('tradeRecord_data params error!');
     		EC::fail(EC_PAR_ERR);
     	}
     	
@@ -1484,17 +1484,17 @@ class TradeRecordController extends BaseController {
     		//根据id查采购单的数据    		
     		$tr_data = $tradeRecord_model->getInfo(array('id' => $id));
     		if(empty($tr_data) || !is_array($tr_data) || EC_OK != $tr_data['code'] || !isset($tr_data['data'])) {
-    			Log::error('tradeRecord getInfo empty !');
+    			Log::auditError('tradeRecord getInfo empty !');
     			EC::fail(EC_DAT_NON);
     		}
     		$tradeRecord_data = $tr_data['data'][0];
     		if(empty($tradeRecord_data)) {
-    			Log::error('tradeRecord getInfo empty !');
+    			Log::auditError('tradeRecord getInfo empty !');
     			EC::fail(EC_RED_EMP);
     		}
     	}elseif(is_array($tradeRecord_data)){
     		if(!isset($tradeRecord_data['id']) || !isset($tradeRecord_data['user_id'])){
-    			Log::error('id or user_id is empty !');
+    			Log::auditError('id or user_id is empty !');
     			EC::fail(EC_PAR_ERR);
     		}
     		$id = $tradeRecord_data['id'];
@@ -1504,7 +1504,7 @@ class TradeRecordController extends BaseController {
     	$tradeRecordItem_model = $this->model('tradeRecordItem');
     	$item_list = $tradeRecordItem_model->searchList(array('trade_record_id' => $id));
     	if($item_list['code'] !== EC_OK){
-    		Log::error('tradeRecordItem searchList error');
+    		Log::auditError('tradeRecordItem searchList error');
     		EC::fail(EC_DAT_NON);
     	}
     	$item_list = $item_list['data'] ? $item_list['data'] : [];
@@ -1523,19 +1523,15 @@ class TradeRecordController extends BaseController {
     		$params['details'][] = $details;
     	}
     	
-    	$log = "request-params  ===>> params = ##" . json_encode($params) . "##";
-    	Log::write($log, 'notice', 'erp_audit-'.date('Y-m-d'));    	
-    	Log::notice($log);
-    	
+    	 	
+    	Log::auditNotice("request-params  ===>> params = ##" . json_encode($params) . "##");
     	$res_data = $tradeRecord_model->erp_auditOneTradRecord($params);
-    	if(EC_OK_ERP != $res_data['code']){
-    		Log::error('erp_auditOneTradRecord Fail!'.$res_data['msg']);
-    		EC::fail($res_data['msg']);
-    	}
+    	Log::auditNotice("response-params ===>> res_data = ##" . json_encode($res_data) . "##");
     	
-    	$log = "response-params ===>> res_data = ##" . json_encode($res_data) . "##";
-    	Log::write($log, 'notice', 'erp_audit-'.date('Y-m-d'));
-    	Log::notice($log);
+    	if(EC_OK_ERP != $res_data['code']){
+    		Log::auditError('erp_auditOneTradRecord Fail!'.$res_data['msg']);
+    		EC::fail($res_data['msg']);
+    	}  
     	
     	return true;
     }
@@ -1544,10 +1540,10 @@ class TradeRecordController extends BaseController {
     protected function auditOneTradRecord(){
     	$id = intval(Request::post('id'));
     	$apply_status = intval(Request::post('apply_status'));    	
-    	Log::notice("request-data ===========================>> id=" .$id . "apply_status=" . $apply_status . "##" );
+    	Log::auditNotice("request-data ===>> id=" .$id . "apply_status=" . $apply_status . "##" );
     	
     	if(empty($id) || empty($apply_status)){
-    		Log::error('id or apply_status params error!');
+    		Log::auditError('id or apply_status params error!');
     		EC::fail(EC_PAR_ERR);
     	}
     	
@@ -1555,12 +1551,12 @@ class TradeRecordController extends BaseController {
     	$tradeRecord_model = $this->model('tradeRecord');
     	$data = $tradeRecord_model->getInfo(array('id' => $id));
     	if(empty($data) || !is_array($data) || EC_OK != $data['code'] || !isset($data['data'])) {
-    		Log::error('tradeRecord getInfo empty !');
+    		Log::auditError('tradeRecord getInfo empty !');
     		EC::fail(EC_DAT_NON);
     	}
     	$data = $data['data'][0];
     	if(empty($data)) {
-    		Log::error('tradeRecord getInfo empty !');
+    		Log::auditError('tradeRecord getInfo empty !');
     		EC::fail(EC_RED_EMP);
     	}
     	//Log::write(var_export($data, true), 'debug', 'debug-'.date('Y-m-d'));
@@ -1574,30 +1570,30 @@ class TradeRecordController extends BaseController {
     	if(2 == $apply_status || 3 == $apply_status){    		
     		//判断当前用户是否有审核权限
     		if($user_id != $data['audit_user_id_first']){
-    			Log::error('1 the current user does not have audit authority!'. 'id='. $id .' ' . $user_id . '!=' . $data['audit_user_id_second']);
+    			Log::auditError('1 the current user does not have audit authority!'. 'id='. $id .' ' . $user_id . '!=' . $data['audit_user_id_second']);
     			EC::fail(EC_USER_NO_AUTH);
     		}
     		//判断是否可以审批
     		if(1 != intval($data['apply_status'])){
-    			Log::error('1 audit did not pass!');
+    			Log::auditError('1 audit did not pass!');
     			EC::fail(EC_TRADE_TF_YES_AS);
     		}
     		$audit_level = 1;
     	}elseif(5 == $apply_status || 6 == $apply_status){//二级审批
     		//判断当前用户是否有审核权限
     		if($user_id != $data['audit_user_id_second']){
-    			Log::error('2 the current user does not have audit authority!'. 'id='. $id .' ' . $user_id . '!=' . $data['audit_user_id_second']);
+    			Log::auditError('2 the current user does not have audit authority!'. 'id='. $id .' ' . $user_id . '!=' . $data['audit_user_id_second']);
     			EC::fail(EC_USER_NO_AUTH);
     		}
     		
     		//判断是否可以审批
     		if(2 != intval($data['apply_status']) && 4 != intval($data['apply_status'])){
-    			Log::error('2 audit did not pass!');
+    			Log::auditError('2 audit did not pass!');
     			EC::fail(EC_TRADE_TF_FRIST_NO_AS);
     		}
     		$audit_level = 2;
     	}else{
-    		Log::error('apply_status is error!');
+    		Log::auditError('apply_status is error!');
     		EC::fail(EC_PAR_ERR);
     	}
     	
@@ -1612,8 +1608,10 @@ class TradeRecordController extends BaseController {
     	$params['apply_timestamp'] = date('Y-m-d H:i:s',time());
      	$tradeRecord_model = $this->model('tradeRecord');
     	$data = $tradeRecord_model->auditOneTradRecord($params);    	
+    	Log::auditNotice("response-data ===========================>> data = ##" . json_encode($data) . "##" );
+    	    	
     	if(EC_OK != $data['code']){
-    		Log::error('auditOneTradRecord Fail!');
+    		Log::auditError('auditOneTradRecord Fail!');
     		EC::fail($data['code']);
     	}
     	
@@ -1622,7 +1620,6 @@ class TradeRecordController extends BaseController {
     		$this->sendTransferTrade($id);
     	} */
     	
-    	Log::notice("response-data ===========================>> data = ##" . json_encode($data) . "##" );
     	EC::success(EC_OK, $data['data']);
     }
 
