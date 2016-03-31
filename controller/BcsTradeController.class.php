@@ -1007,7 +1007,7 @@ class BcsTradeController extends BaseController {
     	$mobile = $user_data['mobile'];
     	
     	//判断是否为大合伙人,如果不是大合伙人，则查大合伙人电话
-    	if(！empty($user_data['fuserid']) && $bcs_data['user_id'] != $user_data['fuserid']){
+    	if(!empty($user_data['fuserid']) && $bcs_data['user_id'] != $user_data['fuserid']){
     		$user_data2 = $user_model->erp_getInfo(array('usercode' => $user_data['fuserid']));
     		if(EC_OK_ERP != $user_data2['code']){
     			Log::skdxError('2 erp_getInfo Fail!');
