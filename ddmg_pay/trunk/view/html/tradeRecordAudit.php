@@ -51,7 +51,7 @@
 	  <div class="form-group">
 	    <label for="add-entity-bank_name" class="col-sm-2 control-label">开户行</label>
 	    <div class="col-sm-4">
-		    <input type="text" class="form-control" readonly="readonly" id="add-entity-bank_name" placeholder="" >    				   
+		    <input type="text" class="form-control" readonly="readonly" id="add-entity-bank_name" placeholder="" value="<?php echo $data_info['bank_name'];?>">    				   
 	    </div>
 	    <label for="add-entity-amount" class="col-sm-2 control-label">金额</label>
 	    <div class="col-sm-4">
