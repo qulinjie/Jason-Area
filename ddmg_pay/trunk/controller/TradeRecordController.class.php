@@ -1497,10 +1497,10 @@ class TradeRecordController extends BaseController {
     	
     	//组织提交参数
     	$params = array();
-    	$params['head'] = array();
-    	$params['head']['usercode'] = $tradeRecord_data['user_id'];
+    	$head = array();
+    	$head['usercode'] = $tradeRecord_data['user_id'];
     	//$params['head']['order_bid_amount'] = $tradeRecord_data['order_bid_amount'];
-    	
+    	$params['head'] = $head;
     	$params['details'] = array();    	
     	foreach ($item_list as $item){
     		$details = array();
@@ -1509,12 +1509,12 @@ class TradeRecordController extends BaseController {
     		$params['details'][] = $details;
     	}
     	
-    	Log::write(var_export($params, true), 'debug', 'debug22-'.date('Y-m-d'));
+    	Log::write(var_export($params, true), 'debug', 'audit-'.date('Y-m-d'));
     	
     	Log::notice("request-params  ===>> params = ##" . json_encode($params) . "##" );
     	$res_data = $tradeRecord_model->erp_auditOneTradRecord($params);
     	if(EC_OK_ERP != $res_data['code']){
-    		Log::error('erp_auditOneTradRecord Fail!');
+    		Log::error('erp_auditOneTradRecord Fail!'.$res_data['msg']);
     		EC::fail($res_data['msg']);
     	}
     	Log::notice("response-params ===>> res_data = ##" . json_encode($res_data) . "##" );
@@ -1697,7 +1697,7 @@ class TradeRecordController extends BaseController {
     		Log::error("the order has been payment: backhost_status={$data['backhost_status']}!");
     		EC::fail(EC_TRADE_TF_OS_ERR_3);
     	}
-    	
+    	  
     	//查合伙人信息    	   
     	$params  = array();
     	$params['user_id'] = $data['user_id'];  
@@ -1713,7 +1713,13 @@ class TradeRecordController extends BaseController {
     	if(empty($bcs_data)) {
     		Log::error('bcsCustomer getInfo empty !');
     		EC::fail(EC_RED_EMP);
-    	}   
+    	}
+
+    	//账户余额判断
+    	if($data['order_bid_amount'] > $params['ACCT_BAL']){
+    		Log::error('order_bid_amount > ACCT_BAL!');
+    		EC::fail(EC_BLE_LESS);
+    	}
     	 	
     	$SIT_NO = $bcs_data['SIT_NO'];
     	$ACCOUNT_NO = $data['ACCOUNT_NO'];
@@ -1735,19 +1741,19 @@ class TradeRecordController extends BaseController {
 	    	$params['payerName']        = $SIT_NO; //Y 付款人名称    	
 	    	$params['payeeAcctNo']  = $data['comp_account']; //Y 收款人账号
 	    	//$params['payeeAcctNo']    = '6223635001004485218'; // 收款人账号
-	    	//$params['payeeAcctName'] = $data['seller_name']; //Y 收款人中文名 
-	    	$params['payeeAcctName']  = '钟煦镠'; // 收款人中文名
+	    	$params['payeeAcctName'] = $data['seller_name']; //Y 收款人中文名 
+	    	//$params['payeeAcctName']  = '钟煦镠'; // 收款人中文名
 	    		
 	    	$params['ownItBankFlag']    = $data['bank_flag'];//Y 本行/它行标志 0：表示本行 1：表示它行   
 			$params['remitLocation']    = $data['local_flag']; // 同城异地标志 0：同城 1：异地 跨行转账时必须输入(即本行/它行标志为1：表示它行)
 	    	$params['payeeBankName']    = $data['bank_name']; // 收款行名称 跨行转账时必须输入(即本行/它行标志为1：表示它行)
 	    	$params['payeeBankAddress'] = $data['bank_name']; // 收款行地址 跨行转账时必须输入(即本行/它行标志为1：表示它行)   
 	    	$params['payeeBankNo']      = $data['bank_no']; // 支付号 【收款账号行号】    	
-	    	$params['transAmount']      = '1.0'; //$data['order_bid_amount']; //Y 交易金额
+	    	$params['transAmount']      = $data['order_bid_amount']; //Y 交易金额
 	    	$params['note']             = $useTodo; // 附言 如果跨行转账，附言请不要超过42字节（汉字21个）
 	    	   	
 	   		//提交付款前记录日志
-	    	Log::write("request-data ===sendTransferTrade===>> params = ##" . json_encode($params) . "##", 'Notice', 'stftd-'.date('Y-m-d'));
+	    	Log::write("request-data ===sendTransferTrade===>> params = ##" . json_encode($params) . "##", 'Notice', 'fk-'.date('Y-m-d'));
 	    	
 	    	$sp_data = array();    	
 	    	$spdBank_model = $this->model('spdBank');	    	
@@ -1761,7 +1767,7 @@ class TradeRecordController extends BaseController {
 	   		$backhost_status = $sp_data['backhostStatus']; //付款后返回的记录状态 0-待补录；1-待记帐；2-待复核；3-待授权；4-完成；8-拒绝；9-撤销；
          
 	    	//付款后记录日志
-	    	Log::write("response-data ===sendTransferTrade===>> sp_data = ##" . json_encode($sp_data) . "##", 'Notice', 'stftd-'.date('Y-m-d'));
+	    	Log::write("response-data ===sendTransferTrade===>> sp_data = ##" . json_encode($sp_data) . "##", 'Notice', 'fk-'.date('Y-m-d'));
 	    		   		
     	}catch (Exception $e){   			
    			Log::error('sendTransferTrade . e=' . $e->getMessage());
@@ -1785,15 +1791,17 @@ class TradeRecordController extends BaseController {
    		}
    		$sp_data['backhostDesc'] = self::getBackhostStatusByKey($backhost_status);   		
 
-   		if($backhost_status !=8 && $backhost_status!=9){   			
+   		if($backhost_status !=8 && $backhost_status!=9){   
+   			
+   			//同步付款单给erp
+   			$this->erp_syncBillsOfPayment($id);
+   			
    			//更新流水   			
    			$this->instance('BcsTradeController')->spd_loadAccountTradeList_exec($ACCOUNT_NO);
    			
    			//更新余额   	
-   			$this->instance('BcsCustomerController')->spd_loadAccountList_exec($ACCOUNT_NO);
+   			$this->instance('BcsCustomerController')->spd_loadAccountList_exec($ACCOUNT_NO); 			   			
    			   			
-   			//同步付款单给erp
-   			$this->erp_syncBillsOfPayment($id);   			
    		}
    		
    		EC::success(EC_OK, $sp_data);
