@@ -829,7 +829,8 @@ class BcsTradeController extends BaseController {
     	Log::notice("erp_syncBillsOfCollection ===========================>> MCH_TRANS_NO=" .$MCH_TRANS_NO );
     	if(empty($MCH_TRANS_NO)){
     		Log::error('MCH_TRANS_NO empty !');
-    		EC::fail(EC_PAR_ERR);
+    		//EC::fail(EC_PAR_ERR);
+    		return false;
     	}
     	 
     	//根据流水号查流水的数据
@@ -837,23 +838,27 @@ class BcsTradeController extends BaseController {
     	$data = $bcsTrade_model->getInfo(array('debitCreditFlag' => 1, 'MCH_TRANS_NO' => $MCH_TRANS_NO));
     	if(empty($data) || !is_array($data) || EC_OK != $data['code'] || !isset($data['data'])) {
     		Log::error('bcsTrade getInfo empty !');
-    		EC::fail(EC_DAT_NON);
+    		//EC::fail(EC_DAT_NON);
+    		return false;
     	}
     	$data = $data['data'][0];
     	if(empty($data)) {
     		Log::error('bcsTrade getInfo empty !');
-    		EC::fail(EC_RED_EMP);
+    		//EC::fail(EC_RED_EMP);
+    		return false;
     	}
     	//必须为收款
     	if(1 != $data['debitCreditFlag']){
     		Log::error('the bcsTrade debitCreditFlag is' . $data['debitCreditFlag'] . '!');
-    		EC::fail(EC_RED_EXP);
+    		//EC::fail(EC_RED_EXP);
+    		return false;
     	}
     	
     	//判断是否已同步erp
     	if(2 == $data['is_erp_sync']){
     		Log::error("the bcsTrade has been sync erp: is_erp_sync={$data['is_erp_sync']}!");
-    		EC::fail(EC_REC_EST);
+    		//EC::fail(EC_REC_EST);
+    		return false;
     	}
     	 
     	//查合伙人信息
@@ -864,12 +869,14 @@ class BcsTradeController extends BaseController {
     	//Log::write("bcs_data==".var_export($bcs_data, true), 'debug', 'debug-'.date('Y-m-d'));
     	if(EC_OK != $bcs_data['code'] || !is_array($bcs_data) || !isset($bcs_data['data'])){
     		Log::error("bcsCustomer getInfo failed . ");
-    		EC::fail(EC_USR_NON);
+    		//EC::fail(EC_USR_NON);
+    		return false;
     	}
     	$bcs_data = $bcs_data['data'][0];
     	if(empty($bcs_data)) {
     		Log::error('bcsCustomer getInfo empty !');
-    		EC::fail(EC_RED_EMP);
+    		//EC::fail(EC_RED_EMP);
+    		return false;
     	}
     	 
     	/*
@@ -916,7 +923,8 @@ class BcsTradeController extends BaseController {
     	$res_data = $bcsTrade_model->erp_syncBillsOfCollection($params);
     	if(EC_OK_ERP != $res_data['code']){
     		Log::error('erp_syncBillsOfCollection Fail:'.$res_data['msg']);
-    		EC::fail($res_data['msg']);
+    		//EC::fail($res_data['msg']);
+    		return false;
     	}
     	Log::notice("response-data ============>> res_data = ##" . json_encode($res_data) . "##" );
     	 
@@ -928,10 +936,12 @@ class BcsTradeController extends BaseController {
     	$bt_data = $bcsTrade_model->update($up_params);
     	if(EC_OK != $bt_data['code']){
     		Log::error('update bcsTrade is_erp_sync status fail!');
-    		EC::fail($bt_data['code']);
+    		//EC::fail($bt_data['code']);
+    		return false;
     	}
-    
-    	EC::success(EC_OK);
+    	
+    	return true;
+    	//EC::success(EC_OK);
     }
     
     //收款后发送短信给用户
@@ -939,7 +949,8 @@ class BcsTradeController extends BaseController {
     	
     	if(empty($ACCOUNT_NO) || empty($payer) || empty($amount)){
     		Log::error('empty args!');
-    		EC::fail(EC_PAR_ERR);
+    		//EC::fail(EC_PAR_ERR);
+    		return false;
     	}
     	
     	//查合伙人信息
@@ -949,12 +960,14 @@ class BcsTradeController extends BaseController {
     	$bcs_data = $bcsCustomer_model->getInfo($bcs_params);
     	if(EC_OK != $bcs_data['code'] || !is_array($bcs_data) || !isset($bcs_data['data'])){
     		Log::error("bcsCustomer getInfo failed . ");
-    		EC::fail(EC_USR_NON);
+    		//EC::fail(EC_USR_NON);
+    		return false;
     	}
     	$bcs_data = $bcs_data['data'][0];
     	if(empty($bcs_data)) {
     		Log::error('bcsCustomer getInfo empty !');
-    		EC::fail(EC_RED_EMP);
+    		//EC::fail(EC_RED_EMP);
+    		return false;
     	}
     	
     	//根据user_id查erp接口得到电话等信息    	
@@ -963,12 +976,14 @@ class BcsTradeController extends BaseController {
     	$user_data = $user_model->erp_getInfo(array('usercode' => $bcs_data['user_id']));
     	if(EC_OK_ERP != $user_data['code']){
     		Log::error('erp_getInfo Fail!');
-    		EC::fail($user_data['code']);
+    		//EC::fail($user_data['code']);
+    		return false;
     	}
     	$user_data = $user_data['data'];
     	if(empty($user_data) || !isset($user_data['mobile']) || empty($user_data['mobile'])){
     		Log::error('mobile is empty!');
-    		EC::fail(EC_DATA_EMPTY_ERR);
+    		//EC::fail(EC_DATA_EMPTY_ERR);
+    		return false;
     	}
     	    		
     	// 尊敬的客户，【Value1】已提交支付，支付【Value2】为【Value3】，请及时跟进。感谢您的支持【Value4】
