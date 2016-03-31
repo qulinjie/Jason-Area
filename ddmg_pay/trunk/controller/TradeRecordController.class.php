@@ -1303,7 +1303,7 @@ class TradeRecordController extends BaseController {
     	
     	$id = ($id == NULL) ? intval(Request::post('id')) : intval($id);
     	$is_ec = ($is_ec == 0) ? intval(Request::post('is_ec')) : intval($is_ec);
-    	Log::fkdNotice("erp_syncBillsOfPayment ===>> id=" .$id ."is_ec=".$is_ec);
+    	Log::fkdNotice("erp_syncBillsOfPayment ===>> id=" .$id ." is_ec=".$is_ec);
     	
     	if(empty($id)){
     		Log::fkdError('id empty !');
@@ -1437,12 +1437,13 @@ class TradeRecordController extends BaseController {
     	$is_erp_sync = 2;    	
     	$tradeRecord_model = $this->model('tradeRecord');
     	$res_data = $tradeRecord_model->erp_syncBillsOfPayment($params);
+    	Log::fkdNotice("response-data ============>> data = ##" . json_encode($res_data) . "##");
+    	 
     	if(EC_OK_ERP != $res_data['code']){
     		Log::fkdError('erp_syncBillsOfPayment Fail!'. $res_data['msg']);
     		//EC::fail($res_data['code']);
     		$is_erp_sync = 3;
     	}    	
-    	Log::fkdNotice("response-data ============>> data = ##" . json_encode($res_data) . "##");
     	
     	/**/
     	//修改同步状态
@@ -1530,7 +1531,10 @@ class TradeRecordController extends BaseController {
     	
     	if(EC_OK_ERP != $res_data['code']){
     		Log::auditError('erp_auditOneTradRecord Fail!'.$res_data['msg']);
-    		EC::fail("erp审核返回错误：".$res_data['msg']);
+    		if(!empty($res_data['data']) && isset($res_data['data']['ReturnCode']) ){
+    			EC::fail($res_data['data']['ReturnMsg']);
+    		}    		
+    		EC::fail("erp审核错误：".$res_data['msg']);
     	}  
     	
     	return true;
@@ -1598,7 +1602,7 @@ class TradeRecordController extends BaseController {
     	}
     	
     	//调用erp接口查询是否可以通过
-    	$erp_audit_result = $this->erp_auditOneTradRecord($data);
+    	//$erp_audit_result = $this->erp_auditOneTradRecord($data);
     	
     	//修改审批状态
     	$params = array();
