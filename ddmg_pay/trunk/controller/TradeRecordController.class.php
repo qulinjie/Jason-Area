@@ -1584,14 +1584,13 @@ class TradeRecordController extends BaseController {
     	//申请状态 1一级待审核 2一级审核通过 3一级审核驳回 4二级待审核 5二级审核通过 6二级审核驳回
     	//audit_user_id_first audit_user_id_second
     	
-    	$user_id = self::getCurrentUserId();
+    	$current_user_id = self::getCurrentUserId();
     	$audit_level =0;
-    	
-    	//一级审批
-    	if(2 == $apply_status || 3 == $apply_status){    		
-    		//判断当前用户是否有审核权限
-    		if($user_id != $data['audit_user_id_first']){
-    			Log::auditError('1 the current user does not have audit authority!'. 'id='. $id .' ' . $user_id . '!=' . $data['audit_user_id_second']);
+    	    	
+    	if(2 == $apply_status || 3 == $apply_status){ //一级审批   		
+    		//判断当前用户是否有审核权限    		
+    		if($current_user_id != $data['audit_user_id_first']){
+    			Log::auditError('1 the current user does not have audit authority!'. 'id='. $id .' ' . $current_user_id . '!=' . $data['audit_user_id_second']);
     			EC::fail(EC_USER_NO_AUTH);
     		}
     		//判断是否可以审批
@@ -1600,10 +1599,10 @@ class TradeRecordController extends BaseController {
     			EC::fail(EC_TRADE_TF_YES_AS);
     		}
     		$audit_level = 1;
-    	}elseif(5 == $apply_status || 6 == $apply_status){//二级审批
+    	}elseif(5 == $apply_status || 6 == $apply_status){ //二级审批
     		//判断当前用户是否有审核权限
-    		if($user_id != $data['audit_user_id_second']){
-    			Log::auditError('2 the current user does not have audit authority!'. 'id='. $id .' ' . $user_id . '!=' . $data['audit_user_id_second']);
+    		if($current_user_id != $data['audit_user_id_second']){
+    			Log::auditError('2 the current user does not have audit authority!'. 'id='. $id .' ' . $current_user_id . '!=' . $data['audit_user_id_second']);
     			EC::fail(EC_USER_NO_AUTH);
     		}
     		
