@@ -196,16 +196,26 @@ abstract class BaseController extends Controller
         return $array;
     }
 
-    public function getCurrentUserId()
+    private static $_currentUserId = NULL;
+    public static function getCurrentUserId()
     {
-        $loginUser_data = UserController::getLoginUser();        
-//         $user_id = $loginUser_data['id'];
-        $user_id = $loginUser_data['usercode'];
-        $loginUser_data['id'] = $user_id;
-        if (empty($user_id)) {
-            Log::error("getLoginUser_dataJson====================>>>loginUser_data=##" . json_encode($loginUser_data) . "##"); // toStirng
+    	if(NULL !== self::$_currentUserId){
+    		return self::$_currentUserId;
+    	}
+    	$loginUser = array();
+    	if(AdminController::isAdmin()){
+    		$loginUser = AdminController::getLoginUser();
+    	}elseif (UserController::isLogin()){
+    		$loginUser = UserController::getLoginUser();
+    	}
+    	if(!empty($loginUser) && is_array($loginUser) && isset($loginUser['usercode'])){
+    		self::$_currentUserId = $loginUser['usercode'];
+    	}    	
+                
+        if (empty(self::$_currentUserId)) {
+            Log::error("getLoginUser_data=========>>>loginUser_data=##" . json_encode($loginUser) . "##"); // toStirng
         }
-        return $user_id;
+        return self::$_currentUserId;
     }
 
 

@@ -8,6 +8,8 @@
 
 class UserController extends BaseController
 {
+	public static $userSessionKey = '_loginUser';
+	
     public function handle($params = array())
     { 
         switch ($params[0]) {
@@ -256,7 +258,7 @@ class UserController extends BaseController
             $data['code'] !== EC_OK && EC::fail($data['code']);
             
             $session = $this->instance('session');
-            $session->set('_loginUser',$data['data']);
+            $session->set(self::$userSessionKey ,$data['data']);
            
             EC::success(EC_OK);
         }
@@ -278,6 +280,7 @@ class UserController extends BaseController
         $cookie = $this->instance('cookie');
         $cookie->clear(Router::getBaseUrl());
         
+        self::$_isLogin = NULL;
         EC::success(EC_OK);
     }
 
@@ -314,60 +317,100 @@ class UserController extends BaseController
         $this->render('index',['page_type' => 'user','password_html' =>$password_html]);
     }
 
+    private static $_isLogin = NULL;
     public static function isLogin()
     {
-        $session = self::instance('session');
-        if(!$session->is_set('_loginUser')){
-            return self::getLoginUser() == true;
-        }
-        
-        return true;
+    	if(NULL !== self::$_isLogin){
+    		return self::$_isLogin;
+    	}    	
+    	$loginUser = self::getLoginUser();        
+        if(!empty($loginUser) && is_array($loginUser) && isset($loginUser['usercode'])){
+            return self::$_isLogin  = true;
+        }else{
+        	return self::$_isLogin = false;
+        }        
+        return self::$_isLogin;
     }
     
+    private static $_isSeller = NULL;
     public static function isSeller()
-    {
-        $session = self::instance('session');
-        if(!$session->is_set('_loginUser')){
-            $session = self::getLoginUser();
+    {    
+    	if(NULL !== self::$_isSeller){
+    		return self::$_isSeller;
+    	}   
+    	if(!self::isLogin()){
+    		return self::$_isSeller = false;
+    	} 
+        $loginUser = self::getLoginUser();        
+        if(!empty($loginUser) && is_array($loginUser) && 1 == $loginUser['user_type'] ){
+            return self::$_isSeller = true;
+        }else {
+        	return self::$_isSeller = false;
         }
-        if(1 == $session->get('_loginUser')['user_type'] ){
-            return true;
-        }
-        return false;
+        return self::$_isSeller;
     }
     
-    public static function isFUser(){
-    	$session = self::instance('session');
-    	if(!$session->is_set('_loginUser')){
-    		$session = self::getLoginUser();
+    //是否是一级审核人
+    private static $_isFirstAuditUser = NULL;
+    public static function isFirstAuditUser(){
+    	
+    	if(NULL !== self::$_isFirstAuditUser){
+    		return self::$_isFirstAuditUser;
     	}
-    	if($session->get('_loginUser')['usercode'] == $session->get('_loginUser')['fuserid'] ){
-    		return true;
+    	if(!self::isLogin()){
+    		return self::$_isFirstAuditUser = false;
     	}
-    	return false;
+    	$loginUser = self::getLoginUser();
+    	if(!empty($loginUser) && is_array($loginUser) &&($loginUser['usercode'] == $loginUser['fuserid']) ){
+    		return self::$_isFirstAuditUser = true;
+    	}else{
+    		return self::$_isFirstAuditUser = false;
+    	}
+    	return self::$_isFirstAuditUser;
     }
-
+     
     //{"userid":"68ff4da6-8dc3-4a60-805a-6fbd609518b9","usercode":"110002","username":"\u674e\u56db","loginid":"110002",
     //"mobile":"18073215757","email":"hisyz@qq.com","is_buyer":1,"is_seller":1,"is_partner":1,"is_manager":1,"is_bank":1,"is_ddmg":1,
     //"is_paymanage":2,"managerid":null,"erp_czydm":"0138","erp_ygdm":"0138","erp_fgsdm":"007","erp_fgsmc":null,"erp_bmdm":"012",
     //"erp_bmmc":null,"user_id":"110002","account":"110002","name":"\u674e\u56db"}
+    private static $_loginUser = NULL;
     public static function getLoginUser()
     {
-        $session = self::instance('session');
-        $loginUser = !empty($session->get('loginUser')) ? $session->get('loginUser') : $session->get('_loginUser');
-        if(!$loginUser){
-            $data = self::model('user')->getLoginUser();
-            Log::notice("getLoginUser . data = ##" . json_encode($data) . "##");
-            if($data['code'] === EC_OK){
-                $session->set('_loginUser',$data['data']);               
-                return $data['data'];
-            }else{
-                Log::error('User getLoginUser not login . return empty data . ');
-                return [];
-            }
+    	$loginUser = NULL;
+    	
+    	if(NULL !== self::$_loginUser){
+    		return self::$_loginUser;
+    	}
+    	
+    	$session = self::instance('session');
+    	if($session->is_set(self::$userSessionKey)){
+    		$loginUser = $session->get(self::$userSessionKey);
+    	}
+        
+        if(!$loginUser){        	
+        	try{
+        		$user_model = self::model('user');
+        		$data = $user_model->getLoginUser();
+        		Log::notice("getLoginUser . data = ##" . json_encode($data) . "##");
+        		if(empty($data) || EC_OK != $data['code']){
+        			Log::error('User getLoginUser data is empyty or code is err . data=' . json_encode($data) );
+        			return [];
+        		}
+        		$loginUser = $data['data'];
+        		if(empty($loginUser)){
+        			Log::error('User getLoginUser . data[loginUser] is null .');
+        			return [];
+        		}
+        		
+        		$session->set(self::$userSessionKey, $loginUser);
+        		
+        	} catch (Exception $e) {
+        		Log::error('getLoginUser . e=' . $e->getMessage());
+        		return [];
+        	}         	
         }
        
-        return $loginUser;
+        return self::$_loginUser = $loginUser;
     }
 
     public static function getToken()
@@ -414,11 +457,11 @@ class UserController extends BaseController
             //一级和二级审批人的检测
             if(empty($data['data']['managerid']) || empty($data['data']['fuserid'])){
             	Log::notice('login error . data=' . json_encode($data['data']) );
-            	EC::fail(EC_OTHER_ERROR, "登录失败：未设置一级或二级审核人！");
+            	EC::fail(EC_ERR, "登录失败：未设置一级或二级审核人！");
             }
             
             $session = $this->instance('session');
-            $session->set('_loginUser',$data['data']);
+            $session->set(self::$userSessionKey, $data['data']);
              
             EC::success(EC_OK);
         }
