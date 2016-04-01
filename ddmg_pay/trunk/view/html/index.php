@@ -1,4 +1,4 @@
-<?php 
+<?php 	
     $session = Controller::instance('session');
     $encrypt = Controller::instance('encrypt');
     $login_token = $encrypt->tokenCode('login:' . $session->get_id());
