@@ -184,17 +184,13 @@ class EC extends Base {
 	public static function load(){
 		return true;
 	}
-	public static function fail($errno, $unlock = true){
+	public static function fail($code, $msg = '', $unlock = true){
 	    
-		if(is_string($errno)){
-			$code = 1;
-			$msg = $errno;
-		}else{
-			$code = $errno;
-			$msg = self::$_errMsg[$errno];
+		if(empty($msg) && isset(self::$_errMsg[$code])){
+			$msg = self::$_errMsg[$code];
 		}
 		
-		if( EC_NOT_LOGIN == $errno && $_SERVER['REQUEST_METHOD']!="POST") {
+		if( EC_NOT_LOGIN == $code && $_SERVER['REQUEST_METHOD']!="POST") {
 	        $view = View::getInstance();
 	        $view->render('index', array( 'code' => $code, 'msg' => $msg ));
 	        exit(0);
