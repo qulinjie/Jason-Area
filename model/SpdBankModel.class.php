@@ -181,7 +181,7 @@ class SpdBankModel extends SPDBankCurl
         
         $requestParms['transAmount'] = $params['transAmount']; // 交易金额
         $requestParms['subAccount'] = $params['subAccount']; // 对方帐号
-        $requestParms['subAcctName'] = $params['subAcctName']; // 对方户名
+        $requestParms['subAcctName'] = self::iconvFunc($params['subAcctName']); // 对方户名
     
         $conf_arr = Controller::getConfig('conf');
         $requestParms['acctNo'] = $conf_arr['ddmg_spd_acctNo']; // 实账号 母实子虚的母账号，银企直连签约账号
@@ -189,6 +189,7 @@ class SpdBankModel extends SPDBankCurl
         $bodyXmlStr = $this->constructBody($requestParms);
     
         Log::notice('end-queryAccountTrade ==== >>> bodyXmlStr=##' . strval($bodyXmlStr) . '##');
+//         eixt;
         return $this->curlSpdRequestXml($bodyXmlStr,$transCode);
     }
     
