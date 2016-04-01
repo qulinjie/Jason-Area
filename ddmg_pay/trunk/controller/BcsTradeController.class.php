@@ -583,7 +583,7 @@ class BcsTradeController extends BaseController {
                 Log::error("update failed . " . $data_upd['code'] );
             }
             
-            EC::fail($bcs_data['code'] . $bcs_data['msg']);
+            EC::fail($bcs_data['code'] , $bcs_data['msg']);
         } else {
             $TRANS_STS = $data['TRANS_STS']; // 交易状态 1:交易成功；2：交易失败；3：状态未知；4：未找到交易记录
             $params = array();
