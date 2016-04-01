@@ -132,22 +132,29 @@ class AdminController extends Controller {
     protected function loginOut(){
         Log::notice("admin loginOut str .");
         try{
-            $admin_model = $this->model('admin');
-            $admin_model->loginOut();
+        	                        
+            $response = $this->model('admin')->loginOut();
+            if($response['code'] !== EC_OK){
+            	Log::error('Adming Logout error '.$response['code']);
+            }
             
-            $session = Controller::instance('session');
-            $session_id = $session->get_id();
-            
-            $redis = Controller::instance('db_redis');
-            $redis->delete($session_id);
-            
+            $session = $this->instance('session');
             $session->delete(self::$adminSessionKey);
             $session->clear();
+            $session->destroy();
+             
+            $cookie = $this->instance('cookie');
+            $cookie->clear(Router::getBaseUrl());
+            
+            self::$_isLogin = NULL;
+            EC::success(EC_OK);
+            
         } catch (Exception $e) {
             Log::error('loginOut . e=' . $e->getMessage());
         }
         Log::notice("admin loginOut end .");
         self::$_isLogin = NULL;
+        
         EC::success(EC_OK);
     }
     
