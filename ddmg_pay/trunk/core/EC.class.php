@@ -179,7 +179,7 @@ class EC extends Base {
 			EC_TRADE_TF_OS_ERR_2   => '订单已付款',			
 			EC_TRADE_TF_OS_ERR_3   => '订单已付款',
 			
-			EC_USER_NO_AUTH => '用户没有该操作权限',
+			EC_USER_NO_AUTH => '当前用户没有该操作权限',
 	);
 	public static function load(){
 		return true;
