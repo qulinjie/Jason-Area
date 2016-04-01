@@ -49,7 +49,7 @@ class AdminController extends Controller {
     	if(NULL !== self::$isAdmin){
     		return self::$isAdmin;
     	}
-    	if(!self::$isLogin()){
+    	if(!self::isLogin()){
     		return self::$isAdmin = false;
     	}
         $session = Controller::instance('session');
