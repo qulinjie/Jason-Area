@@ -1700,8 +1700,14 @@ class TradeRecordController extends BaseController {
     	Log::fkNotice("sendTransferTrade ===>> id=" .$id );    	
     	
     	if(empty($id)){
-    		Log::fkError('id empty !');
+    		Log::fkError('the id empty !');
     		EC::fail(EC_PAR_ERR);
+    	}
+    	
+    	//检查当前登录的用户是否是后台管理人员
+    	if(!AdminController::isAdmin()){
+    		Log::fkError('the current user is not admin, current_user_id='. UserController::getCurrentUserId());
+    		EC::fail(EC_USER_NO_AUTH);
     	}
     	
     	//根据id查采购单的数据    	
@@ -1725,14 +1731,22 @@ class TradeRecordController extends BaseController {
     	}
     	    	
     	//判断是否已付款  
-    	//order_status 订单交易状态 1-待付款 2-已付款  backhost_status 记录状态 0-待补录；1-待记帐；2-待复核；3-待授权；4-完成；8-拒绝；9-撤销；
+    	//order_status 订单交易状态 1-待付款 2-已付款  
     	if(2 == intval($data['order_status'])){
     		Log::fkError("the order has been payment: order_status={$data['order_status']}!");
     		EC::fail(EC_TRADE_TF_OS_ERR_2);
     	}
+    	//backhost_status 记录状态 0-待补录；1-待记帐；2-待复核；3-待授权；4-完成；8-拒绝；9-撤销；
     	if($data['backhost_status']!=null && in_array($data['backhost_status'], array(0,1,2,3,4))){
     		Log::fkError("the order has been payment: backhost_status={$data['backhost_status']}!");
     		EC::fail(EC_TRADE_TF_OS_ERR_3);
+    	}
+    	
+    	//判断当前用户是否有该笔申请单付款权限
+    	$current_user_id = UserController::getCurrentUserId();
+    	if($current_user_id != $data['audit_user_id_second']){
+    		Log::fkError('the current user does not have operation permissions, current_user_id='. UserController::getCurrentUserId() . ' audit_user_id_second='. $data['audit_user_id_second']);
+    		EC::fail(EC_USER_NO_AUTH);
     	}
     	  
     	//查合伙人信息    	   
@@ -1760,11 +1774,13 @@ class TradeRecordController extends BaseController {
     	 	
     	$SIT_NO = $bcs_data['SIT_NO'];
     	$ACCOUNT_NO = $data['ACCOUNT_NO'];
-    	$useTodo = $data['useTodo'];
+    	
     	//附言超过42个字节则截取
+    	$useTodo = $data['useTodo'];
     	if(!empty($useTodo) && ((strlen($useTodo) + mb_strlen($useTodo,'utf-8')) / 2) > 21){
     		$useTodo = mb_substr($useTodo, 0, 21, 'utf-8');
     	}
+    	
     	//必要字段值检测是否为空
     	if(empty($ACCOUNT_NO) || empty($SIT_NO) || empty($data['comp_account']) || empty($data['seller_name']) || empty($data['order_bid_amount'])){
     		Log::fkError("Some data in an empty value. ");
@@ -1807,7 +1823,7 @@ class TradeRecordController extends BaseController {
 	    	Log::fkNotice("response-data ===sendTransferTrade===>> sp_data = ##" . json_encode($sp_data) . "##");
 	    		   		
     	}catch (Exception $e){   			
-   			Log::fkError('sendTransferTrade . e=' . $e->getMessage());
+   			Log::fkError('sendTransferTrade . e==========' . $e->getMessage());
    			EC::fail(EC_OPE_FAI);
     	}
    		
