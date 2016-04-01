@@ -1,7 +1,7 @@
 <?php
 
 define('EC_OK', 0);
-define('EC_OTHER_ERROR', 1);
+define('EC_ERR', 1);
 define('EC_OK_ERP', 1);
 define('EC_DB_CNT', 1);
 define('EC_OTH_TKN', 2);
@@ -94,7 +94,7 @@ class EC extends Base {
 
 	public static $_errMsg = array(
 			
-			EC_OTHER_ERROR  =>  '其他错误',
+			EC_ERR  =>  '错误',
 			EC_OK			=>	'成功',
 	        EC_OK_ERP	    =>	'success',
 	        EC_ERPE_FAI		=>	'与ERP系统通讯失败',
@@ -184,7 +184,7 @@ class EC extends Base {
 	public static function load(){
 		return true;
 	}
-	public static function fail($code, $msg = '', $unlock = true){
+	public static function fail($code, $msg = NULL, $unlock = true){
 	    
 		if(empty($msg) && isset(self::$_errMsg[$code])){
 			$msg = self::$_errMsg[$code];
