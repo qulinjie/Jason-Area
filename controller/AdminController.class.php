@@ -85,13 +85,13 @@ class AdminController extends Controller {
     		return self::$_isAdmin;
     	}
     	if(!self::isLogin()){
-    		return self::$isAdmin = false;
+    		return self::$_isAdmin = false;
     	}
         $loginUser = self::getLoginUser();        
         if(is_array($loginUser) && isset($loginUser['is_admin']) && 'yes' == $loginUser['is_admin'] ) {
         	return self::$_isAdmin = true;
         }
-        Log::notice('isAdmin===========>> loginUser=' . json_encode($loginUser));
+        Log::notice('_isAdmin===========>> loginUser=' . json_encode($loginUser));
          
         return self::$_isAdmin = false;
     }
