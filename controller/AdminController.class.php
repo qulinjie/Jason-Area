@@ -1,6 +1,6 @@
 <?php
-class AdminController extends Controller {
-	public static $adminSessionKey = "loginUser"; //admin的session键名
+class AdminController extends Controller {	
+	public static $adminSessionKey = 'loginUser'; //admin的session键名
 
     public function handle($params = array()) {
         if(empty($params)){
@@ -28,26 +28,61 @@ class AdminController extends Controller {
         }
     }
     
+    private static $_loginUser = NULL;
+    public static function getLoginUser(){
+    	$loginUser = NULL;
+    	
+    	if(NULL !== self::$_loginUser){
+    		return self::$_loginUser;
+    	}
+    	    	
+    	$session = self::instance('session');
+    	if($session->is_set(self::$adminSessionKey)){
+    		$loginUser = $session->get(self::$adminSessionKey);
+    	}
+    	
+    	if(!$loginUser){    	
+	    	try{
+	    		$admin_model = self::model('admin');
+	    		$data = $admin_model->isLogin();    	
+	    		if(empty($data) || EC_OK != $data['code']){
+	    			Log::error('isLogin data is empyty or code is err . data=' . json_encode($data) );
+	    			return [];
+	    		}	    	
+	    		$loginUser = $data['data'];
+	    		if(empty($loginUser)){
+	    			Log::error('isLogin . data[loginUser] is null .');
+	    			return [];
+	    		}
+	    		self::setLoginSession($loginUser);	    		
+	    	} catch (Exception $e) {
+	    		Log::error('isLogin . e=' . $e->getMessage());
+	    		return [];
+	    	}
+    	}
+    	
+    	return self::$_loginUser = $loginUser;     	
+    }
+    
     protected static function setLoginSession($loginUser){
         if(empty($loginUser)){
             Log::error('setLoginSession [loginUser] is empty .');
             return false;
         }
-        $session = Controller::instance('session');
-        unset( $loginUser['password'] );
+        $session = self::instance('session');
+        if(isset($loginUser['password'])) unset( $loginUser['password'] );
         $session->set(self::$adminSessionKey, $loginUser);
-        Log::notice('setLoginSession==>>sessionId=' . $session->get_id() . ' ,loginUser=' . json_encode($loginUser) );
-        // check
+        Log::notice('setLoginSession==>>sessionId=' . $session->get_id() . ' ,loginUser=' . json_encode($loginUser) );        
         Log::notice('check setLoginSession . is_set[loginUser]=' . ($session->is_set(self::$adminSessionKey)) );
         Log::notice('check setLoginSession . get[loginUser]=' . json_encode($session->get(self::$adminSessionKey)) );
         return true;
     }
     
-    private static $isAdmin = NULL;
+    private static $_isAdmin = NULL;
     public static function isAdmin(){
     	
-    	if(NULL !== self::$isAdmin){
-    		return self::$isAdmin;
+    	if(NULL !== self::$_isAdmin){
+    		return self::$_isAdmin;
     	}
     	if(!self::isLogin()){
     		return self::$isAdmin = false;
@@ -59,57 +94,42 @@ class AdminController extends Controller {
             }
             Log::notice('isAdmin==================================>> loginUser=' . json_encode($session->get(self::$adminSessionKey)) );
         }
-        return self::$isAdmin = false;
+        Log::notice('isAdmin===========>> loginUser=' . json_encode($loginUser));
+        
+        return self::$_isAdmin = false;
     }
     
     //是否是二级审核人
-    private static $isSecondAuditUser = NULL;
+    private static $_isSecondAuditUser = NULL;
     public static function isSecondAuditUser(){
     
-    	if(NULL !== self::$isSecondAuditUser){
-    		return self::$isSecondAuditUser;
+    	if(NULL !== self::$_isSecondAuditUser){
+    		return self::$_isSecondAuditUser;
     	}
     	if(!self::isAdmin()){
-    		return self::$isSecondAuditUser = false;
-    	}
-    	$session = self::instance('session');
-    	if(!$session->is_set(self::$adminSessionKey)){
-    		$session = self::getLoginUser();
-    	}
-    	if($session->get(self::$adminSessionKey)['usercode'] == $session->get(self::$adminSessionKey)['managerid'] ){
-    		self::$isSecondAuditUser = true;
+    		return self::$_isSecondAuditUser = false;
+    	}    	
+    	$loginUser = self::getLoginUser();    	
+    	if(!empty($loginUser) && is_array($loginUser) && $loginUser['usercode'] == $loginUser['managerid']){
+    		self::$_isSecondAuditUser = true;
     	}else{
-    		self::$isSecondAuditUser = false;
+    		self::$_isSecondAuditUser = false;
     	}
-    	return self::$isSecondAuditUser;
+    	    	
+    	return self::$_isSecondAuditUser;
     }
     
-    private static $isLogin = NULL;
+    private static $_isLogin = NULL;
     public static function isLogin()
     {    	
-    	if(NULL !== self::$isLogin){
-    		return self::$isLogin;
+    	if(NULL !== self::$_isLogin){
+    		return self::$_isLogin;
     	}
-        try{
-            $admin_model = Controller::model('admin');
-            $data = $admin_model->isLogin();
-            
-            if(empty($data) || EC_OK != $data['code']){
-                Log::error('isLogin data is empyty or code is err . data=' . json_encode($data) );
-                return self::$isLogin = false;
-            }
-            
-            $loginUser = $data['data'];
-            if(empty($loginUser)){
-                Log::error('isLogin . data[loginUser] is null .');
-                return self::$isLogin = false;
-            }
-            AdminController::setLoginSession($loginUser);
-            return self::$isLogin = true;
-        } catch (Exception $e) {
-            Log::error('isLogin . e=' . $e->getMessage());
-            return self::$isLogin = false;
-        }
+    	$loginUser = self::getLoginUser();
+    	if(empty($loginUser)){
+    		return self::$_isLogin = false;
+    	}
+        return self::$_isLogin = true;        
     }
     
     protected function loginOut(){
@@ -130,6 +150,7 @@ class AdminController extends Controller {
             Log::error('loginOut . e=' . $e->getMessage());
         }
         Log::notice("admin loginOut end .");
+        self::$_isLogin = NULL;
         EC::success(EC_OK);
     }
     
