@@ -615,7 +615,7 @@ class BcsTradeController extends BaseController {
     // 更新浦发银行账户流水信息列表
     protected function spd_loadAccountTradeList() {
         $virtualAcctNo = Request::post('virtualAcctNo');
-    
+        Log::notice("spd_loadAccountTradeList-str ===========================>> data-virtualAcctNo = ##" . $virtualAcctNo . "##" );
         if( empty($virtualAcctNo) ) {
             $post_data = getPostStr();
             if(!empty($post_data)){
@@ -624,12 +624,12 @@ class BcsTradeController extends BaseController {
         }
         
         $this->spd_loadAccountTradeList_exec($virtualAcctNo);
-    
+        Log::notice("spd_loadAccountTradeList-end ===========================>> data-virtualAcctNo = ##" . $virtualAcctNo . "##" );
         EC::success(EC_OK);
     }
     
     public function spd_loadAccountTradeList_exec($virtualAcctNo = NULL){
-    	
+        Log::notice("spd_loadAccountTradeList_exec-str ===========================>> data-virtualAcctNo = ##" . $virtualAcctNo . "##" );
     	$spdBank_model = $this->model('spdBank');
     	$conf = $this->getConfig('conf');
     	$bcsCustomer_model = $this->model('bcsCustomer');
@@ -725,7 +725,10 @@ class BcsTradeController extends BaseController {
 //             exit;
     
             // 8924账户明细查询
+//             Log::notice("addAccountTradeList ================199-1==========>> data = ##" . json_encode($obj) . "##" );
             $this->queryTradeSerial($obj);
+//             Log::notice("addAccountTradeList ================199-2==========>> data = ##" . json_encode($obj) . "##" );
+//             exit;
             
             $trade['SELLER_SIT_NO'] = $obj['virtualAcctName']; // 虚账户名称
             $trade['debitCreditFlag'] = $obj['debitCreditFlag']; // 借贷标志
@@ -771,12 +774,12 @@ class BcsTradeController extends BaseController {
         }
     }
 
-    public function queryTradeSerial( &$obj = array() ){
-        
-        if( !empty($obj['oppositeAcctNo']) && !empty($obj['oppositeAcctName']) ){
-            Log::notice("queryAccountTrade oppositeAcct info is fill . ");
-            return ;
-        }
+    public function queryTradeSerial( &$obj ){
+//         Log::notice("queryTradeSerial-str ===========================>> data-obj = ##" . json_encode($obj) . "##" );
+//         if( !empty($obj['oppositeAcctNo']) && !empty($obj['oppositeAcctName']) ){
+//             Log::notice("queryAccountTrade oppositeAcct info is fill . ");
+//             return ;
+//         }
         
         $spdBank_model = $this->model('spdBank');
         
@@ -800,12 +803,15 @@ class BcsTradeController extends BaseController {
             Log::notice("queryAccountTrade data_lists is empty . ");
             return ;
         }
+//         Log::notice("response-data ==============531=============>> data-data_lists = ##" . json_encode($data_lists) . "##" );
+//         exit;
         
         if(!empty($data_lists['seqNo'])) {
             $data_lists_temp = array();
             $data_lists_temp[] = $data_lists;
             $data_lists = $data_lists_temp;
         }
+//         Log::notice("response-data ==============532=============>> data-data_lists = ##" . json_encode($data_lists) . "##" );
         
         $tellerJnlNo = $obj['tellerJnlNo']; // 柜员流水号
         Log::notice("queryAccountTrade=============>>> tellerJnlNo=" . $tellerJnlNo);

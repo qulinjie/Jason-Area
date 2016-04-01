@@ -296,7 +296,7 @@ class TestController extends BaseController
         //$param = '<body><acctNo>6224080602781</acctNo><jnlNoDate>20160309</jnlNoDate><seqNos>999701040001</seqNos><summonsNumber>3</summonsNumber><transAmount>1000</transAmount><debitCreditFlag>1</debitCreditFlag><shareRule>2</shareRule><shareType>1</shareType><summaryCode></summaryCode><lists name="LoopResult"><list><virtualAcctNo>12345678901</virtualAcctNo><transAmount>1000</transAmount></list></lists></body>';
         //$param = '<body><acctNo>6224080600234</acctNo><jnlNoDate>20160314</jnlNoDate><seqNos>999701220001</seqNos><summonsNumber>3</summonsNumber><transAmount>112</transAmount><debitCreditFlag>1</debitCreditFlag><shareRule>2</shareRule><shareType>1</shareType><summaryCode></summaryCode><lists name="LoopResult"><list><virtualAcctNo>62250806009</virtualAcctNo><transAmount>112</transAmount></list></lists></body>';
         //$param = '<body><acctNo>6224080600234</acctNo><jnlNoDate>20160322</jnlNoDate><seqNos>999701590001</seqNos><summonsNumber>3</summonsNumber><transAmount>1000.23</transAmount><debitCreditFlag>1</debitCreditFlag><shareRule>2</shareRule><shareType>1</shareType><summaryCode></summaryCode><lists name="LoopResult"><list><virtualAcctNo>62250806009</virtualAcctNo><transAmount>1000.23</transAmount></list></lists></body>';
-        $param = '<body><acctNo>6224080600234</acctNo><jnlNoDate>' . date('Ymd',time()) .'</jnlNoDate><seqNos>999701620002</seqNos><summonsNumber>3</summonsNumber><transAmount>231.5</transAmount><debitCreditFlag>1</debitCreditFlag><shareRule>2</shareRule><shareType>1</shareType><summaryCode></summaryCode><lists name="LoopResult"><list><virtualAcctNo>62250806009</virtualAcctNo><transAmount>231.5</transAmount></list></lists></body>';
+        $param = '<body><acctNo>6224080600234</acctNo><jnlNoDate>' . date('Ymd',time()) .'</jnlNoDate><seqNos>999701600002</seqNos><summonsNumber>3</summonsNumber><transAmount>231.5</transAmount><debitCreditFlag>1</debitCreditFlag><shareRule>2</shareRule><shareType>1</shareType><summaryCode></summaryCode><lists name="LoopResult"><list><virtualAcctNo>62250806009</virtualAcctNo><transAmount>231.5</transAmount></list></lists></body>';
         $data = $model->testSpdSign1($param);
         Log::notice("\r\n\r\n ============111================\r\n\r\n");
     
@@ -329,7 +329,8 @@ class TestController extends BaseController
     
         //1
         //$param = '<body><acctNo>6224080602781</acctNo><virtualAcctNo>12345678901</virtualAcctNo><jnlSeqNo></jnlSeqNo><summonsNumber></summonsNumber><transBeginDate></transBeginDate><transEndDate></transEndDate><shareBeginDate>20160301</shareBeginDate><shareEndDate>20160330</shareEndDate><beginNumber>1</beginNumber><queryNumber>20</queryNumber></body>';
-        $param = '<body><acctNo>6224080600234</acctNo><virtualAcctNo>62250806009</virtualAcctNo><jnlSeqNo></jnlSeqNo><summonsNumber></summonsNumber><transBeginDate></transBeginDate><transEndDate></transEndDate><shareBeginDate>20160328</shareBeginDate><shareEndDate>20160330</shareEndDate><beginNumber>1</beginNumber><queryNumber>20</queryNumber></body>';
+//         $param = '<body><acctNo>6224080600234</acctNo><virtualAcctNo>62250806009</virtualAcctNo><jnlSeqNo></jnlSeqNo><summonsNumber></summonsNumber><transBeginDate></transBeginDate><transEndDate></transEndDate><shareBeginDate>20160328</shareBeginDate><shareEndDate>20160330</shareEndDate><beginNumber>1</beginNumber><queryNumber>20</queryNumber></body>';
+        $param = '<body><acctNo>66100155260001330</acctNo><virtualAcctNo>66106610888</virtualAcctNo><jnlSeqNo></jnlSeqNo><summonsNumber></summonsNumber><transBeginDate></transBeginDate><transEndDate></transEndDate><shareBeginDate>20160328</shareBeginDate><shareEndDate>20160331</shareEndDate><beginNumber>1</beginNumber><queryNumber>20</queryNumber></body>';
         $data = $model->testSpdSign1($param);
         Log::notice("\r\n\r\n ============111================\r\n\r\n");
     
@@ -337,7 +338,8 @@ class TestController extends BaseController
         $signature = strval( $data['body']['sign'] );
         $param = "<?xml version='1.0' encoding='GB2312'?><packet><head>"
             . "<transCode>5145</transCode><signFlag>1</signFlag>"
-                . "<masterID>2000040752</masterID><packetID>"
+//                 . "<masterID>2000040752</masterID><packetID>"
+                    . "<masterID>2012541443</masterID><packetID>"
                     . date('YmdHis',time()) . "</packetID><timeStamp>"
                         . date('Y-m-d H:i:s',time()) . "</timeStamp></head><body><signature>"
                             . $signature  . "</signature></body></packet>";
@@ -527,7 +529,8 @@ class TestController extends BaseController
     
         $model = $this->model('spdBank');
     
-        $param = '<body><acctNo>6224080600234</acctNo><beginDate>20160329</beginDate><endDate>20160329</endDate><queryNumber>20</queryNumber><beginNumber>1</beginNumber><transAmount></transAmount><subAccount></subAccount><subAcctName></subAcctName></body>';
+//         $param = '<body><acctNo>6224080600234</acctNo><beginDate>20160329</beginDate><endDate>20160329</endDate><queryNumber>20</queryNumber><beginNumber>1</beginNumber><transAmount></transAmount><subAccount></subAccount><subAcctName></subAcctName></body>';
+        $param = '<body><acctNo>66100155260001330</acctNo><beginDate>20160331</beginDate><endDate>20160331</endDate><queryNumber>20</queryNumber><beginNumber>1</beginNumber><transAmount></transAmount><subAccount></subAccount><subAcctName></subAcctName></body>';
         $data = $model->curlSpdRequestXml($param,"8924");
     
         Log::notice('-------SPD----TestController---------------------spd_8924==>>end');

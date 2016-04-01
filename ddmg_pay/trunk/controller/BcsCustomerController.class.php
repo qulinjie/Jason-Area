@@ -450,7 +450,7 @@ class BcsCustomerController extends BaseController {
     }
     
     public function spd_loadAccountList_exec($virtualAcctNo=NULL, $user_id=NULL){
-    	
+        Log::notice("spd_loadAccountList_exec-str ===========================>> data-virtualAcctNo = ##" . $virtualAcctNo . "##,user_id=" . $user_id );
     	$bcsCustomer_model = $this->model('bcsCustomer');
     	$spdBank_model = $this->model('spdBank');
     	$conf = $this->getConfig('conf');

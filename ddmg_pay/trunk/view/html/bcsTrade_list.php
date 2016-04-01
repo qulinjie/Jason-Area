@@ -35,8 +35,8 @@
 <?php $isAdmin = AdminController::isLogin(); ?>
 <div class="panel panel-default">
 <div class="panel-heading" id="search-head-div">列表</div>
-  <div class="panel-body" style="width: 1500px;overflow-x: hidden;">
-		<table class="table table-hover" id="data-list-table" style="width: 1500px;max-width: 1500px;overflow-x: hidden;">
+  <div class="panel-body" style="width: 1500px;overflow-x: scroll;">
+		<table class="table table-hover" id="data-list-table" style="width: 1800px;max-width: 1800px;overflow-x: scroll;">
 			<thead>
 				<tr>
 					<th style="display:none">id</th>
@@ -48,6 +48,8 @@
 					<th>对方帐号</th>
 					<th>付款金额</th>
 					<?php if(strval($inout) == ''){ echo '<th>结余</th>'; } ?>
+					<th>对方行名</th>
+					<th>对方行号</th>
 					<th>状态</th>
 					<th>备注</th>
 					<?php if($isAdmin){ echo '<th>操作</th>'; } ?>
@@ -79,6 +81,8 @@
             				else if($item['status']==BcsTradeModel::$_status_failed) { echo "失败"; } 
                             else if($item['status']==BcsTradeModel::$_status_unknown) { echo "未知"; } ?>
 				</td>
+				<td><?php echo $item['payeeBankNo'];?></td>
+				<td><?php echo $item['payeeBankName'];?></td>
 				<td><?php echo $item['comment'];?></td>
 				<?php if($isAdmin){?>
 				<td>
