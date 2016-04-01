@@ -1,5 +1,6 @@
 <?php
 class AdminController extends Controller {
+	public static $adminSessionKey = "loginUser"; //admin的session键名
 
     public function handle($params = array()) {
         if(empty($params)){
@@ -34,46 +35,80 @@ class AdminController extends Controller {
         }
         $session = Controller::instance('session');
         unset( $loginUser['password'] );
-        $session->set('loginUser', $loginUser);
+        $session->set(self::$adminSessionKey, $loginUser);
         Log::notice('setLoginSession==>>sessionId=' . $session->get_id() . ' ,loginUser=' . json_encode($loginUser) );
         // check
-        Log::notice('check setLoginSession . is_set[loginUser]=' . ($session->is_set('loginUser')) );
-        Log::notice('check setLoginSession . get[loginUser]=' . json_encode($session->get('loginUser')) );
+        Log::notice('check setLoginSession . is_set[loginUser]=' . ($session->is_set(self::$adminSessionKey)) );
+        Log::notice('check setLoginSession . get[loginUser]=' . json_encode($session->get(self::$adminSessionKey)) );
         return true;
     }
     
+    private static $isAdmin = NULL;
     public static function isAdmin(){
+    	
+    	if(NULL !== self::$isAdmin){
+    		return self::$isAdmin;
+    	}
+    	if(!self::$isLogin()){
+    		return self::$isAdmin = false;
+    	}
         $session = Controller::instance('session');
-        if($session->is_set('loginUser') ){
-            if( 'yes' == $session->get('loginUser')['is_admin'] ) {
-                return true;
+        if($session->is_set(self::$adminSessionKey) ){
+            if( 'yes' == $session->get(self::$adminSessionKey)['is_admin'] ) {
+                return self::$isAdmin = true;
             }
-            Log::notice('isAdmin==================================>> loginUser=' . json_encode($session->get('loginUser')) );
+            Log::notice('isAdmin==================================>> loginUser=' . json_encode($session->get(self::$adminSessionKey)) );
         }
-        return false;
+        return self::$isAdmin = false;
     }
     
+    //是否是二级审核人
+    private static $isSecondAuditUser = NULL;
+    public static function isSecondAuditUser(){
+    
+    	if(NULL !== self::$isSecondAuditUser){
+    		return self::$isSecondAuditUser;
+    	}
+    	if(!self::isAdmin()){
+    		return self::$isSecondAuditUser = false;
+    	}
+    	$session = self::instance('session');
+    	if(!$session->is_set(self::$adminSessionKey)){
+    		$session = self::getLoginUser();
+    	}
+    	if($session->get(self::$adminSessionKey)['usercode'] == $session->get(self::$adminSessionKey)['managerid'] ){
+    		self::$isSecondAuditUser = true;
+    	}else{
+    		self::$isSecondAuditUser = false;
+    	}
+    	return self::$isSecondAuditUser;
+    }
+    
+    private static $isLogin = NULL;
     public static function isLogin()
-    {
+    {    	
+    	if(NULL !== self::$isLogin){
+    		return self::$isLogin;
+    	}
         try{
             $admin_model = Controller::model('admin');
             $data = $admin_model->isLogin();
             
             if(empty($data) || EC_OK != $data['code']){
                 Log::error('isLogin data is empyty or code is err . data=' . json_encode($data) );
-                return false;
+                return self::$isLogin = false;
             }
             
             $loginUser = $data['data'];
             if(empty($loginUser)){
                 Log::error('isLogin . data[loginUser] is null .');
-                return false;
+                return self::$isLogin = false;
             }
             AdminController::setLoginSession($loginUser);
-            return true;
+            return self::$isLogin = true;
         } catch (Exception $e) {
             Log::error('isLogin . e=' . $e->getMessage());
-            return false;
+            return self::$isLogin = false;
         }
     }
     
@@ -89,7 +124,7 @@ class AdminController extends Controller {
             $redis = Controller::instance('db_redis');
             $redis->delete($session_id);
             
-            $session->delete('loginUser');
+            $session->delete(self::$adminSessionKey);
             $session->clear();
         } catch (Exception $e) {
             Log::error('loginOut . e=' . $e->getMessage());
@@ -133,7 +168,7 @@ class AdminController extends Controller {
         $params['old_pwd'] = $old_pwd;
          
         $session = Controller::instance('session');
-        $id = $session->get('loginUser')['id'];
+        $id = $session->get(self::$adminSessionKey)['id'];
         $params['id'] = $id;
          
         $data = $admin_model->changePwd( $params);
