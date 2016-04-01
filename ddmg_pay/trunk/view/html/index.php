@@ -33,9 +33,9 @@
 <input type="hidden" id="isAdminLogin" value="<?php echo AdminController::isLogin();?>"/>
 <input type="hidden" id="view_page_type" value="<?php echo $page_type;?>"/>
 <input type="hidden" id="view_controller" value="<?php echo doit::$controller;?>"/>
-<input type="hidden" id="user_id" value="<?php echo empty($session->get('_loginUser')['usercode'])?$session->get('loginUser')['usercode']:$session->get('_loginUser')['usercode']; ?>" />
-<input type="hidden" id="user_type" value="<?php echo $session->get('_loginUser')['user_type']; ?>" />
-<?php //echo json_encode($session->get('_loginUser')); exit;?>
+<input type="hidden" id="user_id" value="<?php echo UserController::getCurrentUserId(); ?>" />
+<input type="hidden" id="user_type" value="<?php echo $session->get(UserController::$userSessionKey)['user_type']; ?>" />
+<?php //echo json_encode($session->get(UserController::$userSessionKey)); exit;?>
 
 <!-- login-modal -->
 <div class="modal fade" id="admin-login-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" >
@@ -290,7 +290,7 @@
                 <span><?php echo '&nbsp; 合伙人 &nbsp;'; echo UserController::getLoginUser()['account']; ?></span>
             </li>
             <li style="color: white;vertical-align:middle;line-height:50px;">
-                &nbsp;&nbsp; <?php echo $session->get('_loginUser')['name']; ?>
+                &nbsp;&nbsp; <?php echo $session->get(UserController::$userSessionKey)['name']; ?>
                 &nbsp;&nbsp;
             </li>
 <!--             <li><a id="user-chg-pwd-btn" href="#">修改密码</a></li> -->
@@ -326,7 +326,7 @@
         	    <li>
         	       <a href="#" style="color: black;font-size: 16px;">付款管理</a>
         	    </li>
-        	    <?php if(UserController::isFUser()){?>
+        	    <?php if(UserController::isFirstAuditUser()){?>
         	    <li <?php if(doit::$controller == 'TradeRecord' && strval($audit_level) == '1'){?> class="active" <?php } ?> style="margin-left: 35px;">
         			<a href="<?php echo Router::getBaseUrl();?>tradeRecord/searchListFrist">付款审批(一级)</a>
         	    </li>
