@@ -732,7 +732,7 @@ class BcsTradeController extends BaseController {
             $trade['TX_AMT'] = $obj['transAmount']; // 交易金额
             $trade['shareDate'] = $obj['shareDate']; // 分摊日期
             $transTime = (6 == strlen( strval($obj['transTime']) ) ) ? strval($obj['transTime']) : "0" . strval($obj['transTime']);
-            $trade['TRANS_TIME'] = date("Y-m-d h:i:s",strtotime( strval($obj['transDate']) . $transTime ) ); // 交易日期 +交易时间
+            $trade['TRANS_TIME'] = date("Y-m-d H:i:s",strtotime( strval($obj['transDate']) . $transTime ) ); // 交易日期 +交易时间
             $trade['comment'] = $obj['summaryCode']; // 摘要代码
             $trade['oppositeAcctNo'] = $obj['oppositeAcctNo']; // 对方帐号
             $trade['oppositeAcctName'] = $obj['oppositeAcctName']; // 对方名称
