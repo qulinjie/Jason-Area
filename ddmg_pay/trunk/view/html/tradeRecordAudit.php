@@ -1,4 +1,39 @@
 
+<div class="modal fade" id="sms-entity-modal">
+	<div class="modal-dialog" style="width: 500px; margin-top:200px;">
+		<div class="modal-content">
+			<div class="modal-header">
+				<!-- <button type="button" class="close1" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button> -->
+				<h4 class="modal-title">短信验证</h4>
+			</div>
+			<div class="modal-body" id="info-sms-trade"></div>
+			<div class="modal-body">
+				<div style="margin-left:35px;margin-bottom: 10px;">
+                     <font style="font-weight: bold; margin-left:15px;">手机号码：</font>
+                     <span><?php if(!empty($mobile)){ echo substr_replace($mobile, '****', 3, 4); }?></span> 
+                </div> 
+                <div style="margin-left: 35px;">
+                     <font style="font-weight: bold;">短信验证码：</font>
+                     <input type="text" class="form-control" id="code" name="code" style="width: 120px;display: inline;" placeholder="验证码"/>
+                     <input type="hidden" id="mobile" name="mobile" value="<?php echo $mobile;?>" />
+                     <input type="button" id="sendCode" value="获取短信验证码" class="btn btn-default" style="background-color: rgb(255,0,255);"/>
+                     <!-- 
+                     <span id="tips_set_pay_pwd"><span style="color: #ADABAB;">您当前未设置手机号码，请先</span><a href="#">设置手机号码</a></span>
+                     -->
+                </div>                
+			</div>
+			<div class="alert alert-danger search-list-hint" id="info-sms-hint"></div>
+			<div class="modal-footer">
+			    <button type="button" class="btn btn-primary" id="btn-sms-pay">确定</button>			
+				<button type="button" class="btn btn-default" id="sms-entity-close">关闭</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+
 <div class="modal fade" id="add-entity-modal">
 	<div class="modal-dialog" style="width: 1200px;">
 		<div class="modal-content">
@@ -7,8 +42,7 @@
 					<span aria-hidden="true">&times;</span>
 				</button>
 				<h4 class="modal-title" id="info_entity_title"></h4>
-			</div>
-			
+			</div>			
 			<div class="modal-body">
 				<form class="form-horizontal" id="entity-form">
 				  <div  id="audit-entity-list"></div>
