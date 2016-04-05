@@ -91,8 +91,11 @@ class TradeRecordController extends BaseController {
                     break;
                 case 'sendTransferTrade':
                 	$this->sendTransferTrade();
+                	break;                	
+                case 'sendSmsVerificationCode':
+                	$this->sendSmsVerificationCode();
                 	break;
-                    	
+                	
                 default:
                     Log::error('page not found . ' . $params[0]);
                     EC::fail(EC_MTD_NON);
@@ -542,6 +545,7 @@ class TradeRecordController extends BaseController {
 
         $is_admin = AdminController::isAdmin();
         $user_id = self::getCurrentUserId();
+        $mobile = '';
         if(!$is_admin){        	
 	        if($isCheck){
 	            $params['seller_id'] = $user_id;
@@ -552,6 +556,18 @@ class TradeRecordController extends BaseController {
 	            	$params['audit_user_id_first'] =  $user_id;
 	            	if(isset($params['user_id']))
 	            	    unset($params['user_id']);
+	            	
+	            	//查审核人手机号码
+	            	$user_model = $this->model('user');
+	            	$user_data = $user_model->erp_getInfo(array('usercode' => $user_id));
+	            	if(EC_OK_ERP != $user_data['code']){
+	            		Log::error('erp_getInfo Fail!');
+	            		//EC::fail($user_data['code']);	            		
+	            	}
+	            	$user_data = $user_data['data'];
+	            	if(!empty($user_data) && isset($user_data['mobile']) && !empty($user_data['mobile'])){
+	            		$mobile = $user_data['mobile'];
+	            	}	            	
 	            }
 	        }
         }else {
@@ -595,7 +611,7 @@ class TradeRecordController extends BaseController {
         }
         if($is_tradeRecordAudit){
         	//用于付款审批、查看
-        	$entity_list_html = $this->render('tradeRecordAudit', array('data_info' => $data_info, 'is_admin' => $is_admin, 'audit_level' => $audit_level), true);
+        	$entity_list_html = $this->render('tradeRecordAudit', array('data_info' => $data_info, 'mobile' => $mobile, 'is_admin' => $is_admin, 'audit_level' => $audit_level), true);
         	EC::success(EC_OK, array('entity_list_html' => $entity_list_html));
         }
     }
@@ -1880,6 +1896,33 @@ class TradeRecordController extends BaseController {
         Log::notice("response-data =============OrgName==============>> data = ##" . json_encode($data) . "##" );
     
         EC::success(EC_OK, $data['data']['data']);
+    }
+    
+    //发送短信验证码
+    public function sendSmsVerificationCode($mobile = NULL){
+    	
+    	$mobile = ($mobile == NULL) ? intval(Request::post('mobile')) : intval($mobile);
+    	Log::notice("sendSmsVerificationCode ===>> mobile=" .$mobile );
+    	
+    	if(!$mobile){
+    		Log::error('sendSmsVerificationCode params error!');
+    		EC::fail(EC_PAR_ERR);
+    	}
+    	
+    	
+    	
+    }
+    
+    //检测提交的验证码是否正确
+    public function checkSmsVerificationCode($vcode){
+    	
+    	$vcode = ($vcode == NULL) ? intval(Request::post('vcode')) : intval($vcode);
+    	Log::notice("checkSmsVerificationCode ===>> vcode=" .$vcode );
+    	 
+    	if(!$vcode){
+    		Log::error('checkSmsVerificationCode params error!');
+    		EC::fail(EC_PAR_ERR);
+    	}
     }
     
     public function test_sendTransferTrade(){
