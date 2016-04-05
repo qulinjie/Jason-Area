@@ -1576,7 +1576,9 @@ class TradeRecordController extends BaseController {
     //审批付款申请单
     protected function auditOneTradRecord(){
     	$id = intval(Request::post('id'));
-    	$apply_status = intval(Request::post('apply_status'));    	
+    	$vcode = Request::post('vcode');
+    	$apply_status = intval(Request::post('apply_status'));   
+    	
     	Log::auditNotice("request-data ===>> id=" .$id . "apply_status=" . $apply_status . "##" );
     	
     	if(empty($id) || empty($apply_status)){
@@ -1603,7 +1605,26 @@ class TradeRecordController extends BaseController {
     	$current_user_id = self::getCurrentUserId();
     	$audit_level =0;
     	    	
-    	if(2 == $apply_status || 3 == $apply_status){ //一级审批   		
+    	if(2 == $apply_status || 3 == $apply_status){ //一级审批   	
+
+    		//查审核人手机号码
+    		$mobile = '';
+    		$user_model = $this->model('user');
+    		$user_data = $user_model->erp_getInfo(array('usercode' => $current_user_id));
+    		if(EC_OK_ERP != $user_data['code']){
+    			Log::error('erp_getInfo Fail!');
+    			EC::fail($user_data['code']);
+    		}
+    		$user_data = $user_data['data'];
+    		if(!empty($user_data) && isset($user_data['mobile']) && !empty($user_data['mobile'])){
+    			$mobile = $user_data['mobile'];
+    		}
+    		
+    		if(2 == $apply_status ){
+    			//检查验证码是否相等
+    			$this->checkSmsVerificationCode($mobile, $vcode);
+    		}    		
+    		
     		//判断当前用户是否有审核权限    		
     		if($current_user_id != $data['audit_user_id_first']){
     			Log::auditError('1 the current user does not have audit authority!'. 'id='. $id .' ' . $current_user_id . '!=' . $data['audit_user_id_second']);
@@ -1898,7 +1919,7 @@ class TradeRecordController extends BaseController {
         EC::success(EC_OK, $data['data']['data']);
     }
     
-    //发送短信验证码
+    //付款审核发送短信验证码
     public function sendSmsVerificationCode($mobile = NULL){
     	
     	$mobile = ($mobile == NULL) ? intval(Request::post('mobile')) : intval($mobile);
@@ -1909,20 +1930,57 @@ class TradeRecordController extends BaseController {
     		EC::fail(EC_PAR_ERR);
     	}
     	
+    	//尊敬的客户，您的验证码为：【Value1】，如非本人操作，请忽略本短信
+    	$data = array();
+    	$data['tel'] = '13367310112'; //$mobile '13367310112'电话
+    	$data['codetype'] = '11';
     	
+    	Log::notice("request-data ============>> data = ##" . json_encode($data) . "##" );
+    	$sms_model = $this->model('sms');
+    	$res_data = $sms_model->erp_sendSmsCode($data);
+    	Log::notice("response-data ============>> res_data = ##" . json_encode($res_data) . "##" );
+
+    	if(EC_OK_ERP != $res_data['code']){
+    		Log::error('sendSmsVerificationCode Fail!');
+    		EC::fail($res_data['code']);    		
+    	}
     	
+    	//return true;
+    	EC::success(EC_OK, $res_data);    	
     }
     
-    //检测提交的验证码是否正确
-    public function checkSmsVerificationCode($vcode){
+    //检测付款审核的验证码是否正确
+    public function checkSmsVerificationCode($mobile, $vcode){
     	
-    	$vcode = ($vcode == NULL) ? intval(Request::post('vcode')) : intval($vcode);
-    	Log::notice("checkSmsVerificationCode ===>> vcode=" .$vcode );
+    	//$vcode = ($vcode == NULL) ? intval(Request::post('vcode')) : intval($vcode);
+    	Log::notice("checkSmsVerificationCode ===>> mobile=". $mobile ." vcode=" .$vcode );
     	 
-    	if(!$vcode){
+    	if(empty($mobile) || empty($vcode)){
     		Log::error('checkSmsVerificationCode params error!');
-    		EC::fail(EC_PAR_ERR);
+    		EC::fail(5000, EC::$_errMsg[EC_PAR_ERR]);
+    		//return false;
     	}
+    	
+    	$data = array();
+    	$data['tel'] = '13367310112'; //$mobile '13367310112'电话    	
+    	$data['code'] = $vcode;
+    	$data['codetype'] = '11';
+    	
+    	Log::notice("request-data ============>> data = ##" . json_encode($data) . "##" );
+    	$sms_model = $this->model('sms');
+    	$res_data = $sms_model->erp_checkSmsCode($data);
+    	Log::notice("response-data ============>> res_data = ##" . json_encode($res_data) . "##" );
+
+    	Log::write(var_export($res_data, true), 'debug', 'debug222-'.date('Y-m-d'));
+    	
+    	if(EC_OK_ERP != $res_data['code']){
+    		Log::error('erp_sendSmsCode Fail!'. $res_data['msg']);
+    		EC::fail(5000, $res_data['msg']);
+    		//return false;
+    	} 
+    	
+    	//EC::success(EC_OK, $res_data);
+    	return true;
     }
     
     public function test_sendTransferTrade(){
