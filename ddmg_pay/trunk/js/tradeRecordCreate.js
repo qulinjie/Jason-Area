@@ -351,7 +351,7 @@ $(document).on('click', '#for-test-btn', function(event){
 	    var comment = $('#add-entity-comment').val(); // 备注
 	    var bank_no = $('#add-entity-bank_no').val(); // 支付号
 	    var bank_flag = $('#add-entity-bank_flag').val(); //本行/它行标志
-	    var local_flag = $('#add-entity-local_flag').val(); //同城异地标志
+	    var local_flag = 1; // $('#add-entity-local_flag').val(); //同城异地标志 // 0-同城 1-异地
 	    var erp_fgsdm = $('#add-entity-erp_fgsdm').val();
 	    var erp_bmdm = $('#add-entity-erp_bmdm').val(); // erp_部门代码		
 		var erp_fgsmc = $('#add-entity-erp_fgsmc').val();// erp_分公司名称
@@ -778,24 +778,24 @@ $(document).on('click', '#for-test-btn', function(event){
 			} else {
 				$('#add-entity-bank_flag').val('1'); // 0-同行 1-跨行
 				$('#add-entity-bank_flag').change();
-				if( '长沙' == city_name_list[index] ){
+				/*if( '长沙' == city_name_list[index] ){
 					$('#add-entity-local_flag').val('0'); // 0-同城 1-异地
 				} else {
 					$('#add-entity-local_flag').val('1'); // 0-同城 1-异地
-				}
+				}*/
 			}
 		}
 //		alert(index);
 	}
 	
-	// 同行/跨行
+	/*// 同行/跨行
 	$('#add-entity-bank_flag').on('change',function(event){
 		if('1' == $('#add-entity-bank_flag').val() ){ // 0-同行 1-跨行
 			$('#span_local_flag').css("display","block");
 		} else {
 			$('#span_local_flag').css("display","none");
 		}
-	});
+	});*/
 	
 prettyPrint();
 });

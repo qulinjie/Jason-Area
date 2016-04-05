@@ -1116,7 +1116,7 @@ class TradeRecordController extends BaseController {
         
         $bank_no = Request::post('bank_no'); // 支付号
         $bank_flag = Request::post('bank_flag'); //本行/它行标志
-        $local_flag = Request::post('local_flag'); //同城异地标志
+        $local_flag = '1'; // Request::post('local_flag'); //同城异地标志 // 0-同城 1-异地
         
         $erp_fgsdm = Request::post('erp_fgsdm'); // erp_分公司代码
         $erp_bmdm = Request::post('erp_bmdm'); // erp_部门代码

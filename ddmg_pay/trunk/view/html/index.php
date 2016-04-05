@@ -123,8 +123,8 @@
           </button>
           <!-- <a class="navbar-brand" href="<?php echo Router::getBaseUrl();?>"></a> 
           <img alt="运营系统" src="<?php echo Router::getBaseUrl();?>view/images/banner.png" style="margin-top: 10px;"/>
-          <div style='color: white;font-size: 24px;margin-top: 6px;'>大大买钢支付管理系统</div>-->
-          
+          <div style='color: white;font-size: 24px;margin-top: 6px;'>大大买钢支付管理系统</div>
+          -->
           <div class="logo" style="float:left; padding-left: 15px;"><img src="<?php echo Router::getBaseUrl();?>view/images/index/logo_reg.png"/></div>
           <div style="color: white;font-size: 24px;margin-top: 20px; margin-left:260px; font-weight:700;">大大买钢支付管理系统</div>
         </div>
@@ -324,7 +324,7 @@
 	<script type="text/javascript" src="<?php echo Router::getBaseUrl();?>js/admin.js"></script>
 <?php } else {?>
 
-<nav class="navbar navbar-inverse navbar-fixed-top">
+<nav class="navbar-fixed-top" style="background-color:#4775AA; height:69px;">
       <div class="container-fluid">
         <div class="navbar-header">
           <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
@@ -334,21 +334,25 @@
             <span class="icon-bar"></span>
           </button>
           <!-- <a class="navbar-brand" href="<?php echo Router::getBaseUrl();?>"></a> 
-          <img alt="运营系统" src="<?php echo Router::getBaseUrl();?>view/images/banner.png" style="margin-top: 10px;"/>-->
+          <img alt="运营系统" src="<?php echo Router::getBaseUrl();?>view/images/banner.png" style="margin-top: 10px;"/>
           <div style='color: white;font-size: 24px;margin-top: 6px;'>大大买钢支付管理系统</div>
+          -->
+          <div class="logo" style="float:left; padding-left: 15px;"><img src="<?php echo Router::getBaseUrl();?>view/images/index/logo_reg.png"/></div>
+          <div style="color: white;font-size: 24px;margin-top: 20px; margin-left:260px; font-weight:700;">大大买钢支付管理系统</div>
         </div>
-        <div id="navbar" class="navbar-collapse collapse">
-          <ul class="nav navbar-nav navbar-right">
-            <li style="color: white;vertical-align:middle;line-height:50px;">
+        <div id="navbar" class="navbar-collapse collapse" style="position:relative;">
+          <ul class="nav navbar-nav navbar-right" style="padding-right:200px;">
+            <li style="color: white;vertical-align:middle;line-height:69px;">
+                <b style="width:22px; height:23px; display:block; background:url(<?php echo Router::getBaseUrl();?>view/images/index/icon-03.png) no-repeat; position:absolute; top:25px; right:99px;"></b>
                 <span><?php echo '&nbsp; 合伙人 &nbsp;'; echo UserController::getLoginUser()['account']; ?></span>
             </li>
-            <li style="color: white;vertical-align:middle;line-height:50px;">
+            <li style="color: white;vertical-align:middle;line-height:69px;">
                 &nbsp;&nbsp; <?php echo $session->get(UserController::$userSessionKey)['name']; ?>
                 &nbsp;&nbsp;
             </li>
 <!--             <li><a id="user-chg-pwd-btn" href="#">修改密码</a></li> -->
-            <li style="color: white;vertical-align:middle;line-height:50px;">
-                <span><a href="javascript:void(0);" id="logoutBtn">退出</a></span>
+            <li style="color: white;vertical-align:middle;line-height:69px;">
+                <span><a href="javascript:void(0);" id="logoutBtn" style="color: white;">退出</a></span>
             </li>
           </ul>
           <input type="hidden" id="type-is-admin-tip" value="<?php if( AdminController::isAdmin()){?>1<?php } else {?>2<?php }?>"/>

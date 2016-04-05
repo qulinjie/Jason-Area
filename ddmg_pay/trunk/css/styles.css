@@ -162,3 +162,7 @@ a {
     text-decoration: none;
 }
 
+td > a,td > a:hover,td > a:focus{
+	color: #428bca;
+}
+
