@@ -1041,8 +1041,8 @@ class BcsTradeController extends BaseController {
     	//Log::write("user_data==".var_export($user_data, true), 'debug', 'debug123-'.date('Y-m-d'));
     	 
     	Log::skdxNotice("request-data ============>> data = ##" . json_encode($data) . "##" );
-    	$BcsTrade_model = $this->model('bcsTrade');
-    	$res_data = $BcsTrade_model->erp_sendSmsCode($data);
+    	$sms_model = $this->model('sms');
+    	$res_data = $sms_model->erp_sendSmsCode($data);
     	Log::skdxNotice("response-data ============>> res_data = ##" . json_encode($res_data) . "##" );
     	
     	return true;
