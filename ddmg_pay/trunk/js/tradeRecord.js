@@ -496,14 +496,13 @@ $(document).on('click', '#sendCode', function(event){
 		var id = $("#info-entity-id").val();
 		var mobile = $('#mobile').val().replace(/\s+/g,"");
 		$.post(BASE_PATH + 'tradeRecord/sendSmsVerificationCode', {    		
-	        'id':id,
-	        'mobile':mobile
-	    },
-	    function(result){	
-	    	
-	    },
-	    'json'
-	);
+		        'id':id,
+		        'mobile':mobile
+		    },
+		    function(result){		    	
+		    },
+		    'json'
+	   );
 	}
 });
 var sends = {
@@ -520,7 +519,7 @@ var sends = {
         	function timeCountDown(){
                 if(time==0){
                     clearInterval(timer);
-                    $('#sendCode').removeAttr('disabled').val("获取短信验证码");
+                    $('#sendCode').removeAttr('disabled').val("重新获取验证码");
                     sends.checked = 1;
                     return true;
                 }
@@ -536,22 +535,37 @@ var sends = {
     }
 };
 
+$(document).on('click', '#btn-sms-pay', function(event){
+	$('#info-sms-hint').html('').fadeOut();
+	var vcode = $('#vcode').val();    
+	if(vcode == '' || vcode.length ==0){    	 
+	$('#info-sms-hint').html('请输入验证码！').fadeIn();
+	    return false;
+	}
+	
+	//$("#sms-entity-modal").modal('hide');
+     
+    $("#add-entity-audit1").html("提交审批中...");
+	$("#add-entity-audit1").attr('disabled', 'disabled');
+	$("#add-entity-audit2").attr('disabled', 'disabled').hide();
+	auditOneTradRecord1(2);
+          
+});
+
 $(document).on('click', '#sms-entity-close', function(event){
 	$("#sms-entity-modal").modal('hide');
 });
 
 //apply_status 申请状态 1一级待审核 2一级审核通过 3一级审核驳回 4二级待审核 5二级审核通过 6二级审核驳回
-$(document).on('click', '#add-entity-audit1', function(event){
-	
-	$('#sms-entity-modal').modal('show');
-	
+$(document).on('click', '#add-entity-audit1', function(event){	
+	$('#sms-entity-modal').modal('show');	
 	return;
-	if(confirm("您确定通过审批吗？")){
+	/*if(confirm("您确定通过审批吗？")){
 		$("#add-entity-audit1").html("提交审批中...");
 		$("#add-entity-audit1").attr('disabled', 'disabled');
 		$("#add-entity-audit2").attr('disabled', 'disabled').hide();
 		auditOneTradRecord1(2);
-	}	
+	}*/	
 });
 
 $(document).on('click', '#add-entity-audit2', function(event){	
@@ -565,17 +579,25 @@ $(document).on('click', '#add-entity-audit2', function(event){
 
 function auditOneTradRecord1(apply_status){	
 	var id = $("#info-entity-id").val();	
+	var vcode = $('#vcode').val();
 	$.post(BASE_PATH + 'tradeRecord/auditOneTradRecord', {    		
 	        'id':id,
-	        'apply_status':apply_status
+	        'apply_status':apply_status,
+	        'vcode':vcode
 	    },
 	    function(result){
-	    	var hint_html = '';	 
-	    	$("#add-entity-hint").html('提交审批中...').fadeIn();	
+	    	var hint_html = ''; 
 	        if(result.code != 0) {	        	
-	        	hint_html = $("#add-entity-hint").html();	            
-	            hint_html += (hint_html == '' ? '' : '<BR>') + '审批操作失败：'+ result.msg + '(' + result.code + ')' ;
-	        	$("#add-entity-hint").html(hint_html).fadeIn();	
+	        	if(result.code == 5000){
+	        		//$('#sms-entity-modal').modal('show');
+	        		hint_html = $("#info-sms-hint").html();	            
+		            hint_html += (hint_html == '' ? '' : '<BR>') + result.msg;
+	        		$('#info-sms-hint').html(hint_html).fadeIn();	        		
+	        	}else{
+	        		hint_html = $("#add-entity-hint").html();	            
+	        		hint_html += (hint_html == '' ? '' : '<BR>') + '审批操作失败：'+ result.msg + '(' + result.code + ')' ;
+	        		$("#add-entity-hint").html(hint_html).fadeIn();	        		        	
+	        	}	
 	            if(apply_status == 2){
 	            	$("#add-entity-audit1").html("审批通过");
 	            }else{
@@ -583,7 +605,9 @@ function auditOneTradRecord1(apply_status){
 	            }
 	            $("#add-entity-audit2").removeAttr('disabled');
 	            $("#add-entity-audit1").removeAttr('disabled');	            
-	        }else {	       
+	        }else {
+	        	$("#sms-entity-modal").modal('hide');
+	        	$("#add-entity-hint").html('提交审批中...').fadeIn();
 	        	hint_html = $("#add-entity-hint").html();
 	        	hint_html += (hint_html == '' ? '' : '<BR>') + '审批操作：' + result.msg ;
 	        	$("#add-entity-hint").html(hint_html).fadeIn();
