@@ -1024,7 +1024,7 @@ class BcsTradeController extends BaseController {
     			return false;
     		}
     		$user_data2 = $user_data2['data'];
-    		if(empty($user_data2) && !isset($user_data2['mobile']) && empty($user_data2['mobile'])){
+    		if(!empty($user_data2) && isset($user_data2['mobile']) && !empty($user_data2['mobile'])){
     			$mobile = $user_data2['mobile'];
     		}    		
     	}
