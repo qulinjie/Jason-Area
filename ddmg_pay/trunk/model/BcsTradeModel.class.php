@@ -59,9 +59,5 @@ class BcsTradeModel extends CurlModel {
     public function erp_syncBillsOfCollection($params = array()){
     	return self::sendRequestErp('api/pub/FinanceService/PostCW_SKDCreate/',$params);
     }
-    
-    //短信发送erp
-    public function erp_sendSmsCode($params = array()){
-    	return self::sendRequestErp('/api/pub/KKunService/PostKKun_sendsmscode/',$params);
-    }
+       
 }

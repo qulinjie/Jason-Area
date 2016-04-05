@@ -16,9 +16,9 @@
                 </div> 
                 <div style="margin-left: 35px;">
                      <font style="font-weight: bold;">短信验证码：</font>
-                     <input type="text" class="form-control" id="code" name="code" style="width: 120px;display: inline;" placeholder="验证码"/>
+                     <input type="text" class="form-control" id="vcode" name="vcode" style="width:120px; display: inline;" placeholder="验证码"/>
                      <input type="hidden" id="mobile" name="mobile" value="<?php echo $mobile;?>" />
-                     <input type="button" id="sendCode" value="获取短信验证码" class="btn btn-default" style="background-color: rgb(255,0,255);"/>
+                     <input type="button" id="sendCode" value="获取验证码" class="btn btn-default" style="background-color: rgb(255,0,255);"/>
                      <!-- 
                      <span id="tips_set_pay_pwd"><span style="color: #ADABAB;">您当前未设置手机号码，请先</span><a href="#">设置手机号码</a></span>
                      -->
