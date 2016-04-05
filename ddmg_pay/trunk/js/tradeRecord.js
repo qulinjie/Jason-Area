@@ -490,8 +490,62 @@ function loadOneAuditTradRecord(id, audit_level){
     );
 }
 
+$(document).on('click', '#sendCode', function(event){	
+	sends.send();		
+	if(0 == sends.checked){
+		var id = $("#info-entity-id").val();
+		var mobile = $('#mobile').val().replace(/\s+/g,"");
+		$.post(BASE_PATH + 'tradeRecord/sendSmsVerificationCode', {    		
+	        'id':id,
+	        'mobile':mobile
+	    },
+	    function(result){	
+	    	
+	    },
+	    'json'
+	);
+	}
+});
+var sends = {
+    checked:1,
+    send:function(){
+        var numbers = /^1\d{10}$/;
+        var mobile = $('#mobile').val().replace(/\s+/g,""); //获取输入手机号码        
+        if(!numbers.test(mobile) || mobile.length ==0){
+            $('#info-sms-hint').append('<span class="error">手机格式错误</span>');
+            return false;
+        }            
+        if(numbers.test(mobile)){        	
+        	var time = 60;
+        	function timeCountDown(){
+                if(time==0){
+                    clearInterval(timer);
+                    $('#sendCode').removeAttr('disabled').val("获取短信验证码");
+                    sends.checked = 1;
+                    return true;
+                }
+                $('#sendCode').attr('disabled', 'disabled').val(time+"S后再次发送");
+                time--;
+                sends.checked = 0;
+                return false;                    
+            }                
+            timeCountDown();
+            var timer = setInterval(timeCountDown,1000);
+            
+        }
+    }
+};
+
+$(document).on('click', '#sms-entity-close', function(event){
+	$("#sms-entity-modal").modal('hide');
+});
+
 //apply_status 申请状态 1一级待审核 2一级审核通过 3一级审核驳回 4二级待审核 5二级审核通过 6二级审核驳回
 $(document).on('click', '#add-entity-audit1', function(event){
+	
+	$('#sms-entity-modal').modal('show');
+	
+	return;
 	if(confirm("您确定通过审批吗？")){
 		$("#add-entity-audit1").html("提交审批中...");
 		$("#add-entity-audit1").attr('disabled', 'disabled');
