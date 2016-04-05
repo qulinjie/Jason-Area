@@ -24,6 +24,7 @@
 	<!-- Custom styles for this template -->
 	<link href="<?php echo Router::getBaseUrl();?>css/custom.css" rel="stylesheet">
 	<link href="<?php echo Router::getBaseUrl();?>css/bootstrap-datetimepicker.min.css" rel="stylesheet" media="screen">
+	<link href="<?php echo Router::getBaseUrl();?>css/styles.css" rel="stylesheet" type="text/css">
 	<script type="text/javascript" src="<?php echo Router::getBaseUrl();?>js/jquery-1.11.3.min.js"></script>
 </head>
 <body>
@@ -111,7 +112,7 @@
 <?php if(doit::$controller == 'Admin' || AdminController::isAdmin()){?>
     <?php if(AdminController::isLogin()){?>
     <!-- top横幅 -->
-    <nav class="navbar navbar-inverse navbar-fixed-top">
+    <nav class="navbar-fixed-top" style="background-color:#4775AA; height:69px;">
       <div class="container-fluid">
         <div class="navbar-header">
           <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
@@ -121,20 +122,26 @@
             <span class="icon-bar"></span>
           </button>
           <!-- <a class="navbar-brand" href="<?php echo Router::getBaseUrl();?>"></a> 
-          <img alt="运营系统" src="<?php echo Router::getBaseUrl();?>view/images/banner.png" style="margin-top: 10px;"/>-->
-          <div style='color: white;font-size: 24px;margin-top: 6px;'>大大买钢支付管理系统</div>
+          <img alt="运营系统" src="<?php echo Router::getBaseUrl();?>view/images/banner.png" style="margin-top: 10px;"/>
+          <div style='color: white;font-size: 24px;margin-top: 6px;'>大大买钢支付管理系统</div>-->
+          
+          <div class="logo" style="float:left; padding-left: 15px;"><img src="<?php echo Router::getBaseUrl();?>view/images/index/logo_reg.png"/></div>
+          <div style="color: white;font-size: 24px;margin-top: 20px; margin-left:260px; font-weight:700;">大大买钢支付管理系统</div>
         </div>
-        <div id="navbar" class="navbar-collapse collapse">
-          <ul class="nav navbar-nav navbar-right">
-            <li style="color: white;vertical-align:middle;line-height:50px;">
+        <div id="navbar" class="navbar-collapse collapse" style="position:relative;">
+          <ul class="nav navbar-nav navbar-right" style="padding-right:200px;">
+            <li style="color: white;vertical-align:middle;line-height:69px;">
+                <b style="width:22px; height:23px; display:block; background:url(<?php echo Router::getBaseUrl();?>view/images/index/icon-03.png) no-repeat; position:absolute; top:25px; right:99px;"></b>
                 <?php echo '&nbsp; 管理员 &nbsp;'; echo UserController::getLoginUser()['account']; ?>
             </li>
-            <li style="color: white;vertical-align:middle;line-height:50px;">
+            <li style="color: white;vertical-align:middle;line-height:69px;">
                 &nbsp;&nbsp; <?php echo $session->get('loginUser')['name']; ?>
                 &nbsp;&nbsp;
             </li>
 <!--             <li><a id="user-chg-pwd-btn" href="#">修改密码</a></li> -->
-            <li><a id="amdin-loginOut-btn" href="#">退出</a></li>
+            <li style="color: white;vertical-align:middle;line-height:69px;">
+                <span><a id="amdin-loginOut-btn" href="#" style="color: white;">退出</a></span>
+            </li>
           </ul>
           <input type="hidden" id="type-is-admin-tip" value="<?php if( AdminController::isAdmin()){?>1<?php } else {?>2<?php }?>"/>
           <!-- <form class="navbar-form navbar-right">
@@ -149,7 +156,10 @@
       <div class="container-fluid">
       <div class="row">
         <div class="col-sm-3 col-md-2 sidebar">
-          <ul id="li-menu-list" class="nav nav-sidebar">
+          <ul id="li-menu-list">
+            <li>
+				<!-- Start Freebie -->
+				<ul class="expmenu">
     		      <!--
     			<li <?php if(doit::$controller == 'BcsMarket'){?> class="active" <?php } ?>>
         			<a href="<?php echo Router::getBaseUrl();?>bcsMarket/getInfo">市场信息</a>
@@ -163,39 +173,82 @@
         	    -->
         	    
         	    <li>
-        	       <a href="#" style="color: black;font-size: 16px;">开户管理</a>
+        	       <div class="header">
+        	       <span class="labels" style="background-image: url(<?php echo Router::getBaseUrl();?>view/images/index/messages.png);background-position:10px 0px;">
+        	                   开户管理
+        	       </span>
+				   <span class="arrow up"></span>
+        	       </div>
+            	    <ul class="menu">
+            	    <li <?php if(doit::$controller == 'BcsCustomer2'){?> class="active" <?php } ?> >
+            			<a href="#">开户申请</a>
+            	    </li>
+            	    <li <?php if(doit::$controller == 'BcsCustomer'){?> class="active" <?php } ?> >
+            			<a href="<?php echo Router::getBaseUrl();?>bcsCustomer/getIndex">开户管理</a>
+            	    </li>
+            	    </ul>
         	    </li>
-        	    <li <?php if(doit::$controller == 'BcsCustomer2'){?> class="active" <?php } ?> style="margin-left: 35px;">
-        			<a href="#">开户申请</a>
-        	    </li>
-        	    <li <?php if(doit::$controller == 'BcsCustomer'){?> class="active" <?php } ?> style="margin-left: 35px;">
-        			<a href="<?php echo Router::getBaseUrl();?>bcsCustomer/getIndex">开户管理</a>
+        	    
+        	    
+        	    <li>
+        	       <div class="header">
+        	       <span class="labels" style="background-image: url(<?php echo Router::getBaseUrl();?>view/images/index/searchs.png);background-position:10px 0px;">
+        	                   收款管理
+        	       </span>
+				   <span class="arrow up"></span>
+        	       </div>
+            	    <ul class="menu">
+            	    <li <?php if(doit::$controller == 'BcsTrade' && strval($inout) == '1'){?> class="active" <?php } ?> >
+            			<a href="<?php echo Router::getBaseUrl();?>bcsTrade/getIndex_in">收款明细</a>
+            	    </li>
+            	    </ul>
         	    </li>
         	    
         	    <li>
-        	       <a href="#" style="color: black;font-size: 16px;">收款管理</a>
+        	       <div class="header">
+        	       <span class="labels" style="background-image: url(<?php echo Router::getBaseUrl();?>view/images/index/searchs.png);background-position:10px 0px;">
+        	                   付款管理
+        	       </span>
+				   <span class="arrow up"></span>
+        	       </div>
+            	    <ul class="menu">
+            	    <li <?php if(doit::$controller == 'TradeRecord' && strval($audit_level) == '2'){?> class="active" <?php } ?> >
+            			<a href="<?php echo Router::getBaseUrl();?>tradeRecord/searchListSecond">付款审批(二级)</a>
+            	    </li>
+            	    <li <?php if(doit::$controller == 'BcsTrade' && strval($inout) == '0'){?> class="active" <?php } ?> >
+            			<a href="<?php echo Router::getBaseUrl();?>bcsTrade/getIndex_out">付款明细</a>
+            	    </li>
+            	    </ul>
         	    </li>
-        	    <li <?php if(doit::$controller == 'BcsTrade' && strval($inout) == '1'){?> class="active" <?php } ?> style="margin-left: 35px;">
-        			<a href="<?php echo Router::getBaseUrl();?>bcsTrade/getIndex_in">收款明细</a>
+        	    
+        	    
+        	    <li>
+        	       <div class="header">
+        	       <span class="labels" style="background-image: url(<?php echo Router::getBaseUrl();?>view/images/index/searchs.png);background-position:10px 0px;">
+        	                   账户查询
+        	       </span>
+				   <span class="arrow up"></span>
+        	       </div>
+            	    <ul class="menu">
+            	    <li <?php if(doit::$controller == 'BcsTrade' && strval($inout) == ''){?> class="active" <?php } ?> >
+            			<a href="<?php echo Router::getBaseUrl();?>bcsTrade/getIndex">收支明细</a>
+            	    </li>
+            	    </ul>
         	    </li>
         	    
         	    <li>
-        	       <a href="#" style="color: black;font-size: 16px;">付款管理</a>
+        	       <div class="header">
+        	       <span class="labels" style="background-image: url(<?php echo Router::getBaseUrl();?>view/images/index/searchs.png);background-position:10px 0px;">
+        	                   开户银行查询
+        	       </span>
+				   <span class="arrow up"></span>
+        	       </div>
+            	    <ul class="menu">
+            	    <li <?php if(doit::$controller == 'SpdInternetBank'){?> class="active" <?php } ?> >
+            			<a href="<?php echo Router::getBaseUrl();?>spdInternetBank/getIndex">开户银行查询</a>
+            	    </li>
+            	    </ul>
         	    </li>
-        	    <li <?php if(doit::$controller == 'TradeRecord' && strval($audit_level) == '2'){?> class="active" <?php } ?> style="margin-left: 35px;">
-        			<a href="<?php echo Router::getBaseUrl();?>tradeRecord/searchListSecond">付款审批(二级)</a>
-        	    </li>
-        	    <li <?php if(doit::$controller == 'BcsTrade' && strval($inout) == '0'){?> class="active" <?php } ?> style="margin-left: 35px;">
-        			<a href="<?php echo Router::getBaseUrl();?>bcsTrade/getIndex_out">付款明细</a>
-        	    </li>
-        	    
-        	    <li>
-        	       <a href="#" style="color: black;font-size: 16px;">账户查询</a>
-        	    </li>
-        	    <li <?php if(doit::$controller == 'BcsTrade' && strval($inout) == ''){?> class="active" <?php } ?> style="margin-left: 35px;">
-        			<a href="<?php echo Router::getBaseUrl();?>bcsTrade/getIndex">收支明细</a>
-        	    </li>
-        	    
         	    
         	    <!--
     			<li <?php if(doit::$controller == 'BcsTransfer'){?> class="active" <?php } ?>>
@@ -211,10 +264,10 @@
         			<a href="<?php echo Router::getBaseUrl();?>bcsTrade/tradeStatusQueryIndex">交易状态查询</a>
         	    </li>
         	    -->
-        	    <li <?php if(doit::$controller == 'SpdInternetBank'){?> class="active" <?php } ?>>
-        			<a href="<?php echo Router::getBaseUrl();?>spdInternetBank/getIndex">行名行号查询</a>
-        	    </li>
         	    
+        	    </ul>
+				<!-- End Freebie -->
+			</li>
           </ul>
         </div>
         
@@ -311,38 +364,89 @@
       <div class="container-fluid">
       <div class="row">
         <div class="col-sm-3 col-md-2 sidebar" id="div-menu-list">
-          <ul id="li-menu-list" class="nav nav-sidebar">
-			    <li <?php if(doit::$controller == 'BcsCustomer' && doit::$params[0] !='getInflow' && doit::$params[0] !='getIncomePay'){?> class="active" <?php } ?>>
-        			<a href="<?php echo Router::getBaseUrl();?>bcsCustomer/getInfo">账户信息</a>
+          <ul id="li-menu-list" >
+          <li>
+				<!-- Start Freebie -->
+				<ul class="expmenu">
+        	    
+        	    <li>
+        	       <div class="header">
+        	       <span class="labels" style="background-image: url(<?php echo Router::getBaseUrl();?>view/images/index/messages.png);background-position:10px 0px;">
+        	                   账户信息
+        	       </span>
+				   <span class="arrow up"></span>
+        	       </div>
+            	    <ul class="menu">
+            	    <li <?php if(doit::$controller == 'BcsCustomer' && doit::$params[0] !='getInflow' && doit::$params[0] !='getIncomePay'){?> class="active" <?php } ?>>
+            			<a href="<?php echo Router::getBaseUrl();?>bcsCustomer/getInfo">账户信息</a>
+            	    </li>
+            	    </ul>
         	    </li>
         	    
         	    <li>
-        	       <a href="#" style="color: black;font-size: 16px;">收款管理</a>
+        	       <div class="header">
+        	       <span class="labels" style="background-image: url(<?php echo Router::getBaseUrl();?>view/images/index/searchs.png);background-position:10px 0px;">
+        	                   收款管理
+        	       </span>
+				   <span class="arrow up"></span>
+        	       </div>
+            	    <ul class="menu">
+            	    <li <?php if(doit::$controller == 'BcsTrade' && strval($inout) == '1'){?> class="active" <?php } ?> >
+            			<a href="<?php echo Router::getBaseUrl();?>bcsTrade/getIndex_in">收款明细</a>
+            	    </li>
+            	    </ul>
         	    </li>
-        	    <li <?php if(doit::$controller == 'BcsTrade' && strval($inout) == '1'){?> class="active" <?php } ?> style="margin-left: 35px;">
-        			<a href="<?php echo Router::getBaseUrl();?>bcsTrade/getIndex_in">收款明细</a>
+        	    
+        	    
+        	    <li>
+        	       <div class="header">
+        	       <span class="labels" style="background-image: url(<?php echo Router::getBaseUrl();?>view/images/index/searchs.png);background-position:10px 0px;">
+        	                   付款管理
+        	       </span>
+				   <span class="arrow up"></span>
+        	       </div>
+            	    <ul class="menu">
+            	    <?php if(UserController::isFirstAuditUser()){?>
+            	    <li <?php if(doit::$controller == 'TradeRecord' && strval($audit_level) == '1'){?> class="active" <?php } ?> >
+            			<a href="<?php echo Router::getBaseUrl();?>tradeRecord/searchListFrist">付款审批(一级)</a>
+            	    </li>
+            	    <?php }?>        	    
+            	    <li <?php if(doit::$controller == 'TradeRecord' && strval($audit_level) == '0'){?> class="active" <?php } ?> >        	    
+            			<a href="<?php echo Router::getBaseUrl();?>tradeRecord/getIndex">申请付款</a>
+            	    </li>
+            	    <li <?php if(doit::$controller == 'BcsTrade' && strval($inout) == '0'){?> class="active" <?php } ?> >
+            			<a href="<?php echo Router::getBaseUrl();?>bcsTrade/getIndex_out">付款明细</a>
+            	    </li>
+            	    </ul>
+        	    </li>
+        	    
+        	    
+        	    <li>
+        	       <div class="header">
+        	       <span class="labels" style="background-image: url(<?php echo Router::getBaseUrl();?>view/images/index/searchs.png);background-position:10px 0px;">
+        	                   账户查询
+        	       </span>
+				   <span class="arrow up"></span>
+        	       </div>
+            	    <ul class="menu">
+            	    <li <?php if(doit::$controller == 'BcsTrade'  && strval($inout) == ''){?> class="active" <?php } ?> >
+            			<a href="<?php echo Router::getBaseUrl();?>bcsTrade/getIndex">收支明细</a>
+            	    </li>
+            	    </ul>
         	    </li>
         	    
         	    <li>
-        	       <a href="#" style="color: black;font-size: 16px;">付款管理</a>
-        	    </li>
-        	    <?php if(UserController::isFirstAuditUser()){?>
-        	    <li <?php if(doit::$controller == 'TradeRecord' && strval($audit_level) == '1'){?> class="active" <?php } ?> style="margin-left: 35px;">
-        			<a href="<?php echo Router::getBaseUrl();?>tradeRecord/searchListFrist">付款审批(一级)</a>
-        	    </li>
-        	    <?php }?>        	    
-        	    <li <?php if(doit::$controller == 'TradeRecord' && strval($audit_level) == '0'){?> class="active" <?php } ?> style="margin-left: 35px;">        	    
-        			<a href="<?php echo Router::getBaseUrl();?>tradeRecord/getIndex">申请付款</a>
-        	    </li>
-        	    <li <?php if(doit::$controller == 'BcsTrade' && strval($inout) == '0'){?> class="active" <?php } ?> style="margin-left: 35px;">
-        			<a href="<?php echo Router::getBaseUrl();?>bcsTrade/getIndex_out">付款明细</a>
-        	    </li>
-        	    
-        	    <li>
-        	       <a href="#" style="color: black;font-size: 16px;">账户查询</a>
-        	    </li>
-        	    <li <?php if(doit::$controller == 'BcsTrade'  && strval($inout) == ''){?> class="active" <?php } ?> style="margin-left: 35px;">
-        			<a href="<?php echo Router::getBaseUrl();?>bcsTrade/getIndex">收支明细</a>
+        	       <div class="header">
+        	       <span class="labels" style="background-image: url(<?php echo Router::getBaseUrl();?>view/images/index/searchs.png);background-position:10px 0px;">
+        	                   开户银行查询
+        	       </span>
+				   <span class="arrow up"></span>
+        	       </div>
+            	    <ul class="menu">
+            	    <li <?php if(doit::$controller == 'SpdInternetBank'){?> class="active" <?php } ?> >
+            			<a href="<?php echo Router::getBaseUrl();?>spdInternetBank/getIndex">开户银行查询</a>
+            	    </li>
+            	    </ul>
         	    </li>
         	    
         	    <!--  
@@ -365,6 +469,9 @@
         			  <a href="<?php echo Router::getBaseUrl();?>message/getIndex">消息提醒</a>
         		</li>
         		-->
+        		</ul>
+				<!-- End Freebie -->
+			</li>
           </ul>
         </div>
         
@@ -395,7 +502,11 @@
         		    <div id="message-list"><?php echo $message_html;?></div>        	 
         	  <?php }else if($page_type == 'payPassword'){?>
 				  <?php echo $password_html; ?>
-			  <?php }?>
+			  <?php	}else if($page_type == 'spdInternetBank'){?>
+                  <script src="<?php echo Router::getBaseUrl();?>js/spdInternetBank.js"></script>
+    			  <?php echo $spdInternetBank_html;?>
+              <?php }?>
+              
         </div>
       </div>
     </div>
