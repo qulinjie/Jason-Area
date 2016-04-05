@@ -48,9 +48,9 @@
 					<th>对方帐号</th>
 					<th>付款金额</th>
 					<?php if(strval($inout) == ''){ echo '<th>结余</th>'; } ?>
-					<th>对方行名</th>
-					<th>对方行号</th>
 					<th>状态</th>
+					<th>对方行号</th>
+					<th>对方行名</th>
 					<th>备注</th>
 					<?php if($isAdmin){ echo '<th>操作</th>'; } ?>
 				</tr>
