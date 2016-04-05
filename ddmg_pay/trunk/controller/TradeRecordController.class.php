@@ -1932,7 +1932,7 @@ class TradeRecordController extends BaseController {
     	
     	//尊敬的客户，您的验证码为：【Value1】，如非本人操作，请忽略本短信
     	$data = array();
-    	$data['tel'] = '13367310112'; //$mobile '13367310112'电话
+    	$data['tel'] = $mobile; //$mobile '13367310112'电话
     	$data['codetype'] = '11';
     	
     	Log::notice("request-data ============>> data = ##" . json_encode($data) . "##" );
@@ -1962,7 +1962,7 @@ class TradeRecordController extends BaseController {
     	}
     	
     	$data = array();
-    	$data['tel'] = '13367310112'; //$mobile '13367310112'电话    	
+    	$data['tel'] = $mobile; //$mobile '13367310112'电话    	
     	$data['code'] = $vcode;
     	$data['codetype'] = '11';
     	
