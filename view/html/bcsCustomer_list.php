@@ -99,9 +99,9 @@
 				<td>
 					<div class="btn-group" role="group">
 					   <?php if( 1 == $item[record_bank_type] ){ ?>
-    			       <a id="entity-loadInfo-btn" href="#" data-toggle="modal" data-keyboard="false" data-backdrop="static">更新</a>
+    			       <a id="entity-loadInfo-btn" href="#" data-toggle="modal" data-keyboard="false" data-backdrop="static">刷新</a>
     			       <?php } else if( 2 == $item[record_bank_type] ){ ?>
-    			       <a id="entity-loadInfo-btn2" href="#" data-toggle="modal" data-keyboard="false" data-backdrop="static">更新</a>
+    			       <a id="entity-loadInfo-btn2" href="#" data-toggle="modal" data-keyboard="false" data-backdrop="static">刷新</a>
     			       <?php } ?>
 					</div>
 				</td>

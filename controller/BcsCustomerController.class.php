@@ -753,7 +753,7 @@ class BcsCustomerController extends BaseController {
         
         $params = array();
         $params['record_bank_type'] = $record_bank_type;
-        $params['user_id'] = -1;
+//         $params['user_id'] = -1;
         
         $data = $bcsCustomer_model->searchList($params, null, null);
         if(EC_OK != $data['code']){
@@ -768,16 +768,41 @@ class BcsCustomerController extends BaseController {
     
         $bcsCustomer_model = $this->model('bcsCustomer');
     
-        $params = array();
-        $params['user_id'] = $account;
-        $params['ACCOUNT_NO'] = $ACCOUNT_NO;
-        Log::notice("updateBind data ===============================>> params = ##" . json_encode($params) . "##" );
+        $customer = array();
+        $customer['record_bank_type'] = 2; // 1-bcs长沙银行 2-psd浦发银行
+        $customer['ACCOUNT_NO'] = $ACCOUNT_NO; // 虚账号
         
-        $data = $bcsCustomer_model->updateBild($params);
-        if(EC_OK != $data['code']){
-            EC::fail($data['code']);
+        $info_data = $bcsCustomer_model->getInfo($customer);
+        if(EC_OK != $info_data['code']){
+            Log::error("getInfo failed . virtualAcctNo-ACCOUNT_NO=" . $customer['ACCOUNT_NO'] . ',code='. $info_data['code'] . ',msg=' . $info_data['msg'] );
+            EC::fail($info_data['code']);
         }
-        EC::success(EC_OK,$data['data']);
+        $info_data = $info_data['data'][0];
+        if( !empty($info_data) ){
+            $customer['user_id'] = $account;
+            $customer['ACCT_BAL'] = $info_data['ACCT_BAL']; // 帐户余额
+            $customer['AVL_BAL'] = $info_data['AVL_BAL'];
+            $customer['SIT_NO'] = $info_data['SIT_NO']; // 虚账户名称
+            $customer['MBR_STS'] = 2; // 客户状态 1-已注册；2-已签约；3-已注销
+            
+            $data_rs = $bcsCustomer_model->create($customer);
+            if($data_rs['code'] !== EC_OK){
+                Log::error('addCustomerList . create bcsCustomer error . code='. $data_rs['code'] . ',msg=' . $data_rs['msg'] );
+                EC::fail($data_rs['code']);;
+            }
+            Log::notice('addCustomerList ==== >>> add-data-end=##' . $info_data['SIT_NO'] . "##");
+        } else {
+            $params = array();
+            $params['user_id'] = $account;
+            $params['ACCOUNT_NO'] = $ACCOUNT_NO;
+            Log::notice("updateBind data ===============================>> params = ##" . json_encode($params) . "##" );
+            
+            $data = $bcsCustomer_model->updateBild($params);
+            if(EC_OK != $data['code']){
+                EC::fail($data['code']);
+            }
+        }
+        EC::success(EC_OK);
     }
     
 }

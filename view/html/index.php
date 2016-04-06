@@ -153,9 +153,9 @@
     </nav>
     
       <!-- 左侧菜单 -->
-      <div class="container-fluid">
-      <div class="row">
-        <div class="col-sm-3 col-md-2 sidebar" style="background-color: white;">
+      <div class="container-fluid" style="width: 1905px;">
+      <div class="row" >
+        <div class="col-sm-3 col-md-2 sidebar" style="background-color: white;width: 320px;">
           <ul id="li-menu-list">
             <li>
 				<!-- Start Freebie -->
@@ -272,7 +272,7 @@
         </div>
         
         <!-- 右侧内容页面 -->
-        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main" >
           <?php if($page_type == 'bcsMarket'){?>
                 <script src="<?php echo Router::getBaseUrl();?>js/bcsMarketInfo.js"></script>
                 <?php echo $bcsMarket_html; ?>
@@ -369,9 +369,9 @@
     </nav>
     
       <!-- 左侧菜单 -->
-      <div class="container-fluid">
-      <div class="row">
-        <div class="col-sm-3 col-md-2 sidebar" id="div-menu-list" style="background-color: white;">
+      <div class="container-fluid" style="width: 1905px;">
+      <div class="row" >
+        <div class="col-sm-3 col-md-2 sidebar" id="div-menu-list" style="background-color: white;width: 320px;display: block;">
           <ul id="li-menu-list" >
           <li>
 				<!-- Start Freebie -->
