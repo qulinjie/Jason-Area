@@ -105,19 +105,19 @@
     <div class="form-inline">
         <input type="hidden" class="form-control" id="entity-search-inout" value="<?php echo $inout; ?>">
       <div class="form-group">
-	    <label for="entity-search-FMS_TRANS_NO">交易流水号</label>
-	    <input type="text" class="form-control" id="entity-search-FMS_TRANS_NO" placeholder="交易流水号">
+	    <label for="entity-search-MCH_TRANS_NO">交易流水号</label>
+	    <input type="text" class="form-control" id="entity-search-MCH_TRANS_NO" placeholder="交易流水号">
 	  </div>
 	  <div class="form-group">
-	    <label for="entity-search-seller_name">对方名称</label>
-	    <input type="text" class="form-control" id="entity-search-seller_name" placeholder="对方名称">
+	    <label for="entity-search-oppositeAcctName">对方账户名</label>
+	    <input type="text" class="form-control" id="entity-search-oppositeAcctName" placeholder="对方账户名">
 	  </div>
-	  <div class="form-group">
+	  <div class="form-group" style="display:none;">
 	    <label for="entity-search-s_account">对方帐号</label>
 	    <input type="text" class="form-control" id="entity-search-s_account" placeholder="对方帐号">
 	  </div>
 	  <div class="form-group">
-	    <label for="entity-search-time">收付款时间</label>
+	    <label for="entity-search-time">交易时间</label>
 	    <input type="text" class="form-control form_datetime" id="entity-search-time1" placeholder="时间">
 	    -
 	    <input type="text" class="form-control form_datetime" id="entity-search-time2" placeholder="时间">

@@ -78,32 +78,20 @@ function search_entity(page){
 	$("#entity-search-btn").attr('disabled', 'disabled');
 	$("#search-entity-hint").html('').fadeOut();
 	
-    var FMS_TRANS_NO = $("#entity-search-FMS_TRANS_NO").val();
+    var MCH_TRANS_NO = $("#entity-search-MCH_TRANS_NO").val();
     var time1 = $("#entity-search-time1").val();
 	var time2 = $("#entity-search-time2").val();
-	var order_no = $("#entity-search-order_no").val();
-	var seller_name = $("#entity-search-seller_name").val();
-	var status = $("#entity-search-status").val();
-	var amount1 = $("#entity-search-amount1").val();
-	var amount2 = $("#entity-search-amount2").val();
-	var s_account = $("#entity-search-s_account").val();
-	var b_account = $("#entity-search-b_account").val();
+	var oppositeAcctName = $("#entity-search-oppositeAcctName").val();
 	var inout = $("#entity-search-inout").val();
 	
 	if(-1 == status) { status =""; }
 	
     //查找
     $.post(BASE_PATH + 'bcsTrade/searchList', {
-	    	'FMS_TRANS_NO':FMS_TRANS_NO, 
+	    	'MCH_TRANS_NO':MCH_TRANS_NO, 
 	    	'time1':time1,
 	    	'time2':time2,
-	    	'order_no':order_no,
-	    	'seller_name':seller_name,
-	    	'status':status,
-	    	'amount1':amount1,
-	    	'amount2':amount2,
-	    	's_account':s_account,
-	    	'b_account':b_account,
+	    	'oppositeAcctName':oppositeAcctName,
 	    	'inout':inout,
 	        'page':page
         },
@@ -121,16 +109,10 @@ function search_entity(page){
 }
 
 function search_clearFields(){
-	$("#entity-search-FMS_TRANS_NO").val("");
+	$("#entity-search-MCH_TRANS_NO").val("");
 	$("#entity-search-time1").val("");
 	$("#entity-search-time2").val("");
-	$("#entity-search-order_no").val("");
-	$("#entity-search-seller_name").val("");
-	$("#entity-search-status").val("-1");
-	$("#entity-search-amount1").val("");
-	$("#entity-search-amount2").val("");
-	$("#entity-search-s_account").val("");
-	$("#entity-search-b_account").val("");
+	$("#entity-search-oppositeAcctName").val("");
 }
 
 /**************start--查看****************/
