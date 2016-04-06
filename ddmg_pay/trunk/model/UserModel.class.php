@@ -69,4 +69,16 @@ class UserModel extends CurlModel
     	return self::sendRequestErp('api/pub/ErpService/PostERP_bm/',$params);
     }
     
+    public function erp_payPwdSet($params = array()){
+    	return self::sendRequestErp('api/pub/userservice/PostUser_SetPayPwd/',$params);
+    }
+    
+    public function erp_payPwdReset($params = array()){
+    	return self::sendRequestErp('api/pub/userservice/PostUser_FindPayPwd/',$params);
+    }
+    
+    public function erp_payPwdVerify($params = array()){
+    	return self::sendRequestErp('api/pub/userservice/PostUser_ValidatePayPwd/',$params);
+    }
+    
 }
