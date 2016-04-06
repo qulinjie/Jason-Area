@@ -329,7 +329,8 @@ $(document).on('click', '#for-test-btn', function(event){
 	    );
 });
 
-	$(document).on('click', '#add-entity-create', function(event){
+	$(document).on('click', '#add-entity-create', function(event){		
+				
 		$("#add-entity-create").attr('disabled', 'disabled');
 	    $("#add-entity-hint").html('').fadeOut();
 	    
@@ -341,70 +342,104 @@ $(document).on('click', '#for-test-btn', function(event){
 	    	hint_html += (hint_html == '' ? '' : '<BR>') + '请填写 单据！' ;
 	    }
 		
-	    var apply_no = $('#add-entity-apply_no').val(); // 申请单号
-	    var comp_name = $('#add-entity-comp_name').val(); // 收款单位
-	    var comp_name_code = $('#add-entity-comp_name_code').val(); // 收款单位
-	    var comp_account = $('#add-entity-comp_account').val(); // 收款账号
-	    var bank_name = $('#add-entity-bank_name').val(); // 开户行
-	    var amount_type = $('#add-entity-amount_type').val(); // 款项类别
-	    var use = $('#add-entity-use').val(); // 用途
-	    var comment = $('#add-entity-comment').val(); // 备注
-	    var bank_no = $('#add-entity-bank_no').val(); // 支付号
-	    var bank_flag = $('#add-entity-bank_flag').val(); //本行/它行标志
-	    var local_flag = 1; // $('#add-entity-local_flag').val(); //同城异地标志 // 0-同城 1-异地
-	    var erp_fgsdm = $('#add-entity-erp_fgsdm').val();
-	    var erp_bmdm = $('#add-entity-erp_bmdm').val(); // erp_部门代码		
-		var erp_fgsmc = $('#add-entity-erp_fgsmc').val();// erp_分公司名称
-		var erp_bmmc = $('#add-entity-erp_bmmc').val();// erp_部门名称
-		var erp_username = $('#add-entity-erp_username').val();// erp_用户名
-		
 	    if(hint_html != ''){
 	        $("#add-entity-hint").html(hint_html).fadeIn();
 	        $("#add-entity-create").removeAttr('disabled');
 	        return 0;
 	    }
 	    
-	    var order_no_arr = new Array();    
-	    $.each(inputArr,function(i,obj){
-	    	order_no_arr[i] =   $(obj).val();
-        }); 
-	    
-	    $("#add-entity-create").html("添加中...");
-	    $.post(BASE_PATH + 'tradeRecord/create_add', {
-	        	'order_no_arr':order_no_arr, 
-	        	'apply_no':apply_no,
-	        	'comp_name':comp_name,
-	        	'comp_name_code':comp_name_code,
-	        	'comp_account':comp_account,
-	        	'bank_name':bank_name,
-	        	'amount_type':amount_type,
-	        	'use':use,
-		        'comment':comment,
-		        'bank_no':bank_no,
-		        'bank_flag':bank_flag,
-		        'local_flag':local_flag,
-		        'erp_fgsdm':erp_fgsdm,
-		        'erp_bmdm':erp_bmdm,
-		        'erp_fgsmc':erp_fgsmc,
-		        'erp_bmmc':erp_bmmc,
-		        'erp_username':erp_username	      
-	        },
-	        function(result){
-	            if(result.code != 0) {
-	                $("#add-entity-hint").html(result.msg + '(' + result.code + ')').fadeIn();
-	                $("#add-entity-create").removeAttr('disabled');
-	                $("#add-entity-create").html("确定");
-	            } else {
-	                $("#add-entity-hint").html(result.msg + ', 关闭...').fadeIn();
-	                setTimeout(function(){
-	                	$('#add-entity-cancel').click();
-	                	window.location.href = $('#add-entity-cancel').attr('href');
-	                }, 1000);
-	            }
-	        },
-	        'json'
-	    );
+	    $("#pay-pwd-modal").modal('show');	    
+	    return; 
 	});
+	
+	$(document).on('click', '#btn-pay-pwd', function(event){
+			$("#btn-pay-pwd").attr('disabled', 'disabled');
+		
+			var pay_pwd = $('#pay-pwd').val();//支付密码
+			var apply_no = $('#add-entity-apply_no').val(); // 申请单号
+		    var comp_name = $('#add-entity-comp_name').val(); // 收款单位
+		    var comp_name_code = $('#add-entity-comp_name_code').val(); // 收款单位
+		    var comp_account = $('#add-entity-comp_account').val(); // 收款账号
+		    var bank_name = $('#add-entity-bank_name').val(); // 开户行
+		    var amount_type = $('#add-entity-amount_type').val(); // 款项类别
+		    var use = $('#add-entity-use').val(); // 用途
+		    var comment = $('#add-entity-comment').val(); // 备注
+		    var bank_no = $('#add-entity-bank_no').val(); // 支付号
+		    var bank_flag = $('#add-entity-bank_flag').val(); //本行/它行标志
+		    var local_flag = $('#add-entity-local_flag').val(); //同城异地标志
+		    var erp_fgsdm = $('#add-entity-erp_fgsdm').val();
+		    var erp_bmdm = $('#add-entity-erp_bmdm').val(); // erp_部门代码		
+			var erp_fgsmc = $('#add-entity-erp_fgsmc').val();// erp_分公司名称
+			var erp_bmmc = $('#add-entity-erp_bmmc').val();// erp_部门名称
+			var erp_username = $('#add-entity-erp_username').val();// erp_用户名
+			
+			var inputArr = $('#div_submit_info').children("input[name='input_apply_orders']");
+			var order_no_arr = new Array();    
+		    $.each(inputArr,function(i,obj){
+		    	order_no_arr[i] =   $(obj).val();
+	        }); 
+		    
+		    var hint_html2 = '';
+		    $("#pay-pwd-hint").html(hint_html2).fadeOut();
+
+		    if( '' == pay_pwd || 0 == pay_pwd.length ){
+		    	hint_html2 += (hint_html2 == '' ? '' : '<BR>') + '请填写支付密码！' ;
+		    	$("#pay-pwd-hint").html(hint_html2).fadeIn();
+		    	return false;
+		    }else{
+		    	hint_html2 += (hint_html2 == '' ? '' : '<BR>') + '校验支付密码中...' ;
+		    	$("#pay-pwd-hint").html(hint_html2).fadeIn();
+		    }		    
+						
+		    $.post(BASE_PATH + 'tradeRecord/create_add', {
+		    		'pay_pwd':pay_pwd, 
+		        	'order_no_arr':order_no_arr, 
+		        	'apply_no':apply_no,
+		        	'comp_name':comp_name,
+		        	'comp_name_code':comp_name_code,
+		        	'comp_account':comp_account,
+		        	'bank_name':bank_name,
+		        	'amount_type':amount_type,
+		        	'use':use,
+			        'comment':comment,
+			        'bank_no':bank_no,
+			        'bank_flag':bank_flag,
+			        'local_flag':local_flag,
+			        'erp_fgsdm':erp_fgsdm,
+			        'erp_bmdm':erp_bmdm,
+			        'erp_fgsmc':erp_fgsmc,
+			        'erp_bmmc':erp_bmmc,
+			        'erp_username':erp_username	      
+		        },
+		        function(result){
+		            if(result.code != 0) {		            	
+		            	if(result.code == 6000){
+		            		hint_html2 += (hint_html2 == '' ? '' : '<BR>') + result.msg ;
+		    		    	$("#pay-pwd-hint").html(hint_html2).fadeIn();
+		    		    	$("#btn-pay-pwd").removeAttr('disabled');
+		            	}else{
+		            		$("#add-entity-hint").html(result.msg + '(' + result.code + ')').fadeIn();
+		            		$("#add-entity-create").removeAttr('disabled');
+		            		$("#add-entity-create").html("提交申请");
+		            	}		                
+		            } else {
+		            	hint_html2 += (hint_html2 == '' ? '' : '<BR>') + '校验支付密码正确！' ;
+				    	$("#pay-pwd-hint").html(hint_html2).fadeIn();				    	
+		            	$("#pay-pwd-modal").modal('hide');
+		            	$("#add-entity-create").attr('disabled', 'disabled');
+		            	$("#add-entity-create").html("添加中...");
+		                $("#add-entity-hint").html(result.msg + ', 关闭...').fadeIn();
+		                setTimeout(function(){
+		                	$('#add-entity-cancel').click();
+		                	window.location.href = $('#add-entity-cancel').attr('href');
+		                }, 1000);
+		            }
+		        },
+		        'json'
+		    );
+		
+		}
+	);
 	
 	// 验证开户行
 	$(document).on('click', '#check-entity-bankName', function(event){
