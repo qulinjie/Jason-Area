@@ -493,13 +493,18 @@ function loadOneAuditTradRecord(id, audit_level){
 $(document).on('click', '#sendCode', function(event){	
 	sends.send();		
 	if(0 == sends.checked){
-		var id = $("#info-entity-id").val();
+		//var id = $("#info-entity-id").val();
 		var mobile = $('#mobile').val().replace(/\s+/g,"");
-		$.post(BASE_PATH + 'tradeRecord/sendSmsVerificationCode', {    		
-		        'id':id,
-		        'mobile':mobile
+		$.post(BASE_PATH + 'sms/sendSmsVerificationCode', { 
+		        'mobile':mobile,
+		        'codetype':11
 		    },
-		    function(result){		    	
+		    function(result){	
+		    	if(result.code == 5000){
+		    		clearInterval(timer);
+	                obj.removeAttr('disabled').val('重新获取验证码');
+	                $("#entity-hint").html('发送短信失败：' + result.msg + '(' + result.code + ')').fadeIn();
+		    	}
 		    },
 		    'json'
 	   );
@@ -523,7 +528,7 @@ var sends = {
                     sends.checked = 1;
                     return true;
                 }
-                $('#sendCode').attr('disabled', 'disabled').val(time+"S后再次发送");
+                $('#sendCode').attr('disabled', 'disabled').val(time+"秒后再次发送");
                 time--;
                 sends.checked = 0;
                 return false;                    
