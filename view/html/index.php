@@ -426,7 +426,7 @@
             			<a href="<?php echo Router::getBaseUrl();?>tradeRecord/searchListFrist">付款审批(一级)</a>
             	    </li>
             	    <?php }?>        	    
-            	    <li <?php if(doit::$controller == 'TradeRecord' && strval($audit_level) == '0'){?> class="active" <?php } ?> >        	    
+            	    <li <?php if(doit::$controller == 'TradeRecord' && strval($audit_level) == ''){?> class="active" <?php } ?> >        	    
             			<a href="<?php echo Router::getBaseUrl();?>tradeRecord/getIndex">申请付款</a>
             	    </li>
             	    <li <?php if(doit::$controller == 'BcsTrade' && strval($inout) == '0'){?> class="active" <?php } ?> >
