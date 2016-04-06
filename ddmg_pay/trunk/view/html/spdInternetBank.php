@@ -3,7 +3,7 @@
  */
 ?>
 
-<h1 class="page-header">网银支付行名行号表查询</h1>
+<!-- <h1 class="page-header">网银支付行名行号表查询</h1> -->
 
 <div class="panel panel-primary">
   <div class="panel-heading">查找</div>
@@ -15,7 +15,7 @@
 	  </div>
       <div class="form-group">
 	    <label for="entity-search-bankName">行名</label>
-	    <input type="email" class="form-control" id="entity-search-bankName" placeholder="">
+	    <input type="email" class="form-control" id="entity-search-bankName" placeholder="" style="width: 335px;">
 	  </div>
 	  <div class="form-group">
     	  <button type="button" class="btn btn-primary" id="entity-search-btn">查询</button>

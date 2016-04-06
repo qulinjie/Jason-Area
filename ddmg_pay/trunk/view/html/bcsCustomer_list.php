@@ -40,8 +40,8 @@
 				<tr>
 					<th style="display:none">id</th>
 					<th>用户登录账号</th>
-					<th>席位号</th>
-					<th>虚拟卡号</th>
+					<th>虚拟帐户名</th>
+					<th>虚拟帐号</th>
 					<!--  
 					<th>客户名称</th>
 					<th>证件号码</th>

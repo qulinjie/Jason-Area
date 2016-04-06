@@ -38,7 +38,7 @@
 			<thead>
 				<tr>
 					<th style="display:none">id</th>
-					<th>序号</th>
+<!-- 					<th>序号</th> -->
 					<th>行号</th>
 					<th>行名称</th>
 					<th>更新时间</th>
@@ -48,7 +48,7 @@
 <?php foreach ($data_list as $item){?>
 			<tr>
 				<td style="display:none"><?php echo $item['id'];?><input type="hidden" value="<?php echo $item['status'];?>"></td>
-				<td><?php echo $item['serialNo'];?></td>
+<!-- 				<td>< ?php echo $item['serialNo'];?></td> -->
 				<td><?php echo $item['bankNo'];?></td>
 				<td><?php echo $item['bankName'];?></td>
 				<td><?php echo $item['add_timestamp'];?></td>

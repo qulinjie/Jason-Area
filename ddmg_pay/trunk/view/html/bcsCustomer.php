@@ -51,27 +51,27 @@
 </div>
 <!-- /.modal -->
 
-<h1 class="page-header">开户管理</h1>
+<!-- <h1 class="page-header">开户管理</h1> -->
 
 <div class="panel panel-primary">
   <div class="panel-heading">查找</div>
   <div class="panel-body">
     <div class="form-inline">
       <div class="form-group">
-	    <label for="entity-search-SIT_NO">席位号</label>
-	    <input type="email" class="form-control" id="entity-search-SIT_NO" placeholder="席位号">
+	    <label for="entity-search-SIT_NO">虚拟帐户名</label>
+	    <input type="email" class="form-control" id="entity-search-SIT_NO" placeholder="">
 	  </div>
 	  <div class="form-group">
-	    <label for="entity-search-ACCOUNT_NO">虚拟卡号</label>
-	    <input type="email" class="form-control" id="entity-search-ACCOUNT_NO" placeholder="虚拟卡号">
+	    <label for="entity-search-ACCOUNT_NO">虚拟帐号</label>
+	    <input type="email" class="form-control" id="entity-search-ACCOUNT_NO" placeholder="">
 	  </div>
-	  <div class="form-group">
+	  <div class="form-group" style="display: none;">
 	    <label for="entity-search-time1">注册时间</label>
 	    <input type="email" class="form-control form_datetime" id="entity-search-time1" placeholder="注册时间">
 	    -
 	    <input type="email" class="form-control form_datetime" id="entity-search-time2" placeholder="注册时间">
 	  </div>
-	  <div class="form-group">
+	  <div class="form-group" style="display: none;">
 	    <label for="entity-search-status">客户状态</label>
 	    <select class="form-control" id="entity-search-status">
 	      <option value="-1">全部</option>
@@ -92,7 +92,7 @@
 
 <div id="add-button-group" style="padding-bottom: 2px;">
 	<a id="add-entity-new" class="btn btn-primary" href="#" data-toggle="modal" data-keyboard="false" data-backdrop="static">新增</a>
-	<a id="entity-loadList-btn" class="btn btn-primary" href="#">更新浦发虚拟子账户</a>
+	<a id="entity-loadList-btn" class="btn btn-primary" href="#">更新浦发虚拟账户</a>
 </div>
 
 <div  id="entity-list">

@@ -219,16 +219,18 @@ class BcsTradeController extends BaseController {
     
     protected function searchList($isIndex = false,$inout = '') {
         $current_page = Request::post('page');
-        $seller_name = Request::post('seller_name'); // 收款方
+//         $seller_name = Request::post('seller_name'); // 收款方
         $time1 = Request::post('time1');
         $time2 = Request::post('time2');
-        $order_no = Request::post('order_no');
-        $status = Request::post('status');
-        $amount1 = Request::post('amount1');
-        $amount2 = Request::post('amount2');
-        $FMS_TRANS_NO = Request::post('FMS_TRANS_NO');
-        $b_account = Request::post('b_account');
-        $s_account = Request::post('s_account');
+//         $order_no = Request::post('order_no');
+//         $status = Request::post('status');
+//         $amount1 = Request::post('amount1');
+//         $amount2 = Request::post('amount2');
+//         $FMS_TRANS_NO = Request::post('FMS_TRANS_NO');
+//         $b_account = Request::post('b_account');
+//         $s_account = Request::post('s_account');
+        $oppositeAcctName = Request::post('oppositeAcctName');
+        $MCH_TRANS_NO = Request::post('MCH_TRANS_NO');
     
         $bcsTrade_model = $this->model('bcsTrade');
         $user_model = $this->model('user');
@@ -250,8 +252,8 @@ class BcsTradeController extends BaseController {
         }
     
         $params  = array();
-        foreach ([ 'b_user_id', 'seller_name', 'time1', 'time2', 'order_no', 'status',
-            'FMS_TRANS_NO', 'seller_name', 'amount1', 'amount2', 'ACCOUNT_NO'] as $val){
+        foreach ([ 'b_user_id', 'seller_name', 'time1', 'time2', 'order_no', 'status','MCH_TRANS_NO',
+            'FMS_TRANS_NO', 'seller_name', 'amount1', 'amount2', 'ACCOUNT_NO', 'oppositeAcctName'] as $val){
             if($$val) $params[$val] = $$val;
         }
     

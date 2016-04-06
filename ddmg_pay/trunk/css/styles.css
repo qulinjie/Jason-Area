@@ -151,11 +151,13 @@ div#content {
 .active > a:hover,
 .active > a:focus {
   color: #000508;
+	text-decoration: none;
 /*   background-color: #428bca; */
 }
 .active {
 /*   color: #fff; */
   background-color: rgba(140, 142, 144, 0.3);
+	text-decoration: none;
 }
 a {
     color: #303B44;
@@ -164,5 +166,14 @@ a {
 
 td > a,td > a:hover,td > a:focus{
 	color: #428bca;
+	text-decoration: none;
 }
 
+td > div > a,td > div > a:hover,td > div > a:focus{
+	color: #428bca;
+	text-decoration: none;
+}
+
+a,a:hover,a:focus{
+	text-decoration: none;
+}
