@@ -30,7 +30,7 @@ class SmsController extends BaseController {
     */
     public function sendSmsVerificationCode($mobile = NULL, $codetype = NULL){
     	
-    	$mobile = ($mobile == NULL) ? intval(Request::post('mobile')) : intval($mobile);
+    	$mobile = ($mobile == NULL) ? Request::post('mobile') : $mobile;
     	$codetype = ($codetype == NULL) ? intval(Request::post('codetype')) : intval($codetype);
     	Log::notice("sendSmsVerificationCode ===>> mobile=" . $mobile . "codetype=" .$codetype);
     	
