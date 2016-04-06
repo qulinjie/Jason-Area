@@ -208,7 +208,7 @@ class TradeRecordController extends BaseController {
         $entity_list_html = $this->render('tradeRecord_list', array('is_admin' => $is_admin, 'current_user_id' => $user_id, 'data_list' => $data_list, 'current_page' => $current_page, 'audit_level' => $audit_level, 'total_page' => $total_page), true);
         if($isIndex) {
             $view_html = $this->render('tradeRecord', array('is_admin' => $is_admin, 'current_user_id' => $user_id, 'audit_level' => $audit_level, 'entity_list_html' => $entity_list_html ), true);
-            $this->render('index', array('page_type' => 'tradeRecord', 'tradeRecord_html' => $view_html, 'bcsCustomerInfo' => $data_info) );
+            $this->render('index', array('page_type' => 'tradeRecord', 'tradeRecord_html' => $view_html, 'bcsCustomerInfo' => $data_info, 'audit_level' => $audit_level) );
         } else {
             EC::success(EC_OK, array('entity_list_html' => $entity_list_html));
         }
