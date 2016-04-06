@@ -155,7 +155,7 @@
       <!-- 左侧菜单 -->
       <div class="container-fluid">
       <div class="row">
-        <div class="col-sm-3 col-md-2 sidebar">
+        <div class="col-sm-3 col-md-2 sidebar" style="background-color: white;">
           <ul id="li-menu-list">
             <li>
 				<!-- Start Freebie -->
@@ -371,7 +371,7 @@
       <!-- 左侧菜单 -->
       <div class="container-fluid">
       <div class="row">
-        <div class="col-sm-3 col-md-2 sidebar" id="div-menu-list">
+        <div class="col-sm-3 col-md-2 sidebar" id="div-menu-list" style="background-color: white;">
           <ul id="li-menu-list" >
           <li>
 				<!-- Start Freebie -->
