@@ -11,13 +11,14 @@
 	  <div class="t1">
       	<div class="top1">
             <div class="left"><span><a class="theme-login" href="javascript:;">登录</a></span><!--  <span><a href="<?php echo Router::getBaseUrl()?>register/account">注册</a></span>--></div>
-            <div class="right"><span>欢迎来到大大付款</span><span><a href="javascript:void(0);">大大买钢首页</a></span><span><a href="javascript:void(0);">大大买钢APP</a></span></div>
+            <div class="right"><span>欢迎来到大大付款</span>
+<!--             <span><a href="javascript:void(0);">大大买钢首页</a></span><span><a href="javascript:void(0);">大大买钢APP</a></span></div> -->
          </div>
       </div>	
 	  <div class="t2">
         <div class="top2">
                 <div class="logo"><a href="javascript:void(0);"><img src="<?php echo Router::getBaseUrl(); ?>view/images/logo.png" /></a></div>
-                <div class="nav"><a href="javascript:void(0);">首页</a><a href="javascript:void(0);">我的大大付款</a><a href="javascript:void(0);">账户管理</a></div>
+<!--                 <div class="nav"><a href="javascript:void(0);">首页</a><a href="javascript:void(0);">我的大大付款</a><a href="javascript:void(0);">账户管理</a></div> -->
          </div>
       </div>
       <div class="tbs">
@@ -37,9 +38,9 @@
                         <input type="hidden" id="token" name="token" value="<?php echo UserController::getToken();?>"/>
                     	<input type="text" class="zh"  id="account" name="account" placeholder="账号"  />
                         <input type="password" class="mm" id="password" name="password" placeholder="登录密码" />
-                        <input type="text" class="yz" id="pinCode" name="pinCode" placeholder="验证码" style="display:none;"/>
-                        <div class="img" style="display:none;">
-                            <!--<a href="javascript:void(0);"><img id="getPinCode" src="< ?php echo Router::getBaseUrl()? >user/getPinCode"/></a> -->                     
+                        <input type="text" class="yz" id="pinCode" name="pinCode" placeholder="验证码" style="display:block;"/>
+                        <div class="img" style="display:block;">
+                            <a href="javascript:void(0);"><img id="getPinCode" src="<?php echo Router::getBaseUrl()?>user/getPinCode"/></a>                     
                         </div>
                         <div class="wj"><!--  <a href="< ?php echo Router::getBaseUrl()?>findPassword/account">忘记密码，去找回！</a>--></div>
                         <input type="button" id="loginBtn" class="dl" name="loginBtn" value="登录" />
@@ -59,8 +60,6 @@
 <script src="<?php echo Router::getBaseUrl();?>js/jsbn.js"></script>
 <script src="<?php echo Router::getBaseUrl();?>js/rsa.js"></script>
 <script type="text/javascript" src="<?php echo Router::getBaseUrl(); ?>js/custom.js"></script>
-</body>
-</html>
 <script type="text/javascript">
 jQuery(document).ready(function($) {
 	$('.theme-login').click(function(){
@@ -81,4 +80,16 @@ $(document).ready(function(){
         $(".all").height($(window).height());  
     });
 }) ;
+
+function changePinCode(id){
+	var src = $('#'+id).attr('src');
+	var rand = Math.random();
+	src = src.replace(/\?(.)*/g, "");
+// 	alert(src);
+	var newSrc = src + "?rand="+rand;
+	$('#'+id).attr('src',newSrc);
+}
+
 </script>
+</body>
+</html>

@@ -1264,12 +1264,15 @@ class TradeRecordController extends BaseController {
         $conf = $this->getConfig('conf');
         $page_cnt = $conf['page_count_default'];
         
+        $loginUser = UserController::getLoginUser();
+        
         $params = array();
         $params['page'] = $current_page;
         $params['rows'] = $page_cnt;
         $params['ksrq'] = $time1;
         $params['jzrq'] = $time2;
         $params['fphm'] = $fphm;
+        $params['fgs'] = $loginUser['erp_fgsdm'];
         
         if($comp_name){
             $params['dwmc'] = $comp_name;

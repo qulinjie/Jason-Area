@@ -324,6 +324,10 @@
 	<script type="text/javascript" src="<?php echo Router::getBaseUrl();?>js/admin.js"></script>
 <?php } else {?>
 
+<?php if(!UserController::isLogin()){?>
+<script type="text/javascript" >window.location.href='<?php echo Router::getBaseUrl();?>';</script>
+<?php } ?>
+
 <nav class="navbar-fixed-top" style="background-color:#4775AA; height:69px;">
       <div class="container-fluid">
         <div class="navbar-header">

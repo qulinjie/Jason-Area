@@ -153,9 +153,9 @@ $(function () {
         /**********************************index end*********************************************/
     } else {
         /**********************************login start*********************************************/
-//    	$('#getPinCode').click(function(){
-//    		this.src = BASE_PATH + 'user/getPinCode?r=' + Math.random();
-//    	});
+    	$('#getPinCode').click(function(){
+    		this.src = BASE_PATH + 'user/getPinCode?r=' + Math.random();
+    	});
         $('#password,#account,#pinCode').on('keydown', function (event) {
             if (event.which == 13) {
                 $('#loginBtn').click();
@@ -176,16 +176,17 @@ $(function () {
             } /*else if (!/^[0-9]{11}$/.test(account)) {
                 msg += '请输入正确的账号<br/>';
             }
-*/
+            */
+            
             if (pwd == '') {
                 msg += '请输入密码<br/>';
             }
 
-            /*if (pinCode == '') {
+            if (pinCode == '') {
                 msg += '请输入验证码<br/>';
             } else if (!/^[A-Za-z0-9]{4}$/.test(pinCode)) {
                 msg += '请输入正确的验证码<br/>';
-            }*/
+            }
 
             if (msg) {
                 $(this).removeAttr('disabled');
@@ -204,7 +205,7 @@ $(function () {
                     if (result.code != 0) {
                         $('#errorMsg').html(result.msg + '(' + result.code + ')');
                         $("#loginBtn").removeAttr('disabled').html('登录');
-//                        $('#getPinCode').click();
+                        $('#getPinCode').click();
                     } else {
                         $("#errorMsg").html('登录成功');
                         setTimeout(function () {

@@ -113,7 +113,7 @@ class SPDBankCurl extends CurlModel {
     
     public function iconvFunc($param = ''){
         if( empty($param) ) {
-            return "";
+            return $param;
         }
         $result = iconv('UTF-8', 'GB2312', $param);
         if( empty($result) ) {
