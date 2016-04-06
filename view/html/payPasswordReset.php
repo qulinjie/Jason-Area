@@ -37,7 +37,7 @@
 	   </div>  
       <div class="alert alert-danger" id="entity-hint" style="display: none;"></div>  
       <div class="form-group"></div>
-	  <div id="button-group" style="padding-bottom: 2px; margin-left: 30%;">
+	  <div id="button-group" style="padding-bottom: 2px; margin-left: 25%;">
     	<a id="pay-pwd-reset" class="btn btn-primary" href="#" style=" width:120px;">确定</a>
       </div>
       
