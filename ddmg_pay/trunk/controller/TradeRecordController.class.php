@@ -91,11 +91,7 @@ class TradeRecordController extends BaseController {
                     break;
                 case 'sendTransferTrade':
                 	$this->sendTransferTrade();
-                	break;                	
-                case 'sendSmsVerificationCode':
-                	$this->sendSmsVerificationCode();
-                	break;
-                	
+                	break; 
                 default:
                     Log::error('page not found . ' . $params[0]);
                     EC::fail(EC_MTD_NON);
@@ -557,17 +553,7 @@ class TradeRecordController extends BaseController {
 	            	if(isset($params['user_id']))
 	            	    unset($params['user_id']);
 	            	
-	            	//查审核人手机号码
-	            	$user_model = $this->model('user');
-	            	$user_data = $user_model->erp_getInfo(array('usercode' => $user_id));
-	            	if(EC_OK_ERP != $user_data['code']){
-	            		Log::error('erp_getInfo Fail!');
-	            		//EC::fail($user_data['code']);	            		
-	            	}
-	            	$user_data = $user_data['data'];
-	            	if(!empty($user_data) && isset($user_data['mobile']) && !empty($user_data['mobile'])){
-	            		$mobile = $user_data['mobile'];
-	            	}	            	
+	            	$mobile = UserController::getUserMobileByUserId($user_id); 	            	
 	            }
 	        }
         }else {
@@ -1102,6 +1088,7 @@ class TradeRecordController extends BaseController {
     }
     
     public function create_add(){
+    	$pay_pwd = Request::post('pay_pwd'); // 支付密码
         $apply_item = Request::post('order_no_arr'); // 业务单号@;金额
         $apply_no = Request::post('apply_no'); // 申请单号
         $seller_name = Request::post('comp_name'); // 收款单位
@@ -1127,12 +1114,28 @@ class TradeRecordController extends BaseController {
         // ["LDRK002-00000002@;102470.56","LDRK002-00000034@;118743.30"]
 //         Log::notice("response-data ===========================>> data = ##" . json_encode($order_no_arr) . "##" );
 //         exit;
-        
-        $tradeRecord_model = $this->model('tradeRecord');
-        
+
         $loginUser_data = UserController::getLoginUser();
-//         Log::notice("response-data ===========================>> data-loginUser_data = ##" . json_encode($loginUser_data) . "##" );
         $user_id = $loginUser_data['usercode'];
+
+	    //支付密码校验
+        if(empty($pay_pwd)){
+        	Log::error('create_add params error!');
+        	EC::fail(6000, EC::$_errMsg[EC_PAR_ERR]);
+        }
+        $pay_pwd_data = array();
+        $pay_pwd_data['usercode'] = $user_id;
+        $pay_pwd_data['paypass'] = $pay_pwd;
+        $user_model = $this->model('user');
+        $res_data = $user_model->erp_payPwdVerify($pay_pwd_data);
+        
+    	if(EC_OK_ERP != $res_data['code']){
+    		Log::error('erp_payPwdVerify Fail!'. $res_data['msg']);
+    		EC::fail(6000, $res_data['msg']);
+    		//return false;
+    	} 
+        
+        $tradeRecord_model = $this->model('tradeRecord');        
         $bcsCustomer_model = $this->model('bcsCustomer');
         
         $audit_user_id_first = $loginUser_data['fuserid']; //一级审核人
@@ -1609,23 +1612,13 @@ class TradeRecordController extends BaseController {
     	$audit_level =0;
     	    	
     	if(2 == $apply_status || 3 == $apply_status){ //一级审批   	
-
-    		//查审核人手机号码
-    		$mobile = '';
-    		$user_model = $this->model('user');
-    		$user_data = $user_model->erp_getInfo(array('usercode' => $current_user_id));
-    		if(EC_OK_ERP != $user_data['code']){
-    			Log::error('erp_getInfo Fail!');
-    			EC::fail($user_data['code']);
-    		}
-    		$user_data = $user_data['data'];
-    		if(!empty($user_data) && isset($user_data['mobile']) && !empty($user_data['mobile'])){
-    			$mobile = $user_data['mobile'];
-    		}
     		
     		if(2 == $apply_status ){
-    			//检查验证码是否相等
-    			$this->checkSmsVerificationCode($mobile, $vcode);
+    			//查审核人手机号码
+    			$mobile = UserController::getUserMobileByUserId($current_user_id);
+    			
+    			//检查验证码是否相等    			
+    			SmsController::checkSmsVerificationCode($mobile, 11, $vcode);
     		}    		
     		
     		//判断当前用户是否有审核权限    		
@@ -1920,70 +1913,6 @@ class TradeRecordController extends BaseController {
         Log::notice("response-data =============OrgName==============>> data = ##" . json_encode($data) . "##" );
     
         EC::success(EC_OK, $data['data']['data']);
-    }
-    
-    //付款审核发送短信验证码
-    public function sendSmsVerificationCode($mobile = NULL){
-    	
-    	$mobile = ($mobile == NULL) ? intval(Request::post('mobile')) : intval($mobile);
-    	Log::notice("sendSmsVerificationCode ===>> mobile=" .$mobile );
-    	
-    	if(!$mobile){
-    		Log::error('sendSmsVerificationCode params error!');
-    		EC::fail(EC_PAR_ERR);
-    	}
-    	
-    	//尊敬的客户，您的验证码为：【Value1】，如非本人操作，请忽略本短信
-    	$data = array();
-    	$data['tel'] = $mobile; //$mobile '13367310112'电话
-    	$data['codetype'] = '11';
-    	
-    	Log::notice("request-data ============>> data = ##" . json_encode($data) . "##" );
-    	$sms_model = $this->model('sms');
-    	$res_data = $sms_model->erp_sendSmsCode($data);
-    	Log::notice("response-data ============>> res_data = ##" . json_encode($res_data) . "##" );
-
-    	if(EC_OK_ERP != $res_data['code']){
-    		Log::error('sendSmsVerificationCode Fail!');
-    		EC::fail($res_data['code']);    		
-    	}
-    	
-    	//return true;
-    	EC::success(EC_OK, $res_data);    	
-    }
-    
-    //检测付款审核的验证码是否正确
-    public function checkSmsVerificationCode($mobile, $vcode){
-    	
-    	//$vcode = ($vcode == NULL) ? intval(Request::post('vcode')) : intval($vcode);
-    	Log::notice("checkSmsVerificationCode ===>> mobile=". $mobile ." vcode=" .$vcode );
-    	 
-    	if(empty($mobile) || empty($vcode)){
-    		Log::error('checkSmsVerificationCode params error!');
-    		EC::fail(5000, EC::$_errMsg[EC_PAR_ERR]);
-    		//return false;
-    	}
-    	
-    	$data = array();
-    	$data['tel'] = $mobile; //$mobile '13367310112'电话    	
-    	$data['code'] = $vcode;
-    	$data['codetype'] = '11';
-    	
-    	Log::notice("request-data ============>> data = ##" . json_encode($data) . "##" );
-    	$sms_model = $this->model('sms');
-    	$res_data = $sms_model->erp_checkSmsCode($data);
-    	Log::notice("response-data ============>> res_data = ##" . json_encode($res_data) . "##" );
-
-    	Log::write(var_export($res_data, true), 'debug', 'debug222-'.date('Y-m-d'));
-    	
-    	if(EC_OK_ERP != $res_data['code']){
-    		Log::error('erp_sendSmsCode Fail!'. $res_data['msg']);
-    		EC::fail(5000, $res_data['msg']);
-    		//return false;
-    	} 
-    	
-    	//EC::success(EC_OK, $res_data);
-    	return true;
     }
     
     public function test_sendTransferTrade(){
