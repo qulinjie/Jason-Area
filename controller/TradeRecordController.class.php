@@ -1127,8 +1127,7 @@ class TradeRecordController extends BaseController {
         $pay_pwd_data['usercode'] = $user_id;
         $pay_pwd_data['paypass'] = $pay_pwd;
         $user_model = $this->model('user');
-        $res_data = $user_model->erp_payPwdVerify($pay_pwd_data);
-        
+        $res_data = $user_model->erp_payPwdVerify($pay_pwd_data);        
     	if(EC_OK_ERP != $res_data['code']){
     		Log::error('erp_payPwdVerify Fail!'. $res_data['msg']);
     		EC::fail(6000, $res_data['msg']);
