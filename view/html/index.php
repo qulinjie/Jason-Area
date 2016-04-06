@@ -389,6 +389,13 @@
             			<a href="<?php echo Router::getBaseUrl();?>bcsCustomer/getInfo">账户信息</a>
             	    </li>
             	    </ul>
+            	    <?php if(UserController::isGeneralUser()){?>
+	            	    <ul class="menu">
+	            	    <li <?php if(doit::$controller == 'PayPassword'){?> class="active" <?php } ?>>
+	            	        <a href="<?php echo Router::getBaseUrl();if(PayPasswordController::checkExist()){?>payPassword/reset<?php }else{?>payPassword/set<?php }?>">支付密码管理</a>
+	            	    </li>
+	            	    </ul>	            	    
+            	    <?php }?>            	    
         	    </li>
         	    
         	    <li>
@@ -469,10 +476,7 @@
         	    </li>						
 				<li <?php if(doit::$controller == 'User'){?> class="discolor" <?php } ?>>
 					<a href="<?php echo Router::getBaseUrl();?>user/passwordReset">重置登录密码</a>
-				</li>
-        		<li <?php if(doit::$controller == 'PayPassword'){?> class="discolor" <?php } ?>>
-        			<a href="<?php echo Router::getBaseUrl();if(PayPasswordController::check()){?>payPassword/reset<?php }else{?>payPassword/notice<?php }?>">重置支付密码</a>
-        		</li>      
+				</li>        		   
         		<li <?php if(doit::$controller == 'Message'){?> class="discolor" <?php } ?>>
         			  <a href="<?php echo Router::getBaseUrl();?>message/getIndex">消息提醒</a>
         		</li>
@@ -509,6 +513,7 @@
         		    <script src="<?php echo Router::getBaseUrl();?>js/sysMessage.js"></script>
         		    <div id="message-list"><?php echo $message_html;?></div>        	 
         	  <?php }else if($page_type == 'payPassword'){?>
+        	  	  <script src="<?php echo Router::getBaseUrl();?>js/payPassword.js"></script>
 				  <?php echo $password_html; ?>
 			  <?php	}else if($page_type == 'spdInternetBank'){?>
                   <script src="<?php echo Router::getBaseUrl();?>js/spdInternetBank.js"></script>
