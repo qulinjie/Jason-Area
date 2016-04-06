@@ -350,6 +350,25 @@ class UserController extends BaseController
         return self::$_isSeller;
     }
     
+    //是否是普通合伙人
+    private static $_isGeneralUser = NULL;
+    public static function isGeneralUser(){
+    	 
+    	if(NULL !== self::$_isGeneralUser){
+    		return self::$_isGeneralUser;
+    	}
+    	if(!self::isLogin()){
+    		return self::$_isGeneralUser = false;
+    	}
+    	$loginUser = self::getLoginUser();
+    	if(!self::isFirstAuditUser() && !AdminController::isSecondAuditUser()){
+    		return self::$_isGeneralUser = true;
+    	}else{
+    		return self::$_isGeneralUser = false;
+    	}
+    	return self::$_isGeneralUser;
+    }
+    
     //是否是一级审核人
     private static $_isFirstAuditUser = NULL;
     public static function isFirstAuditUser(){
@@ -519,6 +538,29 @@ class UserController extends BaseController
         Log::notice("response-data ==============data_lists_user=============>> data = ##" . json_encode($data_lists_user) . "##" );
         
         EC::success(EC_OK, $data_lists_user);
+    }
+    
+    private static $_currentUserMobile = NULL;
+    public static function getUserMobileByUserId($user_id = NULL){
+    	if(NULL !== self::$_currentUserMobile){
+    		return self::$_currentUserMobile;
+    	}
+    	$mobile = '';
+    	$user_id = empty($user_id) ? self::getCurrentUserId() : $user_id; 
+    	$user_model = self::model('user');
+    	$user_data = $user_model->erp_getInfo(array('usercode' => $user_id));
+    	if(EC_OK_ERP != $user_data['code']){
+    		Log::error('erp_getInfo Fail!');
+    		return $mobile;
+    	}
+    	$user_data = $user_data['data'];
+    	if(!empty($user_data) && isset($user_data['mobile']) && !empty($user_data['mobile'])){
+    		$mobile = $user_data['mobile'];
+    	}
+    	if(!empty($mobile)){
+    		return self::$_currentUserMobile = $mobile;
+    	}
+    	return $mobile;
     }
     
 }
