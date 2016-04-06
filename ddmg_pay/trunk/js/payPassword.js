@@ -80,7 +80,7 @@ $(function () {
     /**************begin--重置****************/
     $('#pay-pwd-reset').click(function(){    	
         if(checkForm()) return false;
-        //$(this).attr('disabled','disabled');
+        $('#pay-pwd-reset').attr('disabled','disabled');
         var data   = {};       
         data.code   = $('#code').val(); 
         data.pay_pwd   = hex2b64(do_encrypt($('#password').val()));        
@@ -120,7 +120,7 @@ $(function () {
             }
         },1000);
         obj.val('('+currTime+')秒后再次发送');        
-        var mobile = $('#mobile').val();
+        var mobile = $('#mobile').val(); 
 		$.post(BASE_PATH + 'sms/sendSmsVerificationCode', {
 		        'mobile':mobile,
 		        'codetype':12

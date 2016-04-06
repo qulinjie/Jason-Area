@@ -494,16 +494,16 @@ $(document).on('click', '#sendCode', function(event){
 	sends.send();		
 	if(0 == sends.checked){
 		//var id = $("#info-entity-id").val();
-		var mobile = $('#mobile').val().replace(/\s+/g,"");
+		var mobile = $('#mobile').val();
 		$.post(BASE_PATH + 'sms/sendSmsVerificationCode', { 
 		        'mobile':mobile,
 		        'codetype':11
 		    },
-		    function(result){	
-		    	if(result.code == 5000){
-		    		clearInterval(timer);
-	                obj.removeAttr('disabled').val('重新获取验证码');
-	                $("#entity-hint").html('发送短信失败：' + result.msg + '(' + result.code + ')').fadeIn();
+		    function(result){
+		    	if(result.code == 5000){		    		
+	                $('#sendCode').removeAttr('disabled').val('重新获取验证码');
+	                $("#info-sms-hint").html('发送短信失败：' + result.msg + '(' + result.code + ')').fadeIn();
+	                sends.clearItv();
 		    	}
 		    },
 		    'json'
@@ -512,6 +512,8 @@ $(document).on('click', '#sendCode', function(event){
 });
 var sends = {
     checked:1,
+    time:60,
+    timer:new Object(),
     send:function(){
         var numbers = /^1\d{10}$/;
         var mobile = $('#mobile').val().replace(/\s+/g,""); //获取输入手机号码        
@@ -519,25 +521,26 @@ var sends = {
             $('#info-sms-hint').append('<span class="error">手机格式错误</span>');
             return false;
         }            
-        if(numbers.test(mobile)){        	
-        	var time = 60;
+        if(numbers.test(mobile)){
         	function timeCountDown(){
-                if(time==0){
-                    clearInterval(timer);
+                if(sends.time==0){
+                	sends.clearItv();
                     $('#sendCode').removeAttr('disabled').val("重新获取验证码");
                     sends.checked = 1;
                     return true;
                 }
-                $('#sendCode').attr('disabled', 'disabled').val(time+"秒后再次发送");
-                time--;
+                $('#sendCode').attr('disabled', 'disabled').val(sends.time+"秒后再次发送");
+                sends.time--;
                 sends.checked = 0;
                 return false;                    
             }                
             timeCountDown();
-            var timer = setInterval(timeCountDown,1000);
-            
+            sends.timer = setInterval(timeCountDown,1000);            
         }
-    }
+    },
+	clearItv:function(){
+		clearInterval(sends.timer);
+	}
 };
 
 $(document).on('click', '#btn-sms-pay', function(event){
@@ -549,7 +552,7 @@ $(document).on('click', '#btn-sms-pay', function(event){
 	}
 	
 	//$("#sms-entity-modal").modal('hide');
-     
+	$("#btn-sms-pay").attr('disabled', 'disabled'); 
     $("#add-entity-audit1").html("提交审批中...");
 	$("#add-entity-audit1").attr('disabled', 'disabled');
 	$("#add-entity-audit2").attr('disabled', 'disabled').hide();
@@ -604,6 +607,7 @@ function auditOneTradRecord1(apply_status){
 	        		$("#add-entity-hint").html(hint_html).fadeIn();	        		        	
 	        	}	
 	            if(apply_status == 2){
+	            	$("#btn-sms-pay").removeAttr('disabled');
 	            	$("#add-entity-audit1").html("审批通过");
 	            }else{
 	            	$("#add-entity-audit2").html("审批驳回");	            		            	
