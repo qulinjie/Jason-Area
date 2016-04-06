@@ -448,8 +448,11 @@ class UserController extends BaseController
             $code = $this->post('pinCode');
             (!$account || !$password) && EC::fail(EC_PAR_BAD);
     
-//             $pinCode = self::instance('pincode');
-//             !$pinCode->check($code) && EC::fail(EC_PINCODE_ERR);
+//             Log::notice('login . pinCode=' . $code);
+            $pinCode = self::instance('pincode');
+//             Log::notice('login . pinCode3=' . $pinCode);
+//             Log::notice('login . pinCode2=' . $pinCode->check($code));
+            !$pinCode->check($code) && EC::fail(EC_PINCODE_ERR);
     
             $data = $this->model('user')->erp_login(['loginid' => $account, 'userpwd' => $password]);
             $data['code'] !== EC_OK && EC::fail($data['code']);

@@ -740,8 +740,8 @@ class BcsTradeController extends BaseController {
             $trade['oppositeAcctNo'] = $obj['oppositeAcctNo']; // 对方帐号
             $trade['oppositeAcctName'] = $obj['oppositeAcctName']; // 对方名称
             $trade['status'] = 1; // 交易发送状态 1-成功 2-失败 3-未知
-            $trade['payeeBankNo'] = $obj['payeeBankNo']; // 对方帐号
-            $trade['payeeBankName'] = $obj['payeeBankName']; // 对方户名
+            $trade['payeeBankNo'] = $obj['payeeBankNo']; // 对方行号
+            $trade['payeeBankName'] = $obj['payeeBankName']; // 对方行名
             
             $info_data = $info_data['data'][0];
             if( !empty($info_data) ){
@@ -758,7 +758,7 @@ class BcsTradeController extends BaseController {
                 
                 if( 1 == $trade['debitCreditFlag']){
                 	//对收款进行短信发送
-                	$this->sendSmsCodeForCollection($trade['ACCOUNT_NO'], $trade['oppositeAcctName'], $trade['TX_AMT']);
+                	$this->sendSmsCodeForCollection($trade['ACCOUNT_NO'], $trade['oppositeAcctName'], $trade['TX_AMT'], $trade['oppositeAcctNo']);
                 
                 	//收款单同步erp
                 	$this->erp_syncBillsOfCollection($trade['MCH_TRANS_NO']);
@@ -972,9 +972,9 @@ class BcsTradeController extends BaseController {
     }
     
     //收款后发送短信给用户
-    public function sendSmsCodeForCollection($ACCOUNT_NO, $payer, $amount){
+    public function sendSmsCodeForCollection($ACCOUNT_NO, $payer, $amount, $payer_no){
     	
-    	Log::skdxNotice('ACCOUNT_NO='. $ACCOUNT_NO .'payer='. $payer .'amount='. $amount);    	 
+    	Log::skdxNotice('sendSmsCodeForCollection . ACCOUNT_NO='. $ACCOUNT_NO .',payer='. $payer .',amount='. $amount . ',payer_no=' . $payer_no);    	 
     	if(empty($ACCOUNT_NO) || empty($payer) || empty($amount)){
     		Log::skdxError('empty args!');
     		//EC::fail(EC_PAR_ERR);
@@ -1033,7 +1033,7 @@ class BcsTradeController extends BaseController {
     	$data = array();
     	$data['tel'] = $user_data['mobile']; //'13367310112'电话
     	$data['codetype'] = '10';    
-    	$data['value1'] = $payer; //付款公司名称
+    	$data['value1'] = $payer . empty($payer_no) ? '' : '(账号：'.$payer_no.')' ; //付款公司名称
     	$data['value2'] = '金额'; 
     	$data['value3'] = $amount.'元';
     	$data['value4'] = '!';

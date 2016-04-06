@@ -272,15 +272,18 @@ class pincode extends Base {
      * @return boolean
      */
     public function check($code) {
-
+//         Log::notice('login . pinCode4=' . $code);
+        
         if (!$code) {
             return false;
         }
         $code = strtolower($code);
 
         //start session
-        //session_start();
-
+        session_start();
+        
+        Log::notice('login . pinCode5=' . $_SESSION[$this->sessionName]);
+        Log::notice('_SESSION=##' . var_export($_SESSION,true) . '##');
         if(isset($_SESSION[$this->sessionName]) && (strtolower($_SESSION[$this->sessionName]) == $code)){
         	//invalidate pincode
         	unset($_SESSION[$this->sessionName]);
@@ -409,7 +412,9 @@ class pincode extends Base {
 
         //将显示的验证码赋值给session.
         $_SESSION[$this->sessionName] = $this->textContent;
-
+        Log::notice('login . pinCode6=' . $_SESSION[$this->sessionName]);
+        Log::notice('_SESSION=##' . var_export($_SESSION,true) . '##');
+        
         //当有headers内容输出时.
         if (headers_sent()) {
             EC::fail(EC_OTH);
