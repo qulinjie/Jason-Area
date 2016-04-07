@@ -116,6 +116,8 @@ class TradeRecordController extends BaseController {
         $order_sum_amount1 = Request::post('order_sum_amount1');
         $order_sum_amount2 = Request::post('order_sum_amount2');        
         $backhost_status = Request::post('backhost_status');
+        
+        $apply_status = $apply_status == 4 ? 2 : $apply_status;
         $audit_level = $audit_level != '0' ? $audit_level : Request::post('audit_level');
         
         $tradeRecord_model = $this->model('tradeRecord');
