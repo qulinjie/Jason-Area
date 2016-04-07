@@ -900,7 +900,13 @@ class BcsTradeController extends BaseController {
     	
     	//$data['oppositeAcctName'] = '瑞安市奥利达标准件制造有限公司';
     	Log::skdNotice(" 单位名称 oppositeAcctName = " . $data['oppositeAcctName']);
-
+    	
+    	if(empty($data['oppositeAcctName'])){
+    		Log::skdError('erp_getContactCompanyInfo Fail： oppositeAcctName is empty!' );
+    		if($is_ec) EC::fail(EC_ERR, '失败：单位名称为空！');
+    		return false;
+    	}
+    	
     	//根据对方付款单位名称调用erp接口查该单位代码
     	$ct_params = array();
     	$ct_params['dwmc'] = $data['oppositeAcctName']; 
@@ -918,7 +924,7 @@ class BcsTradeController extends BaseController {
     	}
     	if(empty($dwdm)){
     		Log::skdError('erp_getContactCompanyInfo Fail： dwdm is empty!' );
-    		if($is_ec) EC::fail(EC_ERR, '失败：付款单位名称为空！');
+    		if($is_ec) EC::fail(EC_ERR, '失败：单位代码为空！');
     		return false;
     	}
     	
