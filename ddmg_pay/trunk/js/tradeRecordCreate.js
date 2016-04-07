@@ -331,7 +331,7 @@ $(document).on('click', '#for-test-btn', function(event){
 
 	$(document).on('click', '#add-entity-create', function(event){		
 				
-		$("#add-entity-create").attr('disabled', 'disabled');
+		//$("#add-entity-create").attr('disabled', 'disabled');
 	    $("#add-entity-hint").html('').fadeOut();
 	    
 	    var inputArr = $('#div_submit_info').children("input[name='input_apply_orders']");
@@ -412,6 +412,7 @@ $(document).on('click', '#for-test-btn', function(event){
 			        'erp_username':erp_username	      
 		        },
 		        function(result){
+		        	$("#add-entity-create").attr('disabled', 'disabled');
 		            if(result.code != 0) {		            	
 		            	if(result.code == 6000){
 		            		hint_html2 += (hint_html2 == '' ? '' : '<BR>') + result.msg ;
