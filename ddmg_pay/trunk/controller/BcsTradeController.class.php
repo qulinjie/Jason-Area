@@ -908,7 +908,7 @@ class BcsTradeController extends BaseController {
     	$ct_info_data = $user_model->erp_getContactCompanyInfo($ct_params);
     	if(EC_OK_ERP != $ct_info_data['code']){
     		Log::skdError('erp_getContactCompanyInfo Fail!' . $ct_info_data['msg']);
-    		if($is_ec) EC::fail($ct_info_data['code']);
+    		if($is_ec) EC::fail($ct_info_data['code'], $ct_info_data['msg']);
     		return false;
     	}
     	$ct_info_data = $ct_info_data['data']['data'];
@@ -916,7 +916,11 @@ class BcsTradeController extends BaseController {
     	if(!empty($ct_info_data) && isset($ct_info_data[0])){
     		$dwdm = $ct_info_data[0]['dwdm'];
     	}
-    	
+    	if(empty($dwdm)){
+    		Log::skdError('erp_getContactCompanyInfo Fail： dwdm is empty!' );
+    		if($is_ec) EC::fail(EC_ERR, '失败：付款单位名称为空！');
+    		return false;
+    	}
     	
     	/*
     	 "head":{
