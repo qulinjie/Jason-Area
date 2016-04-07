@@ -69,7 +69,10 @@
 					<th>业务单号</th>
 					<th>机构</th>
 					<th>审批状态</th>
-					<th>支付状态</th>					
+					<th>支付状态</th>
+					<?php if($is_admin){ ?>	
+						<th>发送erp结果</th>
+					<?php }?>				
 					<th><span id="order-status-show">操作</span></th>
 				</tr>
 			</thead>
@@ -100,7 +103,18 @@
                     else if(9==$item['backhostStatus']){ echo '撤销' ;} */
                     else { echo TradeRecordController::getBackhostStatusByKey($item['backhost_status']);}
                 ?>
-            </td>            
+            </td>   
+            <?php if($is_admin){ ?>
+            	<td>
+            	<?php if(2 == $item['is_erp_sync']){
+            		  	echo "成功";
+            		  }elseif(2==$item['order_status']){ ?>
+            		  	<a id="erp-sync-entity-<?php echo $item['id'];?>" class="erp-sync-entity" href="#" >手动发送</a>
+            		<?php }else{
+            			echo "-";
+            		} ?>            	
+            	</td>
+            <?php }?>         
             <td> 
             
             	<a id="audit-entity-<?php echo $item['id'];?>-<?php echo $audit_level?>" value="<?php echo $item['id'];?>" class="audit-entity" href="#" data-toggle="modal" data-keyboard="false" data-backdrop="static">
@@ -132,6 +146,20 @@
             </td>
         </tr>
     	<?php }?>
+    	
+    	<tr>
+			<td style="display:none"></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td>总计:<?php echo number_format($order_bid_amount_total,2);?></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>					
+			<td></td>
+		</tr>
 		</tbody>
 		</table>
 		

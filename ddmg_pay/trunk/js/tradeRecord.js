@@ -756,6 +756,32 @@ function sendTransferTrade1(){
 }
 /**************end--付款审批****************/
 
+/**************begin--付款单手动发送erp****************/
+
+$('.erp-sync-entity').click(function(){
+	var obj = $(this);
+	var id = obj.attr("id").replace('erp-sync-entity-', '');
+	obj.html('发送中...');
+	
+	$.post(BASE_PATH + 'tradeRecord/erp_syncBillsOfPayment', {    		
+        	'id':id,
+        	'is_ec':1
+    	},
+    	function(result){
+    		if(result.code != 0){
+    			$('#search-list-hint').html('发送失败：' + result.msg).fadeIn();
+    			obj.html('手动发送');
+    		}else{
+    			$('#search-list-hint').html('发送成功！').fadeIn();
+    			obj.fadeOut();
+    			obj.parent().html('成功');
+    		}
+    	},
+    	'json'
+    );
+});
+
+/**************end--付款单手动发送erp****************/
 
 prettyPrint();
 });

@@ -51,7 +51,11 @@ class BcsTradeController extends BaseController {
                     
                 case 'spd_loadAccountTradeList':
                     $this->spd_loadAccountTradeList();
-                    break;
+                    break;                    
+                case 'erp_syncBillsOfCollection':
+                	$this->erp_syncBillsOfCollection();
+                	break;
+                	    
                 default:
                     Log::error('page not found . ' . $params[0]);
                     EC::fail(EC_MTD_NON);
@@ -292,8 +296,13 @@ class BcsTradeController extends BaseController {
         }
     
         $data_list = $data['data'];
+        
+        $TX_AMT_total = 0;
+        foreach ($data_list as $v_data){        	
+        	$TX_AMT_total += $v_data['TX_AMT'];
+        }
     
-        $entity_list_html = $this->render('bcsTrade_list', array('data_list' => $data_list, 'current_page' => $current_page, 'total_page' => $total_page,'inout' => strval($inout) ), true);
+        $entity_list_html = $this->render('bcsTrade_list', array('data_list' => $data_list, 'TX_AMT_total' => $TX_AMT_total, 'current_page' => $current_page, 'total_page' => $total_page,'inout' => strval($inout) ), true);
         if($isIndex) {
             $view_html = $this->render('bcsTrade', array('entity_list_html' => $entity_list_html,'inout' => strval($inout) ), true);
             $this->render('index', array('page_type' => 'bcsTrade', 'bcsTrade_html' => $view_html,'inout' => strval($inout) ));
@@ -831,21 +840,21 @@ class BcsTradeController extends BaseController {
     }
     
     //收款单同步erp $MCH_TRANS_NO流水号
-    public function erp_syncBillsOfCollection($MCH_TRANS_NO = NULL){
+    public function erp_syncBillsOfCollection($mch_trans_no = NULL, $is_ec = 0){
     	
-    	$MCH_TRANS_NO = ($MCH_TRANS_NO == NULL) ? Request::post('$MCH_TRANS_NO') : $MCH_TRANS_NO;    	 
+    	$mch_trans_no = ($mch_trans_no == NULL) ? Request::post('mch_trans_no') : $mch_trans_no;    	 
     	$is_ec = ($is_ec == 0) ? intval(Request::post('is_ec')) : intval($is_ec);
-    	Log::skdNotice("erp_syncBillsOfCollection ===>> MCH_TRANS_NO=" .$MCH_TRANS_NO ." is_ec=".$is_ec);
+    	Log::skdNotice("erp_syncBillsOfCollection ===>> mch_trans_no=" .$mch_trans_no ." is_ec=".$is_ec);
     	
-    	if(empty($MCH_TRANS_NO)){
-    		Log::skdError('MCH_TRANS_NO empty !');
+    	if(empty($mch_trans_no)){
+    		Log::skdError('mch_trans_no empty !');
     		if($is_ec) EC::fail(EC_PAR_ERR);
     		return false;
     	}
     	 
     	//根据流水号查流水的数据
     	$bcsTrade_model = $this->model('bcsTrade');
-    	$data = $bcsTrade_model->getInfo(array('debitCreditFlag' => 1, 'MCH_TRANS_NO' => $MCH_TRANS_NO));
+    	$data = $bcsTrade_model->getInfo(array('debitCreditFlag' => 1, 'MCH_TRANS_NO' => $mch_trans_no));
     	if(empty($data) || !is_array($data) || EC_OK != $data['code'] || !isset($data['data'])) {
     		Log::skdError('bcsTrade getInfo empty !');
     		if($is_ec) EC::fail(EC_DAT_NON);
@@ -951,7 +960,7 @@ class BcsTradeController extends BaseController {
     	$res_data = $bcsTrade_model->erp_syncBillsOfCollection($params);
     	if(EC_OK_ERP != $res_data['code']){
     		Log::skdError('erp_syncBillsOfCollection Fail:'.$res_data['msg']);
-    		//EC::fail($res_data['msg']);
+    		//EC::fail($res_data['code'], $res_data['msg']);
     		//return false;
     		$is_erp_sync = 3;
     	}
@@ -966,6 +975,11 @@ class BcsTradeController extends BaseController {
     	if(EC_OK != $bt_data['code']){
     		Log::skdError('update bcsTrade is_erp_sync status fail!');
     		if($is_ec) EC::fail($bt_data['code']);
+    		return false;
+    	}
+    	
+    	if(3 == $is_erp_sync){
+    		if($is_ec) EC::fail($res_data['code'], $res_data['msg']);
     		return false;
     	}
     	    	
