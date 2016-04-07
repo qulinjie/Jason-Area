@@ -2,6 +2,12 @@
 
 require_once dirname(__FILE__).'/init.php';
 
+//erp验证码校验
+$mobile = '13367310112'; //手机号
+$codetype = 11;
+$code = '42987';
+doit::singleton('SmsController')->checkSmsVerificationCode($mobile, $code);
+exit;
 
 //收款单同步erp
 $MCH_TRANS_NO = '999701620002'; //流水号

@@ -46,13 +46,13 @@
 					<th>交易完成时间</th>
 					<th>对方账户名</th>
 					<th>对方帐号</th>
-					<th>付款金额</th>
+					<th>交易金额（元）</th>
 					<?php if(strval($inout) == ''){ echo '<th>结余</th>'; } ?>
 					<th>状态</th>
 					<th>对方行号</th>
 					<th>对方行名</th>
 					<th>备注</th>
-					<?php if($isAdmin){ echo '<th>操作</th>'; } ?>
+					<?php if($isAdmin){ echo '<th>发送erp结果</th><th>操作</th>'; } ?>
 				</tr>
 			</thead>
 			<tbody>
@@ -85,6 +85,15 @@
 				<td><?php echo $item['payeeBankName'];?></td>
 				<td><?php echo $item['comment'];?></td>
 				<?php if($isAdmin){?>
+				
+				<td>
+            	<?php if(2 == $item['is_erp_sync']){
+            		  	echo "成功";
+            		  }else{ ?>
+            		  	<a id="erp-sync-entity-<?php echo $item['MCH_TRANS_NO'];?>" class="erp-sync-entity" href="#" >手动发送</a>
+            	<?php } ?>            	
+            	</td>
+				
 				<td>
 					<div class="btn-group" role="group">
 			           <?php if( 1 == $item[record_bank_type] ){ ?>
@@ -97,6 +106,25 @@
 				<?php }?>
 			</tr>
 <?php }?>
+
+		<tr>
+			<td style="display:none"></td>
+			<?php if($isAdmin){ echo '<td></td>'; } ?>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>				
+			<td>总计:<?php echo number_format($TX_AMT_total, 2); ?></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<?php if($isAdmin){?>
+			<td></td>
+			<?php }?>
+		</tr>
+		
 		</tbody>
 		</table>
 		<nav>

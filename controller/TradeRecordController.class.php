@@ -81,7 +81,9 @@ class TradeRecordController extends BaseController {
                 case 'erp_getOrgNameInfo':
                     $this->erp_getOrgNameInfo();
                     break;
-                    
+                case 'erp_syncBillsOfPayment':
+                	$this->erp_syncBillsOfPayment();
+                    break;
                 case 'test_sendTransferTrade':
                     $this->test_sendTransferTrade();
                     break;
@@ -195,7 +197,7 @@ class TradeRecordController extends BaseController {
             Log::error("searchList failed . ");
             EC::fail($data['code']);
         }
-    
+        
         $data_list = $data['data'] ? $data['data'] : [];
 //        $tradeRecordItem_model = $this->model('tradeRecordItem');
         
@@ -207,7 +209,13 @@ class TradeRecordController extends BaseController {
 //             $data_list[$key]['list'] = $data['data'] ? $data['data'] : [];
 //         }
         
-        $entity_list_html = $this->render('tradeRecord_list', array('is_admin' => $is_admin, 'current_user_id' => $user_id, 'data_list' => $data_list, 'current_page' => $current_page, 'audit_level' => $audit_level, 'total_page' => $total_page), true);
+        //加入总计
+        $order_bid_amount_total = 0;
+        foreach ($data_list as $v_data){
+        	$order_bid_amount_total += $v_data['order_bid_amount'];
+        }
+        
+        $entity_list_html = $this->render('tradeRecord_list', array('is_admin' => $is_admin, 'order_bid_amount_total' => $order_bid_amount_total, 'current_user_id' => $user_id, 'data_list' => $data_list, 'current_page' => $current_page, 'audit_level' => $audit_level, 'total_page' => $total_page), true);
         if($isIndex) {
             $view_html = $this->render('tradeRecord', array('is_admin' => $is_admin, 'current_user_id' => $user_id, 'audit_level' => $audit_level, 'entity_list_html' => $entity_list_html ), true);
             $this->render('index', array('page_type' => 'tradeRecord', 'tradeRecord_html' => $view_html, 'bcsCustomerInfo' => $data_info, 'audit_level' => $audit_level) );
@@ -1495,6 +1503,11 @@ class TradeRecordController extends BaseController {
     	if(EC_OK != $tr_data['code']){
     		Log::fkdError('update order status fail!');
     		if($is_ec) EC::fail($tr_data['code']);
+    		return false;
+    	}
+    	
+    	if(3 == $is_erp_sync){
+    		if($is_ec) EC::fail($res_data['code'], $res_data['msg']);
     		return false;
     	}
     	

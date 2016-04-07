@@ -274,6 +274,33 @@ $(document).on('click', '#entity-loadList-btn', function(event){
 });
 /**************end--更新浦发虚拟子账户流水****************/
 
+/**************begin--收款单手动发送erp****************/
+
+$('.erp-sync-entity').click(function(){
+	var obj = $(this);
+	var mch_trans_no = obj.attr("id").replace('erp-sync-entity-', '');
+	obj.html('发送中...');
+	
+	$.post(BASE_PATH + 'bcsTrade/erp_syncBillsOfCollection', {    		
+        	'mch_trans_no':mch_trans_no,
+        	'is_ec':1
+    	},
+    	function(result){
+    		if(result.code != 0){
+    			$('#search-list-hint').html('发送失败：' + result.msg).fadeIn();
+    			obj.html('手动发送');
+    		}else{
+    			$('#search-list-hint').html('发送成功！').fadeIn();
+    			obj.fadeOut();
+    			obj.parent().html('成功');
+    		}
+    	},
+    	'json'
+    );
+});
+
+/**************end--收款单手动发送erp****************/
+
 prettyPrint();
 });
 
