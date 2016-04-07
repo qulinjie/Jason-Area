@@ -344,7 +344,7 @@ $(document).on('click', '#for-test-btn', function(event){
 		
 	    if(hint_html != ''){
 	        $("#add-entity-hint").html(hint_html).fadeIn();
-	        $("#add-entity-create").removeAttr('disabled');
+	        //$("#add-entity-create").removeAttr('disabled');
 	        return 0;
 	    }
 	    
@@ -352,8 +352,7 @@ $(document).on('click', '#for-test-btn', function(event){
 	    return; 
 	});
 	
-	$(document).on('click', '#btn-pay-pwd', function(event){
-			$("#btn-pay-pwd").attr('disabled', 'disabled');
+	$(document).on('click', '#btn-pay-pwd', function(event){			
 		
 			var pay_pwd = $('#pay-pwd').val();//支付密码
 			var apply_no = $('#add-entity-apply_no').val(); // 申请单号
@@ -390,7 +389,8 @@ $(document).on('click', '#for-test-btn', function(event){
 		    	hint_html2 += (hint_html2 == '' ? '' : '<BR>') + '校验支付密码中...' ;
 		    	$("#pay-pwd-hint").html(hint_html2).fadeIn();
 		    }		    
-						
+			
+		    $("#btn-pay-pwd").attr('disabled', 'disabled');
 		    $.post(BASE_PATH + 'tradeRecord/create_add', {
 		    		'pay_pwd':pay_pwd, 
 		        	'order_no_arr':order_no_arr, 
@@ -412,21 +412,22 @@ $(document).on('click', '#for-test-btn', function(event){
 			        'erp_username':erp_username	      
 		        },
 		        function(result){
-		        	$("#add-entity-create").attr('disabled', 'disabled');
-		            if(result.code != 0) {		            	
+		        	if(result.code != 6000){
+		        		hint_html2 += (hint_html2 == '' ? '' : '<BR>') + '支付密码校验正确！' ;
+	    		    	$("#pay-pwd-hint").html(hint_html2).fadeIn();
+	    		    	$("#pay-pwd-modal").modal('hide');
+		        	}
+		            if(result.code != 0) {	
+		            	$("#btn-pay-pwd").removeAttr('disabled');	            	
 		            	if(result.code == 6000){
 		            		hint_html2 += (hint_html2 == '' ? '' : '<BR>') + result.msg ;
-		    		    	$("#pay-pwd-hint").html(hint_html2).fadeIn();
-		    		    	$("#btn-pay-pwd").removeAttr('disabled');
+		    		    	$("#pay-pwd-hint").html(hint_html2).fadeIn();		    		    	
 		            	}else{
 		            		$("#add-entity-hint").html(result.msg + '(' + result.code + ')').fadeIn();
-		            		$("#add-entity-create").removeAttr('disabled');
+		            		//$("#add-entity-create").removeAttr('disabled');
 		            		$("#add-entity-create").html("提交申请");
 		            	}		                
-		            } else {
-		            	hint_html2 += (hint_html2 == '' ? '' : '<BR>') + '校验支付密码正确！' ;
-				    	$("#pay-pwd-hint").html(hint_html2).fadeIn();				    	
-		            	$("#pay-pwd-modal").modal('hide');
+		            } else {		            	 
 		            	$("#add-entity-create").attr('disabled', 'disabled');
 		            	$("#add-entity-create").html("添加中...");
 		                $("#add-entity-hint").html(result.msg + ', 关闭...').fadeIn();
