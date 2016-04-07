@@ -35,21 +35,25 @@
 				</button>
 				<h4 class="modal-title">验证支付密码</h4>
 			</div>
-			<div class="modal-body" id="pay-pwd-info"></div>
-			<div class="modal-body">
-                <div style="margin-left: 85px;">
-                     <font style="font-weight: bold;">支付密码：</font>
-                     <input type="password" class="form-control" id="pay-pwd" value="" style="width: 150px;display: inline;"/>
-                     <!-- 
-                     <span id="tips_set_pay_pwd"><span style="color: #ADABAB;">您当前未设置支付密码，请先</span><a href="#">设置支付密码</a></span>
-                     -->
-                </div>                
-			</div>
-			<div class="alert alert-danger search-list-hint" id="pay-pwd-hint"></div>			
-			<div class="modal-footer">
-			    <button type="button" class="btn btn-primary" id="btn-pay-pwd">确定</button>			
-				<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-			</div>
+			
+			<?php if(PayPasswordController::checkExist()){?>
+				<div class="modal-body" id="pay-pwd-info"></div>
+				<div class="modal-body">
+	                <div style="margin-left: 85px;">
+	                     <font style="font-weight: bold;">支付密码：</font>
+	                     <input type="password" class="form-control" id="pay-pwd" value="" style="width: 150px;display: inline;"/>                     
+	                </div>                
+				</div>
+				<div class="alert alert-danger search-list-hint" id="pay-pwd-hint"></div>			
+				<div class="modal-footer">
+				    <button type="button" class="btn btn-primary" id="btn-pay-pwd">确定</button>			
+					<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+				</div>
+			<?php }else {?>
+				<div class="modal-body" style="margin-top:60px; margin-bottom:70px;">
+					<span><span style="color: #ADABAB; margin-left:60px;">您当前未设置支付密码，请先</span><a href="<?php echo Router::getBaseUrl(). 'payPassword/set'; ?>">设置支付密码</a></span>      
+				</div>	      
+			<?php }?>
 		</div>
 	</div>
 </div>
@@ -93,13 +97,13 @@
 	    </div>
 	    <label for="add-entity-comp_account" class="col-sm-2 control-label">收款账号</label>
 	    <div class="col-sm-4">
-	        <input type="text" class="form-control" id="add-entity-comp_account" placeholder="" value='6223635001004485218'/>
+	        <input type="text" class="form-control" id="add-entity-comp_account" placeholder="" />
 	    </div>	
 	  </div>
 	  <div class="form-group">
 	    <label for="add-entity-bank_name" class="col-sm-2 control-label">开户行</label>
 	    <div class="col-sm-4">
-		    <input type="text" class="form-control" id="add-entity-bank_name" placeholder=""  value='珠海华润银行股份有限公司清算中心'/>
+		    <input type="text" class="form-control" id="add-entity-bank_name" placeholder="" />
 		    <div id="div_data_bank" class="citydatadiv" style="display: none;"><ul></ul></div>
 		    <a href="#" id="check-entity-bankName">验证开户行</a>
 		    &nbsp;&nbsp;&nbsp;&nbsp;
