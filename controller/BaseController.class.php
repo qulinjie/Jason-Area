@@ -9,6 +9,25 @@
  */
 abstract class BaseController extends Controller
 {
+	
+	public function init(){
+						
+		if(!IS_POST) return true; //默认过滤方式: POST
+		foreach (static::filter() as $key => $actList) {
+			if (in_array(doit::$params[0], $actList)) {
+				switch ($key) {
+					case 'token': //检查令牌
+						//UserController::checkToken($this->post('token'));//默认 post
+						break;
+					case 'login': //检查登录
+						!UserController::isLogin() && EC::fail(EC_NOT_LOGIN);
+						break;
+				}
+			}
+		}
+		return true;
+	}
+	
     /**
      * @brief:  获取$_SERVER['REQUEST_URI'] 里?号及其左边的部分
      * @return:
@@ -82,23 +101,13 @@ abstract class BaseController extends Controller
     protected function getLoginSellerId()
     {
         $user = $this->getLoginSeller();
-        return $user['id'];
-        /*
-        $session =  $this->instance('session');
-        $loginUser = $session->get( 'loginUser' );
-        return $loginUser['id'];
-         */
+        return $user['id'];       
     }
 
     protected function getLoginSellerAccount()
     {
         $user = $this->getLoginSeller();
-        return $user['tel'];
-        /*
-        $session =  $this->instance('session');
-        $loginUser = $session->get( 'loginUser' );
-        return $loginUser['tel'];
-         */
+        return $user['tel'];        
     }
 
     /**
@@ -111,8 +120,6 @@ abstract class BaseController extends Controller
         $user = $res['data'];
         unset($user['password']);
         return $user;
-        //$session =  $this->instance('session');
-        //return $session->get( 'loginUser' );
     }
 
     /**
@@ -256,24 +263,6 @@ abstract class BaseController extends Controller
     public static function filter()
     {
         return [];
-    }
-
-    public function init()
-    {
-        if(!IS_POST) return true; //默认过滤方式: POST
-        foreach (static::filter() as $key => $actList) {
-            if (in_array(doit::$params[0], $actList)) {
-                switch ($key) {
-                    case 'token': //检查令牌
-//                         UserController::checkToken($this->post('token'));//默认 post
-                        break; 
-                    case 'login': //检查登录
-                        !UserController::isLogin() && EC::fail(EC_NOT_LOGIN);
-                        break;
-                }
-            }
-        }
-        return true;
     }
 
     //获取商铺编号
