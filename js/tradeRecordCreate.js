@@ -772,6 +772,10 @@ $(document).on('click', '#for-test-btn', function(event){
 		var objUl = $("#div_data_bank ul");
 		objUl.html('');
 		for(var j=0;j<dataList.length;j++){
+//			alert(dataList[j]['khh']);
+			if( !dataList[j]['khh'] || '' == dataList[j]['khh'] ){
+				continue;
+			}
 			bank_account_list.push(dataList[j]['zh']);
 			city_name_list.push(dataList[j]['cityname']);
 			bank_name_list.push(dataList[j]['bankname']);
