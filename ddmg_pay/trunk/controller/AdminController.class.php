@@ -46,12 +46,12 @@ class AdminController extends Controller {
 	    		$admin_model = self::model('admin');
 	    		$data = $admin_model->isLogin();    	
 	    		if(empty($data) || EC_OK != $data['code']){
-	    			Log::error('isLogin data is empyty or code is err . data=' . json_encode($data) );
+	    			//Log::error('isLogin data is empyty or code is err . data=' . json_encode($data) );
 	    			$loginUser = [];
 	    		}	    	
 	    		$loginUser = $data['data'];
 	    		if(empty($loginUser)){
-	    			Log::error('isLogin . data[loginUser] is null .');
+	    			//Log::error('isLogin . data[loginUser] is null .');
 	    			$loginUser = [];
 	    		}
 	    		self::setLoginSession($loginUser);	    		
@@ -88,10 +88,10 @@ class AdminController extends Controller {
     		return self::$_isAdmin = false;
     	}
         $loginUser = self::getLoginUser();        
-        if(is_array($loginUser) && isset($loginUser['is_admin']) && 'yes' == $loginUser['is_admin'] ) {
+        if(!empty($loginUser) && is_array($loginUser) && isset($loginUser['is_admin']) && 'yes' == $loginUser['is_admin'] ) {
         	return self::$_isAdmin = true;
         }
-        Log::notice('_isAdmin===========>> loginUser=' . json_encode($loginUser));
+        //Log::notice('_isAdmin===========>> loginUser=' . json_encode($loginUser));
          
         return self::$_isAdmin = false;
     }
@@ -221,7 +221,7 @@ class AdminController extends Controller {
         
         Log::notice('login completed . data=##' . json_encode($data) . '##');
         $loginUser = $data['data'];
-        AdminController::setLoginSession($loginUser);
+        self::setLoginSession($loginUser);
         EC::success(EC_OK);
     }
     
