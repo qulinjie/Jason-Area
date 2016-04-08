@@ -20,16 +20,21 @@ class session_redis
 	protected static $expire;		// 数据过期时间
 	protected static $keyPrefix;	// redis里sessionKey的前缀
 
-	public static function init(  )
+	public static function init($is_use_cookies = true)
 	{
 		// 连接设置 redis 主机
 		self::$redis = self::getRedis();
 		if ( !self::$redis ) return false;
-
-		ini_set( 'session.use_trans_sid', 0 ); 		// 不使用GET/POST变量方式
+		
 		ini_set( 'session.gc_maxlifetime', 3600 ); 	// 垃圾回收最大生存时间
-		ini_set( 'session.use_cookies', 1 ); 		// 使用COOKIE保存SESSIONID的方式
-
+		if($is_use_cookies){
+			ini_set( 'session.use_trans_sid', 0 ); 		// 不使用GET/POST变量方式
+			ini_set( 'session.use_cookies', 1 ); 		// 使用COOKIE保存SESSIONID的方式
+		}else{
+			ini_set( 'session.use_trans_sid', 1 ); 		// 不使用GET/POST变量方式
+			ini_set( 'session.use_cookies', 0 ); 		// 使用COOKIE保存SESSIONID的方式
+		}
+		
 		//$domain = '.ddmg.com';   
 		//ini_set( 'session.cookie_domain', $domain );// 多主机共享保存SESSION_ID的域名  -- 这个还没想好设什么，反正不能写死
 
@@ -82,6 +87,7 @@ class session_redis
 
 	public static function read( $id )
 	{
+		Log::write($id, 'debug', 'session-'.date('Y-m-d'));
 		$key = self::$keyPrefix . $id;
 		$sessData = self::$redis->get( $key ); // 读取数据
 		self::$redis->expire( $key, self::$expire ); // 重置超时
