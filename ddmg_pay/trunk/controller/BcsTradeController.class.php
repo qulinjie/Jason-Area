@@ -655,10 +655,10 @@ class BcsTradeController extends BaseController {
     			Log::error("searchList bcsCustomer falied .");
     			EC::fail($data['code']);
     		}
-//            Log::notice("response-data ========bcsCustomer-list===================>> data = ##" . json_encode($data) . "##" );
+//            Log::notice("response-data ========bcsCustomer-list1===================>> data = ##" . json_encode($data) . "##" );
 //             exit;
 //     		$data_lists = $data['data'];
-			if(isset($data['data']) && empty($data['data'])){
+			if(isset($data['data']) && !empty($data['data'])){
 				$data_lists = array_unique(array_column($data['data'], 'ACCOUNT_NO'));
 			}
 //             Log::notice("response-data ========bcsCustomer-list===================>> data = ##" . json_encode($data_lists) . "##" );
