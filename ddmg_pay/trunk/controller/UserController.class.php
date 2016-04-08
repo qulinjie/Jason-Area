@@ -388,10 +388,44 @@ class UserController extends BaseController
     	return self::$_isFirstAuditUser;
     }
      
-    //{"userid":"68ff4da6-8dc3-4a60-805a-6fbd609518b9","usercode":"110002","username":"\u674e\u56db","loginid":"110002",
-    //"mobile":"18073215757","email":"hisyz@qq.com","is_buyer":1,"is_seller":1,"is_partner":1,"is_manager":1,"is_bank":1,"is_ddmg":1,
-    //"is_paymanage":2,"managerid":null,"erp_czydm":"0138","erp_ygdm":"0138","erp_fgsdm":"007","erp_fgsmc":null,"erp_bmdm":"012",
-    //"erp_bmmc":null,"user_id":"110002","account":"110002","name":"\u674e\u56db"}
+    /* {
+        "userid":"68ff4da6-8dc3-4a60-805a-6fbd609518b9",
+        "usercode":"110002",
+        "username":"李四",
+        "loginid":"110002",
+        "mobile":"13367310112",
+        "email":"hisyz@qq.com",
+        "is_buyer":1,
+        "is_seller":1,
+        "is_partner":1,
+        "is_manager":1,
+        "is_bank":1,
+        "is_ddmg":1,
+        "is_paymanage":2,
+        "managerid":"110001",
+        "erp_czydm":"0138",
+        "erp_ygdm":"0138",
+        "erp_fgsdm":"007",
+        "erp_fgsmc":null,
+        "erp_bmdm":"012",
+        "erp_bmmc":null,
+        "fuserid":"110003",
+        "loginkey":"68ff4da6-8dc3-4a60-805a-6fbd609518b9,snePPRwriSzEu0XBmnutgBGnsbEPT0kvqoeYFpUbzL
+                        mLHLed2/m3vlUOShqcg2UpdRyp0yA6kKFLMMK6L8WV5wzGc3Ecyp81iQG/TgO0n2HRRjbnUSeHe8/Ma9djgtAS/115zhrfOndX
+                        aavG65EvPkE3Pdn9nNPXRKRoQ2053xDe/n/Y9NnYedGL9y98SHJ6",
+        "paypwd_isexist":1,
+        "info":null,
+        "company":null,
+        "gender":0,
+        "invite_code":null,
+        "bank_name":null,
+        "bank_num":null,
+        "company_city":null,
+        "id":"110002",
+        "user_id":"110002",
+        "account":"110002",
+        "name":"李四"
+    } */
     private static $_loginUser = NULL;
     public static function getLoginUser()
     {

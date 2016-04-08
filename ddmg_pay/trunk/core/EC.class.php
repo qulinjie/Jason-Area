@@ -131,7 +131,7 @@ class EC extends Base {
 			EC_PWD_EMP		=>	'密码为空',
 			EC_PWD_SAM		=>	'same password',
 			EC_PWD_UPD		=>	'密码重置失败',
-			EC_DAT_NON		=>	'data not exists',
+			EC_DAT_NON		=>	'数据不存在',
 			EC_TEL_NON		=>	'dail failed',
 			EC_OPE_FAI		=>	'operation failure',
 			EC_DEL_FAI		=>	'delete row failure',
@@ -186,16 +186,16 @@ class EC extends Base {
 	}
 	public static function fail($code, $msg = NULL, $unlock = true){
 	    
+	    if( EC_NOT_LOGIN == $code && $_SERVER['REQUEST_METHOD']!="POST") {
+	        $view = View::getInstance();
+	        $view->render('index', array( 'code' => $code, 'msg' => $msg ));
+	        exit(0);
+	    }
+	    
 		if(empty($msg) && isset(self::$_errMsg[$code])){
 			$msg = self::$_errMsg[$code];
 		}
 		
-		if( EC_NOT_LOGIN == $code && $_SERVER['REQUEST_METHOD']!="POST") {
-	        $view = View::getInstance();
-	        $view->render('index', array( 'code' => $code, 'msg' => $msg ));
-	        exit(0);
-	    }    
-	    	    
 		$response_data = array(
 				'caller' => doit::$caller,
 				'callee' => doit::$callee,

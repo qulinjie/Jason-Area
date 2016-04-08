@@ -1052,7 +1052,7 @@ class TradeRecordController extends BaseController {
         $user_model = $this->model('user');
         
         $data = $tradeRecord_model->getNextId(array());
-        Log::notice("response-data ========22===================>> data = ##" . json_encode($data) . "##" );
+//         Log::notice("response-data ========22===================>> data = ##" . json_encode($data) . "##" );
         if(EC_OK != $data['code']){
             Log::error('getNextId Fail!');
             EC::fail($data['code']);
@@ -1061,10 +1061,8 @@ class TradeRecordController extends BaseController {
         $data_info['id'] = $data['data'];
         $data_info['today'] = date('Y-m-d',time());
         
-//         $loginUser_data = UserController::getLoginUser();
-//         Log::notice("response-data ========33===================>> loginUser_data = ##" . json_encode($loginUser_data) . "##" );
-        
         $loginUser_data = UserController::getLoginUser();
+//         Log::notice("response-data ========33===================>> loginUser_data = ##" . json_encode($loginUser_data) . "##" );
         $usercode = $loginUser_data['usercode'];
         $erp_fgsdm = $loginUser_data['erp_fgsdm'];
         
@@ -1125,6 +1123,21 @@ class TradeRecordController extends BaseController {
 //         Log::notice("response-data ===========================>> data = ##" . json_encode($order_no_arr) . "##" );
 //         exit;
 
+        /*
+         * 验证银行行号
+         */
+        $spdInteBank_model = $this->model('spdInternetBank');
+        $bank_info_data = $spdInteBank_model->getInfo($params = array('bankNo'=>$bank_no));
+        if(EC_OK != $bank_info_data['code']){
+            Log::error("getInfo-spdInternetBank failed . ");
+            EC::fail($bank_info_data['code']);
+        }
+//         Log::notice("getInfo-spdInternetBank . bank_info_data=" . json_encode($bank_info_data));
+        if( empty($bank_info_data['data'][0]) ){
+            Log::error("getInfo-spdInternetBank empty . bank_info_data=" . json_encode($bank_info_data));
+            EC::fail(EC_PAR_ERR);
+        }
+        
         $loginUser_data = UserController::getLoginUser();
         $user_id = $loginUser_data['usercode'];
 
@@ -1178,6 +1191,30 @@ class TradeRecordController extends BaseController {
             $trade_record_item[$v_order_no]['item_comp_name_buyer'] = $v_comp_name_buyer;
             $trade_record_item[$v_order_no]['item_comp_name_buyer_code'] = $v_comp_name_buyer_code;
             $trade_record_item[$v_order_no]['comment'] = $v_comment;
+            
+            /*
+             * 检查 采购单 金额 和 下游买家
+             */
+            $data = $tradeRecord_model->erp_getOrderBuyInfo(array('fphm'=>$v_order_no));
+            if(EC_OK_ERP != $data['code']){
+                Log::error('erp_getOrderBuyInfo Fail! order_no=' . $v_order_no);
+                EC::fail($data['code']);
+            }
+            if( empty($data['data']) ){
+                Log::error('erp_getOrderBuyInfo empty! order_no=' . $v_order_no);
+                EC::fail(EC_PAR_ERR);
+            }
+            $t_order_amount = floatval($data['data']['OrderHeader']['_cgddje']); // 金额
+            $t_order_buyer_code = $data['data']['OrderDetails'][0]['string8_']; // 下游买家代码
+            
+            if( $v_amount > $t_order_amount ){
+                Log::error('check OrderBuyInfo-order_amount ! order_no=' . $v_order_no . ',amount=' . $t_order_amount . ',v_amount=' . $v_amount);
+                EC::fail(EC_PAR_ERR);
+            }
+            if( $v_comp_name_buyer_code != $t_order_buyer_code ){
+                Log::error('check OrderBuyInfo-order_buyer_code ! order_no=' . $v_order_no . ',order_buyer_code=' . $t_order_buyer_code . ',comp_name_buyer_code=' . $v_comp_name_buyer_code);
+                EC::fail(EC_PAR_ERR);
+            }
         }
 //         Log::notice("response-data ===========================>> data-order_no_str = ##" . $order_no_str . "##" );
 
@@ -1341,7 +1378,7 @@ class TradeRecordController extends BaseController {
         }
         
         //Log::write(var_export($data, true), 'debug', 'debug1-'.date('Y-m-d'));
-        Log::notice("response-data ===========================>> data = ##" . json_encode($data) . "##" );
+        Log::notice("response-data ===========OrderBuyInfo================>> data = ##" . json_encode($data) . "##" );
         
         EC::success(EC_OK, $data['data']);
     }

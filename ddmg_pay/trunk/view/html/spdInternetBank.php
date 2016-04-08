@@ -27,7 +27,7 @@
 </div>
 
 <div id="add-button-group" style="padding-bottom: 2px;">
-	<a id="add-entity-new" class="btn btn-primary" href="#">更新</a>
+<!-- 	<a id="add-entity-new" class="btn btn-primary" href="#">更新</a> -->
 </div>
 <div  id="entity-list">
 <?php echo $entity_list_html; ?>
