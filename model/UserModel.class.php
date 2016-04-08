@@ -81,4 +81,8 @@ class UserModel extends CurlModel
     	return self::sendRequestErp('api/pub/userservice/PostUser_ValidatePayPwd/',$params);
     }
     
+    public function erp_login_by_loginkey($params = array()){
+    	return self::sendRequestErp('api/pub/userservice/PostUser_LoginByLoginKey/',$params);
+    }
+    
 }
