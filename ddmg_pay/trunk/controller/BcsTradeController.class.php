@@ -649,24 +649,28 @@ class BcsTradeController extends BaseController {
     	if( empty($virtualAcctNo) ) {
     		$params = array();
     		$params['record_bank_type'] = 2;
-    		$params['user_id'] = -1;
+    		$params['user_id'] = '-2'; // 查询 非‘-1’即已绑定过用户的虚拟账户数据。
     		$data = $bcsCustomer_model->searchList($params, null, null);
     		if(EC_OK != $data['code']){
     			Log::error("searchList bcsCustomer falied .");
     			EC::fail($data['code']);
     		}
-    		//             Log::notice("response-data ========bcsCustomer-list===================>> data = ##" . json_encode($data) . "##" );
-    		//             exit;
-    		$data_lists = $data['data'];
+//             Log::notice("response-data ========bcsCustomer-list===================>> data = ##" . json_encode($data) . "##" );
+//             exit;
+//     		$data_lists = $data['data'];
+            $data_lists = array_unique(array_column($data['data'], 'ACCOUNT_NO'));
+//             Log::notice("response-data ========bcsCustomer-list===================>> data = ##" . json_encode($data_lists) . "##" );
+//             exit;
     	} else {
-    		$data_lists[] = array('ACCOUNT_NO'=>$virtualAcctNo);
-    	}    	
+    		$data_lists[] = $virtualAcctNo;
+    	}
     	
     	// 循环账号列表
     	foreach($data_lists as $obj ){
-    		$ACCOUNT_NO = $obj['ACCOUNT_NO'];
+    		$ACCOUNT_NO = $obj;
     		Log::notice("response-data-str ===========================>> data-ACCOUNT_NO = ##" . $ACCOUNT_NO . "##" );
-    	
+//     		continue;
+    		
     		$params = array();
     		$params['beginNumber'] = 1;
     		$params['queryNumber'] = 20;
@@ -681,12 +685,34 @@ class BcsTradeController extends BaseController {
     		$params['transBeginDate'] = ''; // 交易开始日期 交易流水产生时间
     		$params['transEndDate'] = ''; // 交易结束日期 交易流水结束时间
     	
+    		/*
+    		 * 查询已更新的流水数据
+    		 */
+    		$bcsTrade_model = $this->model('bcsTrade');
+    		$params_2 = array();
+    		$params_2['shareDate1'] = $params['shareBeginDate'];
+    		$params_2['shareDate2'] = $params['shareEndDate'];
+    		$params_2['ACCOUNT_NO'] = $params['virtualAcctNo'];
+    		$data_cnt = $bcsTrade_model->searchCnt($params_2);
+    		if(EC_OK != $data_cnt['code']){
+    		    Log::error("searchCnt failed . ");
+    		    EC::fail($data_cnt['code']);
+    		}
+    		$cnt = empty($data_cnt['data']) ? 0 : $data_cnt['data'];
+    		
     		$totalNumber = 0 ;
     		do {
     			$data = $spdBank_model->queryAccountTransferAmount($params);
     			Log::notice('spd_loadAccountTradeList ==== >>> data=##' . json_encode($data) . "##");
     	
     			$totalNumber = $data['body']['totalNumber'];
+    			Log::notice("spd_loadAccountTradeList-->>searchCnt equal . db_cnt=" . $cnt . ',bank_cnt=' . $totalNumber);
+    			if( intval($cnt) == intval($totalNumber) ){
+    			    break ;
+    			}
+//     			Log::notice("\r\n\r\n\r\n=============================================================\r\n\r\n\r\n\r\n");
+//     			exit;
+    			
     			$data_lists = $data['body']['lists']['list'];
     	
     			$this->addAccountTradeList($data_lists);
@@ -697,7 +723,7 @@ class BcsTradeController extends BaseController {
     		} while ( $totalNumber >= $params['beginNumber']);
     		Log::notice("response-data-end ===========================>> data-ACCOUNT_NO = ##" . $ACCOUNT_NO . "##" );
     	}
-    	
+//     	exit;
     	return true;
     }
     
