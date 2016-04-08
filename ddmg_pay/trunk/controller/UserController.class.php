@@ -522,8 +522,8 @@ class UserController extends BaseController
 
     public static function loginByLoginkey($loginkey){
     	$data = self::model('user')->erp_login_by_loginkey(['loginkey' => $loginkey]);
-    	$data['code'] !== EC_OK && EC::fail($data['code']);    	
-    	self::setLoginSession($data);    	
+    	$data['code'] !== EC_OK_ERP && EC::fail($data['code'], $data['msg']);
+    	self::setLoginSession($data['data']);    	
     	self::$_loginUser = NULL;
     	self::$_isLogin = NULL;
     }
