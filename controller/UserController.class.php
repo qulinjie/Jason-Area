@@ -9,6 +9,7 @@
 class UserController extends BaseController
 {
 	public static $userSessionKey = '_loginUser';
+	public static $_loginKeyName = "loginkey";
 	
     public function handle($params = array())
     { 
@@ -257,8 +258,7 @@ class UserController extends BaseController
             $data = $this->model('user')->login(['tel' => $tel, 'pwd' => $pwd]);
             $data['code'] !== EC_OK && EC::fail($data['code']);
             
-            $session = $this->instance('session');
-            $session->set(self::$userSessionKey ,$data['data']);
+            self::setLoginSession($data['data']);
            
             EC::success(EC_OK);
         }
@@ -428,7 +428,7 @@ class UserController extends BaseController
     } */
     private static $_loginUser = NULL;
     public static function getLoginUser()
-    {
+    {    	
     	$loginUser = NULL;
     	
     	if(NULL !== self::$_loginUser){
@@ -455,8 +455,7 @@ class UserController extends BaseController
         			return [];
         		}
         		
-        		$session->set(self::$userSessionKey, $loginUser);
-        		
+        		self::setLoginSession($loginUser); 
         	} catch (Exception $e) {
         		Log::error('getLoginUser . e=' . $e->getMessage());
         		return [];
@@ -464,6 +463,35 @@ class UserController extends BaseController
         }
        
         return self::$_loginUser = $loginUser;
+    }
+    
+    private static $_loginkeyValue = NULL;
+    public static function getLoginkey(){
+    	if(NULL !== self::$_loginkeyValue){
+    		return self::$_loginkeyValue;
+    	}
+    	if(self::isLogin() && $loginUser = self::getLoginUser()){
+    		if(isset($loginUser[self::$_loginKeyName])){
+    			return self::$_loginkeyValue = $loginUser[self::$_loginKeyName];
+    		}    		
+    	}
+    	return NULL;
+    }
+    
+    protected static function setLoginSession($loginUser, $session_id = NULL){
+    	if(empty($loginUser)){
+    		Log::error('setLoginSession [loginUser] is empty .');
+    		return false;
+    	}
+    	 $session = self::instance('session');
+    	/*if(NULL !== $session_id){
+    		$session->set_id($session_id);
+    	} */
+    	 
+    	
+    	if(isset($loginUser['password'])) unset( $loginUser['password'] );
+    	$session->set(self::$userSessionKey, $loginUser);    	
+    	return true;
     }
 
     public static function getToken()
@@ -492,6 +520,13 @@ class UserController extends BaseController
         ];
     }
 
+    public static function loginByLoginkey($loginkey){
+    	$data = $this->model('user')->erp_login_by_loginkey(['loginkey' => $loginkey]);
+    	$data['code'] !== EC_OK && EC::fail($data['code']);    	
+    	self::setLoginSession($data);    	
+    	self::$_loginUser = NULL;
+    	self::$_isLogin = NULL;
+    }
     
     private function login()
     {
@@ -514,11 +549,10 @@ class UserController extends BaseController
             if(empty($data['data']['managerid']) || empty($data['data']['fuserid'])){
             	Log::notice('login error . data=' . json_encode($data['data']) );
             	EC::fail(EC_ERR, "登录失败：未设置一级或二级审核人！");
-            }
+            }            
             
-            $session = $this->instance('session');
-            $session->set(self::$userSessionKey, $data['data']);
-             
+            self::setLoginSession($data['data']);
+            
             EC::success(EC_OK);
         }
         self::isLogin() && $this->redirect(Router::getBaseUrl());
