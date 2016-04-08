@@ -758,7 +758,7 @@ function sendTransferTrade1(){
 
 /**************begin--付款单手动发送erp****************/
 
-$('.erp-sync-entity').click(function(){
+$(document).on('click', ".erp-sync-entity", function(evnent){
 	var obj = $(this);
 	var id = obj.attr("id").replace('erp-sync-entity-', '');
 	obj.html('发送中...');
