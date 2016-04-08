@@ -16,7 +16,7 @@ ApiController::securityValidate();
 session_redis::init(false);
 
 //api接口调用进行user登录
-ApiController::login();
+ApiController::loginByLoginkey();
 
 /**
  * 启动网站进程
