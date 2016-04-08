@@ -1,6 +1,7 @@
 <?php
 
 class ApiController extends Controller {
+	public static $_apiUserSessionKey = "apiLoginUser";
 	
 	public function handle($params = array()) {}
 	
@@ -10,6 +11,11 @@ class ApiController extends Controller {
 			return true;
 		}
 		return false;
+	}
+	
+	//api接口调用安全验证
+	public static function securityValidate(){
+	
 	}
 	
 	//获取get/post提交的loginkey
@@ -57,17 +63,59 @@ class ApiController extends Controller {
 		return false;	
 	}
 	
+	private static $_isLogin = NULL;
+	public static function isLogin() {
+		if(NULL !== self::$_isLogin){
+			return self::$_isLogin;
+		}
+		$loginUser = self::getLoginUser();
+		if(!empty($loginUser) && is_array($loginUser) && isset($loginUser['usercode'])){
+			return self::$_isLogin  = true;
+		}else{
+			return self::$_isLogin = false;
+		}
+		return self::$_isLogin;
+	}
+	
 	//对api方式访问的进行loginkey方式登录user
-	public static function login(){		
-		if(self::isApi() && !empty(self::getLoginkey()) && !UserController::isLogin()){
-			//echo "<br>---- loginByLoginkey ----<br>";
-			UserController::loginByLoginkey(self::getLoginkey());
+	public static function loginByLoginkey(){		
+		$loginkey = self::getLoginkey();
+		if(self::isApi() && !empty($loginkey) && !self::isLogin()){
+			//echo "<br>---- loginByLoginkey ----<br>";			
+			$data = self::model('user')->erp_login_by_loginkey(['loginkey' => $loginkey]);
+			$data['code'] !== EC_OK_ERP && EC::fail($data['code'], $data['msg']);
+			
+			self::setLoginSession($data['data']);			
+			self::$_loginUser = NULL;
+			self::$_isLogin = NULL;
 		}		
 	}
-	
-	//api接口调用安全验证
-	public static function securityValidate(){
 		
-	}
+	protected static function setLoginSession($loginUser){
+    	if(empty($loginUser)){
+    		Log::error('setLoginSession [loginUser] is empty .');
+    		return false;
+    	}
+    	$session = self::instance('session');    	
+    	if(isset($loginUser['password'])) unset( $loginUser['password'] );
+    	$session->set(self::$_apiUserSessionKey, $loginUser);    	
+    	return true;
+    }
 	
+    private static $_loginUser = NULL;
+    public static function getLoginUser(){
+    	$loginUser = NULL;    	 
+    	
+    	if(NULL !== self::$_loginUser){
+    		return self::$_loginUser;
+    	}    	 
+    	$session = self::instance('session');
+    	if($session->is_set(self::$_apiUserSessionKey)){
+    		$loginUser = $session->get(self::$_apiUserSessionKey);
+    	}    
+    	if(!$loginUser){    		
+    		$loginUser = [];    		
+    	}    	 
+    	return self::$_loginUser = $loginUser;
+    }
 }

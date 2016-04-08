@@ -478,17 +478,12 @@ class UserController extends BaseController
     	return NULL;
     }
     
-    protected static function setLoginSession($loginUser, $session_id = NULL){
+    protected static function setLoginSession($loginUser){
     	if(empty($loginUser)){
     		Log::error('setLoginSession [loginUser] is empty .');
     		return false;
     	}
-    	 $session = self::instance('session');
-    	/*if(NULL !== $session_id){
-    		$session->set_id($session_id);
-    	} */
-    	 
-    	
+    	$session = self::instance('session');    	
     	if(isset($loginUser['password'])) unset( $loginUser['password'] );
     	$session->set(self::$userSessionKey, $loginUser);    	
     	return true;
@@ -518,15 +513,7 @@ class UserController extends BaseController
             'token' => ['login','passwordReset'],
             'login' => ['passwordReset']
         ];
-    }
-
-    public static function loginByLoginkey($loginkey){
-    	$data = self::model('user')->erp_login_by_loginkey(['loginkey' => $loginkey]);
-    	$data['code'] !== EC_OK_ERP && EC::fail($data['code'], $data['msg']);
-    	self::setLoginSession($data['data']);    	
-    	self::$_loginUser = NULL;
-    	self::$_isLogin = NULL;
-    }
+    }   
     
     private function login()
     {
