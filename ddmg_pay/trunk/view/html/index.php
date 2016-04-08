@@ -35,8 +35,7 @@
 <input type="hidden" id="view_page_type" value="<?php echo $page_type;?>"/>
 <input type="hidden" id="view_controller" value="<?php echo doit::$controller;?>"/>
 <input type="hidden" id="user_id" value="<?php echo UserController::getCurrentUserId(); ?>" />
-<input type="hidden" id="user_type" value="<?php echo $session->get(UserController::$userSessionKey)['user_type']; ?>" />
-<?php //echo json_encode($session->get(UserController::$userSessionKey)); exit;?>
+<input type="hidden" id="user_type" value="<?php echo UserController::getLoginUser()['user_type']; ?>" />
 
 <!-- login-modal -->
 <div class="modal fade" id="admin-login-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" >
@@ -135,7 +134,7 @@
                 <?php echo '&nbsp; 管理员 &nbsp;'; echo UserController::getLoginUser()['account']; ?>
             </li>
             <li style="color: white;vertical-align:middle;line-height:69px;">
-                &nbsp;&nbsp; <?php echo $session->get('loginUser')['name']; ?>
+                &nbsp;&nbsp; <?php echo AdminController::getLoginUser()['name']; ?>
                 &nbsp;&nbsp;
             </li>
 <!--             <li><a id="user-chg-pwd-btn" href="#">修改密码</a></li> -->
@@ -351,7 +350,7 @@
                 <span><?php echo '&nbsp; 合伙人 &nbsp;'; echo UserController::getLoginUser()['account']; ?></span>
             </li>
             <li style="color: white;vertical-align:middle;line-height:69px;">
-                &nbsp;&nbsp; <?php echo $session->get(UserController::$userSessionKey)['name']; ?>
+                &nbsp;&nbsp; <?php echo UserController::getLoginUser()['name']; ?>
                 &nbsp;&nbsp;
             </li>
 <!--             <li><a id="user-chg-pwd-btn" href="#">修改密码</a></li> -->
