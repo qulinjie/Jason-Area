@@ -86,8 +86,7 @@ class session_redis
 	}
 
 	public static function read( $id )
-	{
-		Log::write($id, 'debug', 'session-'.date('Y-m-d'));
+	{		
 		$key = self::$keyPrefix . $id;
 		$sessData = self::$redis->get( $key ); // 读取数据
 		self::$redis->expire( $key, self::$expire ); // 重置超时
