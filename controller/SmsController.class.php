@@ -1,6 +1,6 @@
 <?php
 
-class SmsController extends BaseController {
+class SmsController extends Controller {
 
     public function handle($params = array()) {
         Log::notice('SmsController  ==== >>> params=' . json_encode($params));
