@@ -210,10 +210,10 @@ abstract class BaseController extends Controller
     		return self::$_currentUserId;
     	}
     	$loginUser = array();
-    	if(AdminController::isAdmin()){
-    		$loginUser = AdminController::getLoginUser();
-    	}elseif (UserController::isLogin()){
+    	if(UserController::isLogin()){
     		$loginUser = UserController::getLoginUser();
+    	}elseif(AdminController::isAdmin()){
+    		$loginUser = AdminController::getLoginUser();
     	}
     	if(!empty($loginUser) && is_array($loginUser) && isset($loginUser['usercode'])){
     		self::$_currentUserId = $loginUser['usercode'];
