@@ -276,7 +276,7 @@ $(document).on('click', '#entity-loadList-btn', function(event){
 
 /**************begin--收款单手动发送erp****************/
 
-$('.erp-sync-entity').click(function(){
+$(document).on('click', ".erp-sync-entity", function(evnent){
 	var obj = $(this);
 	var mch_trans_no = obj.attr("id").replace('erp-sync-entity-', '');
 	obj.html('发送中...');
