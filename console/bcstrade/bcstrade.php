@@ -15,4 +15,4 @@ echo date("Y-m-d H:i:s")."--- begin --- \r\n";
 //更新流水定时任务
 doit::singleton('BcsTradeController')->spd_loadAccountTradeList_exec();
 
-echo date("Y-m-d H:i:s")."--- end --- \r\n";
+echo date("Y-m-d H:i:s")."--- end --- \r\n\r\n";
