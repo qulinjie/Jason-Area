@@ -102,6 +102,9 @@ if (!defined('DOIT_TIMEZONE')) {
     define('DOIT_TIMEZONE', 'Asia/ShangHai');
 }
 
+//时区设置,默认为中国(北京时区)
+date_default_timezone_set(DOIT_TIMEZONE);
+
 /**
  * 设置系统默认的controller名称,默认为:Index
  * 如需更改,将Index换成所需要的.
