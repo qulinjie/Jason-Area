@@ -446,12 +446,12 @@ class UserController extends BaseController
         		$data = $user_model->getLoginUser();
         		Log::notice("getLoginUser . data = ##" . json_encode($data) . "##");
         		if(empty($data) || EC_OK != $data['code']){
-        			Log::error('User getLoginUser data is empyty or code is err . data=' . json_encode($data) );
+        			//Log::error('User getLoginUser data is empyty or code is err . data=' . json_encode($data) );
         			return [];
         		}
         		$loginUser = $data['data'];
         		if(empty($loginUser)){
-        			Log::error('User getLoginUser . data[loginUser] is null .');
+        			//Log::error('User getLoginUser . data[loginUser] is null .');
         			return [];
         		}
         		
@@ -478,7 +478,7 @@ class UserController extends BaseController
     	return NULL;
     }
     
-    protected static function setLoginSession($loginUser){
+    public static function setLoginSession($loginUser){
     	if(empty($loginUser)){
     		Log::error('setLoginSession [loginUser] is empty .');
     		return false;
