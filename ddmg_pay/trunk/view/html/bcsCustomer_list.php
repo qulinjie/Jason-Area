@@ -87,8 +87,8 @@
 				<td><?php echo $item['MBR_ADDR'];?></td>
 				<td><?php echo (1== $item['MBR_STS'])?'已注册':((2== $item['MBR_STS'])?'已签约':'已注销');?></td>
 				-->
-				<td><?php echo $item['ACCT_BAL'];?></td>
-				<td><?php echo $item['AVL_BAL'];?></td>
+				<td><?php echo number_format($item['ACCT_BAL'],2);?></td>
+				<td><?php echo number_format($item['AVL_BAL'],2);?></td>
 				<!--
 				<td><?php echo $item['add_timestamp'];?></td>
 				<td><?php echo (0 < strtotime($item['SIGNED_DATE']))? $item['SIGNED_DATE'] : '-';?></td>
