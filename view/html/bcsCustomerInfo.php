@@ -61,7 +61,7 @@
 	    <label class="col-sm-2 control-label">可用余额:</label>
 	    <div class="col-sm-3">
 	       <span style="vertical-align:middle;line-height:2.5;">
-	           <?php echo $item['AVL_BAL'];?>
+	           <?php echo number_format($item['AVL_BAL'],2);?>
 	       </span>
 	    </div>
 	  </div>
