@@ -778,7 +778,7 @@ class BcsCustomerController extends BaseController {
             EC::fail($info_data['code']);
         }
         $info_data = $info_data['data'][0];
-        if( !empty($info_data) ){
+        if( !empty($info_data) && '-1' != strval($info_data['user_id']) ){
             $customer['user_id'] = $account;
             $customer['ACCT_BAL'] = $info_data['ACCT_BAL']; // 帐户余额
             $customer['AVL_BAL'] = $info_data['AVL_BAL'];
