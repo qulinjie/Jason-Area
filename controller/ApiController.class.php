@@ -86,7 +86,7 @@ class ApiController extends Controller {
 		$loginkey = self::getLoginkey();
 		if(self::isApi() && !empty($loginkey) && !self::isLogin()){
 			//echo "<br>---- loginByLoginkey ----<br>";			
-			log::notice("---api---loginByLoginkey" . $loginkey);
+			log::notice("---api---loginByLoginkey=" . $loginkey);
 			
 			$data = self::model('user')->erp_login_by_loginkey(['loginkey' => $loginkey]);
 			$data['code'] !== EC_OK_ERP && EC::fail($data['code'], $data['msg']);
