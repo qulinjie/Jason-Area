@@ -297,9 +297,21 @@ class BcsTradeController extends BaseController {
     
         $data_list = $data['data'];
         
+        //总计
         $TX_AMT_total = 0;
         foreach ($data_list as $v_data){        	
         	$TX_AMT_total += $v_data['TX_AMT'];
+        }
+        
+        //对api接口调用数据返回处理
+        if(ApiController::isApi()){
+        	$api_data = array();
+        	$api_data['list'] = $data_list;
+        	$api_data['TX_AMT_total'] = $TX_AMT_total;
+        	$api_data['current_page'] = $current_page;
+        	$api_data['total_page'] = $total_page;
+        	$api_data['inout'] = strval($inout);        	
+        	EC::success(EC_OK, $api_data);
         }
     
         $entity_list_html = $this->render('bcsTrade_list', array('data_list' => $data_list, 'TX_AMT_total' => $TX_AMT_total, 'current_page' => $current_page, 'total_page' => $total_page,'inout' => strval($inout) ), true);
@@ -903,7 +915,7 @@ class BcsTradeController extends BaseController {
     	}
     	
     	//判断是否已同步erp
-    	if(2 == $data['is_erp_sync']){
+    	if(2 == $data['is_erp_sync'] || 4 == $data['is_erp_sync']){
     		Log::skdError("the bcsTrade has been sync erp: is_erp_sync={$data['is_erp_sync']}!");
     		if($is_ec) EC::fail(EC_REC_EST);
     		return false;
@@ -933,6 +945,25 @@ class BcsTradeController extends BaseController {
     	if(empty($data['oppositeAcctName'])){
     		Log::skdError('erp_getContactCompanyInfo Fail： oppositeAcctName is empty!' );
     		if($is_ec) EC::fail(EC_ERR, '失败：单位名称为空！');
+    		return false;
+    	}
+    	
+    	if('大汉电子商务有限公司' == trim($data['oppositeAcctName'])){
+    		Log::skdNotice('oppositeAcctName=' .$data['oppositeAcctName']. ', do not need to be synchronized');
+    		
+    		//修改同步状态
+    		$up_params = array();
+    		$up_params['id'] = $data['id'];
+    		$up_params['is_erp_sync'] = 4; //付款单是否同步 1否 2同步成功 3同步失败 4不需同步
+    		$up_params['erp_sync_timestamp'] = date('Y-m-d H:i:s',time());
+    		$bt_data = $bcsTrade_model->update($up_params);
+    		if(EC_OK != $bt_data['code']){
+    			Log::skdError('update bcsTrade is_erp_sync status fail!');
+    			if($is_ec) EC::fail($bt_data['code']);
+    			return false;
+    		}    		
+    		
+    		if($is_ec) EC::success(EC_OK);
     		return false;
     	}
     	
