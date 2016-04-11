@@ -33,7 +33,7 @@ class ApiController extends Controller {
 			}			
 		}
 		
-		log::notice("---loginkey===".$loginkey);
+		Log::notice("---loginkey===".$loginkey);
 		
 		if(!empty($loginkey)){
 			return self::$_loginkey = $loginkey;
