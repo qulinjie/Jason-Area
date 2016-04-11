@@ -1011,10 +1011,10 @@ class BcsTradeController extends BaseController {
     	$head['rq'] = $data['TRANS_TIME']; //日期
     	$head['je'] = $data['TX_AMT']; //金额
     	$head['usercode'] = $bcs_data['user_id'];
-    	$head['gszh'] = $data['oppositeAcctNo']; //付款公司账号
-    	$head['gskhh'] = $data['payeeBankName']; //付款开户行
-    	$head['zh'] = $data['ACCOUNT_NO']; //收款账号
-    	$head['khh'] = '';//$bcs_data['SIT_NO']; //收款开户行
+    	$head['gszh'] = $data['ACCOUNT_NO']; //收款公司账号
+    	$head['gskhh'] = ''; //收款开户行
+    	$head['zh'] = $data['oppositeAcctNo']; //付款账号
+    	$head['khh'] = $data['payeeBankName']; //付款开户行
     	 
     	$details = array();
     	$details['xh'] = $data['id']; //序号
