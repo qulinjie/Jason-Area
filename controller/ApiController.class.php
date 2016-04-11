@@ -23,19 +23,16 @@ class ApiController extends Controller {
 	public static function getLoginkey(){		
 		if(NULL !== self::$_loginkey){
 			return self::$_loginkey;
-		}
-		Log::notice(var_export($_GET,true));
-		Log::notice(var_export($_POST,true));
+		}		
 		$loginkey = NULL;
 		if(self::isApi()){
-			//支持get/post提交loginkey,优先支持get方式
-			$loginkey = $_GET[UserController::$_loginKeyName];
+			//支持get/post提交loginkey,优先支持post方式
+			$loginkey = Request::post(UserController::$_loginKeyName);
 			if(empty($loginkey)){
-				$loginkey = $_POST[UserController::$_loginKeyName];
+				$loginkey = Request::get(UserController::$_loginKeyName);
 			}			
 		}
-		
-		
+				
 		Log::notice("---loginkey===".$loginkey);
 		
 		if(!empty($loginkey)){
