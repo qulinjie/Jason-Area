@@ -32,6 +32,9 @@ class ApiController extends Controller {
 				$loginkey = Request::post(UserController::$_loginKeyName);
 			}			
 		}
+		
+		log::notice("---loginkey===".$loginkey);
+		
 		if(!empty($loginkey)){
 			return self::$_loginkey = $loginkey;
 		}
