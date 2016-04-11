@@ -5,6 +5,7 @@ return array(
         'CSBankSoapUrl'     => 'http://61.187.87.90:43294/icop/services/JTService?wsdl',
         'ddmg_java_url'	      => 'http://120.25.1.102:8081/erpinterface/',
         'ddmg_erp_url'	      => 'http://test-api.gt-xx.com/',
+//         'ddmg_erp_url'	      => 'http://erp-api.gt-xx.com/',
 		'ddmg_pay_url'     => 'http://127.0.0.1/ddmg_pay/index.php/',
 		'ddmg_pay_timeout' => '',
 	    'ddmg_payapi_url'     => 'http://127.0.0.1/ddmg_payapi/index.php/',
