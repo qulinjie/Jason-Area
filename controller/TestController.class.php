@@ -601,6 +601,7 @@ class TestController extends BaseController
     
     
     public static $erp_url = 'http://test-api.gt-xx.com';
+//     public static $erp_url = 'http://test-api.gt-xx.com';
     public function test_Login(){
         $interface = self::$erp_url . "/api/pub/userservice/PostUser_Login/";
         $data = array();
