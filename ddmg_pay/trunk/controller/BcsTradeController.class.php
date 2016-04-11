@@ -964,7 +964,7 @@ class BcsTradeController extends BaseController {
     		}    		
     		
     		if($is_ec) EC::success(EC_OK);
-    		return false;
+    		return true;
     	}
     	
     	//根据对方付款单位名称调用erp接口查该单位代码
