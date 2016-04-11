@@ -89,6 +89,8 @@
 				<td>
             	<?php if(2 == $item['is_erp_sync']){
             		  	echo "成功";
+            		  }elseif(4 == $item['is_erp_sync']){
+            		  	echo "不需同步";
             		  }else{ ?>
             		  	<a id="erp-sync-entity-<?php echo $item['MCH_TRANS_NO'];?>" class="erp-sync-entity" href="#" >手动发送</a>
             	<?php } ?>            	
