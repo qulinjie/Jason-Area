@@ -322,7 +322,7 @@ $(document).ready(function(){
 			        } else {
 			        	var data = result['data'];
 			        	for(var i=0;i<data.length;i++){
-			        		$("#add-entity-account").append("<option value='" + data[i].usercode + "'>" + data[i].username + " " + data[i].usercode + "</option>");
+			        		$("#add-entity-account").append("<option value='" + data[i].usercode + "|" + data[i].username + "'>" + data[i].username + " " + data[i].usercode + "</option>");
 			        	}
 			        }
 			    },
