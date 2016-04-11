@@ -29,9 +29,9 @@ class ApiController extends Controller {
 		$loginkey = NULL;
 		if(self::isApi()){
 			//支持get/post提交loginkey,优先支持get方式
-			$loginkey = $_GET(UserController::$_loginKeyName);
+			$loginkey = $_GET[UserController::$_loginKeyName];
 			if(empty($loginkey)){
-				$loginkey = $_POST(UserController::$_loginKeyName);
+				$loginkey = $_POST[UserController::$_loginKeyName];
 			}			
 		}
 		
