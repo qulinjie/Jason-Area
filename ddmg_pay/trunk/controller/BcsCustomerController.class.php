@@ -269,6 +269,13 @@ class BcsCustomerController extends BaseController {
         $cert_type = $this->getConfig('certificate_type');
         $data_info['MBR_CERT_TYPE'] = $cert_type[$data_info['MBR_CERT_TYPE']];
         
+        //对api接口调用数据返回处理
+        if(ApiController::isApi()){
+        	$api_data = array();
+        	$api_data['item'] = $data_info;
+        	EC::success(EC_OK, $api_data);
+        }
+        
         $view_html = $this->render('bcsCustomerInfo', array('item' => $data_info), true);
         $this->render('index', array('page_type' => 'bcsCustomer', 'bcsCustomer_html' => $view_html));
     }
@@ -764,6 +771,10 @@ class BcsCustomerController extends BaseController {
     
     private function updateBind(){
         $account = Request::post('account');
+        $user_arr = explode("|", $account);
+        $user_id = $user_arr[0];
+        $user_name = $user_arr[1];
+        
         $ACCOUNT_NO = Request::post('ACCOUNT_NO');
     
         $bcsCustomer_model = $this->model('bcsCustomer');
@@ -778,8 +789,10 @@ class BcsCustomerController extends BaseController {
             EC::fail($info_data['code']);
         }
         $info_data = $info_data['data'][0];
+
         if( !empty($info_data) && '-1' != strval($info_data['user_id']) ){
-            $customer['user_id'] = $account;
+            $customer['user_id'] = $user_id;
+            $customer['user_name'] = $user_name;
             $customer['ACCT_BAL'] = $info_data['ACCT_BAL']; // 帐户余额
             $customer['AVL_BAL'] = $info_data['AVL_BAL'];
             $customer['SIT_NO'] = $info_data['SIT_NO']; // 虚账户名称
@@ -793,7 +806,8 @@ class BcsCustomerController extends BaseController {
             Log::notice('addCustomerList ==== >>> add-data-end=##' . $info_data['SIT_NO'] . "##");
         } else {
             $params = array();
-            $params['user_id'] = $account;
+            $params['user_id'] = $user_id;
+            $params['user_name'] = $user_name;
             $params['ACCOUNT_NO'] = $ACCOUNT_NO;
             Log::notice("updateBind data ===============================>> params = ##" . json_encode($params) . "##" );
             
