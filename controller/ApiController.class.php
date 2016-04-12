@@ -26,19 +26,21 @@ class ApiController extends Controller {
 		}		
 		$loginkey = NULL;
 		if(self::isApi()){
-			//支持get/post提交loginkey,优先支持post方式
+			//支持post提交loginkey
 			$loginkey = Request::post(UserController::$_loginKeyName);
-			if(empty($loginkey)){
+			/* if(empty($loginkey)){
 				$loginkey = Request::get(UserController::$_loginKeyName);
-			}			
+			} */			
 		}
-		
-				
-		Log::notice("---loginkey===".$loginkey);
-		
+						
+		Log::notice("---api---getLoginkey---loginkey=".$loginkey);		
 		if(!empty($loginkey)){
 			return self::$_loginkey = $loginkey;
+		}else{
+			Log::error("loginkey is empty!");
+			EC::fail(EC_LOGINKEY_ERR);
 		}
+		
 		return $loginkey;
 	}
 	
@@ -86,7 +88,7 @@ class ApiController extends Controller {
 		$loginkey = self::getLoginkey();
 		if(self::isApi() && !empty($loginkey) && !self::isLogin()){
 			//echo "<br>---- loginByLoginkey ----<br>";			
-			log::notice("---api---loginByLoginkey=" . $loginkey);
+			log::notice("---api---loginByLoginkey---loginkey=" . $loginkey);
 			
 			$data = self::model('user')->erp_login_by_loginkey(['loginkey' => $loginkey]);
 			$data['code'] !== EC_OK_ERP && EC::fail($data['code'], $data['msg']);
