@@ -388,7 +388,7 @@
             			<a href="<?php echo Router::getBaseUrl();?>bcsCustomer/getInfo">账户信息</a>
             	    </li>
             	    </ul>
-            	    <?php if(UserController::isGeneralUser()){?>
+            	    <?php if(!AdminController::isAdmin()){?>
 	            	    <ul class="menu">
 	            	    <li <?php if(doit::$controller == 'PayPassword'){?> class="active" <?php } ?>>
 	            	        <a href="<?php echo Router::getBaseUrl();if(PayPasswordController::checkExist()){?>payPassword/reset<?php }else{?>payPassword/set<?php }?>">支付密码管理</a>
