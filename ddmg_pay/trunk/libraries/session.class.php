@@ -26,7 +26,7 @@ class session extends Base {
      */
     public function __construct() {
 		
-    	if(defined("IN_API")){
+    	if(ApiController::isApi()){
     		//对api接口方式的访问进行session_id设置,必须在session_start()前
     		ApiController::setSessionId();
     	}   	
