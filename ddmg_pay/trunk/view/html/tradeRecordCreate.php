@@ -119,8 +119,9 @@
 	    <label for="add-entity-bank_flag" class="col-sm-2 control-label">同行/跨行</label>
 	    <div class="col-sm-4">
 	        <select class="form-control" id="add-entity-bank_flag">
-              <option value="0">同行</option>
-              <option value="1">跨行</option>
+	        	<option value="-1">-请选择-</option>
+            	<option value="0">同行</option>
+            	<option value="1">跨行</option>
             </select>
 	    </div>
 	    <span id="span_local_flag" style="display: none;">
