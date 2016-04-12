@@ -89,6 +89,7 @@ define('EC_TRADE_TF_OS_ERR', 1004);
 define('EC_TRADE_TF_OS_ERR_2', 1005);
 define('EC_TRADE_TF_OS_ERR_3', 1006);
 define('EC_USER_NO_AUTH', 1007);
+define('EC_LOGINKEY_ERR', 1008);
 
 class EC extends Base {
 
@@ -178,8 +179,11 @@ class EC extends Base {
 			EC_TRADE_TF_OS_ERR     => '订单状态异常',
 			EC_TRADE_TF_OS_ERR_2   => '订单已付款',			
 			EC_TRADE_TF_OS_ERR_3   => '订单已付款',
-			
+						
 			EC_USER_NO_AUTH => '当前用户没有该操作权限',
+			
+			EC_LOGINKEY_ERR => 'loginkey为空',
+				
 	);
 	public static function load(){
 		return true;
