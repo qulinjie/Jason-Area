@@ -41,7 +41,11 @@ class AdminController extends Controller {
     		$loginUser = $session->get(self::$adminSessionKey);
     	}
     	
-    	if(!$loginUser){    	
+    	if(!empty($loginUser)){
+    		self::$_loginUser = $loginUser;
+    	}
+    	
+    	/* if(!$loginUser){    	
 	    	try{
 	    		$admin_model = self::model('admin');
 	    		$data = $admin_model->isLogin();    	
@@ -60,9 +64,9 @@ class AdminController extends Controller {
 	    		Log::error('isLogin . e=' . $e->getMessage());
 	    		return [];
 	    	}
-    	}
+    	} */
     	
-    	return self::$_loginUser = $loginUser;     	
+    	return self::$_loginUser;     	
     }
     
     protected static function setLoginSession($loginUser){
