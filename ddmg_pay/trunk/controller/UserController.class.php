@@ -280,7 +280,7 @@ class UserController extends BaseController
         $cookie = $this->instance('cookie');
         $cookie->clear(Router::getBaseUrl());
         
-        self::$_isLogin = NULL;
+        self::clearStaticValue();
         EC::success(EC_OK);
     }
 
@@ -326,9 +326,10 @@ class UserController extends BaseController
     	$loginUser = self::getLoginUser();        
         if(!empty($loginUser) && is_array($loginUser) && isset($loginUser['usercode'])){
             return self::$_isLogin  = true;
-        }else{
+        }
+        /* else{
         	return self::$_isLogin = false;
-        }        
+        } */        
         return self::$_isLogin;
     }
     
@@ -446,12 +447,12 @@ class UserController extends BaseController
         		$data = $user_model->getLoginUser();
         		Log::notice("getLoginUser . data = ##" . json_encode($data) . "##");
         		if(empty($data) || EC_OK != $data['code']){
-        			//Log::error('User getLoginUser data is empyty or code is err . data=' . json_encode($data) );
+        			Log::error('User getLoginUser data is empyty or code is err . data=' . json_encode($data) );
         			return [];
         		}
         		$loginUser = $data['data'];
         		if(empty($loginUser)){
-        			//Log::error('User getLoginUser . data[loginUser] is null .');
+        			Log::error('User getLoginUser . data[loginUser] is null .');
         			return [];
         		}
         		
@@ -479,14 +480,27 @@ class UserController extends BaseController
     }
     
     public static function setLoginSession($loginUser){
+    	Log::notice(" setLoginSession -loginUser=" . json_encode($loginUser));
     	if(empty($loginUser)){
     		Log::error('setLoginSession [loginUser] is empty .');
     		return false;
     	}
     	$session = self::instance('session');    	
     	if(isset($loginUser['password'])) unset( $loginUser['password'] );
-    	$session->set(self::$userSessionKey, $loginUser);    	
+    	$session->set(self::$userSessionKey, $loginUser); 
+    	Log::notice('setLoginSession==>>sessionId=' . $session->get_id() . ' ,loginUser=' . json_encode($loginUser) );
+    	Log::notice('check setLoginSession . is_set[loginUser]=' . ($session->is_set(self::$userSessionKey)) );
+    	Log::notice('check setLoginSession . get[loginUser]=' . json_encode($session->get(self::$userSessionKey)) );
+    	self::clearStaticValue();
     	return true;
+    }
+    
+    private static function clearStaticValue(){
+    	self::$_isLogin = NULL;
+    	self::$_loginUser = NULL;
+    	self::$_isSeller = NULL;
+    	self::$_isGeneralUser = NULL;
+    	self::$_isFirstAuditUser = NULL;    	
     }
 
     public static function getToken()

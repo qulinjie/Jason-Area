@@ -46,12 +46,12 @@ class AdminController extends Controller {
 	    		$admin_model = self::model('admin');
 	    		$data = $admin_model->isLogin();    	
 	    		if(empty($data) || EC_OK != $data['code']){
-	    			//Log::error('isLogin data is empyty or code is err . data=' . json_encode($data) );
+	    			Log::error('isLogin data is empyty or code is err . data=' . json_encode($data) );
 	    			$loginUser = [];
 	    		}	    	
 	    		$loginUser = $data['data'];
 	    		if(empty($loginUser)){
-	    			//Log::error('isLogin . data[loginUser] is null .');
+	    			Log::error('isLogin . data[loginUser] is null .');
 	    			$loginUser = [];
 	    		}
 	    		self::setLoginSession($loginUser);	    		
@@ -75,6 +75,8 @@ class AdminController extends Controller {
         Log::notice('setLoginSession==>>sessionId=' . $session->get_id() . ' ,loginUser=' . json_encode($loginUser) );        
         Log::notice('check setLoginSession . is_set[loginUser]=' . ($session->is_set(self::$adminSessionKey)) );
         Log::notice('check setLoginSession . get[loginUser]=' . json_encode($session->get(self::$adminSessionKey)) );
+        
+        self::clearStaticValue();
         return true;
     }
     
@@ -123,10 +125,13 @@ class AdminController extends Controller {
     		return self::$_isLogin;
     	}
     	$loginUser = self::getLoginUser();
-    	if(empty($loginUser)){
-    		return self::$_isLogin = false;
-    	}
-        return self::$_isLogin = true;        
+        if(!empty($loginUser) && is_array($loginUser) && isset($loginUser['usercode'])){
+        	return self::$_isLogin  = true;
+        }
+        /* else{
+         return self::$_isLogin = false;
+        } */
+        return self::$_isLogin;
     }
     
     protected function loginOut(){
@@ -146,16 +151,23 @@ class AdminController extends Controller {
             $cookie = $this->instance('cookie');
             $cookie->clear(Router::getBaseUrl());
             
-            self::$_isLogin = NULL;
+            self::clearStaticValue();
+            
             EC::success(EC_OK);
             
         } catch (Exception $e) {
             Log::error('loginOut . e=' . $e->getMessage());
         }
         Log::notice("admin loginOut end .");
-        self::$_isLogin = NULL;
-        
+                
         EC::success(EC_OK);
+    }
+    
+    private function clearStaticValue(){
+    	self::$_isLogin = NULL;
+    	self::$_isAdmin = NULL;
+    	self::$_loginUser = NULL;
+    	self::$_isSecondAuditUser = NULL;
     }
     
     private function login_old(){
