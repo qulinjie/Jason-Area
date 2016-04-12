@@ -650,6 +650,7 @@ $(document).on('click', '#for-test-btn', function(event){
 		var comp_account = $('#add-entity-comp_account').val(); // 收款账号
 		var bank_name = $('#add-entity-bank_name').val(); // 开户行
 		var amount = $('#add-entity-amount').val(); // 申请金额
+		var bank_flag = $('#add-entity-bank_flag').val(); //同行、跨行
 		var amount_type = $('#add-entity-amount_type').val(); // 款项类别
 		var comment = $('#add-entity-comment').val(); // 备注
 		var use = $('#add-entity-use').val(); // 用途
@@ -670,6 +671,10 @@ $(document).on('click', '#for-test-btn', function(event){
 	    if( !comp_account || '' == comp_account ){
 	    	hint_html += (hint_html == '' ? '' : '<BR>') + '请填写 收款账号！' ;
 	    }
+	    if( !bank_flag || '-1' == bank_flag ){
+	    	hint_html += (hint_html == '' ? '' : '<BR>') + '请选择 同行/跨行！' ;
+	    }
+	    
 	    if( !bank_name || '' == bank_name ){
 	    	hint_html += (hint_html == '' ? '' : '<BR>') + '请填写 开户行！' ;
 	    } else {
