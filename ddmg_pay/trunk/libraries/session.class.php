@@ -26,8 +26,10 @@ class session extends Base {
      */
     public function __construct() {
 		
-    	//对api接口方式的访问进行session_id设置,必须在session_start()前
-    	ApiController::setSessionId();
+    	if(defined("IN_API")){
+    		//对api接口方式的访问进行session_id设置,必须在session_start()前
+    		ApiController::setSessionId();
+    	}   	
     	
         session_start();
         register_shutdown_function(array($this,'close'));
