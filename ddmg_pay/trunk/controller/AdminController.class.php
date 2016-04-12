@@ -132,10 +132,9 @@ class AdminController extends Controller {
     	$loginUser = self::getLoginUser();
         if(!empty($loginUser) && is_array($loginUser) && isset($loginUser['usercode'])){
         	return self::$_isLogin  = true;
-        }
-        /* else{
-         return self::$_isLogin = false;
-        } */
+        }else{
+         	return self::$_isLogin = false;
+        } 
         return self::$_isLogin;
     }
     
