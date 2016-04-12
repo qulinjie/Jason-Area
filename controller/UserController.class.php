@@ -326,10 +326,9 @@ class UserController extends BaseController
     	$loginUser = self::getLoginUser();        
         if(!empty($loginUser) && is_array($loginUser) && isset($loginUser['usercode'])){
             return self::$_isLogin  = true;
-        }
-        /* else{
+        }else{
         	return self::$_isLogin = false;
-        } */        
+        }       
         return self::$_isLogin;
     }
     
@@ -441,7 +440,11 @@ class UserController extends BaseController
     		$loginUser = $session->get(self::$userSessionKey);
     	}
         
-        if(!$loginUser){        	
+    	if(!empty($loginUser)){
+    		self::$_loginUser = $loginUser;
+    	}
+    	
+        /* if(!$loginUser){        	
         	try{
         		$user_model = self::model('user');
         		$data = $user_model->getLoginUser();
@@ -461,9 +464,10 @@ class UserController extends BaseController
         		Log::error('getLoginUser . e=' . $e->getMessage());
         		return [];
         	}         	
-        }
+        } */
+    	
        
-        return self::$_loginUser = $loginUser;
+        return self::$_loginUser;
     }
     
     private static $_loginkeyValue = NULL;
