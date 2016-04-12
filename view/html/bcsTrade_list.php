@@ -52,7 +52,7 @@
 					<th>对方行号</th>
 					<th>对方行名</th>
 					<th>备注</th>
-					<?php if($isAdmin){ echo '<th>发送erp结果</th><th>操作</th>'; } ?>
+					<?php if($isAdmin && strval($inout) == '1'){ echo '<th>发送erp结果</th><th>操作</th>'; } ?>
 				</tr>
 			</thead>
 			<tbody>
@@ -86,15 +86,17 @@
 				<td><?php echo $item['comment'];?></td>
 				<?php if($isAdmin){?>
 				
+				<?php if(strval($inout) == '1'){ ?>
 				<td>
-            	<?php if(2 == $item['is_erp_sync']){
-            		  	echo "成功";
-            		  }elseif(4 == $item['is_erp_sync']){
-            		  	echo "不需同步";
-            		  }else{ ?>
-            		  	<a id="erp-sync-entity-<?php echo $item['MCH_TRANS_NO'];?>" class="erp-sync-entity" href="#" >手动发送</a>
-            	<?php } ?>            	
-            	</td>
+					<?php if(2 == $item['is_erp_sync']){
+	            		  	echo "成功";
+	            		  }elseif(4 == $item['is_erp_sync']){
+	            		  	echo "不需同步";
+	            		  }else{ ?>
+	            		  	<a id="erp-sync-entity-<?php echo $item['MCH_TRANS_NO'];?>" class="erp-sync-entity" href="#" >手动发送</a>
+	            	<?php } ?>            	
+	            </td>
+	            <?php } ?>
 				
 				<td>
 					<div class="btn-group" role="group">
@@ -105,6 +107,7 @@
     			       <?php } ?>
 					</div>
 				</td>
+				
 				<?php }?>
 			</tr>
 <?php }?>
