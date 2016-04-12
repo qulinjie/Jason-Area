@@ -104,9 +104,13 @@ class ApiController extends Controller {
 				UserController::setLoginSession($loginUser);
 			}
 			
-			self::$_loginUser = NULL;
-			self::$_isLogin = NULL;
+			self::clearStaticValue();			
 		}		
+	}
+	
+	private static function clearStaticValue(){
+		self::$_loginUser = NULL;
+		self::$_isLogin = NULL;
 	}
 		
 	/* protected static function setLoginSession($loginUser){
@@ -134,10 +138,10 @@ class ApiController extends Controller {
     	}elseif(AdminController::isAdmin()){
     		$loginUser = AdminController::getLoginUser();
     	}    	
-    	if(!$loginUser){    		
-    		$loginUser = [];    		
+    	if(!empty($loginUser)){    		
+    		self::$_loginUser = $loginUser;   		
     	}    	 
-    	return self::$_loginUser = $loginUser;
+    	return self::$_loginUser;
     } 
 	
 }
