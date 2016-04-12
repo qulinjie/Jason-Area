@@ -47,17 +47,18 @@ class AdminController extends Controller {
 	    		$data = $admin_model->isLogin();    	
 	    		if(empty($data) || EC_OK != $data['code']){
 	    			Log::error('isLogin data is empyty or code is err . data=' . json_encode($data) );
-	    			$loginUser = [];
+	    			return [];
 	    		}	    	
 	    		$loginUser = $data['data'];
 	    		if(empty($loginUser)){
 	    			Log::error('isLogin . data[loginUser] is null .');
-	    			$loginUser = [];
+	    			return [];
 	    		}
+	    		
 	    		self::setLoginSession($loginUser);	    		
 	    	} catch (Exception $e) {
 	    		Log::error('isLogin . e=' . $e->getMessage());
-	    		$loginUser = [];
+	    		return [];
 	    	}
     	}
     	
