@@ -1091,6 +1091,13 @@ class TradeRecordController extends BaseController {
             $data_info['record_bank_type'] = $user_info_data['record_bank_type'];
         }
         
+        //对api接口调用数据返回处理
+        if(ApiController::isApi()){
+        	$api_data = array();
+        	$api_data = $data_info;
+        	EC::success(EC_OK, $api_data);
+        }
+        
         $view_html = $this->render('tradeRecordCreate', array('data_info' => $data_info), true);
         $this->render('index', array('page_type' => 'tradeRecord', 'tradeRecordCreate_html' => $view_html) );
     }
