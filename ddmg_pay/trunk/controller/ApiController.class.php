@@ -93,6 +93,13 @@ class ApiController extends Controller {
 			$data = self::model('user')->erp_login_by_loginkey(['loginkey' => $loginkey]);
 			$data['code'] !== EC_OK_ERP && EC::fail($data['code'], $data['msg']);
 			
+			/* $data = array();
+			$data['data']["userid"] = "68ff4da6-8dc3-4a60-805a-6fbd609518b9";
+			$data['data']["usercode"] = "110002";
+			$data['data']["username"] = "李四";
+			$data['data']["loginid"] = "110002";
+			$data['data']["mobile"] = "13367310112"; */			
+			
 			$loginUser = $data['data'];	
 			//如果是admin用户则设置AdminController的session		
 			if(is_array($loginUser) && isset($loginUser['is_admin']) && 'yes' == $loginUser['is_admin']){
