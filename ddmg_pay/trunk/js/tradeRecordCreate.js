@@ -806,7 +806,7 @@ $(document).on('click', '#for-test-btn', function(event){
 					$("#add-entity-bank_name").val(selVal);
 					if(bank_account_list[i]){
 						$("#add-entity-comp_account").val(bank_account_list[i]);
-						setBankDomain(i);
+						//setBankDomain(i);
 					}
 					$('#check-entity-bankName').click(); // 验证开户行
 				}
