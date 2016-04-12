@@ -116,7 +116,7 @@ class curl extends Base {
      */
     public static function postRequest($url, $data = '', $header = array(), $proxy = null, $expire = 30) {
 
-    	Log::notice('post req data:' . $data);
+    	Log::notice('post req data:' . json_encode($data));
         //参数分析
         if (!$url) {
             return false;
