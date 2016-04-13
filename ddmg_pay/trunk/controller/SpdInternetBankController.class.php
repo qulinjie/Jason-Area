@@ -18,7 +18,7 @@ class SpdInternetBankController extends BaseController {
                     $this->searchList();
                     break;
                 case 'getApplyIndex':
-                    $this->searchList(false, '1');
+                    $this->searchList(true, '1');
                     break;
 //                 case 'getInfo':
 //                     $this->getInfo();
@@ -41,6 +41,13 @@ class SpdInternetBankController extends BaseController {
     }
     
     protected function searchList($isIndex = false, $isApplyIndex = '0') {
+        
+        if($isIndex && strval($isApplyIndex) == '1'){
+            $entity_list_html = $this->render('spdInternetBank_list', array('data_list' => [], 'isApplyIndex' => $isApplyIndex, 'current_page' => 1, 'total_page' => 0), true);
+            $apply_list_html = $this->render('spdInternetBank', array('entity_list_html' => $entity_list_html, 'isApplyIndex' => $isApplyIndex), true);
+            EC::success(EC_OK, array('entity_list_html' => $apply_list_html));
+        }
+        
         $current_page = Request::post('page');
         $bankName = Request::post('bankName');
         $bankNo = Request::post('bankNo');        
@@ -99,9 +106,9 @@ class SpdInternetBankController extends BaseController {
         if(strval($isApplyIndex) == '1'){
         	$apply_list_html = $this->render('spdInternetBank', array('entity_list_html' => $entity_list_html, 'isApplyIndex' => $isApplyIndex), true);
         	EC::success(EC_OK, array('entity_list_html' => $apply_list_html));
-        }elseif(strval($isApplyIndex) == '2'){
+        }else if(strval($isApplyIndex) == '2'){
         	EC::success(EC_OK, array('entity_list_html' => $entity_list_html, 'isApplyIndex' => $isApplyIndex));        	 
-        }elseif($isIndex) {
+        }else if($isIndex) {
             $view_html = $this->render('spdInternetBank', array('entity_list_html' => $entity_list_html, 'isApplyIndex' => $isApplyIndex ), true);
             $this->render('index', array('page_type' => 'spdInternetBank', 'spdInternetBank_html' => $view_html));
         }else {
