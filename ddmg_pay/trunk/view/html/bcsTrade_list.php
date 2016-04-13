@@ -40,7 +40,7 @@
 			<thead>
 				<tr>
 					<th style="display:none">id</th>
-					<?php if($isAdmin){ echo '<th>虚拟账号</th>'; } ?>
+					<?php if($isAdmin){ echo '<th>专属账号</th>'; } ?>
 					<th>交易流水号</th><!-- 商户交易流水号 -->
 					<th>收款/付款</th>
 					<th>交易完成时间</th>

@@ -105,7 +105,7 @@
 	    <div class="col-sm-4">
 	    	<div class="form-inline">
 		    	<input type="text" class="form-control" id="add-entity-bank_name" placeholder="" style="width: 420px;"/>
-		    	<input type="button" class="btn btn-default" id="btn-bank_name" value="查" />
+		    	<input type="button" class="btn btn-primary" id="btn-bank_name" value="查" />
 		    </div>
 		    <div id="div_data_bank" class="citydatadiv" style="display: none;"><ul></ul></div>
 		    <a href="#" id="check-entity-bankName">验证开户行</a>
@@ -127,11 +127,12 @@
             	<option value="1">跨行</option>
             </select>
 	    </div>
+	    <span id="span_local_flag" style="display: none;">
 	    <label for="add-entity-buyer" class="col-sm-2 control-label">下游买家</label>
 	    <div class="col-sm-4">
 	        <input type="text" class="form-control" id="add-entity-buyer" placeholder=""></input>
 	    </div>
-	    <span id="span_local_flag" style="display: none;">
+	    
 	    <label for="add-entity-local_flag" class="col-sm-2 control-label">同城/异地</label>
 	    <div class="col-sm-4">
 	        <select class="form-control" id="add-entity-local_flag">
