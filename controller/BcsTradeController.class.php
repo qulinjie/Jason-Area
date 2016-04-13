@@ -299,9 +299,12 @@ class BcsTradeController extends BaseController {
         
         //总计
         $TX_AMT_total = 0;
-        foreach ($data_list as $v_data){        	
-        	$TX_AMT_total += $v_data['TX_AMT'];
+        if(is_array($data_list) && !empty($data_list)){
+        	foreach ($data_list as $v_data){        	
+        		$TX_AMT_total += $v_data['TX_AMT'];
+        	}
         }
+        
         
         //对api接口调用数据返回处理
         if(ApiController::isApi()){
