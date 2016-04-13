@@ -167,7 +167,7 @@ class AdminController extends Controller {
         EC::success(EC_OK);
     }
     
-    private function clearStaticValue(){
+    private static function clearStaticValue(){
     	self::$_isLogin = NULL;
     	self::$_isAdmin = NULL;
     	self::$_loginUser = NULL;
