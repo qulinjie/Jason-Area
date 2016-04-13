@@ -105,9 +105,11 @@ $(document).ready(function(){
 	            }else {
 	                $("#entity-list").html(result.data.entity_list_html);
 	            }
-	            $("#entity-search-btn-bank").removeAttr('disabled');
-	            entitySetSelectedPage();
 	            alert(3);
+	            $("#entity-search-btn-bank").removeAttr('disabled');
+	            alert(4);
+	            entitySetSelectedPage();
+	            alert(5);
 	        },
 	        'json'
 	    );
