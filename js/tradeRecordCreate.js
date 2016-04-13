@@ -714,6 +714,7 @@ $(document).on('click', '#for-test-btn', function(event){
 		}
 		$('#add-entity-amount').val(''); // 申请金额
 		
+		/*
 		$("#add-entity-comp_name").attr('disabled', 'disabled'); // 收款单位
 		$("#add-entity-comp_account").attr('disabled', 'disabled'); // 收款账号
 		$('#add-entity-bank_name').attr('disabled', 'disabled'); // 开户行
@@ -722,7 +723,7 @@ $(document).on('click', '#for-test-btn', function(event){
 		$('#add-entity-use').attr('disabled', 'disabled'); // 用途
 		$('#add-entity-bank_flag').attr('disabled', 'disabled'); // 同行/跨行
 		$('#add-entity-local_flag').attr('disabled', 'disabled'); // 同城/异地
-		
+		*/
 	});
 	/**************end--引用****************/
 	
