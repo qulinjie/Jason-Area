@@ -496,8 +496,8 @@ $(document).on('click', '#for-test-btn', function(event){
 		$('#btn-add-entity').show();
 		$('#btn-add-entity').unbind("click");
 	
-		var title = $('#add-entity-quote').text();
-		$('#info_entity_title').html(title);
+//		var title = $('#add-entity-quote').text();
+//		$('#info_entity_title').html(title);
 		
 		$("#add-entity-hint").html('').fadeOut();
 		
