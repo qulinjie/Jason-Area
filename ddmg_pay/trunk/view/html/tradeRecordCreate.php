@@ -93,7 +93,7 @@
 	  <div class="form-group">
 	    <label for="add-entity-comp_name" class="col-sm-2 control-label">收款单位</label>
 	    <div class="col-sm-4">
-		    <input type="text" class="form-control" readonly="readonly" id="add-entity-comp_name" placeholder="" />    				   
+		    <input type="text" class="form-control" id="add-entity-comp_name" placeholder="" />    				   
 	    </div>
 	    <label for="add-entity-comp_account" class="col-sm-2 control-label">收款账号</label>
 	    <div class="col-sm-4">
@@ -124,6 +124,10 @@
             	<option value="1">跨行</option>
             </select>
 	    </div>
+	    <label for="add-entity-buyer" class="col-sm-2 control-label">下游买家</label>
+	    <div class="col-sm-4">
+	        <input type="text" class="form-control" id="add-entity-buyer" placeholder=""></input>
+	    </div>
 	    <span id="span_local_flag" style="display: none;">
 	    <label for="add-entity-local_flag" class="col-sm-2 control-label">同城/异地</label>
 	    <div class="col-sm-4">
@@ -138,7 +142,9 @@
 	    <label for="add-entity-amount_type" class="col-sm-2 control-label">款项类别</label>
 	    <div class="col-sm-4">
 	        <select class="form-control" id="add-entity-amount_type">
+	          <option value="">-请选择-</option>
               <option value="货款">货款</option>
+              <option value="预付款">预付款</option>
             </select>
 	    </div>
 	    <label for="add-entity-use" class="col-sm-2 control-label">用途</label>
