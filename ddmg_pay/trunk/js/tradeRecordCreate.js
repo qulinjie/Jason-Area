@@ -98,7 +98,7 @@ function search_entity(page){
             if(result.code != 0) {
                 $("#search-entity-hint").html(result.msg + '(' + result.code + ')').fadeIn();
             }else {
-                $("#entity-list").html(result.data.entity_list_html);
+                $("#add-entity-list").html(result.data.entity_list_html);
             }
             $("#entity-search-btn").removeAttr('disabled');
             renderDatetime();
@@ -489,14 +489,14 @@ $(document).on('click', '#for-test-btn', function(event){
 	    );
 	}
 
-	$(document).on('click', '#add-entity-new', function(event){
+	$(document).on('click', '#add-entity-quote', function(event){
 		$('#add-entity-modal').modal('show');
 		$('#add-entity-modal').modal({keyboard: false});
 			
 		$('#btn-add-entity').show();
 		$('#btn-add-entity').unbind("click");
 	
-		var title = $('#add-entity-new').text();
+		var title = $('#add-entity-quote').text();
 		$('#info_entity_title').html(title);
 		
 		$("#add-entity-hint").html('').fadeOut();
@@ -534,7 +534,7 @@ $(document).on('click', '#for-test-btn', function(event){
 	            if(result.code != 0) {
 	                $("#search-entity-hint").html(result.msg + '(' + result.code + ')').fadeIn();
 	            }else {
-	                $("#entity-list").html(result.data.entity_list_html);
+	                $("#add-entity-list").html(result.data.entity_list_html);
 	                renderDatetime();
 	                entitySetSelectedPage();
 	            }
@@ -658,6 +658,11 @@ $(document).on('click', '#for-test-btn', function(event){
 		var comp_name_buyer_code = $('#add-entity-comp_name_buyer_code').val(); // 下游买家代码
 		
 		var hint_html = '';
+		
+		if( !comp_name || '' == comp_name ){
+	    	hint_html += (hint_html == '' ? '' : '<BR>') + '请填写 收款单位！' ;
+	    }
+		
 	    if( !amount || '' == amount ){
 	    	hint_html += (hint_html == '' ? '' : '<BR>') + '请填写 金额！' ;
 	    }
@@ -843,6 +848,30 @@ $(document).on('click', '#for-test-btn', function(event){
 			$('#span_local_flag').css("display","none");
 		}
 	});*/
+	
+	/* ---------查行名start----------*/
+	$(document).on('click', '#btn-bank_name', function(event){
+		
+		$('#add-entity-modal').modal('show');
+		$('#add-entity-modal').modal({keyboard: false});
+		
+		$('#add-entity-list').html("<div style='width:100%;text-align:center;'><img alt='正在加载数据...' src='" + BASE_PATH + "view/images/tips_loading.gif'/></div>");
+		//查找
+	    $.post(BASE_PATH + 'spdInternetBank/getApplyIndex', {
+	        },
+	        function(result){        	
+	            if(result.code != 0) {
+	                $("#search-entity-hint").html(result.msg + '(' + result.code + ')').fadeIn();
+	            }else {
+	                $("#add-entity-list").html(result.data.entity_list_html);
+	                //renderDatetime();
+	                //entitySetSelectedPage();
+	            }
+	        },
+	        'json'
+	    );
+	});
+	/* ---------查行名end----------*/
 	
 prettyPrint();
 });

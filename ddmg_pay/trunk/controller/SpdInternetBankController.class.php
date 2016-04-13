@@ -17,6 +17,9 @@ class SpdInternetBankController extends BaseController {
                 case 'searchList':
                     $this->searchList();
                     break;
+                case 'getApplyIndex':
+                    $this->searchList(false, '1');
+                    break;
 //                 case 'getInfo':
 //                     $this->getInfo();
 //                     break;
@@ -37,17 +40,26 @@ class SpdInternetBankController extends BaseController {
         }
     }
     
-    protected function searchList($isIndex = false) {
+    protected function searchList($isIndex = false, $isApplyIndex = '0') {
         $current_page = Request::post('page');
         $bankName = Request::post('bankName');
-        $bankNo = Request::post('bankNo');
+        $bankNo = Request::post('bankNo');        
+        $super_bank_id = Request::post('super_bank_id');
+        $city_id = Request::post('city_id');
+        $isApplyIndex = !empty(Request::post('isApplyIndex')) ? Request::post('isApplyIndex') : $isApplyIndex;
         
         $code_model = $this->model('spdInternetBank');
         $user_id = self::getCurrentUserId();
         
         $params  = array();
-        foreach ([ 'bankName', 'bankNo' ] as $val){
+        foreach ([ 'bankName', 'bankNo', 'super_bank_id', 'city_id' ] as $val){
             if($$val) $params[$val] = $$val;
+        }
+        if(isset($params['super_bank_id']) && $params['super_bank_id'] == '-1'){
+        	unset($params['super_bank_id']);
+        }
+        if(isset($params['city_id']) && $params['city_id'] == '-1'){
+        	unset($params['city_id']);
         }
         
         $data_cnt = $code_model->searchCnt($params);
@@ -78,12 +90,22 @@ class SpdInternetBankController extends BaseController {
         }
         
         $data_list = $data['data'];
-        $entity_list_html = $this->render('spdInternetBank_list', array('data_list' => $data_list, 'current_page' => $current_page, 'total_page' => $total_page), true);
-        if($isIndex) {
-            $view_html = $this->render('spdInternetBank', array('entity_list_html' => $entity_list_html ), true);
+        
+        /* foreach ($data_list as $k_data => $v_data){
+        	$data_list[$k_data]['city_name'] = 
+        } */        
+        
+        $entity_list_html = $this->render('spdInternetBank_list', array('data_list' => $data_list, 'isApplyIndex' => $isApplyIndex, 'current_page' => $current_page, 'total_page' => $total_page), true);
+        if(strval($isApplyIndex) == '1'){
+        	$apply_list_html = $this->render('spdInternetBank', array('entity_list_html' => $entity_list_html, 'isApplyIndex' => $isApplyIndex), true);
+        	EC::success(EC_OK, array('entity_list_html' => $apply_list_html));
+        }elseif(strval($isApplyIndex) == '2'){
+        	EC::success(EC_OK, array('entity_list_html' => $entity_list_html, 'isApplyIndex' => $isApplyIndex));        	 
+        }elseif($isIndex) {
+            $view_html = $this->render('spdInternetBank', array('entity_list_html' => $entity_list_html, 'isApplyIndex' => $isApplyIndex ), true);
             $this->render('index', array('page_type' => 'spdInternetBank', 'spdInternetBank_html' => $view_html));
-        } else {
-            EC::success(EC_OK, array('entity_list_html' => $entity_list_html));
+        }else {
+            EC::success(EC_OK, array('entity_list_html' => $entity_list_html, 'isApplyIndex' => $isApplyIndex));
         }
     }
  
@@ -213,6 +235,11 @@ class SpdInternetBankController extends BaseController {
     }
     
     private function create(){
+    	
+    	if(!AdminController::isAdmin()){
+    		EC::fail(EC_USER_NO_AUTH);
+    	}
+    	
         $spdBank_model = $this->model('spdBank');
         
         $data = $spdBank_model->queryBankNumberByName(array());

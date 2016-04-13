@@ -38,6 +38,9 @@
 			<thead>
 				<tr>
 					<th style="display:none">id</th>
+					<?php if(strval($isApplyIndex) == '1' || strval($isApplyIndex) == '2'){?>
+					<th>操作</th>
+					<?php }?>
 <!-- 					<th>序号</th> -->
 					<th>行号</th>
 					<th>行名称</th>
@@ -49,8 +52,15 @@
 			<tr>
 				<td style="display:none"><?php echo $item['id'];?><input type="hidden" value="<?php echo $item['status'];?>"></td>
 <!-- 				<td>< ?php echo $item['serialNo'];?></td> -->
+				<?php if(strval($isApplyIndex) == '1' || strval($isApplyIndex) == '2'){?>
+				<td> 	      
+	  				<a id="entity-select-<?php echo $item['id'];?>" class="entity-select-bank" href="#" data-toggle="modal" data-keyboard="false" data-backdrop="static">选择</a>
+	        		<input id="entity-select-bankname-<?php echo $item['id'];?>" type="hidden" value="<?php echo $item['bankName'];?>" />
+	        	</td>
+	        	<?php }?>
 				<td><?php echo $item['bankNo'];?></td>
 				<td><?php echo $item['bankName'];?></td>
+				<!-- <td><?php echo $item['city_name'];?></td> -->
 				<td><?php echo $item['add_timestamp'];?></td>
 			</tr>
 <?php }?>
@@ -58,10 +68,10 @@
 		</table>
 		<nav>
 		  <ul class="pager" id="entity-pager-ul">
-		    <li><a id="entity-list-prev" href="#" <?php if($current_page == 1){?> class="disabled" <?php }?>>上一页</a></li>
-		    <li><span id="entity-current-page"><?php echo $current_page;?></span> /  <span id="entity-total-page"><?php echo $total_page;?></span></li>
-		    <li><a id="entity-list-next" href="#" <?php if($current_page == $total_page){?> class="disabled" <?php }?>>下一页</a></li>
-		    <li><select class="form-control input-sm " id="entity-custom-page" style="width: 60px;height:26px;display:inline;"></select></li>
+		    <li><a id="entity-list-prev-bank" href="#" <?php if($current_page == 1){?> class="disabled" <?php }?>>上一页</a></li>
+		    <li><span id="entity-current-page-bank"><?php echo $current_page;?></span> /  <span id="entity-total-page-bank"><?php echo $total_page;?></span></li>
+		    <li><a id="entity-list-next-bank" href="#" <?php if($current_page == $total_page){?> class="disabled" <?php }?>>下一页</a></li>
+		    <li><select class="form-control input-sm " id="entity-custom-page-bank" style="width: 60px;height:26px;display:inline;"></select></li>
 		  </ul>
 		</nav>
   </div>
