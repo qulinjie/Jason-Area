@@ -88,7 +88,7 @@ $(document).ready(function(){
 		}else{
 			isApplyIndex = '0';
 		}
-		alert(1);
+		
 	    //查找
 	    $.post(BASE_PATH + 'spdInternetBank/searchList', {
 		    	'bankNo':bankNo,
@@ -98,20 +98,16 @@ $(document).ready(function(){
 		    	'isApplyIndex':isApplyIndex,
 		        'page':page
 	        },
-	        function(result){
-	        	alert(2);
+	        function(result){	        	
 	            if(result.code != 0) {
 	                $("#search-entity-hint").html(result.msg + '(' + result.code + ')').fadeIn();
 	            }else {
 	                $("#entity-list").html(result.data.entity_list_html);
-	            }
-	            alert(3);
-	            $("#entity-search-btn-bank").removeAttr('disabled');
-	            alert(4);	            
+	            }	            
+	            $("#entity-search-btn-bank").removeAttr('disabled');	                        
 	            setTimeout(function(){
 	            	entitySetSelectedPage();
-                }, 2000);
-	            alert(5);
+                }, 1000);	           
 	        },
 	        'json'
 	    );
