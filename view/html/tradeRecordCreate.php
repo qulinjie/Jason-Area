@@ -4,7 +4,7 @@
  */
 ?>
 <div class="modal fade" id="add-entity-modal">
-	<div class="modal-dialog" style="width: 1200px;">
+	<div class="modal-dialog" style="width: 1300px;">
 		<div class="modal-content">
 			<div class="modal-header">
 				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -15,7 +15,7 @@
 			
 			<div class="modal-body">
 				<form class="form-horizontal" id="entity-form">
-				  <div  id="entity-list"></div>
+				  <div  id="add-entity-list"></div>
 				</form>
 			</div>
 			<div class="modal-footer" style="display: none;">
@@ -103,7 +103,10 @@
 	  <div class="form-group">
 	    <label for="add-entity-bank_name" class="col-sm-2 control-label">开户行</label>
 	    <div class="col-sm-4">
-		    <input type="text" class="form-control" id="add-entity-bank_name" placeholder="" />
+	    	<div class="form-inline">
+		    	<input type="text" class="form-control" id="add-entity-bank_name" placeholder="" style="width: 420px;"/>
+		    	<input type="button" class="btn btn-default" id="btn-bank_name" value="查" />
+		    </div>
 		    <div id="div_data_bank" class="citydatadiv" style="display: none;"><ul></ul></div>
 		    <a href="#" id="check-entity-bankName">验证开户行</a>
 		    &nbsp;&nbsp;&nbsp;&nbsp;
