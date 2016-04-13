@@ -202,6 +202,24 @@ abstract class BaseController extends Controller
         }
         return $array;
     }
+    
+	private static $_uniqueLoginUser = NULL;
+    public static function getUniqueLoginUser(){
+    	$loginUser = NULL;
+    	
+    	if(NULL !== self::$_uniqueLoginUser){
+    		return self::$_uniqueLoginUser;
+    	}
+    	if(UserController::isLogin()){
+    		$loginUser = UserController::getLoginUser();
+    	}elseif(AdminController::isAdmin()){
+    		$loginUser = AdminController::getLoginUser();
+    	}    	
+    	if(!empty($loginUser) && is_array($loginUser)){
+    		self::$_uniqueLoginUser = $loginUser;
+    	}
+    	return self::$_uniqueLoginUser;
+    }
 
     private static $_currentUserId = NULL;
     public static function getCurrentUserId()
@@ -210,11 +228,7 @@ abstract class BaseController extends Controller
     		return self::$_currentUserId;
     	}
     	$loginUser = array();
-    	if(UserController::isLogin()){
-    		$loginUser = UserController::getLoginUser();
-    	}elseif(AdminController::isAdmin()){
-    		$loginUser = AdminController::getLoginUser();
-    	}
+    	$loginUser = self::getUniqueLoginUser();
     	if(!empty($loginUser) && is_array($loginUser) && isset($loginUser['usercode'])){
     		self::$_currentUserId = $loginUser['usercode'];
     	}    	
@@ -223,6 +237,20 @@ abstract class BaseController extends Controller
             Log::error("getLoginUser_data=========>>>loginUser_data=##" . json_encode($loginUser) . "##"); // toStirng
         }
         return self::$_currentUserId;
+    }
+    
+    private static $_uniqueLoginkeyValue = NULL;
+    public static function getUniqueLoginkey(){
+    	if(NULL !== self::$_uniqueLoginkeyValue){
+    		return self::$_uniqueLoginkeyValue;
+    	}
+    	$loginUser = array();
+    	$loginUser = self::getUniqueLoginUser();    	
+    	
+    	if(!empty($loginUser) && is_array($loginUser) && isset($loginUser[UserController::$_loginKeyName])){
+    		return self::$_uniqueLoginkeyValue = $loginUser[UserController::$_loginKeyName];
+    	}    	
+    	return NULL;
     }
 
 
