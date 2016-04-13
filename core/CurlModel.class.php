@@ -426,7 +426,7 @@ class CurlModel
 	public function sendRequestErp($interface, $data)
 	{
         $base_data = [ 'caller'=>'ddmg_pay', 'callee'=>'ebLlyZDBSGgp', 'eventid'=>rand(1000,9999), 'timestamp'=>time() ];
-        $base_data['loginkey'] = UserController::getLoginkey();        
+        $base_data['loginkey'] = UserController::getUniqueLoginkey();        
         $base_data['data'] = $data;
     
 //         Log::error("\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n");

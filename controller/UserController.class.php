@@ -470,7 +470,7 @@ class UserController extends BaseController
         return self::$_loginUser;
     }
     
-    private static $_loginkeyValue = NULL;
+    /* private static $_loginkeyValue = NULL;
     public static function getLoginkey(){
     	if(NULL !== self::$_loginkeyValue){
     		return self::$_loginkeyValue;
@@ -481,7 +481,7 @@ class UserController extends BaseController
     		}    		
     	}
     	return NULL;
-    }
+    } */
     
     public static function setLoginSession($loginUser){
     	Log::notice(" setLoginSession -loginUser=" . json_encode($loginUser));
