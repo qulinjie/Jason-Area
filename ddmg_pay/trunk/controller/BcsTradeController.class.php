@@ -1012,7 +1012,7 @@ class BcsTradeController extends BaseController {
     	$head['je'] = $data['TX_AMT']; //金额
     	$head['usercode'] = $bcs_data['user_id'];
     	$head['gszh'] = $data['ACCOUNT_NO']; //收款公司账号
-    	$head['gskhh'] = ''; //收款开户行
+    	$head['gskhh'] = '上海浦东发展银行'; //收款开户行名称
     	$head['zh'] = $data['oppositeAcctNo']; //付款账号
     	$head['khh'] = $data['payeeBankName']; //付款开户行
     	 
