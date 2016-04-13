@@ -26,8 +26,10 @@
 	      <option value="-1">-请选择-</option>
 	      <?php 
 	      		$super_bank_list = SpdInternetSuperBankController::getSuperBankList(false);
-	      		foreach ($super_bank_list as $super_bank){
-	      			echo "<option value=". $super_bank['id'] .">". $super_bank['super_bank_name'] ."</option>";
+	      		if(is_array($super_bank_list) && !empty($super_bank_list)){
+		      		foreach ($super_bank_list as $super_bank){
+		      			echo "<option value=". $super_bank['id'] .">". $super_bank['super_bank_name'] ."</option>";
+		      		}
 	      		}
 	      ?> 
         </select>        
@@ -38,9 +40,11 @@
 	      <option value="-1">-请选择-</option>
 	      <?php 
 	      		$province_list = ProvinceController::getProviceList(false);
-	      		foreach ($province_list as $province){
-	      			echo "<option value=". $province['id'] .">". $province['province_name'] ."</option>";
-	      		}
+	      		if(is_array($province_list) && !empty($province_list)){
+	      			foreach ($province_list as $province){
+	      				echo "<option value=". $province['id'] .">". $province['province_name'] ."</option>";
+	      			}
+	      		}	      		
 	      ?> 
         </select>
         <label for="entity-search-city_id">城市</label>
