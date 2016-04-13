@@ -31,7 +31,7 @@
 				    </div>
 				  </div>
 				  <div class="form-group">
-				    <label for="add-entity-ACCOUNT_NO" class="col-sm-2 control-label">虚拟账户</label>
+				    <label for="add-entity-ACCOUNT_NO" class="col-sm-2 control-label">专属账户</label>
 				    <div class="col-sm-9">
 				      <select class="form-control" id="add-entity-ACCOUNT_NO">
                       </select>
@@ -58,11 +58,11 @@
   <div class="panel-body">
     <div class="form-inline">
       <div class="form-group">
-	    <label for="entity-search-SIT_NO">虚拟帐户名</label>
+	    <label for="entity-search-SIT_NO">专属帐户名</label>
 	    <input type="email" class="form-control" id="entity-search-SIT_NO" placeholder="">
 	  </div>
 	  <div class="form-group">
-	    <label for="entity-search-ACCOUNT_NO">虚拟帐号</label>
+	    <label for="entity-search-ACCOUNT_NO">专属帐号</label>
 	    <input type="email" class="form-control" id="entity-search-ACCOUNT_NO" placeholder="">
 	  </div>
 	  <div class="form-group" style="display: none;">
@@ -92,7 +92,7 @@
 
 <div id="add-button-group" style="padding-bottom: 2px;">
 	<a id="add-entity-new" class="btn btn-primary" href="#" data-toggle="modal" data-keyboard="false" data-backdrop="static">新增</a>
-	<a id="entity-loadList-btn" class="btn btn-primary" href="#">更新浦发虚拟账户</a>
+	<a id="entity-loadList-btn" class="btn btn-primary" href="#">更新浦发账户</a>
 </div>
 
 <div  id="entity-list">
