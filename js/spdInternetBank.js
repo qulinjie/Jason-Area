@@ -57,9 +57,11 @@ $(document).ready(function(){
 			var total_page = $("#entity-total-page-bank").html();
 			var selObj = $('#entity-custom-page-bank');
 			selObj.empty();
+			var html = '';
 			for(var i=1; i<=total_page; i++){
-				selObj.append("<option value='" + i +"'>" + i +"</option>");
+				html += "<option value='" + i +"'>" + i +"</option>";
 			}
+			selObj.append(html);
 			selObj.val(cur_page);
 		}
 	}
@@ -105,9 +107,9 @@ $(document).ready(function(){
 	                $("#entity-list").html(result.data.entity_list_html);
 	            }	            
 	            $("#entity-search-btn-bank").removeAttr('disabled');	                        
-	            setTimeout(function(){
+	            //setTimeout(function(){
 	            	entitySetSelectedPage();
-                }, 1000);	           
+                //}, 1000);	           
 	        },
 	        'json'
 	    );
