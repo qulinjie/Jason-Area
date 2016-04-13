@@ -60,8 +60,8 @@ $(document).ready(function(){
 			var html = '';
 			for(var i=1; i<=total_page; i++){
 				html += "<option value='" + i +"'>" + i +"</option>";
-				if(i > 500) {
-					i = total_page;
+				if(i == 500) {
+					i = total_page - 1;
 				}
 			}
 			selObj.append(html);
