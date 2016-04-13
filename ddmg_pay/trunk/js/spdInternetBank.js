@@ -107,9 +107,9 @@ $(document).ready(function(){
 	                $("#entity-list").html(result.data.entity_list_html);
 	            }	            
 	            $("#entity-search-btn-bank").removeAttr('disabled');	                        
-	            //setTimeout(function(){
+	            setTimeout(function(){
 	            	entitySetSelectedPage();
-                //}, 1000);	           
+                }, 1000);	           
 	        },
 	        'json'
 	    );
