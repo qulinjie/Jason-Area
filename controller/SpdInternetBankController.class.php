@@ -91,6 +91,9 @@ class SpdInternetBankController extends BaseController {
         $params['current_page'] = $current_page;
         $params['page_count'] = $page_cnt;
         $data = $code_model->searchList($params, $current_page, $page_cnt);
+        
+        Log::notice("---response--- searchList--- data=". json_encode($data));
+        
         if(EC_OK != $data['code']){
             Log::error("searchList failed . ");
             EC::fail($data['code']);
