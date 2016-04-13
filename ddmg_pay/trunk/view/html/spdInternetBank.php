@@ -21,7 +21,7 @@
 	    <input type="email" class="form-control" id="entity-search-bankName" placeholder="" style="width: 220px;">
 	  </div>
 	  <div class="form-group">
-	    <label for="entity-search-super_bank_id">银行分类</label>
+	    <label for="entity-search-super_bank_id">行别</label>
 	    <select class="form-control" id="entity-search-super_bank_id">
 	      <option value="-1">-请选择-</option>
 	      <?php 
