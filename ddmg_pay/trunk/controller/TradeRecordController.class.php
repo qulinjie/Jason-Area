@@ -1511,10 +1511,10 @@ class TradeRecordController extends BaseController {
     	$head['rq'] = $data['pay_timestamp']; //日期：rq_
     	$head['je'] = $data['order_bid_amount']; //金额：je_
     	$head['usercode'] = $data['user_id']; 
-    	$head['gszh'] = $data['ACCOUNT_NO']; //公司帐户：gszh_（浦发银行帐号）
-    	$head['gskhh_'] = ''; //开户银行：gskhh_（浦发银行）
-    	$head['zh'] = $data['comp_account']; 
-    	$head['khh'] = $data['bank_name'];
+    	$head['gszh'] = $data['ACCOUNT_NO']; //付款公司帐户：gszh_（浦发银行帐号）
+    	$head['gskhh'] = '上海浦东发展银行'; //付款开户银行：gskhh_（浦发银行）
+    	$head['zh'] = $data['comp_account']; //收款银行帐号
+    	$head['khh'] = $data['bank_name']; //收款银行名称
     	$params['head'] = $head;
     	
     	$params['details'] = array();
@@ -1707,6 +1707,29 @@ class TradeRecordController extends BaseController {
     	}else{
     		Log::auditError('apply_status is error!');
     		EC::fail(EC_PAR_ERR);
+    	}
+    	
+    	//查合伙人信息
+    	$params  = array();
+    	$params['user_id'] = $data['user_id'];
+    	//Log::write("user_id==".$data['user_id'], 'debug', 'debug-'.date('Y-m-d'));
+    	$bcsCustomer_model = $this->model('bcsCustomer');
+    	$bcs_data = $bcsCustomer_model->getInfo($params);
+    	//Log::write("bcs_data==".var_export($bcs_data, true), 'debug', 'debug-'.date('Y-m-d'));
+    	if(EC_OK != $bcs_data['code'] || !is_array($bcs_data) || !isset($bcs_data['data'])){
+    		Log::auditError("bcsCustomer getInfo failed . ");
+    		EC::fail(EC_USR_NON);
+    	}
+    	$bcs_data = $bcs_data['data'][0];
+    	if(empty($bcs_data)) {
+    		Log::auditError('bcsCustomer getInfo empty !');
+    		EC::fail(EC_RED_EMP);
+    	}
+    	
+    	//账户余额判断
+    	if(floatval($data['order_bid_amount']) > floatval($bcs_data['ACCT_BAL'])){
+    		Log::auditError('order_bid_amount'.$data['order_bid_amount']. '> ACCT_BAL!'.$bcs_data['ACCT_BAL']);
+    		EC::fail(EC_BLE_LESS);
     	}
     	
     	//调用erp接口查询是否可以通过
