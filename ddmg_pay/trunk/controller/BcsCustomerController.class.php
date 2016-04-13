@@ -265,6 +265,7 @@ class BcsCustomerController extends BaseController {
         }
     
         $data_info = $data['data'][0];
+        Log::notice("getInfo data ===========================>> data = ##" . json_encode($data_info) . "##" );
         
         $cert_type = $this->getConfig('certificate_type');
         $data_info['MBR_CERT_TYPE'] = $cert_type[$data_info['MBR_CERT_TYPE']];

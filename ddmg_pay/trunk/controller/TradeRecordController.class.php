@@ -1268,6 +1268,7 @@ class TradeRecordController extends BaseController {
     
     public function checkBankName(){
         $bankName = Request::post('bankName');
+//         Log::notice(var_export($_POST,true));
         
         if( !$bankName ){
             Log::error('check params is empty !' . $bankName);

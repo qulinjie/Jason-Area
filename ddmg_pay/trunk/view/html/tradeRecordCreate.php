@@ -169,7 +169,7 @@
 	  <div class="alert alert-danger search-list-hint" id="ref-entity-hint"></div>
 	  
 	  <div id="add-button-group" style="padding-bottom: 2px;">
-        	<a id="add-entity-new" class="btn btn-primary" href="#" >引用采购单</a>
+        	<a id="add-entity-new" class="btn btn-primary" href="#" >引订单</a>
         	<a id="add-entity-ref" class="btn btn-primary" href="#" >插入</a>
         </div>
         
