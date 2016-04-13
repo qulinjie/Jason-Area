@@ -107,8 +107,10 @@ $(document).ready(function(){
 	            }
 	            alert(3);
 	            $("#entity-search-btn-bank").removeAttr('disabled');
-	            alert(4);
-	            entitySetSelectedPage();
+	            alert(4);	            
+	            setTimeout(function(){
+	            	entitySetSelectedPage();
+                }, 2000);
 	            alert(5);
 	        },
 	        'json'
