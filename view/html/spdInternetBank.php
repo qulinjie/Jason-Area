@@ -27,9 +27,11 @@
 	      <?php 
 	      		$super_bank_list = SpdInternetSuperBankController::getSuperBankList(false);
 	      		if(is_array($super_bank_list) && !empty($super_bank_list)){
+					$option = '';
 		      		foreach ($super_bank_list as $super_bank){
-		      			echo "<option value=". $super_bank['id'] .">". $super_bank['super_bank_name'] ."</option>";
+		      			$option .= "<option value=". $super_bank['id'] .">". $super_bank['super_bank_name'] ."</option>";
 		      		}
+		      		echo $option;
 	      		}
 	      ?> 
         </select>        
@@ -41,9 +43,11 @@
 	      <?php 
 	      		$province_list = ProvinceController::getProviceList(false);
 	      		if(is_array($province_list) && !empty($province_list)){
+					$option = '';
 	      			foreach ($province_list as $province){
-	      				echo "<option value=". $province['id'] .">". $province['province_name'] ."</option>";
+	      				$option .= "<option value=". $province['id'] .">". $province['province_name'] ."</option>";
 	      			}
+	      			echo $option;
 	      		}	      		
 	      ?> 
         </select>
