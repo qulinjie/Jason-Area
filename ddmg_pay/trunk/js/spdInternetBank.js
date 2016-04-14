@@ -53,16 +53,15 @@ $(document).ready(function(){
 
 	function entitySetSelectedPage(){
 		if($('#entity-custom-page-bank') && $("#entity-current-page-bank") && $("#entity-total-page-bank")){
-			var cur_page = $("#entity-current-page-bank").html();
-			var total_page = $("#entity-total-page-bank").html();
+			var cur_page = parseInt($("#entity-current-page-bank").html());
+			var total_page = parseInt($("#entity-total-page-bank").html());
 			var selObj = $('#entity-custom-page-bank');
 			selObj.empty();
 			var html = '';
-			for(var i=1; i<=total_page; i++){
-				html += "<option value='" + i +"'>" + i +"</option>";
-				if(i == 500) {
-					i = total_page - 1;
-				}
+		    var start = cur_page > 20 ? cur_page - 20 : 1;
+		    var end = (total_page - cur_page) > 20 ? cur_page + 19 : total_page;
+			for(var i=start; i<=end; i++){
+				html += "<option value='" + i +"'>" + i +"</option>";				
 			}
 			selObj.append(html);
 			selObj.val(cur_page);
