@@ -1059,8 +1059,18 @@ class BcsTradeController extends BaseController {
     	if($is_ec) EC::success(EC_OK);
     	return true;
     }
-    
-    //收款后发送短信给用户
+        
+    /**
+    * 收款后发送短信给用户
+    * @date: 2016-4-14 下午3:30:52
+    * @author: lw
+    * @param: 
+    * $ACCOUNT_NO 虚拟帐号
+    * $payer 付款单位名称
+    * $amount 付款金额
+    * $payer_no 付款银行号
+    * @return:
+    */
     public function sendSmsCodeForCollection($ACCOUNT_NO, $payer, $amount, $payer_no){
     	
     	Log::skdxNotice('sendSmsCodeForCollection . ACCOUNT_NO='. $ACCOUNT_NO .',payer='. $payer .',amount='. $amount . ',payer_no=' . $payer_no);    	 
@@ -1068,7 +1078,7 @@ class BcsTradeController extends BaseController {
     		Log::skdxError('empty args!');
     		//EC::fail(EC_PAR_ERR);
     		return false;
-    	}
+    	}    	
     	
     	//查合伙人信息
     	$bcs_params  = array();
@@ -1092,7 +1102,7 @@ class BcsTradeController extends BaseController {
     	$user_model = $this->model('user');
     	$user_data = $user_model->erp_getInfo(array('usercode' => $bcs_data['user_id']));
     	if(EC_OK_ERP != $user_data['code']){
-    		Log::skdxError('erp_getInfo Fail!');
+    		Log::skdxError('erp_getInfo Fail!' . $user_data['msg']);
     		//EC::fail($user_data['code']);
     		return false;
     	}
@@ -1108,7 +1118,7 @@ class BcsTradeController extends BaseController {
     	if(!empty($user_data['fuserid']) && $bcs_data['user_id'] != $user_data['fuserid']){
     		$user_data2 = $user_model->erp_getInfo(array('usercode' => $user_data['fuserid']));
     		if(EC_OK_ERP != $user_data2['code']){
-    			Log::skdxError('2 erp_getInfo Fail!');
+    			Log::skdxError('2 erp_getInfo Fail!' . $user_data2['msg']);
     			//EC::fail($user_data2['code']);
     			return false;
     		}
@@ -1121,8 +1131,10 @@ class BcsTradeController extends BaseController {
     	// 尊敬的客户，【Value1】已提交支付，支付【Value2】为【Value3】，请及时跟进。感谢您的支持【Value4】
     	$data = array();
     	$data['tel'] = $user_data['mobile']; //'13367310112'电话
-    	$data['codetype'] = '10';    
-    	$data['value1'] = $payer . empty($payer_no) ? '' : '(账号：'.$payer_no.')' ; //付款公司名称
+    	$data['codetype'] = '10'; 
+    	$payer_no = empty($payer_no) ? '' : '(账号:'.$payer_no.')';
+    	$value1 = $payer . $payer_no;    	
+    	$data['value1'] = $value1 ; //付款公司名称
     	$data['value2'] = '金额'; 
     	$data['value3'] = $amount.'元';
     	$data['value4'] = '!';
