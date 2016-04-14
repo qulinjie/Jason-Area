@@ -56,10 +56,10 @@ $(document).ready(function(){
 			var cur_page = parseInt($("#entity-current-page-bank").html());
 			var total_page = parseInt($("#entity-total-page-bank").html());
 			var selObj = $('#entity-custom-page-bank');
-			selObj.empty();
-			var html = '';
+			selObj.empty();			
 		    var start = cur_page > 20 ? cur_page - 20 : 1;
 		    var end = (total_page - cur_page) > 20 ? cur_page + 19 : total_page;
+		    var html = '';
 			for(var i=start; i<=end; i++){
 				html += "<option value='" + i +"'>" + i +"</option>";				
 			}
