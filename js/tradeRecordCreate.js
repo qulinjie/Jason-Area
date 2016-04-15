@@ -683,7 +683,7 @@ $(document).on('click', '#for-test-btn', function(event){
 		//判断单位是否不一致
 		if(comp_name_code != '' && quote_comp_name_code != comp_name_code){
 			$("#ref-entity-hint").html('收款单位不一致，请引用同一收款单位的单据！').fadeIn();
-			//return false;
+			return false;
 		}
 		if(comp_name_code == ''){
 			$('#add-entity-comp_name_code').val(quote_comp_name_code);
@@ -704,7 +704,7 @@ $(document).on('click', '#for-test-btn', function(event){
 		
 		//var fphm = $('#add-entity-fphm').val(); // 业务单号-发票号码
 		var quote_fphm = orderHeader['fphm_']; // 业务单号-发票号码
-		var quote_amount = 123;//orderDetails['js_cgje']; // 申请金额
+		var quote_amount = orderDetails['js_cgje']; // 申请金额
 		var quote_comp_name_buyer = orderHeader['string7_']; // 下游买家
 		var quote_comp_name_buyer_code = orderHeader['string8_']; // 下游买家代码
 		if(quote_comp_name_buyer == 'null' || quote_comp_name_buyer == null ){
