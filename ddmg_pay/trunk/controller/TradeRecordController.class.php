@@ -1053,7 +1053,7 @@ class TradeRecordController extends BaseController {
         EC::success(EC_OK);
     }
     
-    private function createApply($is_advance = '0'){
+    private function createApply($order_apply_type = 0){
         $data_info = array();
         
         $bcsCustomer_model = $this->model('bcsCustomer');
@@ -1107,13 +1107,13 @@ class TradeRecordController extends BaseController {
         	EC::success(EC_OK, $api_data);
         }
         
-        $view_html = $this->render('tradeRecordCreate', array('data_info' => $data_info, 'is_advance' => $is_advance), true);
+        $view_html = $this->render('tradeRecordCreate', array('data_info' => $data_info, 'order_apply_type' => $order_apply_type), true);
         $this->render('index', array('page_type' => 'tradeRecord', 'tradeRecordCreate_html' => $view_html) );
     }
     
     public function create_add(){
     	
-    	//$is_advance = strval(Request::post('is_advance')); //是否是预付款申请单  '1'是
+    	$order_apply_type = intval(Request::post('order_apply_type')); //申请单类型  0普通订单付款  1预付款单 
     	$pay_pwd = Request::post('pay_pwd'); // 支付密码        
         $apply_no = Request::post('apply_no'); // 申请单号
         $comp_account = Request::post('comp_account'); // 收款账号
@@ -1138,13 +1138,7 @@ class TradeRecordController extends BaseController {
         $loginUser_data = UserController::getLoginUser();
         $user_id = $loginUser_data['usercode']; //当前登录用户id
         $audit_user_id_first = $loginUser_data['fuserid']; //一级审核人id
-        $audit_user_id_second = $loginUser_data['managerid']; //二级审核人id
-        
-        //如果订单列表为空则表示为预付款
-        $is_advance = '0';
-        if(empty($apply_item) && is_array($apply_item)){
-        	$is_advance = '1'; 
-        }
+        $audit_user_id_second = $loginUser_data['managerid']; //二级审核人id    
         
         //支付密码校验
         if(empty($pay_pwd)){
@@ -1181,16 +1175,21 @@ class TradeRecordController extends BaseController {
             EC::fail($user_info_data['code'], $user_info_data['msg']);
         }
         $ACCOUNT_NO = $user_info_data['data'][0]['ACCOUNT_NO'];
-        
+           
         $tradeRecord_model = $this->model('tradeRecord');
         $trade_record = array();
         $trade_record_item = array();        
         $sum_amount = 0; //非预付款的所有订单的申请金额的总计
-        $order_no_str = ''; //非预付款的所有订单的单号
-        $order_type = 0; //申请单类型 1预付款单      
+        $order_no_str = ''; //非预付款的所有订单的单号             
         
-        //非预付款单
-        if($is_advance != '1' && !empty($apply_item) && is_array($apply_item)){
+        /* //如果订单列表为空则表示为预付款
+        $is_advance = '0';
+        if(empty($apply_item) && is_array($apply_item)){
+        	$is_advance = '1';
+        	$order_apply_type = 1;
+        } */
+                
+        if(!empty($apply_item) && is_array($apply_item)){
 	        foreach ($apply_item as $itemKey => $itemVal){
 	            $arr = explode("@;",$itemVal);
 	            $v_order_no = $arr[0]; //单个订单单号
@@ -1227,16 +1226,14 @@ class TradeRecordController extends BaseController {
 	                EC::fail(EC_PAR_ERR);
 	            }
 	            if( $v_comp_name_buyer_code != $t_order_buyer_code ){
-	                Log::error('check SellOrderInfo-order_buyer_code - order_no=' . $v_order_no . ',order_buyer_code=' . $t_order_buyer_code . ' != comp_name_buyer_code=' . $v_comp_name_buyer_code);
+	                Log::error('check SellOrderInfo-order_buyer_code - v_comp_name_buyer_code=' . $v_comp_name_buyer_code . ',t_order_buyer_code=' . $t_order_buyer_code . ' != comp_name_buyer_code=' . $v_comp_name_buyer_code);
 	                EC::fail(EC_PAR_ERR);
 	            }
 	        }        
-        }else if($is_advance == '1'){
-        	$order_type = 1; //预付款单
         }
         
         $trade_record['item'] = $trade_record_item;
-        //$trade_record['order_type'] = $order_type; //申请单类型  1预付款单
+        $trade_record['order_apply_type'] = $order_apply_type; //申请单类型  0普通订单付款  1预付款单
         $trade_record['ACCOUNT_NO'] = $ACCOUNT_NO;
         $trade_record['user_id'] = $user_id;
         $trade_record['audit_user_id_first'] = $audit_user_id_first;
@@ -1722,8 +1719,8 @@ class TradeRecordController extends BaseController {
     	$params['details'] = array();    	
     	foreach ($item_list as $item){
     		$details = array();
-    		$details['xymjdm'] = $item['item_comp_name_buyer_code'];
-    		$details['fkje'] = $item['bid_amount'];
+    		$details['xymjdm'] = $item['item_comp_name_buyer_code']; //下游买家代码
+    		$details['fkje'] = $item['bid_amount']; //申请付款金额
     		$params['details'][] = $details;
     	}
     	
@@ -1756,25 +1753,24 @@ class TradeRecordController extends BaseController {
     		EC::fail(EC_PAR_ERR);
     	}
     	
-    	//根据id查采购单的数据
+    	//根据id查申请付款单的数据
     	$tradeRecord_model = $this->model('tradeRecord');
-    	$data = $tradeRecord_model->getInfo(array('id' => $id));
-    	if(empty($data) || !is_array($data) || EC_OK != $data['code'] || !isset($data['data'])) {
+    	$tradeRecord_data = $tradeRecord_model->getInfo(array('id' => $id));
+    	if(empty($tradeRecord_data) || !is_array($tradeRecord_data) || EC_OK != $tradeRecord_data['code'] || !isset($tradeRecord_data['data'])) {
     		Log::auditError('tradeRecord getInfo empty !');
     		EC::fail(EC_DAT_NON);
     	}
-    	$data = $data['data'][0];
-    	if(empty($data)) {
+    	$tradeRecord_data = $tradeRecord_data['data'][0];
+    	if(empty($tradeRecord_data)) {
     		Log::auditError('tradeRecord getInfo empty !');
     		EC::fail(EC_RED_EMP);
     	}
-    	//Log::write(var_export($data, true), 'debug', 'debug-'.date('Y-m-d'));
-    	//申请状态 1一级待审核 2一级审核通过 3一级审核驳回 4二级待审核 5二级审核通过 6二级审核驳回
-    	//audit_user_id_first audit_user_id_second
-    	
+    	    	
     	$current_user_id = self::getCurrentUserId();
     	$audit_level =0;
-    	    	
+    	
+    	//申请状态 1一级待审核 2一级审核通过 3一级审核驳回 4二级待审核 5二级审核通过 6二级审核驳回
+    	//audit_user_id_first audit_user_id_second    	
     	if(2 == $apply_status || 3 == $apply_status){ //一级审批   	
     		
     		if(2 == $apply_status ){
@@ -1786,25 +1782,25 @@ class TradeRecordController extends BaseController {
     		}    		
     		
     		//判断当前用户是否有审核权限    		
-    		if($current_user_id != $data['audit_user_id_first']){
-    			Log::auditError('1 the current user does not have audit authority!'. 'id='. $id .' ' . $current_user_id . '!=' . $data['audit_user_id_second']);
+    		if($current_user_id != $tradeRecord_data['audit_user_id_first']){
+    			Log::auditError('1 the current user does not have audit authority!'. 'id='. $id .' ' . $current_user_id . '!=' . $tradeRecord_data['audit_user_id_second']);
     			EC::fail(EC_USER_NO_AUTH);
     		}
     		//判断是否可以审批
-    		if(1 != intval($data['apply_status'])){
+    		if(1 != intval($tradeRecord_data['apply_status'])){
     			Log::auditError('1 audit did not pass!');
     			EC::fail(EC_TRADE_TF_YES_AS);
     		}
     		$audit_level = 1;
     	}elseif(5 == $apply_status || 6 == $apply_status){ //二级审批
     		//判断当前用户是否有审核权限
-    		if($current_user_id != $data['audit_user_id_second']){
-    			Log::auditError('2 the current user does not have audit authority!'. 'id='. $id .' ' . $current_user_id . '!=' . $data['audit_user_id_second']);
+    		if($current_user_id != $tradeRecord_data['audit_user_id_second']){
+    			Log::auditError('2 the current user does not have audit authority!'. 'id='. $id .' ' . $current_user_id . '!=' . $tradeRecord_data['audit_user_id_second']);
     			EC::fail(EC_USER_NO_AUTH);
     		}
     		
     		//判断是否可以审批
-    		if(2 != intval($data['apply_status']) && 4 != intval($data['apply_status'])){
+    		if(2 != intval($tradeRecord_data['apply_status']) && 4 != intval($tradeRecord_data['apply_status'])){
     			Log::auditError('2 audit did not pass!');
     			EC::fail(EC_TRADE_TF_FRIST_NO_AS);
     		}
@@ -1816,11 +1812,9 @@ class TradeRecordController extends BaseController {
     	
     	//查合伙人信息
     	$params  = array();
-    	$params['user_id'] = $data['user_id'];
-    	//Log::write("user_id==".$data['user_id'], 'debug', 'debug-'.date('Y-m-d'));
+    	$params['user_id'] = $tradeRecord_data['user_id'];
     	$bcsCustomer_model = $this->model('bcsCustomer');
     	$bcs_data = $bcsCustomer_model->getInfo($params);
-    	//Log::write("bcs_data==".var_export($bcs_data, true), 'debug', 'debug-'.date('Y-m-d'));
     	if(EC_OK != $bcs_data['code'] || !is_array($bcs_data) || !isset($bcs_data['data'])){
     		Log::auditError("bcsCustomer getInfo failed . ");
     		EC::fail(EC_USR_NON);
@@ -1832,13 +1826,13 @@ class TradeRecordController extends BaseController {
     	}
     	
     	//账户余额判断
-    	if(floatval($data['order_bid_amount']) > floatval($bcs_data['ACCT_BAL'])){
-    		Log::auditError('order_bid_amount'.$data['order_bid_amount']. '> ACCT_BAL!'.$bcs_data['ACCT_BAL']);
+    	if(floatval($tradeRecord_data['order_bid_amount']) > floatval($bcs_data['ACCT_BAL'])){
+    		Log::auditError('order_bid_amount'.$tradeRecord_data['order_bid_amount']. '> ACCT_BAL!'.$bcs_data['ACCT_BAL']);
     		EC::fail(EC_BLE_LESS);
     	}
     	
     	//调用erp接口查询是否可以通过
-    	//$erp_audit_result = $this->erp_auditOneTradRecord($data);
+    	//$erp_audit_result = $this->erp_auditOneTradRecord($tradeRecord_data);
     	
     	//修改审批状态
     	$params = array();
@@ -1847,12 +1841,12 @@ class TradeRecordController extends BaseController {
     	$params['audit_level'] = $audit_level;
     	$params['apply_timestamp'] = date('Y-m-d H:i:s',time());
      	$tradeRecord_model = $this->model('tradeRecord');
-    	$data = $tradeRecord_model->auditOneTradRecord($params);    	
-    	Log::auditNotice("response-data ===========================>> data = ##" . json_encode($data) . "##" );
+    	$audit_data = $tradeRecord_model->auditOneTradRecord($params);    	
+    	Log::auditNotice("response-data ===========================>> data = ##" . json_encode($audit_data) . "##" );
     	    	
-    	if(EC_OK != $data['code']){
+    	if(EC_OK != $audit_data['code']){
     		Log::auditError('auditOneTradRecord Fail!');
-    		EC::fail($data['code']);
+    		EC::fail($audit_data['code']);
     	}
     	
     	/* //对审批通过的进行付款
@@ -1860,7 +1854,7 @@ class TradeRecordController extends BaseController {
     		$this->sendTransferTrade($id);
     	} */
     	
-    	EC::success(EC_OK, $data['data']);
+    	EC::success(EC_OK, $audit_data['data']);
     }
 
     public static function getBackhostStatus(){
@@ -1931,50 +1925,48 @@ class TradeRecordController extends BaseController {
     	
     	//根据id查采购单的数据    	
     	$tradeRecord_model = $this->model('tradeRecord');    	
-    	$data = $tradeRecord_model->getInfo(array('id' => $id));        	
-    	if(empty($data) || !is_array($data) || EC_OK != $data['code'] || !isset($data['data'])) {
+    	$tradeRecord_data = $tradeRecord_model->getInfo(array('id' => $id));        	
+    	if(empty($tradeRecord_data) || !is_array($tradeRecord_data) || EC_OK != $tradeRecord_data['code'] || !isset($tradeRecord_data['data'])) {
     		Log::fkError('tradeRecord getInfo empty !');
     		EC::fail(EC_DAT_NON);
     	}    	    	
-    	$data = $data['data'][0];
-    	if(empty($data)) {
+    	$tradeRecord_data = $tradeRecord_data['data'][0];
+    	if(empty($tradeRecord_data)) {
     		Log::fkError('tradeRecord getInfo empty !');
     		EC::fail(EC_RED_EMP);
     	}    		
-    	//Log::write(var_export($data, true), 'debug', 'debug-'.date('Y-m-d'));
     	
     	//判断二级是否已审批通过
-    	if(5 != intval($data['apply_status'])){    		
+    	if(5 != intval($tradeRecord_data['apply_status'])){    		
     		Log::fkError('second audit did not pass!');
     		EC::fail(EC_TRADE_TF_SECOND_NO_AS);
     	}
     	    	
     	//判断是否已付款  
     	//order_status 订单交易状态 1-待付款 2-已付款  
-    	if(2 == intval($data['order_status'])){
-    		Log::fkError("the order has been payment: order_status={$data['order_status']}!");
+    	if(2 == intval($tradeRecord_data['order_status'])){
+    		Log::fkError("the order has been payment: order_status={$tradeRecord_data['order_status']}!");
     		EC::fail(EC_TRADE_TF_OS_ERR_2);
     	}
     	//backhost_status 记录状态 0-待补录；1-待记帐；2-待复核；3-待授权；4-完成；8-拒绝；9-撤销；
-    	if($data['backhost_status']!=null && in_array($data['backhost_status'], array(0,1,2,3,4))){
-    		Log::fkError("the order has been payment: backhost_status={$data['backhost_status']}!");
+    	//backhost_status array(0,1,2,3,4)) 不给付款
+    	if($tradeRecord_data['backhost_status']!=null && in_array($tradeRecord_data['backhost_status'], array(0,1,2,3,4))){
+    		Log::fkError("the order has been payment: backhost_status={$tradeRecord_data['backhost_status']}!");
     		EC::fail(EC_TRADE_TF_OS_ERR_3);
     	}
     	
     	//判断当前用户是否有该笔申请单付款权限
     	$current_user_id = UserController::getCurrentUserId();
-    	if($current_user_id != $data['audit_user_id_second']){
-    		Log::fkError('the current user does not have operation permissions, current_user_id='. UserController::getCurrentUserId() . ' audit_user_id_second='. $data['audit_user_id_second']);
+    	if($current_user_id != $tradeRecord_data['audit_user_id_second']){
+    		Log::fkError('the current user does not have operation permissions, current_user_id='. UserController::getCurrentUserId() . ' audit_user_id_second='. $tradeRecord_data['audit_user_id_second']);
     		EC::fail(EC_USER_NO_AUTH);
     	}
     	  
     	//查合伙人信息    	   
     	$params  = array();
-    	$params['user_id'] = $data['user_id'];  
-    	//Log::write("user_id==".$data['user_id'], 'debug', 'debug-'.date('Y-m-d'));
+    	$params['user_id'] = $tradeRecord_data['user_id'];  
     	$bcsCustomer_model = $this->model('bcsCustomer');  	
     	$bcs_data = $bcsCustomer_model->getInfo($params); 
-    	//Log::write("bcs_data==".var_export($bcs_data, true), 'debug', 'debug-'.date('Y-m-d'));    	
     	if(EC_OK != $bcs_data['code'] || !is_array($bcs_data) || !isset($bcs_data['data'])){
     		Log::fkError("bcsCustomer getInfo failed . ");
     		EC::fail(EC_USR_NON);
@@ -1986,22 +1978,22 @@ class TradeRecordController extends BaseController {
     	}
 
     	//账户余额判断
-    	if(floatval($data['order_bid_amount']) > floatval($bcs_data['ACCT_BAL'])){
-    		Log::fkError('order_bid_amount'.$data['order_bid_amount']. '> ACCT_BAL!'.$bcs_data['ACCT_BAL']);
+    	if(floatval($tradeRecord_data['order_bid_amount']) > floatval($bcs_data['ACCT_BAL'])){
+    		Log::fkError('order_bid_amount'.$tradeRecord_data['order_bid_amount']. '> ACCT_BAL!'.$bcs_data['ACCT_BAL']);
     		EC::fail(EC_BLE_LESS);
     	}
     	 	
     	$SIT_NO = $bcs_data['SIT_NO'];
-    	$ACCOUNT_NO = $data['ACCOUNT_NO'];
+    	$ACCOUNT_NO = $tradeRecord_data['ACCOUNT_NO'];
     	
     	//附言超过42个字节则截取
-    	$useTodo = $data['useTodo'];
+    	$useTodo = $tradeRecord_data['useTodo'];
     	if(!empty($useTodo) && ((strlen($useTodo) + mb_strlen($useTodo,'utf-8')) / 2) > 21){
     		$useTodo = mb_substr($useTodo, 0, 21, 'utf-8');
     	}
     	
     	//必要字段值检测是否为空
-    	if(empty($ACCOUNT_NO) || empty($SIT_NO) || empty($data['comp_account']) || empty($data['seller_name']) || empty($data['order_bid_amount'])){
+    	if(empty($ACCOUNT_NO) || empty($SIT_NO) || empty($tradeRecord_data['comp_account']) || empty($tradeRecord_data['seller_name']) || empty($tradeRecord_data['order_bid_amount'])){
     		Log::fkError("Some data in an empty value. ");
     		EC::fail(EC_DATA_EMPTY_ERR);
     	}
@@ -2011,17 +2003,17 @@ class TradeRecordController extends BaseController {
     		$params = array();
 	    	$params['payerVirAcctNo']   = $ACCOUNT_NO; //Y 付款人虚账号
 	    	$params['payerName']        = $SIT_NO; //Y 付款人名称    	
-	    	$params['payeeAcctNo']  = $data['comp_account']; //Y 收款人账号
+	    	$params['payeeAcctNo']  = $tradeRecord_data['comp_account']; //Y 收款人账号
 	    	//$params['payeeAcctNo']    = '6223635001004485218'; // 收款人账号
-	    	$params['payeeAcctName'] = $data['seller_name']; //Y 收款人中文名 
+	    	$params['payeeAcctName'] = $tradeRecord_data['seller_name']; //Y 收款人中文名 
 	    	//$params['payeeAcctName']  = '钟煦镠'; // 收款人中文名
 	    		
-	    	$params['ownItBankFlag']    = $data['bank_flag'];//Y 本行/它行标志 0：表示本行 1：表示它行   
-			$params['remitLocation']    = $data['local_flag']; // 同城异地标志 0：同城 1：异地 跨行转账时必须输入(即本行/它行标志为1：表示它行)
-	    	$params['payeeBankName']    = $data['bank_name']; // 收款行名称 跨行转账时必须输入(即本行/它行标志为1：表示它行)
-	    	$params['payeeBankAddress'] = $data['bank_name']; // 收款行地址 跨行转账时必须输入(即本行/它行标志为1：表示它行)   
-	    	$params['payeeBankNo']      = $data['bank_no']; // 支付号 【收款账号行号】    	
-	    	$params['transAmount']      = $data['order_bid_amount']; //Y 交易金额
+	    	$params['ownItBankFlag']    = $tradeRecord_data['bank_flag'];//Y 本行/它行标志 0：表示本行 1：表示它行   
+			$params['remitLocation']    = $tradeRecord_data['local_flag']; // 同城异地标志 0：同城 1：异地 跨行转账时必须输入(即本行/它行标志为1：表示它行)
+	    	$params['payeeBankName']    = $tradeRecord_data['bank_name']; // 收款行名称 跨行转账时必须输入(即本行/它行标志为1：表示它行)
+	    	$params['payeeBankAddress'] = $tradeRecord_data['bank_name']; // 收款行地址 跨行转账时必须输入(即本行/它行标志为1：表示它行)   
+	    	$params['payeeBankNo']      = $tradeRecord_data['bank_no']; // 支付号 【收款账号行号】    	
+	    	$params['transAmount']      = $tradeRecord_data['order_bid_amount']; //Y 交易金额
 	    	$params['note']             = $useTodo; // 附言 如果跨行转账，附言请不要超过42字节（汉字21个）
 	    	   	
 	   		//提交付款前记录日志
