@@ -293,6 +293,8 @@ $(document).ready(function(){
 		
 		//$('#add-entity-account').empty();
 		$('#add-entity-comment').val('');
+		$('#add-entity-account').val('');
+		$('#add-entity-account_str').val('');
 	}
 
 	function renderSpdCardSelect(id){
@@ -341,6 +343,8 @@ $(document).ready(function(){
 			        if(result.code != 0) {
 			        	Messenger().post(result.msg + '(' + result.code + ')');
 			        } else {
+			        	user_info_list_k = [];
+		        		user_info_list_v = [];
 			        	var data = result['data'];
 			        	for(var i=0;i<data.length;i++){
 			        		var str_k = data[i].username + " " + data[i].usercode;
@@ -356,6 +360,9 @@ $(document).ready(function(){
 	} // end renderErpUserSelect
 	
 	$('#add-entity-account_str').bind('focus',function(event){
+		var objUl = $("#div_data_user ul");
+		objUl.html('');
+		
 		var str = $("#add-entity-account_str").val();
 		filterUserInfo(str)
 		
