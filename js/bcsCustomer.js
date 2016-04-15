@@ -80,6 +80,7 @@ $(document).ready(function(){
 		
 	    var time1 = $("#entity-search-time1").val();
 		var time2 = $("#entity-search-time2").val();
+		var USER_NAME = $("#entity-search-user_name").val();
 		var SIT_NO = $("#entity-search-SIT_NO").val();
 		var ACCOUNT_NO = $("#entity-search-ACCOUNT_NO").val();
 		var status = $("#entity-search-status").val();
@@ -92,6 +93,7 @@ $(document).ready(function(){
 		    	'time2':time2,
 		    	'SIT_NO':SIT_NO,
 		    	'ACCOUNT_NO':ACCOUNT_NO,
+				'USER_NAME':USER_NAME,
 		    	'status':status,
 		        'page':page
 	        },
@@ -114,6 +116,7 @@ $(document).ready(function(){
 		$("#entity-search-SIT_NO").val("");
 		$("#entity-search-ACCOUNT_NO").val("");
 		$("#entity-search-status").val("-1");
+		$("#entity-search-user_name").val("");
 	}
 	
 	

@@ -63,6 +63,10 @@
 	    <input type="email" class="form-control" id="entity-search-SIT_NO" placeholder="">
 	  </div>
 	  <div class="form-group">
+			<label for="entity-search-user_name">用户登录名</label>
+			<input type="email" class="form-control" id="entity-search-user_name" placeholder="">
+	  </div>
+	  <div class="form-group">
 	    <label for="entity-search-ACCOUNT_NO">专属帐号</label>
 	    <input type="email" class="form-control" id="entity-search-ACCOUNT_NO" placeholder="">
 	  </div>

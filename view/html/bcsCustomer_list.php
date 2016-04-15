@@ -41,6 +41,7 @@
 					<th style="display:none">id</th>
 					<th>用户登录账号</th>
 					<th>用户登录名称</th>
+					<th>分公司名称</th>
 					<th>专属帐户名</th>
 					<th>专属帐号</th>
 					<!--  
@@ -74,7 +75,8 @@
 				<td style="display:none"><?php echo $item['id'];?><input type="hidden" value="<?php echo $item['status'];?>"></td>
 				<td><?php echo ('-1' == $item['user_id']) ? '' : $item['user_id'];?></td>
 				<td><?php echo $item['user_name'];?></td>
-				<td><?php echo $item['SIT_NO'];?></td>
+				<td><?php echo $item['user_fgs_dm'];?></td>
+				<td><?php echo $item['SIT_NO'];?></td>				
 				<td><?php echo $item['ACCOUNT_NO'];?></td>				
 				<!--
 				<td><?php echo $item['MBR_NAME'];?></td>
