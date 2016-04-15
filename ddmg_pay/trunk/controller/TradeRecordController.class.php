@@ -1219,7 +1219,7 @@ class TradeRecordController extends BaseController {
 	            }
 	            	            
 	            $t_order_amount = floatval($data['data']['Details'][0]['js_cgje']); // 金额
-	            $t_order_buyer_code = $data['data']['Details'][0]['string8_']; // 下游买家代码	
+	            $t_order_buyer_code = $data['data']['Header'][0]['string8_']; // 下游买家代码	
 	                        
 	            if( $v_amount > $t_order_amount ){
 	                Log::error('check SellOrderInfo-order_amount - order_no=' . $v_order_no . ',amount=' . $t_order_amount . ' != v_amount=' . $v_amount);
