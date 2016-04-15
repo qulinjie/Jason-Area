@@ -71,12 +71,13 @@ class BcsCustomerController extends BaseController {
         $status = Request::post('status');
         $SIT_NO = Request::post('SIT_NO');
         $ACCOUNT_NO = Request::post('ACCOUNT_NO');
+		$USER_NAME  = Request::post('USER_NAME');
     
         $bcsCustomer_model = $this->model('bcsCustomer');
 //         $user_id = self::getCurrentUserId();
     
         $params  = array();
-        foreach ([ 'status', 'SIT_NO', 'ACCOUNT_NO', 'time1', 'time2' ] as $val){
+        foreach ([ 'status', 'SIT_NO', 'ACCOUNT_NO', 'time1', 'time2' ,'USER_NAME'] as $val){
             if($$val) $params[$val] = $$val;
         }
     
@@ -776,6 +777,14 @@ class BcsCustomerController extends BaseController {
         $user_id = $user_arr[0];
         $user_name = $user_arr[1];
         
+		//根据用户id获取用户分公司
+        $user_model = $this->model('user');
+        $user_data = $user_model->erp_getInfo(array('usercode' => $user_id));
+
+        //用户分公司dm
+        $userfgsdm = $user_data['data']['erp_fgsdm'];
+        //用户分公司mc
+        $userfgsmc = $user_data['data']['erp_bmmc'];
         $ACCOUNT_NO = Request::post('ACCOUNT_NO');
     
         $bcsCustomer_model = $this->model('bcsCustomer');
@@ -798,7 +807,7 @@ class BcsCustomerController extends BaseController {
             $customer['AVL_BAL'] = $info_data['AVL_BAL'];
             $customer['SIT_NO'] = $info_data['SIT_NO']; // 虚账户名称
             $customer['MBR_STS'] = 2; // 客户状态 1-已注册；2-已签约；3-已注销
-            
+            $customer['user_fgs_dm'] = $userfgsmc;
             $data_rs = $bcsCustomer_model->create($customer);
             if($data_rs['code'] !== EC_OK){
                 Log::error('addCustomerList . create bcsCustomer error . code='. $data_rs['code'] . ',msg=' . $data_rs['msg'] );
@@ -810,6 +819,7 @@ class BcsCustomerController extends BaseController {
             $params['user_id'] = $user_id;
             $params['user_name'] = $user_name;
             $params['ACCOUNT_NO'] = $ACCOUNT_NO;
+			$params['user_fgs_dm'] = $userfgsmc;
             Log::notice("updateBind data ===============================>> params = ##" . json_encode($params) . "##" );
             
             $data = $bcsCustomer_model->updateBild($params);
