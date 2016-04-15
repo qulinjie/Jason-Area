@@ -165,4 +165,24 @@ $(document).ready(function(){
 
 		$(this).parent().find("ul.menu").slideToggle();
 	});
+	
+	$('#div_switch_menu').click(function () {
+		 var img_obj = $('#div_switch_menu').find('img');
+		 //alert(img_obj.attr('src'));
+		 var src = img_obj.attr('src');
+		 if( -1 == src.indexOf('left') ){
+			 src = img_obj.attr('src').replace('right','left');
+			 img_obj.attr('src',src);
+			 $('#div-menu-list').css('width','280px');
+			 $('#li-menu-list').css('display','block');
+			 $('#div_content_html').css('width','85%').css('margin-left','280px');
+		 } else {
+			 src = img_obj.attr('src').replace('left','right');
+			 img_obj.attr('src',src);
+			 $('#div-menu-list').css('width','20px');
+			 $('#li-menu-list').css('display','none');
+			 $('#div_content_html').css('width','99%').css('margin-left','20px');
+		 }
+	 });
+	
 });
