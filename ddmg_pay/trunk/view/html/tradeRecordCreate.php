@@ -147,8 +147,8 @@
 	    <div class="col-sm-4">	    	    
 	        <select class="form-control" id="add-entity-amount_type" <?php if(strval($is_advance) == '1'){ echo "disabled=true";}?>>
 	          <option value="">-请选择-</option>
-              <option value="1" selected=selected >货款</option>
-              <?php if(strval($is_advance) == '1'){ echo '<option value="2" selected=selected >预付款</option>';}?>
+              <option value="货款" selected=selected >货款</option>
+              <?php if(strval($is_advance) == '预付款'){ echo '<option value="2" selected=selected >预付款</option>';}?>
             </select>	
 	    </div>	    	    
 	    <span id="span_local_flag" style="display: none;">	
