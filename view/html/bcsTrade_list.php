@@ -83,8 +83,8 @@
                             else if($item['status']==BcsTradeModel::$_status_unknown) { echo "未知"; } ?>
 				</td>
 				<td><?php echo $item['payeeBankNo'];?></td>
-				<td><?php echo $item['payeeBankName'];?></td>
-				<td><?php echo $item['comment'];?></td>
+				<td nowrap><?php echo $item['payeeBankName'];?></td>
+				<td nowrap><?php echo $item['comment'];?></td>
 				<?php if($isAdmin){?>
 				
 				<?php if(strval($inout) == '1'){ ?>
