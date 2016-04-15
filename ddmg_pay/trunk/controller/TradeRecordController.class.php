@@ -1140,6 +1140,12 @@ class TradeRecordController extends BaseController {
         $audit_user_id_first = $loginUser_data['fuserid']; //一级审核人id
         $audit_user_id_second = $loginUser_data['managerid']; //二级审核人id
         
+        //如果订单列表为空则表示为预付款
+        $is_advance = '0';
+        if(empty($apply_item) && is_array($apply_item)){
+        	$is_advance = '1'; 
+        }
+        
         //支付密码校验
         if(empty($pay_pwd)){
         	Log::error('create_add params error!');
@@ -1181,12 +1187,7 @@ class TradeRecordController extends BaseController {
         $trade_record_item = array();        
         $sum_amount = 0; //非预付款的所有订单的申请金额的总计
         $order_no_str = ''; //非预付款的所有订单的单号
-        $order_type = 0; //申请单类型 1预付款单
-        
-        $is_advance = '0';
-        if(empty($apply_item) && is_array($apply_item)){
-        	$is_advance = '1'; //如果订单列表为空则表示为预付款
-        }
+        $order_type = 0; //申请单类型 1预付款单      
         
         //非预付款单
         if($is_advance != '1' && !empty($apply_item) && is_array($apply_item)){
