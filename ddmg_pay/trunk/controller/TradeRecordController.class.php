@@ -1221,7 +1221,7 @@ class TradeRecordController extends BaseController {
 	            $t_order_buyer_code = $data['data']['Details'][0]['string8_']; // 下游买家代码	            
 	            if( $v_amount > $t_order_amount ){
 	                Log::error('check SellOrderInfo-order_amount - order_no=' . $v_order_no . ',amount=' . $t_order_amount . ' != v_amount=' . $v_amount);
-	                //EC::fail(EC_PAR_ERR);
+	                EC::fail(EC_PAR_ERR);
 	            }
 	            if( $v_comp_name_buyer_code != $t_order_buyer_code ){
 	                Log::error('check SellOrderInfo-order_buyer_code - order_no=' . $v_order_no . ',order_buyer_code=' . $t_order_buyer_code . ' != comp_name_buyer_code=' . $v_comp_name_buyer_code);
