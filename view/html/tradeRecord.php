@@ -41,42 +41,60 @@
 <div class="panel panel-primary">
   <div class="panel-body">
     <div class="form-inline">
-      <div class="form-group">
-	    <label for="entity-search-time">时间</label>
-	    <input type="text" style="width:100px;" class="form-control form_datetime" id="entity-search-order_time1" placeholder="单据日期">
-	    -
-	    <input type="text" style="width:100px;" class="form-control form_datetime" id="entity-search-order_time2" placeholder="单据日期">
+	  <div>
+		  <div class="form-group">
+			<label for="entity-search-time">时间</label>
+			<input type="text" style="width:100px;" class="form-control form_datetime" id="entity-search-order_time1" placeholder="单据日期">
+			-
+			<input type="text" style="width:100px;" class="form-control form_datetime" id="entity-search-order_time2" placeholder="单据日期">
+		  </div>
+		  <div class="form-group">
+			<label for="entity-search-seller_name">单位名称</label>
+			<input type="text" class="form-control" id="entity-search-seller_name" placeholder="单位名称">
+		  </div>
+		  <div class="form-group">
+			<label for="entity-search-order_no">业务单号</label>
+			<input type="text" class="form-control" id="entity-search-order_no" placeholder="业务单号">
+		  </div>
+		  <div class="form-group">
+			<label for="entity-search-apply_status">申请状态</label>
+			<select class="form-control" id="entity-search-apply_status">
+			  <option value="-1">全部</option>
+			  <?php foreach(TradeRecordController::getApplyStatus() as $key => $value){
+					echo "<option value=\"".$key."\">".$value."</option>";
+			  }?>
+			</select>
+		  </div>
+		  <div class="form-group">
+			<label for="entity-search-backhost_status">付款状态</label>
+			<select class="form-control" id="entity-search-backhost_status">
+			  <option value="-1">全部</option>
+			  <?php foreach(TradeRecordController::getBackhostStatus() as $key => $value){
+					if(0 == $key){$key .= 0; }
+					echo "<option value=\"".$key."\">".$value."</option>";
+			  }?>
+			</select>
+		  </div>
 	  </div>
-	  <div class="form-group">
-	    <label for="entity-search-seller_name">单位名称</label>
-	    <input type="text" class="form-control" id="entity-search-seller_name" placeholder="单位名称">
-	  </div>	  
-	  <div class="form-group">
-	    <label for="entity-search-order_no">业务单号</label>
-	    <input type="text" class="form-control" id="entity-search-order_no" placeholder="业务单号">
-	  </div>
-	  <div class="form-group">
-	    <label for="entity-search-apply_status">申请状态</label>
-	    <select class="form-control" id="entity-search-apply_status">
-	      <option value="-1">全部</option>	       
-	      <?php foreach(TradeRecordController::getApplyStatus() as $key => $value){          	   
-          		echo "<option value=\"".$key."\">".$value."</option>";          	
-          }?>        
-        </select>
-	  </div>
-	  <div class="form-group">
-	    <label for="entity-search-backhost_status">付款状态</label>
-	    <select class="form-control" id="entity-search-backhost_status">
-	      <option value="-1">全部</option>
-          <?php foreach(TradeRecordController::getBackhostStatus() as $key => $value){
-          	    if(0 == $key){$key .= 0; }
-          		echo "<option value=\"".$key."\">".$value."</option>";          	
-          }?>         
-        </select>
-	  </div>
-	  <div class="form-group">
-    	  <button type="button" class="btn btn-primary" id="entity-search-btn">查询</button>
-    	  <button type="button" class="btn btn-default search-clear-btn" id="entity-clear-btn">清空查询条件</button>
+	  <div>
+		  <div class="form-group">
+			  <label for="entity-search-time">金额</label>
+			  <input type="text" style="width:100px;" class="form-control" id="entity-search-order_amount1" placeholder="申请金额">
+			  -
+			  <input type="text" style="width:100px;" class="form-control" id="entity-search-order_amount2" placeholder="申请金额">
+		  </div>
+		  <div class="form-group">
+			  <label for="entity-search-seller_name">款项类别</label>
+			  <input type="text" class="form-control" id="entity-search-amount_type" placeholder="款项类别">
+		  </div>
+		  <div class="form-group">
+			  <label for="entity-search-order_no">机构名称</label>
+			  <input type="text" class="form-control" id="entity-search-erp_fgsmc" placeholder="机构名称">
+		  </div>
+		  <div class="form-group">
+			  <button type="button" class="btn btn-primary" id="entity-search-btn">查询</button>
+			  <button type="button" class="btn btn-default search-clear-btn" id="entity-clear-btn">清空查询条件</button>
+		  </div>
 	  </div>
 	  <div class="form-group" style="display: none;">
     	  <button type="button" class="btn btn-primary" id="entity-export-page-btn">导出当前页</button>

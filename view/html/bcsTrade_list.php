@@ -42,13 +42,14 @@
 					<th style="display:none">id</th>
 					<?php if($isAdmin){ echo '<th>专属账号</th>'; } ?>
 					<th>交易流水号</th><!-- 商户交易流水号 -->
-					<th>收款/付款</th>
+					<th nowrap>收款/付款</th>
 					<th>交易完成时间</th>
+					<th nowrap>分公司名称</th>
 					<th>对方账户名</th>
 					<th>对方帐号</th>
-					<th>交易金额（元）</th>
+					<th nowrap>交易金额（元）</th>
 					<?php if(strval($inout) == ''){ echo '<th>结余</th>'; } ?>
-					<th>状态</th>
+					<th nowrap>状态</th>
 					<th>对方行号</th>
 					<th>对方行名</th>
 					<th>备注</th>
@@ -69,9 +70,9 @@
 				            echo '-';
 				        }
 				    ?>
-				<td><?php echo (0 < strtotime($item['TRANS_TIME']))? $item['TRANS_TIME'] : '-';?>
-				
-				<td><?php echo $item['oppositeAcctName'];?></td>
+				<td nowrap><?php echo (0 < strtotime($item['TRANS_TIME']))? $item['TRANS_TIME'] : '-';?></td>
+				<td><?php echo $item['erp_fgsdm'];?></td>
+				<td nowrap="nowrap"><?php echo $item['oppositeAcctName'];?></td>
 				<td><?php echo $item['oppositeAcctNo'];?></td>
 				
 				<td><?php echo number_format($item['TX_AMT'],2);?></td>

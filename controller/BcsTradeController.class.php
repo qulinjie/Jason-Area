@@ -223,19 +223,15 @@ class BcsTradeController extends BaseController {
     
     protected function searchList($isIndex = false,$inout = '') {
         $current_page = Request::post('page');
-//         $seller_name = Request::post('seller_name'); // 收款方
         $time1 = Request::post('time1');
         $time2 = Request::post('time2');
-//         $order_no = Request::post('order_no');
-//         $status = Request::post('status');
-//         $amount1 = Request::post('amount1');
-//         $amount2 = Request::post('amount2');
-//         $FMS_TRANS_NO = Request::post('FMS_TRANS_NO');
-//         $b_account = Request::post('b_account');
-//         $s_account = Request::post('s_account');
         $oppositeAcctName = Request::post('oppositeAcctName');
         $MCH_TRANS_NO = Request::post('MCH_TRANS_NO');
-    
+        //新增加金额、对方银行名等
+        $txamt1 = Request::post('txamt1');
+        $txamt2 = Request::post('txamt2');
+        $paybankname = Request::post('paybankname');
+        $erpfgsdm    = Request::post('erpfgsdm');
         $bcsTrade_model = $this->model('bcsTrade');
         $user_model = $this->model('user');
         $bcsCustomer_model = $this->model('bcsCustomer');
@@ -257,7 +253,7 @@ class BcsTradeController extends BaseController {
     
         $params  = array();
         foreach ([ 'b_user_id', 'seller_name', 'time1', 'time2', 'order_no', 'status','MCH_TRANS_NO',
-            'FMS_TRANS_NO', 'seller_name', 'amount1', 'amount2', 'ACCOUNT_NO', 'oppositeAcctName'] as $val){
+            'FMS_TRANS_NO', 'seller_name', 'amount1', 'amount2', 'ACCOUNT_NO', 'oppositeAcctName','paybankname','erpfgsdm','txamt1','txamt2'] as $val){
             if($$val) $params[$val] = $$val;
         }
     
@@ -741,7 +737,7 @@ class BcsTradeController extends BaseController {
     		} while ( $totalNumber >= $params['beginNumber']);
     		Log::notice("response-data-end ===========================>> data-ACCOUNT_NO = ##" . $ACCOUNT_NO . "##" );
     	}
-//     	exit;
+     	//exit();
     	return true;
     }
     
@@ -761,8 +757,20 @@ class BcsTradeController extends BaseController {
         }
 //         Log::notice("addAccountTradeList =================333==========>> data-data_lists = ##" . json_encode($data_lists) . "##" );
 //         exit;
-        
+
         $bcsTrade_model = $this->model('bcsTrade');
+        $bcsCustomer_model = $this->model('bcsCustomer');
+        $data = $bcsCustomer_model->searchList();
+        $bcsCustomerInfo = array();
+        //增加bcsCustomer表中虚拟账号和分公司的对应关系
+        if(isset($data['data']) && is_array($data['data'])) {
+            foreach($data['data'] as $key => $value) {
+                if(!array_key_exists($value['ACCOUNT_NO'],$bcsCustomerInfo) && !empty($value['user_fgs_dm'])) {
+                    $bcsCustomerInfo[$value['ACCOUNT_NO']] = $value['user_fgs_dm'];
+                }
+            }
+        }
+
         foreach($data_lists as $obj ){
             Log::notice("addAccountTradeList ===========================>> data = ##" . json_encode($obj) . "##" );
             $trade = array();
@@ -797,7 +805,9 @@ class BcsTradeController extends BaseController {
             $trade['status'] = 1; // 交易发送状态 1-成功 2-失败 3-未知
             $trade['payeeBankNo'] = $obj['payeeBankNo']; // 对方行号
             $trade['payeeBankName'] = $obj['payeeBankName']; // 对方行名
-            
+            //分公司字段值
+            $trade['erp_fgsdm']    = array_key_exists($obj['virtualAcctNo'],$bcsCustomerInfo)?$bcsCustomerInfo[$obj['virtualAcctNo']]:'';
+
             $info_data = $info_data['data'][0];
             if( !empty($info_data) ){
                 $trade['id'] = $info_data['id'];
