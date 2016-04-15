@@ -503,7 +503,7 @@
         	  <?php }else if($page_type == 'tradeRecordBill'){?>
         	        <script src="<?php echo Router::getBaseUrl();?>js/tradeRecordBill.js"></script>
                     <?php echo $tradeRecordBill_html; ?>
-              <?php }else if($page_type == 'tradeRecord' && doit::$params[0] =='createApply' ){?>
+              <?php }else if($page_type == 'tradeRecord' && (doit::$params[0] =='createApply' || doit::$params[0] =='createAdvanceApply')){?>
         	        <script src="<?php echo Router::getBaseUrl();?>js/tradeRecordCreate.js"></script>
                     <?php echo $tradeRecordCreate_html; ?>
         	  <?php }else if($page_type == 'tradeRecord'){?>
