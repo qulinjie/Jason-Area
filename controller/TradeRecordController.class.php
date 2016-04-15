@@ -1184,12 +1184,12 @@ class TradeRecordController extends BaseController {
         $order_type = 0; //申请单类型 1预付款单
         
         $is_advance = '0';
-        if(empty($apply_item)){
+        if(empty($apply_item) && is_array($apply_item)){
         	$is_advance = '1'; //如果订单列表为空则表示为预付款
         }
         
         //非预付款单
-        if($is_advance != '1' && !empty($apply_item)){
+        if($is_advance != '1' && !empty($apply_item) && is_array($apply_item)){
 	        foreach ($apply_item as $itemKey => $itemVal){
 	            $arr = explode("@;",$itemVal);
 	            $v_order_no = $arr[0]; //单个订单单号
@@ -1216,9 +1216,11 @@ class TradeRecordController extends BaseController {
 	            if( empty($data['data']) ){
 	                Log::error('erp_getSellOrderInfo empty! order_no=' . $v_order_no);
 	                EC::fail(EC_PAR_ERR);
-	            }	            
-	            $t_order_amount = floatval($data['data']['Header']['js_cgje']); // 金额
-	            $t_order_buyer_code = $data['data']['Details'][0]['string8_']; // 下游买家代码	            
+	            }
+	            	            
+	            $t_order_amount = floatval($data['data']['Details'][0]['js_cgje']); // 金额
+	            $t_order_buyer_code = $data['data']['Details'][0]['string8_']; // 下游买家代码	
+	                        
 	            if( $v_amount > $t_order_amount ){
 	                Log::error('check SellOrderInfo-order_amount - order_no=' . $v_order_no . ',amount=' . $t_order_amount . ' != v_amount=' . $v_amount);
 	                EC::fail(EC_PAR_ERR);
