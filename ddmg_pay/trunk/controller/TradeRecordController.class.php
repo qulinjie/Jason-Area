@@ -130,7 +130,11 @@ class TradeRecordController extends BaseController {
         
         $apply_status = $apply_status == 4 ? 2 : $apply_status;
         $audit_level = $audit_level != '0' ? $audit_level : Request::post('audit_level');
-        
+
+        $amount1     = Request::post('amount1');
+        $amount2     = Request::post('amount2');
+        $amount_type = Request::post('amount_type');
+        $erp_fgsmc   = Request::post('erp_fgsmc');
         $tradeRecord_model = $this->model('tradeRecord');
         $user_id = self::getCurrentUserId();
     
@@ -152,8 +156,7 @@ class TradeRecordController extends BaseController {
         $params  = array();
         foreach ([ 'order_no', 'user_id', 'audit_user_id_first', 'audit_user_id_second', 'code', 'time1', 'time2', 'type', 'order_status', 'apply_status',
                     'backhost_status', 'order_time1', 'order_time2', 'seller_name', 'seller_conn_name', 'order_sum_amount1', 'order_sum_amount2',
-                    'ACCOUNT_NO'
-                ] as $val)
+                    'ACCOUNT_NO','amount1','amount2','amount_type','erp_fgsmc'] as $val)
         {
             if($$val) $params[$val] = $$val;
         }   

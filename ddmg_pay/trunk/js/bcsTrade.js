@@ -83,7 +83,10 @@ function search_entity(page){
 	var time2 = $("#entity-search-time2").val();
 	var oppositeAcctName = $("#entity-search-oppositeAcctName").val();
 	var inout = $("#entity-search-inout").val();
-	
+	var paybankname      = $('#entity-search-s_paybankname').val();
+	var txamt1           = $('#entity-search-txamt1').val();
+	var txamt2           = $('#entity-search-txamt2').val();
+	var erpfgsdm        = $('#entity-search-user_fgsdm').val();
 	if(-1 == status) { status =""; }
 	
     //查找
@@ -93,6 +96,10 @@ function search_entity(page){
 	    	'time2':time2,
 	    	'oppositeAcctName':oppositeAcctName,
 	    	'inout':inout,
+			'paybankname':paybankname,
+			'erpfgsdm':erpfgsdm,
+			'txamt1':txamt1,
+			'txamt2':txamt2,
 	        'page':page
         },
         function(result){
@@ -113,6 +120,11 @@ function search_clearFields(){
 	$("#entity-search-time1").val("");
 	$("#entity-search-time2").val("");
 	$("#entity-search-oppositeAcctName").val("");
+	$('#entity-search-s_paybankname').val("");
+	$('#entity-search-user_fgsdm').val("");
+	$('#entity-search-txamt1').val("");
+	$('#entity-search-txamt2').val("");
+
 }
 
 /**************start--查看****************/

@@ -85,7 +85,12 @@ function search_entity(page){
 	var order_sum_amount1 = $("#entity-search-order_sum_amount1").val();
 	var order_sum_amount2 = $("#entity-search-order_sum_amount2").val();	
 	var apply_status = $("#entity-search-apply_status").val();
-	var backhost_status = $("#entity-search-backhost_status").val();	
+	var backhost_status = $("#entity-search-backhost_status").val();
+	//新增加金额、机构名称以及款项类别筛选
+	var amount1     = $("#entity-search-order_amount1").val();
+	var amount2     = $("#entity-search-order_amount2").val();
+	var amount_type = $("#entity-search-amount_type").val();
+	var erp_fgsmc   = $("#entity-search-erp_fgsmc").val();
 	
 	if(-1 == order_status) { order_status =""; }
 	if(-1 == apply_status) { apply_status =""; }
@@ -102,12 +107,15 @@ function search_entity(page){
 	if(pathname.indexOf("searchListSecond") > 0){
 		audit_level = '2';		
 	}
-	
     //查找
     $.post(BASE_PATH + 'tradeRecord/searchList', {
 	    	'order_no':order_no, 
 	    	'time1':time1,
 	    	'time2':time2,
+			'amount1':amount1,
+			'amount2':amount2,
+			'amount_type':amount_type,
+			'erp_fgsmc':erp_fgsmc,
 	    	'order_status':order_status,
 	    	'order_time1':order_time1,
 	    	'order_time2':order_time2,
@@ -147,6 +155,11 @@ function search_clearFields(){
 	$("#entity-search-order_sum_amount2").val("");
 	$("#entity-search-apply_status").val("-1");
 	$("#entity-search-backhost_status").val("-1");
+
+	$("#entity-search-order_amount1").val("");
+	$("#entity-search-order_amount2").val("");
+	$("#entity-search-amount_type").val("");
+	$("#entity-search-erp_fgsmc").val("");
 }
 
 /**************start--导出数据****************/

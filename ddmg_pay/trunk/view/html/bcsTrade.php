@@ -103,37 +103,56 @@
   <div class="panel-heading">查找</div>
   <div class="panel-body">
     <div class="form-inline">
-        <input type="hidden" class="form-control" id="entity-search-inout" value="<?php echo $inout; ?>">
-      <div class="form-group">
-	    <label for="entity-search-MCH_TRANS_NO">交易流水号</label>
-	    <input type="text" class="form-control" id="entity-search-MCH_TRANS_NO" placeholder="交易流水号">
+      <input type="hidden" class="form-control" id="entity-search-inout" value="<?php echo $inout; ?>">
+      <div>
+		  <div class="form-group">
+			<label for="entity-search-MCH_TRANS_NO">交易流水号</label>
+			<input type="text" class="form-control" id="entity-search-MCH_TRANS_NO" placeholder="交易流水号">
+		  </div>
+		  <div class="form-group">
+			<label for="entity-search-oppositeAcctName">对方账户名</label>
+			<input type="text" class="form-control" id="entity-search-oppositeAcctName" placeholder="对方账户名">
+		  </div>
+		  <div class="form-group" style="display:none;">
+			<label for="entity-search-s_account">对方帐号</label>
+			<input type="text" class="form-control" id="entity-search-s_account" placeholder="对方帐号">
+		  </div>
+		  <div class="form-group">
+			<label for="entity-search-time">交易时间</label>
+			<input type="text" class="form-control form_datetime" id="entity-search-time1" placeholder="时间">
+			-
+			<input type="text" class="form-control form_datetime" id="entity-search-time2" placeholder="时间">
+		  </div>
 	  </div>
-	  <div class="form-group">
-	    <label for="entity-search-oppositeAcctName">对方账户名</label>
-	    <input type="text" class="form-control" id="entity-search-oppositeAcctName" placeholder="对方账户名">
-	  </div>
-	  <div class="form-group" style="display:none;">
-	    <label for="entity-search-s_account">对方帐号</label>
-	    <input type="text" class="form-control" id="entity-search-s_account" placeholder="对方帐号">
-	  </div>
-	  <div class="form-group">
-	    <label for="entity-search-time">交易时间</label>
-	    <input type="text" class="form-control form_datetime" id="entity-search-time1" placeholder="时间">
-	    -
-	    <input type="text" class="form-control form_datetime" id="entity-search-time2" placeholder="时间">
-	  </div>
-	  <div class="form-group" style="display:none;">
-	    <label for="entity-search-status">付款状态</label>
-	    <select class="form-control" id="entity-search-status">
-	      <option value="-1">全部</option>
-          <option value="1">成功</option>
-          <option value="2">失败</option>
-          <option value="3">未知</option>
-        </select>
-	  </div>
-	  <div class="form-group">
-    	  <button type="button" class="btn btn-primary" id="entity-search-btn">查询</button>
-    	  <button type="button" class="btn btn-default search-clear-btn" id="entity-clear-btn">清空查询条件</button>
+	  <!--新增加分公司,对方银行名称以及金额范围查询-->
+ 	  <div>
+		<div class="form-group">
+			<label for="entity-search-oppositeAcctName">分公司名称</label>
+			<input type="text" class="form-control" id="entity-search-user_fgsdm" placeholder="分公司名称">
+		</div>
+		<div class="form-group">
+			<label for="entity-search-s_account">对方银行名</label>
+			<input type="text" class="form-control" id="entity-search-s_paybankname" placeholder="对方银行名">
+		</div>
+		<div class="form-group">
+			<label for="entity-search-time">交易金额</label>
+			<input type="text" class="form-control" id="entity-search-txamt1" placeholder="金额">
+			-
+			<input type="text" class="form-control" id="entity-search-txamt2" placeholder="金额">
+		</div>
+	    <div class="form-group" style="display:none;">
+	        <label for="entity-search-status">付款状态</label>
+	        <select class="form-control" id="entity-search-status">
+	            <option value="-1">全部</option>
+                <option value="1">成功</option>
+                <option value="2">失败</option>
+                <option value="3">未知</option>
+            </select>
+	    </div>
+	    <div class="form-group">
+    	    <button type="button" class="btn btn-primary" id="entity-search-btn">查询</button>
+    	    <button type="button" class="btn btn-default search-clear-btn" id="entity-clear-btn">清空查询条件</button>
+	    </div>
 	  </div>
 	  <div class="form-group" style="display: none;">
     	  <button type="button" class="btn btn-primary" id="entity-export-page-btn">导出当前页</button>
