@@ -1189,14 +1189,14 @@ class TradeRecordController extends BaseController {
         }
         
         //非预付款单
-        if($is_advance != '1'){
+        if($is_advance != '1' && !empty($apply_item)){
 	        foreach ($apply_item as $itemKey => $itemVal){
 	            $arr = explode("@;",$itemVal);
 	            $v_order_no = $arr[0]; //单个订单单号
 	            $v_quote_amount = floatval($arr[1]); //单个订单的原始采购金额            
 	            $v_comp_name_buyer = $arr[2]; //下游买家名称
 	            $v_comp_name_buyer_code = $arr[3]; //下游买家代码
-	            $v_amount = $arr[4]; //单个订单的申请金额
+	            $v_amount = floatval($arr[4]); //单个订单的申请金额
 	            $order_no_str = $order_no_str . ',' . $v_order_no;
 	            $sum_amount = $sum_amount + $v_amount;
 	            $trade_record_item[$v_order_no]['order_no'] = $apply_no;
