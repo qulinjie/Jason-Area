@@ -1226,7 +1226,7 @@ class TradeRecordController extends BaseController {
 	                EC::fail(EC_PAR_ERR);
 	            }
 	            if( $v_comp_name_buyer_code != $t_order_buyer_code ){
-	                Log::error('check SellOrderInfo-order_buyer_code - v_comp_name_buyer_code=' . $v_comp_name_buyer_code . ',t_order_buyer_code=' . $t_order_buyer_code . ' != comp_name_buyer_code=' . $v_comp_name_buyer_code);
+	                Log::error('check SellOrderInfo-order_buyer_code - v_comp_name_buyer_code=' . $v_comp_name_buyer_code . ' != t_order_buyer_code=' . $t_order_buyer_code );
 	                EC::fail(EC_PAR_ERR);
 	            }
 	        }        
