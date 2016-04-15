@@ -105,6 +105,14 @@ class SpdInternetBankController extends BaseController {
         	$data_list[$k_data]['city_name'] = 
         } */        
         
+        if(ApiController::isApi()){
+            $api_data = array();
+            $api_data['list'] = $data_list;
+            $api_data['current_page'] = $current_page;
+            $api_data['total_page'] = $total_page;
+            EC::success(EC_OK, $api_data);
+        }
+        
         $entity_list_html = $this->render('spdInternetBank_list', array('data_list' => $data_list, 'isApplyIndex' => $isApplyIndex, 'current_page' => $current_page, 'total_page' => $total_page), true);
         if(strval($isApplyIndex) == '1'){
         	$apply_list_html = $this->render('spdInternetBank', array('entity_list_html' => $entity_list_html, 'isApplyIndex' => $isApplyIndex), true);
