@@ -42,13 +42,17 @@ $(document).on('change', '#entity-custom-page', function(event){
 
 function entitySetSelectedPage(){
 	if($('#entity-custom-page') && $("#entity-current-page") && $("#entity-total-page")){
-		var cur_page = $("#entity-current-page").html();
-		var total_page = $("#entity-total-page").html();
+		var cur_page = parseInt($("#entity-current-page").html());
+		var total_page = parseInt($("#entity-total-page").html());
 		var selObj = $('#entity-custom-page');
-		selObj.empty();
-		for(var i=1; i<=total_page; i++){
-			selObj.append("<option value='" + i +"'>" + i +"</option>");
+		selObj.empty();		
+	    var start = cur_page > 20 ? cur_page - 20 : 1;
+	    var end = (total_page - cur_page) > 20 ? cur_page + 19 : total_page;
+	    var html = '';
+		for(var i=start; i<=end; i++){
+			html += "<option value='" + i +"'>" + i +"</option>";				
 		}
+		selObj.append(html);
 		selObj.val(cur_page);
 	}
 }
