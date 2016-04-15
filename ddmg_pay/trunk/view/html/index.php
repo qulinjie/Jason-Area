@@ -154,7 +154,10 @@
       <!-- 左侧菜单 -->
       <div class="container-fluid" style="width: 1905px;">
       <div class="row" >
-        <div class="col-sm-3 col-md-2 sidebar" style="background-color: white;width: 320px;">
+        <div class="col-sm-3 col-md-2 sidebar" id="div-menu-list" style="background-color: white;width: 280px;display: block;padding-left: 5px;padding-right: 0px;">
+            <div id="div_switch_menu" style="margin-top: 210px;margin-right: 0px;border: none;text-align: center;vertical-align: middle;cursor: pointer;float: right;width: 15px;height: 150px;">
+                <img alt="" src="<?php echo Router::getBaseUrl();?>view/images/index/swith_left.png"/>
+            </div>
           <ul id="li-menu-list">
             <li>
 				<!-- Start Freebie -->
@@ -271,7 +274,7 @@
         </div>
         
         <!-- 右侧内容页面 -->
-        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main" >
+        <div id="div_content_html" class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main" style="width: 85%;padding-left: 0px;padding-right: 0px;margin-left: 285px;">
           <?php if($page_type == 'bcsMarket'){?>
                 <script src="<?php echo Router::getBaseUrl();?>js/bcsMarketInfo.js"></script>
                 <?php echo $bcsMarket_html; ?>
@@ -370,7 +373,10 @@
       <!-- 左侧菜单 -->
       <div class="container-fluid" style="width: 1905px;">
       <div class="row" >
-        <div class="col-sm-3 col-md-2 sidebar" id="div-menu-list" style="background-color: white;width: 320px;display: block;">
+        <div class="col-sm-3 col-md-2 sidebar" id="div-menu-list" style="background-color: white;width: 280px;display: block;padding-left: 5px;padding-right: 0px;">
+            <div id="div_switch_menu" style="margin-top: 210px;margin-right: 0px;border: none;text-align: center;vertical-align: middle;cursor: pointer;float: right;width: 15px;height: 150px;">
+                <img alt="" src="<?php echo Router::getBaseUrl();?>view/images/index/swith_left.png"/>
+            </div>
           <ul id="li-menu-list" >
           <li>
 				<!-- Start Freebie -->
@@ -487,7 +493,7 @@
         </div>
         
         <!-- 右侧内容页面 -->
-        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+        <div id="div_content_html" class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main" style="width: 85%;padding-left: 0px;padding-right: 0px;margin-left: 285px;">
               <?php if($page_type == 'bcsCustomer'){?>
         	        <script src="<?php echo Router::getBaseUrl();?>js/bcsCustomerInfo.js"></script>
         		    <?php echo $bcsCustomer_html; ?>

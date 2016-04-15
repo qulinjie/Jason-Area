@@ -35,8 +35,8 @@
 <?php $isAdmin = AdminController::isLogin(); ?>
 <div class="panel panel-default">
 <div class="panel-heading" id="search-head-div">列表</div>
-  <div class="panel-body" style="width: 1500px;overflow-x: scroll;">
-		<table class="table table-hover" id="data-list-table" style="width: 1800px;max-width: 1800px;overflow-x: scroll;">
+  <div class="panel-body" style="width: 100%;overflow-x: scroll;">
+		<table class="table table-hover" id="data-list-table" style="width: 100%;max-width: 1900px;overflow-x: scroll;">
 			<thead>
 				<tr>
 					<th style="display:none">id</th>
