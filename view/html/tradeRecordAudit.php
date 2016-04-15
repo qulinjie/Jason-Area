@@ -69,7 +69,7 @@
 	    </div>
 	    <label for="add-entity-apply_data" class="col-sm-2 control-label">申请日期</label>
 	    <div class="col-sm-4">
-	        <input type="text" class="form-control form_datetime" readonly="readonly" id="add-entity-order_timestamp" placeholder="" value="<?php echo $data_info['order_timestamp'];?>"></input>
+	        <input type="text" class="form-control form_datetime" readonly="readonly" id="add-entity-order_timestamp" placeholder="" value="<?php echo date("Y-m-d",strtotime($data_info['order_timestamp']));?>"></input>
 	    </div>	
 	  </div>
 	  <div class="form-group">
