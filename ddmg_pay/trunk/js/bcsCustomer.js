@@ -311,7 +311,7 @@ $(document).ready(function(){
 		);
 	}
 	
-	function renderErpUserSelect(id){
+	function renderErpUserSelect2(id){
 		$("#add-entity-account").empty();
 		
 		$("#add-entity-account").append("<option value='-1'>请选择</option>");
@@ -329,6 +329,106 @@ $(document).ready(function(){
 			    'json'
 		);
 	}
+	
+	var user_info_list_k = [];
+	var user_info_list_v = [];
+	function renderErpUserSelect(id){
+		$.post(BASE_PATH + 'user/erp_getList', {},
+				function(result){
+			        if(result.code != 0) {
+			        	Messenger().post(result.msg + '(' + result.code + ')');
+			        } else {
+			        	var data = result['data'];
+			        	for(var i=0;i<data.length;i++){
+			        		var str_k = data[i].username + " " + data[i].usercode;
+			        		var str_v = data[i].usercode + "|" + data[i].username;
+			        		user_info_list_k.push(str_k);
+			        		user_info_list_v.push(str_v);
+			        	}
+			        	renderUserListSelect(user_info_list_k,user_info_list_v);
+			        }
+			    },
+			    'json'
+		); // end post
+	} // end renderErpUserSelect
+	
+	$('#add-entity-account_str').bind('focus',function(event){
+		var str = $("#add-entity-account_str").val();
+		filterUserInfo(str)
+		
+		var list_li_Obj = $("#div_data_user li");
+		if(0 ==  list_li_Obj.length){
+			return false;
+		}
+		if('readonly' != $('#add-entity-account_str').attr('readonly') ){
+			$("#div_data_user").fadeIn();
+		}
+	}).bind('blur',function(event){
+		$("#div_data_user").fadeOut();
+	}).bind('keyup',function(event){
+		$("#add-entity-account").val('');
+		var str = $("#add-entity-account_str").val();
+		filterUserInfo(str)
+		$("#div_data_user").fadeIn();
+	});
+	
+	function filterUserInfo(str){
+		if(!str || '' == str){
+			renderUserListSelect(user_info_list_k,user_info_list_v);
+			return ;
+		}
+		var list_key = [];
+		var list_val = [];
+		if(0 ==  user_info_list_k.length){
+			return false;
+		}
+		for(var i=0; i<user_info_list_k.length; i++){
+			var key = user_info_list_k[i];
+			if( -1 != key.indexOf(str)){
+				list_key.push(user_info_list_k[i]);
+				list_val.push(user_info_list_v[i]);
+			}
+		}
+		renderUserListSelect(list_key,list_val);
+	}
+	
+	function renderUserListSelect(list_key,list_val){
+		var objUl = $("#div_data_user ul");
+		objUl.html('');
+		if(0 ==  list_key.length){
+			return false;
+		}
+		for(var i=0; i<list_key.length; i++){
+			var li = "<li><span>" + list_key[i] + "</span><input type='hidden' value='" + list_val[i] + "' /></li>";
+			objUl.append(li);
+		}
+		$("#add-entity-account_str").attr("placeholder","");
+		
+		var list_li_Obj = $("#div_data_user li");
+		if(0 ==  list_li_Obj.length){
+			return false;
+		}
+		list_li_Obj.each(function(i,e){
+			list_li_Obj[i].style.cursor="pointer";
+			e.onmouseover = function(e){
+				list_li_Obj[i].style.backgroundColor="#3399FF";
+			};
+			e.onmouseout = function(e){
+				list_li_Obj[i].style.backgroundColor="white";
+			};
+			e.onclick = function(e){
+				if('readonly' != $("#add-entity-account_str").attr('readonly') ){
+					var selKey = $(list_li_Obj[i]).find("span").text();
+					var selVal = $(list_li_Obj[i]).find("input").val();
+					//alert(selKey + '--' +selVal);
+					$("#add-entity-account_str").val(selKey);
+					$("#add-entity-account").val(selVal);
+				}
+				$("#div_data_user").fadeOut();
+			};
+		});
+	}
+	
 
 	/**************end--增加****************/
 	

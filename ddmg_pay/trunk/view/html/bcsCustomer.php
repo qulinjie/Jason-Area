@@ -18,8 +18,9 @@
 				  <div class="form-group">
 				    <label for="add-entity-account" class="col-sm-2 control-label">用户登录账号</label>
 				    <div class="col-sm-9">
-				      <select class="form-control" id="add-entity-account">
-                      </select>
+                      <input type="hidden" class="form-control" id="add-entity-account" placeholder=""/>
+                      <input type="text" class="form-control" id="add-entity-account_str" placeholder="数据加载中..."/>
+                      <div id="div_data_user" class="citydatadiv" style="display: none;width: 560px;max-height: 220px;margin-top: 5px;border-top-style:solid overflow-y: scroll;overflow-x: hidden;"><ul></ul></div>
 				    </div>
 				  </div>
 				  <div class="form-group">
