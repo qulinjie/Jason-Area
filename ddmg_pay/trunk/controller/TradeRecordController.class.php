@@ -557,7 +557,7 @@ class TradeRecordController extends BaseController {
     
         $tradeRecord_model = $this->model('tradeRecord');
         $tradeRecordItem_model = $this->model('tradeRecordItem');        
-    
+        $bcsCustomer_model     = $this->model('bcsCustomer');
         $params  = array();
         $params['id'] = $id;
 
@@ -593,7 +593,46 @@ class TradeRecordController extends BaseController {
             EC::fail($data['code']);
         }
         $data_info = $data['data'][0];
-        
+        //通过账户更新余额
+        $account_no      = $data_info['ACCOUNT_NO'];
+        $bcsCustomerInfo = $bcsCustomer_model->getInfo(array("user_id"=>$data_info['user_id']));
+
+        //通过银行接口计算实时余额(区分银行,浦发银行和长沙银行)
+        $record_bank_type  = $bcsCustomerInfo['data'][0]['record_bank_type'];
+        if($record_bank_type == 2) {
+            //$tradeObj  = new BcsTradeController();
+            $tradeObj  = $this->instance('BcsTradeController');
+            $tradeData = $tradeObj->spd_loadAccountTradeList_exec($account_no);
+
+            //再次查询对应账户的余额
+            $newbcsCustomerInfo = $bcsCustomer_model->getInfo(array("user_id"=>$data_info['user_id']));
+            if(isset($newbcsCustomerInfo['data'][0]) && !empty($newbcsCustomerInfo['data'][0])) {
+                $data_info['acct_bal'] = $bcsCustomerInfo['data'][0]['ACCT_BAL'];
+                $data_info['avl_bal']  = $bcsCustomerInfo['data'][0]['AVL_BAL'];
+            }
+        }
+
+        /*
+         **record_bank_type==1时,银行是长沙银行.
+         else {
+         $bcsBank_model     = $this->model('bank');
+        $bcsRegister_model = $this->model('bcsRegister');
+        //获取商户编号
+        $conf   = $this->getConfig('conf');
+        $mch_no = $conf['MCH_NO'];
+        //获取席位号
+        $info_data = $bcsRegister_model->getInfo(array("user_id"=>$data_info['user_id']));
+        $info_data = $info_data['data'][0];
+
+        $sit_no = $info_data['SIT_NO']; // 席位号
+
+        $bcs_data = $bcsBank_model->getCustomerInfo( $mch_no, $sit_no );
+        $bcs_data = $bcs_data['data'];
+        if(isset($bcs_data) && !empty($bcs_data)) {
+            $data_info['acct_bal'] = $bcs_data['ACCT_BAL'];
+            $data_info['avl_bal']  = $bcs_data['avl_bal'];
+        }*/
+
         $data_item = $tradeRecordItem_model->searchList(array('trade_record_id' => $data_info['id']));
         if(EC_OK != $data_item['code']){
             Log::error("searchList failed . ");
