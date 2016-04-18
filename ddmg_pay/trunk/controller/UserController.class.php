@@ -47,6 +47,12 @@ class UserController extends BaseController
                 
             case 'erp_getList':
                 $this->erp_getList();
+                break;                
+            case 'erp_getContactCompanyList':
+                $this->erp_getContactCompanyList();
+                break;
+            case 'erp_getContactCompanyInfo':
+                $this->erp_getContactCompanyInfo();
                 break;
             default:
                 Log::error('UserController method not exists ' . $params[0]);
@@ -634,6 +640,84 @@ class UserController extends BaseController
     		return self::$_currentUserMobile = $mobile;
     	}
     	return $mobile;
+    }
+    
+    //来往单位列表
+    public function erp_getContactCompanyList(){
+    	
+    	$referer = intval(Request::post('referer'));
+    	$current_page = Request::post('page');    	
+    	$dwdm = Request::post('dwdm');    	
+    	$dwmc = Request::post('dwmc');     	    	
+    
+    	if(!$current_page || 0 >= $current_page) {
+    		$current_page = 1;
+    	}        	    
+    	$conf = $this->getConfig('conf');
+    	$page_cnt = $conf['page_count_default'];
+        
+    	$params = array();
+    	if($dwdm){
+    		$params['dwdm'] = $dwdm;    		    		
+    	}
+    	if($dwmc){
+    		$params['dwmc'] = $dwmc . '%';
+    	}
+    	$params['page'] = $current_page;
+    	$params['rows'] = $page_cnt;
+    	 
+    	//Log::notice("request-data ===========================>> data = ##" . json_encode($params) . "##" );
+    	$user_model = $this->model('user');
+    	$data = $user_model->erp_getContactCompanyList($params);
+    	if(EC_OK_ERP != $data['code']){
+    		Log::error('erp_getContactCompanyList Fail!');
+    		EC::fail($data['code']);
+    	}
+    	//Log::notice("response-data ===========================>> data = ##" . json_encode($data) . "##" );
+    
+    	$data_list = $data['data']['data'];
+    	$cnt = $data['data']['records'];
+    
+    	$total_page = ($cnt % $page_cnt) ? (integer)($cnt / $page_cnt) + 1 : $cnt / $page_cnt;
+    	Log::notice($page_cnt . " -response-data ======================total_page=====>> data = ##" . $total_page. "##cnt="  . $cnt);
+    
+    	if(!$current_page || 0 >= $current_page) {
+    		$current_page = 1;
+    	} if($current_page > $total_page) {
+    		$current_page = $total_page;
+    	}
+    	
+    	$params['dwmc'] = $dwmc;
+    
+    	$entity_list_html = $this->render('erpContactCompany_list', array('referer' => $referer, 'params' => $params, 'data_list' => $data_list, 'current_page' => $current_page, 'total_page' => $total_page), true);
+    	EC::success(EC_OK, array('entity_list_html' => $entity_list_html));
+    }
+    
+    //来往单位详情
+    public function erp_getContactCompanyInfo(){
+    	$dwdm = Request::post('dwdm');
+    	//$dwmc = Request::post('dwmc');
+    	 
+    	if($dwdm ==''){
+    		Log::error('erp_getContactCompanyInfo params error!');
+    		EC::fail(EC_PAR_ERR);
+    	}    
+    	
+    	$params = array();
+    	if($dwdm){
+    		$params['dwdm'] = $dwdm;
+    	}
+    	
+    	$user_model = $this->model('user');
+    	$data = $user_model->erp_getContactCompanyInfo($params);
+    	if(EC_OK_ERP != $data['code']){
+    		Log::error('erp_getContactCompanyInfo Fail!');
+    		EC::fail($data['code']);
+    	}
+    	//Log::notice("response-data ===========================>> data = ##" . json_encode($data) . "##" );
+    	$data = $data['data'];
+    	
+    	EC::success(EC_OK, $data);    	
     }
     
 }

@@ -54,13 +54,17 @@ $(document).on('change', '#entity-custom-page', function(event){
 
 function entitySetSelectedPage(){
 	if($('#entity-custom-page') && $("#entity-current-page") && $("#entity-total-page")){
-		var cur_page = $("#entity-current-page").html();
-		var total_page = $("#entity-total-page").html();
+		var cur_page = parseInt($("#entity-current-page").html());
+		var total_page = parseInt($("#entity-total-page").html());
 		var selObj = $('#entity-custom-page');
 		selObj.empty();
-		for(var i=1; i<=total_page; i++){
-			selObj.append("<option value='" + i +"'>" + i +"</option>");
+		var start = cur_page > 20 ? cur_page - 20 : 1;
+	    var end = (total_page - cur_page) > 20 ? cur_page + 19 : total_page;
+	    var html = '';
+		for(var i=start; i<=end; i++){
+			html += "<option value='" + i +"'>" + i +"</option>";				
 		}
+		selObj.append(html);
 		selObj.val(cur_page);
 	}
 }
@@ -111,6 +115,104 @@ function search_entity(page){
 function search_clearFields(){
 	$("#entity-search-order_no").val("");
 }
+
+/**************start--来往单位搜索分页***********/
+$(document).on('click', '#entity-search-btn-contact', function(event){
+	search_entity_contact(1);
+});
+
+$(document).on('click', '#entity-clear-btn-contact', function(event){
+	search_entity_contact(1);
+	return;
+});
+
+$(document).on('click', '#entity-list-prev-contact', function(event){
+	var cur_page = $("#entity-current-page-contact").html();
+	var total_page = $("#entity-total-page-contact").html();
+	
+	if(cur_page == '1') {
+		Messenger().post('已经是第一页了！');
+		return ;
+	}
+	var page = cur_page * 1 - 1;
+	search_entity_contact(page);
+});
+
+$(document).on('click', '#entity-list-next-contact', function(event){
+	var cur_page = $("#entity-current-page-contact").html();
+	var total_page = $("#entity-total-page-contact").html();
+	if(cur_page == total_page) {
+		Messenger().post('已经是最后一页了！');
+		return ;
+	}
+	var page = cur_page * 1 + 1;
+	search_entity_contact(page);
+});
+
+$(document).on('change', '#entity-custom-page-contact', function(event){
+	var sel_page = $('#entity-custom-page-contact').val();
+	var cur_page = $("#entity-current-page-contact").html();
+	var total_page = $("#entity-total-page-contact").html();
+	search_entity_contact(sel_page);
+});
+
+function entitySetSelectedPage_contact(){
+	if($('#entity-custom-page-contact') && $("#entity-current-page-contact") && $("#entity-total-page-contact")){
+		var cur_page = parseInt($("#entity-current-page-contact").html());
+		var total_page = parseInt($("#entity-total-page-contact").html());;
+		var selObj = $('#entity-custom-page-contact');
+		selObj.empty();		
+		var start = cur_page > 20 ? cur_page - 20 : 1;
+	    var end = (total_page - cur_page) > 20 ? cur_page + 19 : total_page;	   
+	    var html = '';
+		for(var i=start; i<=end; i++){
+			html += "<option value='" + i +"'>" + i +"</option>";				
+		}
+		selObj.append(html);
+		selObj.val(cur_page);
+	}
+}
+$(function(){
+	//entitySetSelectedPage_contact();
+});
+
+function search_entity_contact(page){
+	var cur_page = $("#entity-current-page-contact").html();
+	var total_page = $("#entity-total-page-contact").html();
+	if(page < 1 || page > total_page * 1) {
+		Messenger().post('页码错误！');
+		return ;
+	}
+	
+	$("#entity-search-btn-contact").attr('disabled', 'disabled');
+	$("#search-entity-hint-contact").html('').fadeOut();
+
+	var referer = $("#entity-search-referer").val();
+    var dwmc = $("#entity-search-dwmc").val(); 
+	var dwdm = $('#entity-search-dwdm').val();
+	
+    //查找
+    $.post(BASE_PATH + 'user/erp_getContactCompanyList', {
+    		'referer' : referer,
+	    	'dwmc':dwmc,
+	    	'dwdm':dwdm,
+	        'page':page
+        },
+        function(result){
+            if(result.code != 0) {
+                $("#search-entity-hint").html(result.msg + '(' + result.code + ')').fadeIn();
+            }else {
+                $("#add-entity-list").html(result.data.entity_list_html);
+            }
+            $("#entity-search-btn-contact").removeAttr('disabled');
+            //renderDatetime();
+            entitySetSelectedPage_contact();
+        },
+        'json'
+    );
+}
+
+/**************end--来往单位搜索分页***********/
 
 /**************start--导出数据****************/
 
@@ -328,7 +430,7 @@ $(document).on('click', '#for-test-btn', function(event){
 	    );
 });
 
-	//订单申请付款单提交前验证
+	//普通订单申请付款单提交前验证
 	$(document).on('click', '#add-entity-create', function(event){		
 			
 		//$("#add-entity-create").attr('disabled', 'disabled');
@@ -405,10 +507,90 @@ $(document).on('click', '#for-test-btn', function(event){
 	    return; 
 	});
 	
+	//申请预付款单提交前验证
+	$(document).on('click', '#add-entity-create-advance', function(event){		
+			
+		//$("#add-entity-advance").attr('disabled', 'disabled');
+	    $("#add-entity-hint").html('').fadeOut();		
+		var hint_html = '';
+	    
+		var comp_name = $('#add-entity-comp_name').val(); // 收款单位
+		var comp_name_code = $('#add-entity-comp_name_code').val(); // 收款单位代码
+		var comp_account = $('#add-entity-comp_account').val(); // 收款账号
+		var bank_name = $('#add-entity-bank_name').val(); // 开户行
+		var amount = $('#add-entity-apply_total_amount').val(); // 申请金额
+		var bank_flag = $('#add-entity-bank_flag').val(); //同行、跨行		
+		var comp_name_buyer = $('#add-entity-comp_name_buyer').val(); // 下游买家
+		var comp_name_buyer_code = $('#add-entity-comp_name_buyer_code').val(); // 下游买家代码
+			
+		if( !comp_name || '' == comp_name || !comp_name_code || '' == comp_name_code){
+	    	hint_html += (hint_html == '' ? '' : '<BR>') + '请选择 收款单位！' ;
+	    }
+		
+	    if( !comp_account || '' == comp_account ){
+	    	hint_html += (hint_html == '' ? '' : '<BR>') + '请填写 收款账号！' ;
+	    }else{
+	    	var comp_account_reg = /^\d{16,19}$/;
+	    	if(!comp_account_reg.test(comp_account)){
+	    		hint_html += (hint_html == '' ? '' : '<BR>') + '收款账号有误：只能是16-19位数字，且不能包含空格！' ;
+	    	}
+	    }	    
+	    
+		if( !bank_name || '' == bank_name ){
+	    	hint_html += (hint_html == '' ? '' : '<BR>') + '请填写 收款开户行！' ;
+	    } else {
+	    	if( '' == $('#add-entity-bank_no').val() || bank_name != $('#add-entity-bank_name_checked').val() ){
+		    	hint_html += (hint_html == '' ? '' : '<BR>') + '请验证  收款开户行！' ;
+		    	$('#check-entity-bankName').click(); // 验证开户行
+		    	/*setTimeout(function(){
+		    		$('#add-entity-ref').click();
+                }, 2000);*/
+		    }
+	    }
+		
+		if( !amount || '' == amount ){
+	    	hint_html += (hint_html == '' ? '' : '<BR>') + '请填写 金额！' ;
+	    }else{
+	    	var amount_reg = /^\d+?\.?\d*?$/;;
+	    	if(!amount_reg.test(amount)){
+	    		hint_html += (hint_html == '' ? '' : '<BR>') + ' 金额填写有误：只能输入正数、小数，且不能包含空格!' ;
+	    	}
+	    }	           
+	    
+		if( !comp_name_buyer || '' == comp_name_buyer || !comp_name_buyer_code || '' == comp_name_buyer_code ){
+	    	hint_html += (hint_html == '' ? '' : '<BR>') + '请选择 下游买家！' ;
+	    }	
+		
+	    if( !bank_flag || '-1' == bank_flag ){
+	    	hint_html += (hint_html == '' ? '' : '<BR>') + '请选择 同行/跨行！' ;
+	    }
+	    	    
+	    if(hint_html != ''){
+	        $("#add-entity-hint").html(hint_html).fadeIn();
+	        //$("#add-entity-create").removeAttr('disabled');
+	        return 0;
+	    }	 
+	    
+	    
+	    $("#build_apply_order").remove();
+	    //组装
+	    $str = '@;';
+	    var str = "@;";
+	    var quote_fphm = '';
+	    var quote_amount = '';	    
+	    var submitInfo = quote_fphm + str + quote_amount + str + comp_name_buyer + str + comp_name_buyer_code + str + amount;
+	    var inputObj = "<input id='build_apply_order"  + "' name='input_apply_orders' value='" + submitInfo + "' />";		
+		$('#div_submit_info').append(inputObj);
+	    
+	    $("#pay-pwd-hint").html('').fadeOut();
+	    $("#pay-pwd-modal").modal('show');	    
+	    return; 
+	});
+	
 	//输入支付密码后提交
 	$(document).on('click', '#btn-pay-pwd', function(event){	
 		
-			var is_advance = $('#add-entity-is_advance').val(); //是否是预付款申请单  '1'是
+			var order_apply_type = $('#add-entity-order_apply_type').val(); //申请单类型  0普通订单付款  1预付款单 
 			var pay_pwd = $('#pay-pwd').val();//支付密码
 			var apply_no = $('#add-entity-apply_no').val(); // 申请单号
 		    var comp_name = $('#add-entity-comp_name').val(); // 收款单位
@@ -425,15 +607,19 @@ $(document).on('click', '#for-test-btn', function(event){
 		    var erp_bmdm = $('#add-entity-erp_bmdm').val(); // erp_部门代码		
 			var erp_fgsmc = $('#add-entity-erp_fgsmc').val();// erp_分公司名称
 			var erp_bmmc = $('#add-entity-erp_bmmc').val();// erp_部门名称
-			var erp_username = $('#add-entity-erp_username').val();// erp_用户名
+			var erp_username = $('#add-entity-erp_username').val();// erp_用户名						
 			
-			//将申请金额加上
 			var inputArr = $('#div_submit_info').children("input[name='input_apply_orders']");
 			var order_no_arr = new Array();    
 		    $.each(inputArr,function(i, obj){
-		    	var quote_fphm_name = obj['id'].replace("quote_fphm_", '');
-		    	var apply_amount = $("#apply_amount_"+quote_fphm_name).val(); 		    	
-		    	order_no_arr[i] =   $(obj).val() + "@;" + apply_amount;
+		    	var order_item = $(obj).val();
+		    	//普通订单申请付款单则将申请金额加上
+		    	if(parseInt(order_apply_type) == 0){		    		
+		    		var quote_fphm_name = obj['id'].replace("quote_fphm_", '');
+		    		var apply_amount = $("#apply_amount_"+quote_fphm_name).val(); 
+		    		order_item = order_item + "@;" + apply_amount;		    		
+		    	}		    	
+		    	order_no_arr[i] = order_item; 
 	        }); 
 		    		    
 		    var hint_html2 = '';
@@ -450,7 +636,7 @@ $(document).on('click', '#for-test-btn', function(event){
 			
 		    $("#btn-pay-pwd").attr('disabled', 'disabled');
 		    $.post(BASE_PATH + 'tradeRecord/create_add', {
-		    	    'is_advance':is_advance,
+		    	    'order_apply_type':order_apply_type,
 		    		'pay_pwd':pay_pwd, 
 		        	'order_no_arr':order_no_arr, 
 		        	'apply_no':apply_no,
@@ -482,13 +668,24 @@ $(document).on('click', '#for-test-btn', function(event){
 		            		hint_html2 += (hint_html2 == '' ? '' : '<BR>') + result.msg ;
 		    		    	$("#pay-pwd-hint").html(hint_html2).fadeIn();		    		    	
 		            	}else{
-		            		$("#add-entity-hint").html(result.msg + '(' + result.code + ')').fadeIn();
-		            		//$("#add-entity-create").removeAttr('disabled');
+		            		$("#add-entity-hint").html(result.msg + '(' + result.code + ')').fadeIn();		            		
 		            		$("#add-entity-create").html("提交申请");
+		            		if(parseInt(order_apply_type) == 0){
+		            			//$("#add-entity-create").removeAttr('disabled');
+		            			$("#add-entity-create").html("提交申请");
+			            	}else if(parseInt(order_apply_type) == 1){	
+			            		//$("#add-entity-create-advance").removeAttr('disabled');
+			            		$("#add-entity-create-advance").html("提交申请");
+			            	}
 		            	}		                
-		            } else {		            	 
-		            	$("#add-entity-create").attr('disabled', 'disabled');
-		            	$("#add-entity-create").html("添加中...");
+		            } else {
+		            	if(parseInt(order_apply_type) == 0){
+		            		$("#add-entity-create").attr('disabled', 'disabled');
+		            		$("#add-entity-create").html("添加中...");
+		            	}else if(parseInt(order_apply_type) == 1){
+		            		$("#add-entity-create-advance").attr('disabled', 'disabled');
+		            		$("#add-entity-create-advance").html("添加中...");
+		            	}
 		                $("#add-entity-hint").html(result.msg + ', 关闭...').fadeIn();
 		                setTimeout(function(){
 		                	$('#add-entity-cancel').click();
@@ -547,7 +744,100 @@ $(document).on('click', '#for-test-btn', function(event){
 	        'json'
 	    );
 	}
+	
+	// 验证收款单位 
+	$(document).on('click', '#check-entity-comp_name', function(event){
+		var dwdm = $('#add-entity-comp_name_code').val(); // 收款单位代码
+		checkCompName(dwdm);
+	});
+	
+	function checkCompName(dwdm){
+		if(!dwdm || '' == dwdm ){
+			return false;
+		}
+		$("#span_check_comp_failed").hide();
+		$("#span_check_comp_success").hide();
+	
+		if( '' == $('#add-entity-comp_name_code').val()) {
+			$("#span_check_comp_success").fadeIn();
+    		$("#span_check_comp_failed").fadeOut();
+    		return false;
+		}				
+		//$('#add-entity-comp_name_checked').val('');
+		$.post(BASE_PATH + 'user/erp_getContactCompanyInfo', {
+		        'dwdm':dwdm
+	        },
+	        function(result){
+	            if(result.code != 0) {
+	                $("#ref-entity-hint").html(result.msg + '(' + result.code + ')').fadeIn();
+	            } else {            	    
+	            	if(result.data){
+	            		$("#span_check_comp_success").fadeIn();
+	            		$("#span_check_comp_failed").fadeOut();
+	            		//$('#add-entity-comp_name_code').val(result.data['']);
+	            		//$('#add-entity-comp_name_checked').val(result.data['']);
+	            		return true;
+	            	} else {
+	            		$("#span_check_comp_success").fadeOut();
+	            		$("#span_check_comp_failed").fadeIn();
+	            		$('#add-entity-comp_name_code').val('');
+	            		$('#add-entity-comp_name').val('');
+	            		//$('#add-entity-comp_name_checked').val('');
+	            		return false;
+	            	}
+	            }
+	        },
+	        'json'
+	    );
+	}
+	
+	// 验证下游买家
+	$(document).on('click', '#check-entity-comp_name_buyer', function(event){
+		var dwdm = $('#advance-comp_name_buyer_code').val(); // 预付款下游买家
+		checkCompNameBuyer(dwdm);
+	});
+	
+	function checkCompNameBuyer(dwdm){
+		if(!dwdm || '' == dwdm ){
+			return false;
+		}
+		$("#span_check_buyer_failed").hide();
+		$("#span_check_buyer_success").hide();
+		
+		if( '' == $('#add-entity-comp_name_buyer_code').val()) {
+			$("#span_check_buyer_success").fadeIn();
+    		$("#span_check_buyer_failed").fadeOut();
+    		return false;
+		}
+				
+		//$('#add-entity-comp_name_checked').val('');
+		$.post(BASE_PATH + 'user/erp_getContactCompanyInfo', {
+		        'dwdm':dwdm
+	        },
+	        function(result){
+	            if(result.code != 0) {
+	                $("#ref-entity-hint").html(result.msg + '(' + result.code + ')').fadeIn();
+	            } else {            	   
+	            	if(result.data){
+	            		$("#span_check_buyer_success").fadeIn();
+	            		$("#span_check_buyer_failed").fadeOut();
+	            		//$('#add-entity-comp_name_buyer').val(result.data['']);
+	            		//$('#add-entity-comp_name_buyer_code').val(result.data['']);
+	            		return true;
+	            	} else {
+	            		$("#span_check_buyer_success").fadeOut();
+	            		$("#span_check_buyer_failed").fadeIn();
+	            		$('#add-entity-comp_name_buyer').val('');
+	            		$('#add-entity-comp_name_buyer_code').val('');
+	            		return false;
+	            	}
+	            }
+	        },
+	        'json'
+	    );
+	}
 
+	//引订单按钮
 	$(document).on('click', '#add-entity-quote', function(event){
 		$('#add-entity-modal').modal('show');
 		$('#add-entity-modal').modal({keyboard: false});
@@ -823,7 +1113,7 @@ $(document).on('click', '#for-test-btn', function(event){
 				js_cgje = parseFloat($('#'+quote_amount_id).val());
 				var reg = /^\d+?\.?\d*?$/;
 				if(!reg.test(amount)){
-					$('#'+apply_amount_id).next('span').html('金额必须输入，且只能输入正数和小数!').fadeIn();
+					$('#'+apply_amount_id).next('span').html('金额必须输入，且只能输入正数、小数，不能包含空格!').fadeIn();
 					$('#'+apply_amount_id).focus();
 					is_true = false;
 				}else if(amount <= 0){
@@ -949,7 +1239,6 @@ $(document).on('click', '#for-test-btn', function(event){
 	}
 	
 	function setBankDomain(index){
-//		alert(index);
 		if('2' == $('#add-entity-record_bank_type').val() ){
 			if( '浦发银行' == bank_name_list[index] ){
 				$('#add-entity-bank_flag').val('0'); // 0-同行 1-跨行
@@ -964,7 +1253,6 @@ $(document).on('click', '#for-test-btn', function(event){
 				}*/
 			}
 		}
-//		alert(index);
 	}
 	
 	/*// 同行/跨行
@@ -976,7 +1264,7 @@ $(document).on('click', '#for-test-btn', function(event){
 		}
 	});*/
 	
-	/* ---------查行名start----------*/
+	/* ---------查行名列表start----------*/
 	$(document).on('click', '#btn-bank_name', function(event){
 		
 		$('#add-entity-modal').modal('show');
@@ -998,7 +1286,62 @@ $(document).on('click', '#for-test-btn', function(event){
 	        'json'
 	    );
 	});
-	/* ---------查行名end----------*/
+	/* ---------查行名列表end----------*/
+	
+	/* ---------查来往单位列表start----------*/
+	$(document).on('click', '#btn-comp_name', function(event){
+		erp_getContactCompanyList(1); //收款单位		
+	});
+	
+	$(document).on('click', '#btn-comp_name_buyer', function(event){
+		erp_getContactCompanyList(2); //下游买家
+	});
+	
+	function erp_getContactCompanyList(referer){
+		$('#add-entity-modal').modal('show');
+		$('#add-entity-modal').modal({keyboard: false});		
+		
+		$('#add-entity-list').html("<div style='width:100%;text-align:center;'><img alt='正在加载数据...' src='" + BASE_PATH + "view/images/tips_loading.gif'/></div>");
+		//查找
+	    $.post(BASE_PATH + 'user/erp_getContactCompanyList', {
+	    		'referer' : referer
+	        },
+	        function(result){        	
+	            if(result.code != 0) {
+	                $("#search-entity-hint").html(result.msg + '(' + result.code + ')').fadeIn();
+	            }else {
+	                $("#add-entity-list").html(result.data.entity_list_html);
+	                //renderDatetime();
+	                entitySetSelectedPage_contact();
+	            }
+	        },
+	        'json'
+	    );
+	}
+	
+	$(document).on('click', '.entity-select-comp', function(event){
+		var dwdm = $(this).attr("id").replace('entity-select-dwdm-', '');		
+		var dwmc_id = 'entity-select-dwmc-' + dwdm.toString();		
+		if($("#"+dwmc_id).length > 0){			
+			$("#add-entity-comp_name_code").val(dwdm);
+			$("#add-entity-comp_name").val($("#"+dwmc_id).val());			
+			$("#add-entity-modal").modal('hide');
+		}
+		
+	});	
+	
+	$(document).on('click', '.entity-select-buyer', function(event){
+		var dwdm = $(this).attr("id").replace('entity-select-dwdm-', '');		
+		var dwmc_id = 'entity-select-dwmc-' + dwdm.toString();		
+		if($("#"+dwmc_id).length > 0){
+			$("#add-entity-comp_name_buyer_code").val(dwdm);
+			$("#add-entity-comp_name_buyer").val($("#"+dwmc_id).val());
+			$("#advance-comp_name_buyer").val($("#"+dwmc_id).val());
+			$("#add-entity-modal").modal('hide');
+		}
+		
+	});	
+	/* ---------查来往单位列表end----------*/
 	
 prettyPrint();
 });

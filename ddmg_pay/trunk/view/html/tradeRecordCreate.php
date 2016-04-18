@@ -1,8 +1,8 @@
 
 <style type="text/css">
 .form-group-margin {
-	margin-left: 30px !important;
-	margin-right: 120px !important;
+	margin-left: 20px !important;
+	margin-right: 130px !important;
 }
 </style>
 
@@ -59,15 +59,15 @@
 	</div>
 </div>
 
-<h1 class="page-header"><?php if(strval($is_advance) == '1'){ echo '增加预付款单';}else{ echo '增加订单付款单';}?></h1>
+<h1 class="page-header"><?php if(intval($order_apply_type) == 1){ echo '增加预付款单';}else{ echo '增加订单付款单';}?></h1>
 
 <div class="panel panel-primary">
   <div class="panel-body">
     <div class="form-horizontal">
        <input type="hidden" id="info-entity-id" value=""></input>
        
-       <input type="hidden" id="add-entity-is_advance" value="<?php echo $is_advance;?>"></input> <!-- 是否是预付款 -->
-       <!--<input type="hidden" id="info-entity-comp_name" value=""></input> 收款单位 -->
+       <input type="hidden" id="add-entity-order_apply_type" value="<?php echo $order_apply_type;?>"></input> <!-- 申请单类型 -->
+       <input type="hidden" id="add-entity-comp_name_checked" value=""></input><!-- （预付款已验证的）收款单位 -->
        <input type="hidden" id="add-entity-comp_name_code" value=""></input><!-- 收款单位代码 -->
        <input type="hidden" id="add-entity-bank_no" value=""></input><!-- （已验证的）银行行号 -->
        <input type="hidden" id="add-entity-bank_name_checked" value=""></input><!-- （已验证的）银行名称 -->
@@ -95,7 +95,22 @@
 	  <div class="form-group form-group-margin">
 	    <label for="add-entity-comp_name" class="col-sm-2 control-label">收款单位</label>
 	    <div class="col-sm-4">
-		    <input type="text" class="form-control" <?php if(strval($is_advance) != '1'){ echo 'readonly="readonly"';}?> id="add-entity-comp_name" placeholder="" />    				   
+    		<?php if(intval($order_apply_type) == 1){ ?>
+	    	<div class="form-inline">	
+	    	<?php }?>	    	
+		    <input type="text" class="form-control" readonly="readonly" <?php if(intval($order_apply_type) == 1){ echo ' style="width: 360px;"';}?> id="add-entity-comp_name" placeholder="" />    				   
+	    	<?php if(intval($order_apply_type) == 1){ ?>
+	    		<input type="button" class="btn btn-primary" id="btn-comp_name" value="选" />
+	    	</div>
+	    	<!--  
+	    	<div id="div_data_comp_name" class="citydatadiv" style="display: none;"><ul></ul></div>
+		    
+		    	<a href="#" id="check-entity-comp_name">验证收款单位</a>
+		    	&nbsp;&nbsp;&nbsp;&nbsp;
+		    	<span id="span_check_comp_success" style="display: none;color: blue;" class="glyphicon glyphicon-ok form-control-feedback" aria-hidden="true"><span style="color:blue">验证通过</span></span>
+		    	<span id="span_check_comp_failed" style="display: none;color: red;" class="glyphicon glyphicon-remove form-control-feedback" aria-hidden="true"><span style="color:red">验证失败</span></span>
+	    	-->
+	    	<?php }?>	    	
 	    </div>
 	    <label for="add-entity-erp_username" class="col-sm-2 control-label">申请人</label>
 	    <div class="col-sm-4">
@@ -123,17 +138,30 @@
 	    </div>	    
 	  </div>
 	  <div class="form-group form-group-margin">
-	  	<label for="add-entity-amount" class="col-sm-2 control-label">总金额</label>
+	  	<label for="add-entity-amount" class="col-sm-2 control-label">金额</label>
 	    <div class="col-sm-4">
-	        <input type="text" class="form-control" <?php if(strval($is_advance) != '1'){echo 'readonly="readonly"';}?> id="add-entity-apply_total_amount" placeholder=""></input>
-	    </div>
-	    <?php if(strval($is_advance) == '1'){ ?>
+	        <input type="text" class="form-control" <?php if(intval($order_apply_type) == 0){echo 'readonly="readonly"';}?> id="add-entity-apply_total_amount" placeholder=""></input>
+	    </div>	    
+	  </div>	
+	  <?php if(intval($order_apply_type) == 1){ ?>
+	  	<div class="form-group form-group-margin">
 	    	<label for="add-entity-buyer" class="col-sm-2 control-label">下游买家</label>
 		    <div class="col-sm-4">
-		        <input type="text" class="form-control" id="add-entity-buyer" placeholder=""></input>
+		        <div class="form-inline">		    	
+		        	<input type="text" class="form-control" id="advance-comp_name_buyer" readonly="readonly" placeholder="" style="width: 360px;"></input>		        
+		    		<input type="button" class="btn btn-primary" id="btn-comp_name_buyer" value="选" />		    	
+		    	</div>
+		    	<!-- 
+		        <div id="div_data_buyer" class="citydatadiv" style="display: none;"><ul></ul></div>
+			    <a href="#" id="check-entity-comp_name_buyer">验证下游买家</a>
+			    &nbsp;&nbsp;&nbsp;&nbsp;
+			    <span id="span_check_buyer_success" style="display: none;color: blue;" class="glyphicon glyphicon-ok form-control-feedback" aria-hidden="true"><span style="color:blue">验证通过</span></span>
+			    <span id="span_check_buyer_failed" style="display: none;color: red;" class="glyphicon glyphicon-remove form-control-feedback" aria-hidden="true"><span style="color:red">验证失败</span></span>
+		    	-->
 		    </div>
-	    <?php }?>
-	  </div>	
+		</div>    
+	  <?php }?>
+	  
 	  <div class="form-group form-group-margin">
 	    <label for="add-entity-bank_flag" class="col-sm-2 control-label">同行/跨行</label>
 	    <div class="col-sm-4">
@@ -145,10 +173,10 @@
 	    </div>
 	    <label for="add-entity-amount_type" class="col-sm-2 control-label">款项类别</label>
 	    <div class="col-sm-4">	    	    
-	        <select class="form-control" id="add-entity-amount_type" <?php if(strval($is_advance) == '1'){ echo "disabled=true";}?>>
+	        <select class="form-control" id="add-entity-amount_type" <?php if(intval($order_apply_type) == 1){ echo "disabled=true";}?>>
 	          <option value="">-请选择-</option>
               <option value="货款" selected=selected >货款</option>
-              <?php if(strval($is_advance) == '预付款'){ echo '<option value="2" selected=selected >预付款</option>';}?>
+              <?php if(intval($order_apply_type) == 1){ echo '<option value="预付款" selected=selected >预付款</option>';}?>
             </select>	
 	    </div>	    	    
 	    <span id="span_local_flag" style="display: none;">	
@@ -183,7 +211,7 @@
 	  </div>
 	  <div class="alert alert-danger search-list-hint" id="ref-entity-hint"></div>
 	  
-	  <?php if(strval($is_advance) != '1'){?>
+	  <?php if(intval($order_apply_type) == 0){?>
 		  <div id="add-button-group" style="padding-bottom: 2px;">	  	  		
 	        <a id="add-entity-quote" class="btn btn-primary" href="#" >引订单</a>      	
 	        <!-- <a id="add-entity-ref" class="btn btn-primary" href="#" >插入</a>  -->
@@ -209,7 +237,7 @@
 	   <div id="div_submit_info" style="display: none;"></div>  
        <div class="alert alert-danger" id="add-entity-hint" style="display: none;"></div>	  
 	   <div id="add-button-group" class="text-center" style="padding-bottom: 2px; margin-top:30px; margin-bottom:10px;">
-    	 <a id="<?php if(strval($is_advance) == '1'){ echo "add-entity-create-advance";}else {echo "add-entity-create"; } ?>" class="btn btn-primary" href="#">&nbsp;&nbsp;提交申请&nbsp;&nbsp;</a>
+    	 <a id="<?php if(intval($order_apply_type) == 1){ echo "add-entity-create-advance";}else {echo "add-entity-create"; } ?>" class="btn btn-primary" href="#">&nbsp;&nbsp;提交申请&nbsp;&nbsp;</a>
     	 <a id="add-entity-cancel" class="btn btn-primary" href="<?php echo Router::getBaseUrl();?>tradeRecord/getIndex">取消</a>
        </div>
 	</div>

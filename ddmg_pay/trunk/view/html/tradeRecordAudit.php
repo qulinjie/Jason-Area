@@ -1,4 +1,11 @@
 
+<style type="text/css">
+.form-group-margin {
+	margin-left: 20px !important;
+	margin-right: 130px !important;
+}
+</style>
+
 <div class="modal fade" id="sms-entity-modal">
 	<div class="modal-dialog" style="width: 500px; margin-top:200px;">
 		<div class="modal-content">
@@ -62,7 +69,7 @@
     <div class="form-horizontal">
        <input type="hidden" id="info-entity-id" value="<?php echo $data_info['id'];?>"></input>
        
-       <div class="form-group">
+       <div class="form-group form-group-margin">
 	    <label for="add-entity-apply_no" class="col-sm-2 control-label">申请单号</label>
 	    <div class="col-sm-4">
 		    <input type="text" class="form-control" readonly="readonly" id="add-entity-apply_no" placeholder="" value="<?php echo $data_info['apply_no'];?>" />    				   
@@ -72,27 +79,48 @@
 	        <input type="text" class="form-control form_datetime" readonly="readonly" id="add-entity-order_timestamp" placeholder="" value="<?php echo date("Y-m-d",strtotime($data_info['order_timestamp']));?>"></input>
 	    </div>	
 	  </div>
-	  <div class="form-group">
+	  <div class="form-group form-group-margin">
 	    <label for="add-entity-comp_name" class="col-sm-2 control-label">收款单位</label>
 	    <div class="col-sm-4">
 		    <input type="text" class="form-control" readonly="readonly" id="add-entity-seller_name" placeholder="" value="<?php echo $data_info['seller_name'];?>">    				   
 	    </div>
-	    <label for="add-entity-comp_account" class="col-sm-2 control-label">收款账号</label>
+	    <label for="add-entity-account" class="col-sm-2 control-label">申请人</label>
+	    <div class="col-sm-4">
+		    <input type="text" class="form-control" readonly="readonly" id="add-entity-erp_username" placeholder="" value="<?php echo $data_info['erp_username'];?>" />    				   
+	    </div>	    
+	  </div>
+	  <div class="form-group form-group-margin">
+	  	<label for="add-entity-comp_account" class="col-sm-2 control-label">收款账号</label>
 	    <div class="col-sm-4">
 	        <input type="text" class="form-control" readonly="readonly" id="add-entity-comp_account" placeholder="" value="<?php echo $data_info['comp_account'];?>"></input>
 	    </div>	
 	  </div>
-	  <div class="form-group">
-	    <label for="add-entity-bank_name" class="col-sm-2 control-label">开户行</label>
+	  <div class="form-group form-group-margin">
+	    <label for="add-entity-bank_name" class="col-sm-2 control-label">收款开户行</label>
 	    <div class="col-sm-4">
 		    <input type="text" class="form-control" readonly="readonly" id="add-entity-bank_name" placeholder="" value="<?php echo $data_info['bank_name'];?>">    				   
 	    </div>
-	    <label for="add-entity-amount" class="col-sm-2 control-label">金额</label>
+	    <?php 
+	    	if(intval($data_info['order_apply_type'] == 1)){				
+	    		if(isset($data_info['data_list']) && isset($data_info['data_list'][0]['item_comp_name_buyer'])){
+	    ?>	      	
+    	<label for="add-entity-buyer" class="col-sm-2 control-label">下游买家</label>
+	    <div class="col-sm-4">
+	      <input type="text" class="form-control" id="advance-comp_name_buyer" readonly="readonly" placeholder="" value="<?php echo $data_info['data_list'][0]['item_comp_name_buyer'];?>"></input>		        
+	    </div>   
+	    <?php } }?>	    
+	  </div>	
+	  <div class="form-group form-group-margin">
+	  	<label for="add-entity-amount" class="col-sm-2 control-label">金额</label>
 	    <div class="col-sm-4">
 	        <input type="text" class="form-control" readonly="readonly" id="add-entity-order_bid_amount" placeholder="" value="<?php echo $data_info['order_bid_amount'];?>"></input>
+	    </div>
+	    <label for="add-entity-amount_type" class="col-sm-2 control-label">款项类别</label>
+	    <div class="col-sm-4">	        
+	        <input type="text" class="form-control" readonly="readonly" id="add-entity-amount_type" placeholder="" value="<?php echo $data_info['amount_type'];?>"></input>
 	    </div>	
-	  </div>	  
-	  <div class="form-group">
+	  </div>
+	  <div class="form-group form-group-margin">
 	    <label for="add-entity-bank_flag" class="col-sm-2 control-label">同行/跨行</label>
 	    <div class="col-sm-4">	    	      
         	<input type="text" class="form-control" readonly="readonly" id="add-entity-bank_flag" placeholder="" 
@@ -103,33 +131,20 @@
 	    <div class="col-sm-4">	        
             <input type="text" class="form-control" readonly="readonly" id="add-entity-local_flag" placeholder="" 
         		value="<?php echo ($data_info['local_flag'] ==0) ? '同城' : '异地';?>"></input>
-	    </div>
-	    </span>
-	  </div>
-	  <div class="form-group">
-	    <label for="add-entity-amount_type" class="col-sm-2 control-label">款项类别</label>
-	    <div class="col-sm-4">
-	        <!-- <select class="form-control" id="add-entity-amount_type">
-              <option value="货款">货款</option>
-            </select> -->
-	        <input type="text" class="form-control" readonly="readonly" id="add-entity-amount_type" placeholder="" value="<?php echo $data_info['amount_type'];?>"></input>
-	    </div>
+	    </div>	    
+	    </span>	    
+	  </div>	
+	  <div class="form-group form-group-margin">	    
 	    <label for="add-entity-use" class="col-sm-2 control-label">用途</label>
 	    <div class="col-sm-4">
 		    <input type="text" class="form-control" readonly="readonly" id="add-entity-useTodo" placeholder="" value="<?php echo $data_info['useTodo'];?>">    				   
-	    </div>	
-	  </div>
-	  <div class="form-group">
+	    </div>	  
 	    <label for="add-entity-pwd" class="col-sm-2 control-label">备注</label>
 	    <div class="col-sm-4">
 	        <input type="text" class="form-control" readonly="readonly" id="add-entity-comment" placeholder="" value="<?php echo $data_info['comment'];?>"></input>
-	    </div>
-	    <label for="add-entity-account" class="col-sm-2 control-label">申请人</label>
-	    <div class="col-sm-4">
-		    <input type="text" class="form-control" readonly="readonly" id="add-entity-erp_username" placeholder="" value="<?php echo $data_info['erp_username'];?>" />    				   
-	    </div>	
+	    </div>	    	
 	  </div>
-	  <div class="form-group">
+	  <div class="form-group form-group-margin">
 	    <label for="add-entity-organization" class="col-sm-2 control-label">机构</label>
 	    <div class="col-sm-4">
 	        <input type="text" class="form-control" readonly="readonly" id="add-entity-erp_fgsmc" placeholder="" value="<?php echo $data_info['erp_fgsmc'];?>"></input>
@@ -142,7 +157,7 @@
 	  <div class="alert alert-danger search-list-hint" id="ref-entity-hint"></div>
 	    
       <p class="text-center"></p>
-        
+      <?php if(intval($data_info['order_apply_type']) == 0){ ?> 
 	  <div class="panel-body">
 		<table class="table table-hover" id="data-list-table">
 			<thead>
@@ -162,11 +177,11 @@
 	            <td><?php echo $item['item_comp_name_buyer']; ?></td>
 	            <td><?php echo $item['comment'];?></td>	            
 	       </tr>
-	       <?php } }?>
-			
-			</tbody>
+	       <?php } }?>			
+		   </tbody>
 		</table>
-  </div>
+  	  </div>
+  	  <?php }?>
   
       <div id="div_submit_info" style="display: none;"></div>  
       <div class="alert alert-danger" id="add-entity-hint" style="display: none;"></div>  	  

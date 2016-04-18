@@ -59,10 +59,14 @@ class UserModel extends CurlModel
     
     public function erp_getInfo($params = array()){
         return self::sendRequestErp('api/pub/userservice/PostUser_GetInfo/',$params);
+    }    
+    
+    public function erp_getContactCompanyList($params = array()){
+    	return self::sendRequestErp('api/pub/ErpService/PostERP_wldw/',$params);
     }
     
     public function erp_getContactCompanyInfo($params = array()){
-    	return self::sendRequestErp('api/pub/ErpService/PostERP_wldw/',$params);
+    	return self::sendRequestErp('api/pub/ErpService/PostERP_wldwinfo/',$params);
     }
     
     public function erp_getContactDeptInfo($params = array()){
