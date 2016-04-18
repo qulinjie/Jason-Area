@@ -2091,16 +2091,23 @@ class TradeRecordController extends BaseController {
 	    	$sp_data = array();    	
 	    	$spdBank_model = $this->model('spdBank');	    	
 	    	$sp_data = $spdBank_model->sendTransferTrade($params);
+	    	
+	    	//付款后记录日志
+	    	Log::fkNotice("response-data ===sendTransferTrade===>> sp_data = ##" . json_encode($sp_data) . "##");
+	    		    	
 	    	$sp_data = $sp_data['body'];
-	    	 /*   
+	    	if(isset($sp_data['returnCode']) && isset($sp_data['returnMsg'])){
+	    		Log::fkError(" sendTransferTrade=== error>> returnCode=" . $sp_data['returnCode'] . ", returnMsg=". $sp_data['returnMsg']);
+	    		EC::fail($sp_data['returnCode'], $sp_data['returnMsg']);
+	    	}	    	
+	    	
+	    	/*   
             $sp_data['jnlSeqNo'] = '123456789123456789';
 	    	$sp_data['backhostStatus'] = 4;
 	    	*/
 	    	$jnl_seq_no = $sp_data['jnlSeqNo']; //业务流水号
 	   		$backhost_status = $sp_data['backhostStatus']; //付款后返回的记录状态 0-待补录；1-待记帐；2-待复核；3-待授权；4-完成；8-拒绝；9-撤销；
          
-	    	//付款后记录日志
-	    	Log::fkNotice("response-data ===sendTransferTrade===>> sp_data = ##" . json_encode($sp_data) . "##");
 	    		   		
     	}catch (Exception $e){   			
    			Log::fkError('sendTransferTrade . e==========' . $e->getMessage());
