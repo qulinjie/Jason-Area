@@ -690,7 +690,7 @@ class BcsTradeController extends BaseController {
     	
     		$params['virtualAcctNo'] = $ACCOUNT_NO;//'62250806009'; // 虚账号
     		// for test
-//     		$params['shareBeginDate'] = '20160301'; // 分摊开始日期
+//     		$params['shareBeginDate'] = '20160401'; // 分摊开始日期
 //     		$params['shareEndDate'] = 20160409; // 分摊结束日期
     		$params['shareBeginDate'] = date('Ymd',time()); // 分摊开始日期
     		$params['shareEndDate'] = date('Ymd',time()); // 分摊结束日期
