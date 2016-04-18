@@ -41,7 +41,7 @@ class SPDBankCurl extends CurlModel {
             Log::notice("data = ##" . json_encode($data) . "##" );
             Log::notice( "result=" . strval( $data['head']['result']) );
             Log::spdError("err-dataSign.数据签名错误。returnMsg=" . strval( $data['body']['returnMsg']));
-            return []; // "err-dataSign.数据签名错误。returnMsg=" . strval( $data['body']['returnMsg']) ;
+            return $data; // "err-dataSign.数据签名错误。returnMsg=" . strval( $data['body']['returnMsg']) ;
         }
         $signature = strval( $data['body']['sign'] );
         
@@ -66,7 +66,7 @@ class SPDBankCurl extends CurlModel {
             Log::notice("data = ##" . json_encode($data) . "##" );
             Log::notice( "returnCode=" . strval( $data['head']['returnCode']) );
             Log::spdError("err-dataExec.数据执行错误。returnMsg=" . strval( $data['body']['returnMsg']));
-            return []; // "err-dataExec.数据执行错误。returnMsg=" . strval( $data['body']['returnMsg']) ;
+            return $data; // "err-dataExec.数据执行错误。returnMsg=" . strval( $data['body']['returnMsg']) ;
         }
         $param = strval( $data['body']['signature'] );
         
@@ -79,7 +79,7 @@ class SPDBankCurl extends CurlModel {
             Log::notice("data = ##" . json_encode($data) . "##" );
             Log::notice( "result=" . strval( $data['head']['result']) );
             Log::spdError("err-dataSignV.数据验签错误。returnMsg=" . strval( $data['body']['returnMsg']));
-            return []; // "err-dataSignV.数据验签错误。returnMsg=" . strval( $data['body']['returnMsg']) ;
+            return $data; // "err-dataSignV.数据验签错误。returnMsg=" . strval( $data['body']['returnMsg']) ;
         }
         
         return $data['body']['sic'];
