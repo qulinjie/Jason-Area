@@ -120,8 +120,10 @@
 			<td></td>
 			<td></td>
 			<td></td>
-			<td></td>				
+			<td></td>
+			<td></td>
 			<td>总计:<?php echo number_format($TX_AMT_total, 2); ?></td>
+			<td></td>
 			<td></td>
 			<td></td>
 			<td></td>
