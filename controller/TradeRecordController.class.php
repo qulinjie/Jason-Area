@@ -1132,10 +1132,9 @@ class TradeRecordController extends BaseController {
         $erp_bmdm = Request::post('erp_bmdm'); // erp_部门代码
         $erp_fgsmc = Request::post('erp_fgsmc'); // erp_分公司名称
         $erp_bmmc = Request::post('erp_bmmc'); // erp_部门名称
-        $erp_username = Request::post('erp_username'); // erp_用户名
-        
+        $erp_username = Request::post('erp_username'); // erp_用户名        
         $apply_item = Request::post('order_no_arr'); // 业务单列表 @;
-        $seller_name = Request::post('comp_name'); // 收款单位
+        $seller_name = Request::post('comp_name'); // 收款单位名称
         $seller_name_code = Request::post('comp_name_code'); // 收款单位代码
         
         $loginUser_data = UserController::getLoginUser();
@@ -1143,7 +1142,13 @@ class TradeRecordController extends BaseController {
         $audit_user_id_first = $loginUser_data['fuserid']; //一级审核人id
         $audit_user_id_second = $loginUser_data['managerid']; //二级审核人id    
         
-        //支付密码校验
+        //必要字段检测
+        if(empty($pay_pwd) || empty($comp_account) || empty($bank_name) || empty($seller_name) || empty($seller_name_code)){
+        	Log::error('create_add params error!');
+        	EC::fail(EC_PAR_ERR);
+        }
+        
+        //验证支付密码
         if(empty($pay_pwd)){
         	Log::error('create_add params error!');
         	EC::fail(6000, EC::$_errMsg[EC_PAR_ERR]);
@@ -1157,13 +1162,26 @@ class TradeRecordController extends BaseController {
         	Log::error('erp_payPwdVerify Fail!'. $res_data['msg']);
         	EC::fail(6000, $res_data['msg']);
         }
+        
+        //验证收款单位代码和名称
+        $user_model = $this->model('user');
+        $contact_data = $user_model->erp_getContactCompanyInfo(array('dwdm' => $seller_name_code));
+        if(EC_OK_ERP != $contact_data['code']){
+        	Log::error('erp_getContactCompanyInfo Fail!');
+        	EC::fail($contact_data['code'], $contact_data['msg']);
+        }
+        $contact_data = $contact_data['data'];
+        if(empty($contact_data) || !isset($contact_data['dwmc']) || $contact_data['dwmc'] != $seller_name){
+        	Log::error('check Fail: seller_name is empty or is not equal');
+        	EC::fail(5000, '操作失败：收款单位名称验证失败！');
+        }        
        
         //验证银行行号         
         $spdInteBank_model = $this->model('spdInternetBank');
         $bank_info_data = $spdInteBank_model->getInfo($params = array('bankNo'=>$bank_no));
         if(EC_OK != $bank_info_data['code']){
             Log::error("getInfo-spdInternetBank failed . ");
-            EC::fail($bank_info_data['code']);
+            EC::fail($bank_info_data['code'], $bank_info_data['msg']);
         }
         if( empty($bank_info_data['data'][0]) ){
             Log::error("getInfo-spdInternetBank empty . bank_info_data=" . json_encode($bank_info_data));
@@ -1184,13 +1202,6 @@ class TradeRecordController extends BaseController {
         $trade_record_item = array();        
         $sum_amount = 0; //非预付款的所有订单的申请金额的总计
         $order_no_str = ''; //非预付款的所有订单的单号             
-        
-        /* //如果订单列表为空则表示为预付款
-        $is_advance = '0';
-        if(empty($apply_item) && is_array($apply_item)){
-        	$is_advance = '1';
-        	$order_apply_type = 1;
-        } */
                 
         if(!empty($apply_item) && is_array($apply_item)){
 	        foreach ($apply_item as $itemKey => $itemVal){
@@ -1210,27 +1221,42 @@ class TradeRecordController extends BaseController {
 	            $trade_record_item[$v_order_no]['item_comp_name_buyer_code'] = $v_comp_name_buyer_code;
 	            $trade_record_item[$v_order_no]['comment'] = $comment;
 	            
-	            //检查 采购单 金额 和 下游买家             
-	            $data = $tradeRecord_model->erp_getSellOrderInfo(array('fphm'=>$v_order_no));
-	            if(EC_OK_ERP != $data['code']){
-	                Log::error('erp_getSellOrderInfo Fail! order_no=' . $v_order_no);
-	                EC::fail($data['code']);
+	            //普通订单的付款申请单验证
+	            if($order_apply_type == 0){
+		            //检查 采购单 金额 和 下游买家             
+		            $sell_order_data = $tradeRecord_model->erp_getSellOrderInfo(array('fphm'=>$v_order_no));
+		            if(EC_OK_ERP != $sell_order_data['code']){
+		                Log::error('erp_getSellOrderInfo Fail! order_no=' . $v_order_no);
+		                EC::fail($sell_order_data['code'], $sell_order_data['msg']);
+		            }
+		            if( empty($sell_order_data['data']) ){
+		                Log::error('erp_getSellOrderInfo empty! order_no=' . $v_order_no);
+		                EC::fail(EC_PAR_ERR);
+		            }		            	            
+		            $t_order_amount = floatval($sell_order_data['data']['Details'][0]['js_cgje']); // 金额
+		            $t_order_buyer_code = $sell_order_data['data']['Header']['string8_']; // 下游买家代码
+		            if( $v_amount > $t_order_amount ){
+		                Log::error('check SellOrderInfo-order_amount - order_no=' . $v_order_no . ',amount=' . $t_order_amount . ' != v_amount=' . $v_amount);
+		                EC::fail(EC_PAR_ERR);
+		            }
+		            if( $v_comp_name_buyer_code != $t_order_buyer_code ){
+		                Log::error('check SellOrderInfo-order_buyer_code - v_comp_name_buyer_code=' . $v_comp_name_buyer_code . ' != t_order_buyer_code=' . $t_order_buyer_code );
+		                EC::fail(EC_PAR_ERR);
+		            }
 	            }
-	            if( empty($data['data']) ){
-	                Log::error('erp_getSellOrderInfo empty! order_no=' . $v_order_no);
-	                EC::fail(EC_PAR_ERR);
-	            }
-	            	            
-	            $t_order_amount = floatval($data['data']['Details'][0]['js_cgje']); // 金额
-	            $t_order_buyer_code = $data['data']['Header']['string8_']; // 下游买家代码	
-	                        
-	            if( $v_amount > $t_order_amount ){
-	                Log::error('check SellOrderInfo-order_amount - order_no=' . $v_order_no . ',amount=' . $t_order_amount . ' != v_amount=' . $v_amount);
-	                EC::fail(EC_PAR_ERR);
-	            }
-	            if( $v_comp_name_buyer_code != $t_order_buyer_code ){
-	                Log::error('check SellOrderInfo-order_buyer_code - v_comp_name_buyer_code=' . $v_comp_name_buyer_code . ' != t_order_buyer_code=' . $t_order_buyer_code );
-	                EC::fail(EC_PAR_ERR);
+	            //预付款的付款申请单验证
+	            if($order_apply_type == 1){
+	            	//验证下游买家
+	            	$contact_data2 = $user_model->erp_getContactCompanyInfo(array('dwdm' => $v_comp_name_buyer_code));
+	            	if(EC_OK_ERP != $contact_data2['code']){
+	            		Log::error('erp_getContactCompanyInfo Fail!');
+	            		EC::fail($contact_data2['code'], $contact_data2['msg']);
+	            	}
+	            	$contact_data2 = $contact_data2['data'];
+	            	if(empty($contact_data2) || !isset($contact_data2['dwmc']) || $contact_data2['dwmc'] != $v_comp_name_buyer){
+	            		Log::error('check Fail: comp_name_buyer is empty or is not equal');
+	            		EC::fail(7000, '操作失败：下游买家名称验证失败！');
+	            	}
 	            }
 	        }        
         }
@@ -1299,7 +1325,7 @@ class TradeRecordController extends BaseController {
         $data = $data['data'][0];
         
         EC::success(EC_OK, $data);
-    }
+    }        
     
     public function erp_getOrderBuy(){
         $current_page = Request::post('page');
@@ -1397,6 +1423,7 @@ class TradeRecordController extends BaseController {
         EC::success(EC_OK, $data['data']);
     }
     
+    //erp销售订单列表
     public function erp_getSellOrderList(){
     	$current_page = Request::post('page');
     	$time1 = Request::post('time1');
@@ -1424,7 +1451,7 @@ class TradeRecordController extends BaseController {
     	$conf = $this->getConfig('conf');
     	$page_cnt = $conf['page_count_default'];
     
-    	$loginUser = UserController::getLoginUser();
+    	//$loginUser = UserController::getLoginUser();
     
     	$params = array();
     	$params['fphm'] = $fphm;
@@ -1433,15 +1460,15 @@ class TradeRecordController extends BaseController {
     	//$params['fgs'] = $loginUser['erp_fgsdm'];
     	$params['djzt'] = $status;
     	if($comp_name_code){
-    		$params['dwdm_3'] = $comp_name_code;
+    		$params['sydwdm'] = $comp_name_code;
     		$dwmc = $comp_name;
     	}else if($comp_name){
-    		$params['dwmc_3'] = $comp_name . '%';
+    		$params['sydwmc'] = $comp_name . '%';
     	}
     	$params['page'] = $current_page;
     	$params['rows'] = $page_cnt;
     	
-    
+    	//Log::notice("request-data ===========================>> data = ##" . json_encode($params) . "##" );    
     	$data = $tradeRecord_model->erp_getSellOrderList($params);
     	if(EC_OK_ERP != $data['code']){
     		Log::error('erp_getSellOrderList Fail!');
@@ -1574,9 +1601,9 @@ class TradeRecordController extends BaseController {
     	$ct_params = array();
     	$ct_params['dwmc'] = '湖南金荣钢贸有限公司';//$data['seller_name'];
     	$user_model = $this->model('user');
-    	$ct_info_data = $user_model->erp_getContactCompanyInfo($ct_params);
+    	$ct_info_data = $user_model->erp_getContactCompanyList($ct_params);
     	if(EC_OK_ERP != $ct_info_data['code']){
-    		Log::error('erp_getContactCompanyInfo Fail!');
+    		Log::error('erp_getContactCompanyList Fail!');
     		EC::fail($ct_info_data['code']);
     	}
     	$ct_info_data = $ct_info_data['data']['data'];
