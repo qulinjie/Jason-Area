@@ -66,10 +66,11 @@ $(function () {
            	 	$('#pay-pwd-set').removeAttr('disabled');
                 $("#entity-hint").html(result.msg + '(' + result.code + ')').fadeIn();
             }else {
-                $("#entity-hint").html("设置成功,请重新登录！").fadeIn();
+                $("#entity-hint").html("设置成功,请记住您的支付密码！").fadeIn();
                 setTimeout(function(){
-                	$('#logoutBtn').click();
-            	},1000);                
+                	location.href = BASE_PATH + 'payPassword/reset';
+            	},1000);
+                
             }
         },'json');
         
@@ -90,10 +91,10 @@ $(function () {
            	 	$('#pay-pwd-reset').removeAttr('disabled');
                 $("#entity-hint").html(result.msg + '(' + result.code + ')').fadeIn();
             }else {
-                $("#entity-hint").html("设置成功,请重新登录！").fadeIn();
+                $("#entity-hint").html("设置成功，请记住您新的支付密码！").fadeIn();
                 setTimeout(function(){
-                	$('#logoutBtn').click();
-            	},1000);                
+                	location.href = BASE_PATH + 'payPassword/reset';
+            	},1000);                 
             }
         },'json');
         
