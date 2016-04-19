@@ -40,13 +40,18 @@ class PayPasswordController extends BaseController
 	    	$pay_pwd_data['paypass'] = $pay_pwd;
 	    	$user_model = $this->model('user');
 	    	$res_data = $user_model->erp_payPwdSet($pay_pwd_data);
-	    	
-	    	
+	    		    	
 	    	if($res_data['code'] != EC_OK_ERP){
 	    		Log::error('erp_payPwdSet error'. $res_data['msg']);
 	    		EC::fail($res_data['code'], $res_data['msg']);
 	    	}
-	    	self::$_isCheckExist = true;
+	    		    	
+	    	//重置session
+	    	$loginUser = UserController::getLoginUser();
+	    	$loginUser['paypwd_isexist'] = 1;
+	    	UserController::setLoginSession($loginUser);
+	    	self::$_isCheckExist = NULL;
+	    	
 	    	EC::success(EC_OK);
     	}
     	
