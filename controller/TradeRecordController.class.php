@@ -2132,7 +2132,7 @@ class TradeRecordController extends BaseController {
    		}
    		$sp_data['backhostDesc'] = self::getBackhostStatusByKey($backhost_status);   		
 
-   		if($backhost_status !=8 && $backhost_status!=9){   
+   		if($backhost_status == 4){   
    			
    			//同步付款单给erp
    			$this->erp_syncBillsOfPayment($id);
