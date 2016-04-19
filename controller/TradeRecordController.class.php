@@ -1189,6 +1189,14 @@ class TradeRecordController extends BaseController {
         	EC::fail(EC_PAR_ERR);
         }
         
+        //申请单号是否重复判断
+        $tradeRecord_model = $this->model('tradeRecord');
+        $trade_record_data = $tradeRecord_model->getInfo(array('apply_no' => $apply_no));
+        if(EC_OK == $trade_record_data['code'] && isset($trade_record_data['data']) && !empty($trade_record_data['data'])){
+        	Log::error(' apply_no ['. $apply_no .'] is repeat! ');
+        	EC::fail(EC_PAR_ERR, '申请的号已存在！');
+        }
+        
         //验证支付密码
         if(empty($pay_pwd)){
         	Log::error('create_add params error!');
@@ -1237,8 +1245,7 @@ class TradeRecordController extends BaseController {
             EC::fail($user_info_data['code'], $user_info_data['msg']);
         }
         $ACCOUNT_NO = $user_info_data['data'][0]['ACCOUNT_NO'];
-           
-        $tradeRecord_model = $this->model('tradeRecord');
+                
         $trade_record = array();
         $trade_record_item = array();        
         $sum_amount = 0; //非预付款的所有订单的申请金额的总计
@@ -1925,6 +1932,12 @@ class TradeRecordController extends BaseController {
     		$this->sendTransferTrade($id);
     	} */
     	
+    	//对一级审核通过的给二级审核人发送短信
+    	if($audit_level == 1){
+    		$audit_user_id_second = $tradeRecord_data['audit_user_id_second'];
+    		
+    	}
+    	
     	EC::success(EC_OK, $audit_data['data']);
     }
 
@@ -2143,7 +2156,9 @@ class TradeRecordController extends BaseController {
    			
    			//更新余额   	
    			$this->instance('BcsCustomerController')->spd_loadAccountList_exec($ACCOUNT_NO); 			   			
-   			   			
+
+   			//发送短信给申请人
+   			
    		}
    		
    		EC::success(EC_OK, $sp_data);
