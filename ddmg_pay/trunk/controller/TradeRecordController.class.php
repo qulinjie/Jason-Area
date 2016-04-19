@@ -596,7 +596,7 @@ class TradeRecordController extends BaseController {
         
         //通过账户更新余额
         $account_no      = $data_info['ACCOUNT_NO'];
-        if($data_info['apply_status'] == 2 && '2' == strval($audit_level)) {
+        if($data_info['apply_status'] == 2 && $is_admin && '2' == strval($audit_level)) {
             $bcsCustomerInfo = $bcsCustomer_model->getInfo(array("user_id" => $data_info['user_id']));
 
             //通过银行接口计算实时余额(区分银行,浦发银行和长沙银行)
