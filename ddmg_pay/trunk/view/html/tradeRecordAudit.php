@@ -154,14 +154,22 @@
 	        <input type="text" class="form-control" readonly="readonly" id="add-entity-erp_bmmc" placeholder="" value="<?php echo $data_info['erp_bmmc'];?>"></input>
 	    </div>
 	  </div>
-	  <div class="form-group">
-			<!--增加余额显示 -->
-			<label for="add-entity-dept" class="col-sm-2 control-label">余额</label>
-			<div class="col-sm-4">
-				<input type="text" class="form-control" readonly="readonly" id="add-entity-acct_bal" placeholder="" value="<?php echo $data_info['acct_bal'];?>">
-				<!--<input type="text" class="form-control" readonly="readonly" id="add-entity-avl_bal" placeholder="" value="<?php echo $data_info['avl_bal'];?>">-->
-			</div>
-	  </div>
+	  <?php
+	  if($data_info['apply_status'] == 2) {
+		  ?>
+		  <div class="form-group">
+			  <!--增加余额显示 -->
+			  <label for="add-entity-dept" class="col-sm-2 control-label">余额</label>
+
+			  <div class="col-sm-4">
+				  <input type="text" class="form-control" readonly="readonly" id="add-entity-acct_bal" placeholder=""
+						 value="<?php echo $data_info['acct_bal']; ?>">
+				  <!--<input type="text" class="form-control" readonly="readonly" id="add-entity-avl_bal" placeholder="" value="<?php echo $data_info['avl_bal']; ?>">-->
+			  </div>
+		  </div>
+		<?php
+	  	}
+		?>
 	  <div class="alert alert-danger search-list-hint" id="ref-entity-hint"></div>
 	    
       <p class="text-center"></p>
@@ -267,11 +275,17 @@
 </div>
 <script>
 	$(function() {
+		<?php
+		if($data_info['apply_status'] == 2) {
+		?>
 		var bid_amount = $('#add-entity-order_bid_amount').val();
-		var acct_bal   = $('#add-entity-acct_bal').val();
-		if(parseFloat(bid_amount) > parseFloat(acct_bal)) {
+		var acct_bal = $('#add-entity-acct_bal').val();
+		if (parseFloat(bid_amount) > parseFloat(acct_bal)) {
 			$('#add-entity-audit21').addClass('disabled');
-			$('#add-entity-hint').css('display','block').html('当申请金额高于余额,不能进行审批通过操作！');
+			$('#add-entity-hint').css('display', 'block').html('当申请金额高于余额,不能进行审批通过操作！');
 		}
+		<?php
+		}
+		?>
 	});
 </script>
