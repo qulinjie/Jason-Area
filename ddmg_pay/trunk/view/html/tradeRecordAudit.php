@@ -154,22 +154,15 @@
 	        <input type="text" class="form-control" readonly="readonly" id="add-entity-erp_bmmc" placeholder="" value="<?php echo $data_info['erp_bmmc'];?>"></input>
 	    </div>
 	  </div>
-	  <?php
-	  if($data_info['apply_status'] == 2) {
-		  ?>
-		  <div class="form-group">
-			  <!--增加余额显示 -->
+	  <?php if($data_info['apply_status'] == 2 && $is_admin && '2' == strval($audit_level)) { ?>
+		  <div class="form-group form-group-margin">			  
 			  <label for="add-entity-dept" class="col-sm-2 control-label">余额</label>
-
 			  <div class="col-sm-4">
-				  <input type="text" class="form-control" readonly="readonly" id="add-entity-acct_bal" placeholder=""
-						 value="<?php echo $data_info['acct_bal']; ?>">
+				  <input type="text" class="form-control" readonly="readonly" id="add-entity-acct_bal" placeholder="" value="<?php echo $data_info['acct_bal']; ?>">
 				  <!--<input type="text" class="form-control" readonly="readonly" id="add-entity-avl_bal" placeholder="" value="<?php echo $data_info['avl_bal']; ?>">-->
 			  </div>
 		  </div>
-		<?php
-	  	}
-		?>
+	  <?php }?>
 	  <div class="alert alert-danger search-list-hint" id="ref-entity-hint"></div>
 	    
       <p class="text-center"></p>
