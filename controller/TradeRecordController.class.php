@@ -595,23 +595,24 @@ class TradeRecordController extends BaseController {
         $data_info = $data['data'][0];
         //通过账户更新余额
         $account_no      = $data_info['ACCOUNT_NO'];
-        $bcsCustomerInfo = $bcsCustomer_model->getInfo(array("user_id"=>$data_info['user_id']));
+        if($data_info['apply_status'] == 2) {
+            $bcsCustomerInfo = $bcsCustomer_model->getInfo(array("user_id" => $data_info['user_id']));
 
-        //通过银行接口计算实时余额(区分银行,浦发银行和长沙银行)
-        $record_bank_type  = $bcsCustomerInfo['data'][0]['record_bank_type'];
-        if($record_bank_type == 2) {
-            //$tradeObj  = new BcsTradeController();
-            $tradeObj  = $this->instance('BcsTradeController');
-            $tradeData = $tradeObj->spd_loadAccountTradeList_exec($account_no);
+            //通过银行接口计算实时余额(区分银行,浦发银行和长沙银行)
+            $record_bank_type = $bcsCustomerInfo['data'][0]['record_bank_type'];
+            if ($record_bank_type == 2) {
+                //$tradeObj  = new BcsTradeController();
+                $tradeObj = $this->instance('BcsTradeController');
+                $tradeData = $tradeObj->spd_loadAccountTradeList_exec($account_no);
 
-            //再次查询对应账户的余额
-            $newbcsCustomerInfo = $bcsCustomer_model->getInfo(array("user_id"=>$data_info['user_id']));
-            if(isset($newbcsCustomerInfo['data'][0]) && !empty($newbcsCustomerInfo['data'][0])) {
-                $data_info['acct_bal'] = $bcsCustomerInfo['data'][0]['ACCT_BAL'];
-                $data_info['avl_bal']  = $bcsCustomerInfo['data'][0]['AVL_BAL'];
+                //再次查询对应账户的余额
+                $newbcsCustomerInfo = $bcsCustomer_model->getInfo(array("user_id" => $data_info['user_id']));
+                if (isset($newbcsCustomerInfo['data'][0]) && !empty($newbcsCustomerInfo['data'][0])) {
+                    $data_info['acct_bal'] = $bcsCustomerInfo['data'][0]['ACCT_BAL'];
+                    $data_info['avl_bal'] = $bcsCustomerInfo['data'][0]['AVL_BAL'];
+                }
             }
         }
-
         /*
          **record_bank_type==1时,银行是长沙银行.
          else {
