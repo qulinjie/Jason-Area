@@ -111,6 +111,20 @@ class Log extends Base {
     	Log::write($message, 'Warning','skdx-'.date('Y-m-d'));
     }
     
+    //付款后发送短信 log 定义三种级别
+    public static function fkdxError($message){
+    	Log::write($message);
+    	Log::write($message, 'Error','fkdx-'.date('Y-m-d'));
+    }
+    public static function fkdxNotice($message){
+    	Log::write($message, 'Notice');
+    	Log::write($message, 'Notice','fkdx-'.date('Y-m-d'));
+    }
+    public static function fkdxWarning($message){
+    	Log::write($message, 'Warning');
+    	Log::write($message, 'Warning','fkdx-'.date('Y-m-d'));
+    }
+    
     //审核 log 定义三种级别
     public static function auditError($message){
     	Log::write($message);
