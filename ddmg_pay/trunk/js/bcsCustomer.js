@@ -288,18 +288,78 @@ $(document).ready(function(){
 		renderSpdCardSelect();
 	});
 
+	/*编辑账户*/
+	$(document).on('click','.entity-edit-btn',function() {
+		$('#customer-edit-modal').modal('show');
+		$('#edit-entity-hint').css('display','none').html('');
+		//$('#customer-edit-modal').modal({keyboard: false});
+
+		var valId = $(this).attr("id").replace('entity-edit-', '');
+		var accountId = $(this).attr('cid');
+		$('#oldid').val(valId);
+		$('#oldaccountid').val(accountId);
+		renderSpdCardEdit(accountId);
+	});
+
+	/*编辑更新*/
+	$(document).on('click','#btn-edit-entity',function() {
+		var accountVal  = $('#edit-entity-ACCOUNT_NO').val();
+		var accountInfo = accountVal.split('-');
+		var accountNo   = accountInfo[0];
+		var oldId 		= $('#oldid').val();
+		var accountId   = $('#oldaccountid').val();
+		//var currentPage = $('#entity-current-page').val();
+		var currentPage  = $('#entity-custom-page').val();
+		//判断虚拟账号是否变动
+		if(parseInt(oldId) != parseInt(accountNo)) {
+			$.post(BASE_PATH + 'bcsCustomer/updateCustomerList',{"ACCOUNT_NO":accountNo,"ACCOUNT_OLD_NO":oldId,'ACCOUNT_ID':accountId},
+				  function(data) {
+					  if(data) {
+						  $('#edit-entity-hint').css('display','block').html('更新成功');
+						  setTimeout(function () {
+							  $('#customer-edit-modal').modal('hide');
+						  },1000);
+						  search_entity(currentPage);
+					  }
+				  },
+				  'json'
+			);
+		} else {
+			$('#customer-edit-modal').modal('hide');
+		}
+	});
+
+	/*清空*/
 	function clear_entity_field(){
 		$('#info-entity-id').val('');
-		
 		//$('#add-entity-account').empty();
 		$('#add-entity-comment').val('');
 		$('#add-entity-account').val('');
 		$('#add-entity-account_str').val('');
 	}
 
+	//编辑时,对获取的银行信息的处理
+	function renderSpdCardEdit(id){
+		$("#edit-entity-ACCOUNT_NO").empty();
+		$.post(BASE_PATH + 'bcsCustomer/getAllList', {"record_bank_type":2},
+				function(result){
+					if(result.code != 0) {
+						Messenger().post(result.msg + '(' + result.code + ')');
+					} else {
+						var data     = result['data'];
+						var selected = '';
+						for(var i=0;i<data.length;i++){
+							selected = data[i]['id'] == id?'selected':'';
+							$("#edit-entity-ACCOUNT_NO").append("<option value='" + data[i].ACCOUNT_NO+'-'+data[i].id + "'"+selected+">" + data[i].ACCOUNT_NO + " " + data[i].SIT_NO + "</option>");
+						}
+					}
+				},
+				'json'
+		);
+	}
+
 	function renderSpdCardSelect(id){
 		$("#add-entity-ACCOUNT_NO").empty();
-		
 		$("#add-entity-ACCOUNT_NO").append("<option value='-1'>请选择</option>");
 		$.post(BASE_PATH + 'bcsCustomer/getAllList', {"record_bank_type":2},
 				function(result){
@@ -307,6 +367,7 @@ $(document).ready(function(){
 			        	Messenger().post(result.msg + '(' + result.code + ')');
 			        } else {
 			        	var data = result['data'];
+						var accountNoArr = [];
 			        	for(var i=0;i<data.length;i++){
 			        		$("#add-entity-ACCOUNT_NO").append("<option value='" + data[i].ACCOUNT_NO + "'>" + data[i].ACCOUNT_NO + " " + data[i].SIT_NO + "</option>");
 			        	}

@@ -44,4 +44,9 @@ class BcsCustomerModel extends CurlModel {
     public function spd_loadAccountList($params = array()){
     	return self::sendRequestSelf('bcsCustomer/spd_loadAccountList', $params);
     }
+
+    //删除方法
+    public function delete($params = array()) {
+        return self::sendRequestSelf('bcsCustomer/delete', $params);
+    }
 }

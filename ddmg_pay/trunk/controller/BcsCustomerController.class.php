@@ -19,6 +19,9 @@ class BcsCustomerController extends BaseController {
                 case 'searchList':
                     $this->searchList();
                     break;
+                case 'updateCustomerList':
+                    $this->updateCustomerList();
+                    break;
                 case 'getInfo':
                     $this->getInfo();
                     break;
@@ -62,6 +65,49 @@ class BcsCustomerController extends BaseController {
                     break;
             }
         }
+    }
+
+    //更新开户用户信息
+    public function updateCustomerList($isIndex = false) {
+        $ACCOUNT_NO      = Request::post('ACCOUNT_NO');
+        $ACCOUNT_ID      = Request::post('ACCOUNT_ID');
+        $ACCOUNT_OLD_NO  = Request::post('ACCOUNT_OLD_NO');
+
+        $bcsCustomer_model = $this->model('bcsCustomer');
+
+        $params  = array();
+        foreach (['SIT_NO', 'ACCOUNT_NO','USER_NAME'] as $val){
+            if($$val) $params[$val] = $$val;
+        }
+
+        $data = $bcsCustomer_model->searchList($params);
+        if(EC_OK != $data['code']){
+            Log::error("searchList failed . ");
+            EC::fail($data['code']);
+        }
+
+        $data_list = $data['data'];
+        $params = array();
+        foreach($data_list as $key => $value) {
+            $oldInfo = $bcsCustomer_model->getInfo(array('ACCOUNT_NO'=>$ACCOUNT_OLD_NO));
+            if(isset($oldInfo['data']) && is_array($oldInfo['data'])){
+                foreach($oldInfo['data'] as $values) {
+                    if($ACCOUNT_ID == $values['id']) {
+                        if(!empty($values['user_name'])) {
+                            $params  = array('user_id' => $values['user_id'], 'user_name' => $values['user_name'], 'ACCOUNT_NO' => $ACCOUNT_NO, 'user_fgs_dm' => $values['user_fgs_dm']);
+                            $params1 = array('user_id' => '', 'user_name' => '','id'=>$ACCOUNT_ID,'ACCOUNT_NO' => $ACCOUNT_OLD_NO, 'user_fgs_dm' => '');
+
+                            $data    = $bcsCustomer_model->update($params);
+                            $data1   = $bcsCustomer_model->update($params1);
+                        }
+                        /*else {
+                            //$data1 = $bcsCustomer_model->delete(array('id' => $values['id']));
+                        }*/
+                    }
+                }
+            }
+        }
+        EC::success(EC_OK);
     }
     
     protected function searchList($isIndex = false) {
@@ -765,10 +811,19 @@ class BcsCustomerController extends BaseController {
 //         $params['user_id'] = -1;
         
         $data = $bcsCustomer_model->searchList($params, null, null);
+        $accountNoArr = array();
+        //对返回的账户信息去重处理
+        foreach($data['data'] as $key => $value) {
+            if(in_array($value['ACCOUNT_NO'],$accountNoArr)) {
+                unset($data['data'][$key]);
+            } else {
+                array_push($accountNoArr,$value['ACCOUNT_NO']);
+            }
+        }
         if(EC_OK != $data['code']){
             EC::fail($data['code']);
         }
-        EC::success(EC_OK,$data['data']);
+        EC::success(EC_OK,array_values($data['data']));
     }
     
     private function updateBind(){
