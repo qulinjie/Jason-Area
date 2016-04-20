@@ -1739,7 +1739,252 @@ class TradeRecordController extends BaseController {
     	if($is_ec) EC::success(EC_OK);
     	return true;
     }
+       
+    /**
+    * 订单付款完成支付后同步已支付给erp
+    * @date: 2016-4-19 下午2:36:40
+    * @author: lw
+    * @param: 
+    * $id tradeRecord的id
+    * $tradeRecordData tradeRecord数据，如果该值不为空，则直接使用，反之则用id查
+    * $is_ec == 1时 用EC:: 返回
+    * @return:
+    */
+    public function erp_syncPaidStatus($id = NULL, $tradeRecordData = NULL, $is_ec = 0){
+    	 
+    	$id = ($id == NULL) ? intval(Request::post('id')) : intval($id);
+    	//$tradeRecordData = ($tradeRecordData == NULL) ? Request::post('tradeRecordData') : $tradeRecordData;
+    	$is_ec = ($is_ec == 0) ? intval(Request::post('is_ec')) : intval($is_ec);
+    	Log::notice("erp_syncPaidStatus ===>> id=" .$id ." is_ec=".$is_ec);
+    	 
+    	if(empty($id)){
+    		Log::error('id empty !');
+    		if($is_ec) EC::fail(EC_PAR_ERR);
+    		return false;
+    	}
+    	
+    	$data = array();
+    	if(empty($tradeRecordData)){    
+	    	//根据id查采购单的数据
+	    	$tradeRecord_model = $this->model('tradeRecord');
+	    	$data = $tradeRecord_model->getInfo(array('id' => $id));
+	    	if(empty($data) || !is_array($data) || EC_OK != $data['code'] || !isset($data['data'])) {
+	    		Log::error('tradeRecord getInfo empty !');
+	    		if($is_ec) EC::fail(EC_DAT_NON);
+	    		return false;
+	    	}
+	    	$data = $data['data'][0];
+	    	if(empty($data)) {
+	    		Log::error('tradeRecord getInfo empty !');
+	    		if($is_ec) EC::fail(EC_RED_EMP);
+	    		return false;
+	    	}
+	    	//Log::write(var_export($data, true), 'debug', 'debug2-'.date('Y-m-d'));
+    	}else {
+    		$data = $tradeRecordData;
+    	}
+    	
+    	//判断订单类型是否为普通订单的申请付款单
+    	if(0 != intval($data['order_apply_type'])){
+    		Log::error('order_apply_type ！= 0!');
+    		if($is_ec) EC::fail(EC_ERR,'order_apply_type ！= 0!');
+    		return false;
+    	}
+    	
+    	//判断是否已审批通过
+    	if(5 != intval($data['apply_status'])){
+    		Log::error('audit did not pass!');
+    		if($is_ec) EC::fail(EC_TRADE_TF_NO_AS);
+    		return false;
+    	}
+    	 
+    	//判断是否已付款  order_status 订单交易状态 1-待付款 2-已付款' || 记录状态 0-待补录；1-待记帐；2-待复核；3-待授权；4-完成；8-拒绝；9-撤销；
+    	if(2 != intval($data['order_status'])){
+    		Log::error("the order has not been payment: order_status={$data['order_status']}!");
+    		if($is_ec) EC::fail(EC_TRADE_TF_OS_ERR_2);
+    		return false;
+    	}
+    	if(true && !in_array($data['backhost_status'], array(0,1,2,3,4))){
+    		Log::error("the order has not been payment: backhost_status={$data['backhost_status']}!");
+    		if($is_ec) EC::fail(EC_TRADE_TF_OS_ERR_3);
+    		return false;
+    	}
+    	 
+    	//判断是否已同步erp
+    	if(2 == $data['is_erp_status_sync']){
+    		Log::error("the order has been sync erp: is_erp_status_sync={$data['is_erp_status_sync']}!");
+    		if($is_ec) EC::fail(EC_REC_EST);
+    		return false;
+    	}
+    	
+    	/* //获取详细订单数据
+    	$tradeRecordItem_model = $this->model('tradeRecordItem');
+    	$data_list = $tradeRecordItem_model->searchList(array('trade_record_id' => $data['id']));
+    	if($data_list['code'] !== EC_OK){
+    		Log::error('tradeRecordItem searchList error');
+    	}
+    	$data['list'] = $data_list['data'] ? $data_list['data'] : []; */
+    	
+    	//组织提交参数
+    	$params = array();    	
+    	$params['fphm'] = $data['order_no']; //订单号
+    	$params['fkdh'] = $data['apply_no']; //付款单号
 
+    	Log::notice("request-data ============>> data = ##" . json_encode($params) . "##");
+    	$is_erp_status_sync = 2;
+    	$tradeRecord_model = $this->model('tradeRecord');
+    	$res_data = $tradeRecord_model->erp_syncPaidStatus($params);
+    	Log::notice("response-data ============>> data = ##" . json_encode($res_data) . "##");
+    	
+    	if(EC_OK_ERP != $res_data['code']){
+    		Log::error('erp_syncPaidStatus Fail!'. $res_data['msg']);
+    		//EC::fail($res_data['code']);
+    		$is_erp_status_sync = 3;
+    	}
+    	     	
+    	//修改同步状态
+    	$up_params = array();
+    	$up_params['id'] = $data['id'];
+    	$up_params['is_erp_status_sync'] = $is_erp_status_sync; //是否同步 1否 2同步 3同步失败
+    	$up_params['erp_status_sync_timestamp'] = date('Y-m-d H:i:s',time());
+    	$tr_data = $tradeRecord_model->update($up_params);
+    	if(EC_OK != $tr_data['code']){
+    		Log::error('update order status fail!');
+    		if($is_ec) EC::fail($tr_data['code']);
+    		return false;
+    	}
+    	 
+    	if(3 == $is_erp_status_sync){
+    		if($is_ec) EC::fail($res_data['code'], $res_data['msg']);
+    		return false;
+    	}
+    	 
+    	if($is_ec) EC::success(EC_OK);
+    	return true;
+    }
+    
+    /**
+     * 订单驳回后同步给erp
+     * @date: 2016-4-19 下午2:36:40
+     * @author: lw
+     * @param:
+     * $id tradeRecord的id
+     * $tradeRecordData tradeRecord数据，如果该值不为空，则直接使用，反之则用id查
+     * $is_ec == 1时 用EC:: 返回
+     * @return:
+     */
+    public function erp_syncRejectStatus($id = NULL, $tradeRecordData = NULL, $is_ec = 0){
+    
+    	$id = ($id == NULL) ? intval(Request::post('id')) : intval($id);
+    	//$tradeRecordData = ($tradeRecordData == NULL) ? Request::post('tradeRecordData') : $tradeRecordData;
+    	$is_ec = ($is_ec == 0) ? intval(Request::post('is_ec')) : intval($is_ec);
+    	Log::notice("erp_syncPaidStatus ===>> id=" .$id ." is_ec=".$is_ec);
+    
+    	if(empty($id)){
+    		Log::error('id empty !');
+    		if($is_ec) EC::fail(EC_PAR_ERR);
+    		return false;
+    	}
+    	 
+    	$data = array();
+    	if(empty($tradeRecordData)){
+    		//根据id查采购单的数据
+    		$tradeRecord_model = $this->model('tradeRecord');
+    		$data = $tradeRecord_model->getInfo(array('id' => $id));
+    		if(empty($data) || !is_array($data) || EC_OK != $data['code'] || !isset($data['data'])) {
+    			Log::error('tradeRecord getInfo empty !');
+    			if($is_ec) EC::fail(EC_DAT_NON);
+    			return false;
+    		}
+    		$data = $data['data'][0];
+    		if(empty($data)) {
+    			Log::error('tradeRecord getInfo empty !');
+    			if($is_ec) EC::fail(EC_RED_EMP);
+    			return false;
+    		}
+    		//Log::write(var_export($data, true), 'debug', 'debug2-'.date('Y-m-d'));
+    	}else {
+    		$data = $tradeRecordData;
+    	}
+    	 
+    	//判断订单类型是否为普通订单的申请付款单
+    	if(0 != intval($data['order_apply_type'])){
+    		Log::error('order_apply_type ！= 0!');
+    		if($is_ec) EC::fail(EC_ERR,'order_apply_type ！= 0!');
+    		return false;
+    	}
+    	 
+    	//判断是否已驳回
+    	if(3 != intval($data['apply_status']) && 6 != intval($data['apply_status']) ){
+    		Log::error('audit did not pass!');
+    		if($is_ec) EC::fail(EC_TRADE_TF_NO_AS);
+    		return false;
+    	}
+    
+    	//判断是否已付款  order_status 订单交易状态 1-待付款 2-已付款' || 记录状态 0-待补录；1-待记帐；2-待复核；3-待授权；4-完成；8-拒绝；9-撤销；
+    	if(2 != intval($data['order_status'])){
+    		Log::error("the order has not been payment: order_status={$data['order_status']}!");
+    		if($is_ec) EC::fail(EC_TRADE_TF_OS_ERR_2);
+    		return false;
+    	}
+    	if(true && !in_array($data['backhost_status'], array(0,1,2,3,4))){
+    		Log::error("the order has not been payment: backhost_status={$data['backhost_status']}!");
+    		if($is_ec) EC::fail(EC_TRADE_TF_OS_ERR_3);
+    		return false;
+    	}
+    
+    	//判断是否已同步erp
+    	if(2 == $data['is_erp_status_sync']){
+    		Log::error("the order has been sync erp: is_erp_status_sync={$data['is_erp_status_sync']}!");
+    		if($is_ec) EC::fail(EC_REC_EST);
+    		return false;
+    	}
+    	 
+    	/* //获取详细订单数据
+    	 $tradeRecordItem_model = $this->model('tradeRecordItem');
+    	$data_list = $tradeRecordItem_model->searchList(array('trade_record_id' => $data['id']));
+    	if($data_list['code'] !== EC_OK){
+    	Log::error('tradeRecordItem searchList error');
+    	}
+    	$data['list'] = $data_list['data'] ? $data_list['data'] : []; */
+    	 
+    	//组织提交参数
+    	$params = array();
+    	$params['fphm'] = $data['order_no']; //订单号
+    	$params['sqdh'] = $data['apply_no']; //申请单号
+    
+    	Log::notice("request-data ============>> data = ##" . json_encode($params) . "##");
+    	$is_erp_status_sync = 2;
+    	$tradeRecord_model = $this->model('tradeRecord');
+    	$res_data = $tradeRecord_model->erp_syncRejectStatus($params);
+    	Log::notice("response-data ============>> data = ##" . json_encode($res_data) . "##");
+    	 
+    	if(EC_OK_ERP != $res_data['code']){
+    		Log::error('erp_syncRejectStatus Fail!'. $res_data['msg']);
+    		//EC::fail($res_data['code']);
+    		$is_erp_status_sync = 3;
+    	}
+    	 
+    	//修改同步状态
+    	$up_params = array();
+    	$up_params['id'] = $data['id'];
+    	$up_params['is_erp_status_sync'] = $is_erp_status_sync; //是否同步 1否 2同步 3同步失败
+    	$up_params['erp_status_sync_timestamp'] = date('Y-m-d H:i:s',time());
+    	$tr_data = $tradeRecord_model->update($up_params);
+    	if(EC_OK != $tr_data['code']){
+    		Log::error('update order status fail!');
+    		if($is_ec) EC::fail($tr_data['code']);
+    		return false;
+    	}
+    
+    	if(3 == $is_erp_status_sync){
+    		if($is_ec) EC::fail($res_data['code'], $res_data['msg']);
+    		return false;
+    	}
+    
+    	if($is_ec) EC::success(EC_OK);
+    	return true;
+    }
     
     /**
     * 付款申请单提交erp接口是否可以审批通过
@@ -1933,9 +2178,14 @@ class TradeRecordController extends BaseController {
     	} */
     	
     	//对一级审核通过的给二级审核人发送短信
-    	if($audit_level == 1){
+    	if( 1 == $audit_level  && 2 == $apply_status){
     		$audit_user_id_second = $tradeRecord_data['audit_user_id_second'];
-    		
+    		//SmsController::sendSmsToSecondAuditUser($audit_user_id_second);
+    	}
+    	
+    	//驳回同步erp
+    	if( 0 == intval($tradeRecord_data['order_apply_type']) && (3 == $apply_status || 6 == $apply_status)){
+    		//$this->erp_syncRejectStatus($id);
     	}
     	
     	EC::success(EC_OK, $audit_data['data']);
@@ -2151,13 +2401,18 @@ class TradeRecordController extends BaseController {
    			//同步付款单给erp
    			$this->erp_syncBillsOfPayment($id);
    			
+   			if(0 == intval($tradeRecord_data['order_apply_type'])){
+   				//同步付款状态给erp
+   				//$this->erp_syncPaidStatus($id);
+   			}
    			//更新流水   			
    			$this->instance('BcsTradeController')->spd_loadAccountTradeList_exec($ACCOUNT_NO);
    			
    			//更新余额   	
    			$this->instance('BcsCustomerController')->spd_loadAccountList_exec($ACCOUNT_NO); 			   			
 
-   			//发送短信给申请人
+   			//发送短信给申请人   			
+   			//SmsController::sendSmsCodeForPayment($ACCOUNT_NO, time(), $tradeRecord_data['seller_name'], $tradeRecord_data['order_bid_amount']);   			
    			
    		}
    		
