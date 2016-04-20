@@ -121,14 +121,15 @@
             	 <?php             
 	            	//apply_status 申请状态 1一级待审核 2一级审核通过 3一级审核驳回 4二级待审核 5二级审核通过 6二级审核驳回            	
 	            	//order_status 订单交易状态 1-待付款 2-已付款
-	            	if(!$is_admin && $current_user_id == $item['audit_user_id_first']){
+	            	
+	            	if($audit_level != 0 && !$is_admin && $current_user_id == $item['audit_user_id_first']){
 	            		//一级审批
 	            		if(1==$item['apply_status']){
 	            			echo "审批";
 	            		}else{
 	            			echo "查看";
 	            		}
-	            	}elseif($is_admin && $current_user_id == $item['audit_user_id_second']){
+	            	}elseif($audit_level != 0 && $is_admin && $current_user_id == $item['audit_user_id_second']){
 	            		//二级审批
 						if(2==$item['apply_status']){
 							echo "审批";

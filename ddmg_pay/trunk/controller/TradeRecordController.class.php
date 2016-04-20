@@ -1282,7 +1282,7 @@ class TradeRecordController extends BaseController {
 		                EC::fail(EC_PAR_ERR);
 		            }		            	            
 		            $t_order_amount = floatval($sell_order_data['data']['Details'][0]['js_cgje']); // 金额
-		            $t_order_buyer_code = $sell_order_data['data']['Header']['string8_']; // 下游买家代码
+		            $t_order_buyer_code = $sell_order_data['data']['Header']['dwdm_3']; // 下游买家代码
 		            if( $v_amount > $t_order_amount ){
 		                Log::error('check SellOrderInfo-order_amount - order_no=' . $v_order_no . ',amount=' . $t_order_amount . ' != v_amount=' . $v_amount);
 		                EC::fail(EC_PAR_ERR);
