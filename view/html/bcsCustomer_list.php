@@ -4,7 +4,44 @@
  * 	
  */
 ?>
-
+<div class="modal fade" id="customer-edit-modal">
+	<div class="modal-dialog" style="width: 800px;">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+				<h4 class="modal-title" id="info_customer_title">编辑资料</h4>
+			</div>
+			<div class="modal-body">
+				<form class="form-horizontal">
+					<div class="form-group">
+						<label for="add-entity-bankType" class="col-sm-2 control-label">银行</label>
+						<div class="col-sm-9">
+							<select class="form-control" id="add-entity-bankType">
+								<option value="2">浦发银行</option>
+							</select>
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="add-entity-ACCOUNT_NO" class="col-sm-2 control-label">专属账户</label>
+						<div class="col-sm-9">
+							<select class="form-control" id="edit-entity-ACCOUNT_NO">
+							</select>
+						</div>
+					</div>
+					<div class="alert alert-success" style="display:none;" id="edit-entity-hint"></div>
+					<input type="hidden" name="oldid" id="oldid">
+					<input type="hidden" name="oldaccountid" id="oldaccountid">
+				</form>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+				<button type="button" class="btn btn-primary" id="btn-edit-entity">确定</button>
+			</div>
+		</div>
+	</div>
+</div>
 <div class="modal fade" id="confirm-callHelp-modal">
 	<div class="modal-dialog">
 		<div class="modal-content">
@@ -70,7 +107,7 @@
 				</tr>
 			</thead>
 			<tbody>
-<?php foreach ($data_list as $item){?>
+			<?php foreach ($data_list as $item){?>
 			<tr>
 				<td style="display:none"><?php echo $item['id'];?><input type="hidden" value="<?php echo $item['status'];?>"></td>
 				<td><?php echo ('-1' == $item['user_id']) ? '' : $item['user_id'];?></td>
@@ -107,10 +144,11 @@
     			       <?php } else if( 2 == $item[record_bank_type] ){ ?>
     			       <a id="entity-loadInfo-btn2" href="#" data-toggle="modal" data-keyboard="false" data-backdrop="static">刷新</a>
     			       <?php } ?>
+					   <a id="entity-edit-<?php echo $item['ACCOUNT_NO'];?>" cid="<?php echo $item['id'];?>" class="entity-edit-btn" href="#" data-toggle="modal" data-keyboard="false" data-backdrop="static">编辑</a>
 					</div>
 				</td>
 			</tr>
-<?php }?>
+		<?php }?>
 		</tbody>
 		</table>
 		<nav>
