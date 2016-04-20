@@ -823,7 +823,7 @@ class BcsTradeController extends BaseController {
                 
                 if( 1 == $trade['debitCreditFlag']){
                 	//对收款进行短信发送
-                	$this->sendSmsCodeForCollection($trade['ACCOUNT_NO'], $trade['oppositeAcctName'], $trade['TX_AMT'], $trade['oppositeAcctNo']);
+                	SmsController::sendSmsCodeForCollection($trade['ACCOUNT_NO'], $trade['oppositeAcctName'], $trade['TX_AMT'], $trade['oppositeAcctNo']);
                 
                 	//收款单同步erp
                 	$this->erp_syncBillsOfCollection($trade['MCH_TRANS_NO']);
@@ -1068,96 +1068,6 @@ class BcsTradeController extends BaseController {
     	    	
     	if($is_ec) EC::success(EC_OK);
     	return true;
-    }
-        
-    /**
-    * 收款后发送短信给用户
-    * @date: 2016-4-14 下午3:30:52
-    * @author: lw
-    * @param: 
-    * $ACCOUNT_NO 虚拟帐号
-    * $payer 付款单位名称
-    * $amount 付款金额
-    * $payer_no 付款银行号
-    * @return:
-    */
-    public function sendSmsCodeForCollection($ACCOUNT_NO, $payer, $amount, $payer_no){
-    	
-    	Log::skdxNotice('sendSmsCodeForCollection . ACCOUNT_NO='. $ACCOUNT_NO .',payer='. $payer .',amount='. $amount . ',payer_no=' . $payer_no);    	 
-    	if(empty($ACCOUNT_NO) || empty($payer) || empty($amount)){
-    		Log::skdxError('empty args!');
-    		//EC::fail(EC_PAR_ERR);
-    		return false;
-    	}    	
-    	
-    	//查合伙人信息
-    	$bcs_params  = array();
-    	$bcs_params['ACCOUNT_NO'] = $ACCOUNT_NO;
-    	$bcsCustomer_model = $this->model('bcsCustomer');
-    	$bcs_data = $bcsCustomer_model->getInfo($bcs_params);
-    	if(EC_OK != $bcs_data['code'] || !is_array($bcs_data) || !isset($bcs_data['data'])){
-    		Log::skdxError("bcsCustomer getInfo failed . ");
-    		//EC::fail(EC_USR_NON);
-    		return false;
-    	}
-    	$bcs_data = $bcs_data['data'][0];
-    	if(empty($bcs_data)) {
-    		Log::skdxError('bcsCustomer getInfo empty !');
-    		//EC::fail(EC_RED_EMP);
-    		return false;
-    	}
-    	
-    	//根据user_id查erp接口得到用户信息    	
-    	$user_data = array();
-    	$user_model = $this->model('user');
-    	$user_data = $user_model->erp_getInfo(array('usercode' => $bcs_data['user_id']));
-    	if(EC_OK_ERP != $user_data['code']){
-    		Log::skdxError('erp_getInfo Fail!' . $user_data['msg']);
-    		//EC::fail($user_data['code']);
-    		return false;
-    	}
-    	$user_data = $user_data['data'];
-    	if(empty($user_data) || !isset($user_data['mobile']) || empty($user_data['mobile'])){
-    		Log::skdxError('mobile is empty!');
-    		//EC::fail(EC_DATA_EMPTY_ERR);
-    		return false;
-    	}
-    	$mobile = $user_data['mobile'];
-    	
-    	//判断是否为大合伙人,如果不是大合伙人，则查大合伙人电话
-    	if(!empty($user_data['fuserid']) && $bcs_data['user_id'] != $user_data['fuserid']){
-    		$user_data2 = $user_model->erp_getInfo(array('usercode' => $user_data['fuserid']));
-    		if(EC_OK_ERP != $user_data2['code']){
-    			Log::skdxError('2 erp_getInfo Fail!' . $user_data2['msg']);
-    			//EC::fail($user_data2['code']);
-    			return false;
-    		}
-    		$user_data2 = $user_data2['data'];
-    		if(!empty($user_data2) && isset($user_data2['mobile']) && !empty($user_data2['mobile'])){
-    			$mobile = $user_data2['mobile'];
-    		}    		
-    	}
-    	    		
-    	// 尊敬的客户，【Value1】已提交支付，支付【Value2】为【Value3】，请及时跟进。感谢您的支持【Value4】
-    	$data = array();
-    	$data['tel'] = $user_data['mobile']; //'13367310112'电话
-    	$data['codetype'] = '10'; 
-    	$payer_no = empty($payer_no) ? '' : '(账号:'.$payer_no.')';
-    	$value1 = $payer . $payer_no;    	
-    	$data['value1'] = $value1 ; //付款公司名称
-    	$data['value2'] = '金额'; 
-    	$data['value3'] = $amount.'元';
-    	$data['value4'] = '!';
-    
-    	//Log::write("user_data==".var_export($user_data, true), 'debug', 'debug123-'.date('Y-m-d'));
-    	 
-    	Log::skdxNotice("request-data ============>> data = ##" . json_encode($data) . "##" );
-    	$sms_model = $this->model('sms');
-    	$res_data = $sms_model->erp_sendSmsCode($data);
-    	Log::skdxNotice("response-data ============>> res_data = ##" . json_encode($res_data) . "##" );
-    	
-    	return true;
-    	//EC::success(EC_OK, $res_data);
     }
     
 }
