@@ -969,8 +969,8 @@ $(document).on('click', '#for-test-btn', function(event){
 		
 		var orderHeader = data.Header;
 		var orderDetails = data.Details[0];
-		var quote_comp_name_code = orderHeader['dwdm_3']; // 订单的收款单位代码
-		var quote_comp_name= orderHeader['dwmc_3']; // 订单收款单位名称
+		var quote_comp_name_code = orderHeader['string8_']; // 订单的收款单位代码
+		var quote_comp_name= orderHeader['string7_']; // 订单收款单位名称
 		var comp_name_code = $('#add-entity-comp_name_code').val(); // 收款单位代码
 		var comp_name = $('#add-entity-comp_name').val(); // 收款单位名称
 		
@@ -999,8 +999,8 @@ $(document).on('click', '#for-test-btn', function(event){
 		//var fphm = $('#add-entity-fphm').val(); // 业务单号-发票号码
 		var quote_fphm = orderHeader['fphm_']; // 业务单号-发票号码
 		var quote_amount = orderDetails['js_cgje']; // 申请金额
-		var quote_comp_name_buyer = orderHeader['string7_']; // 下游买家
-		var quote_comp_name_buyer_code = orderHeader['string8_']; // 下游买家代码
+		var quote_comp_name_buyer = orderHeader['dwmc_3']; // 下游买家
+		var quote_comp_name_buyer_code = orderHeader['dwdm_3']; // 下游买家代码
 		if(quote_comp_name_buyer == 'null' || quote_comp_name_buyer == null ){
 			quote_comp_name_buyer = '';
 		}

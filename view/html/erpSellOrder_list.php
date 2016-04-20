@@ -39,7 +39,7 @@
 					<th style="display:none">id</th>
 					<th>操作</th>
 					<th>业务单号</th>
-					<th>单位名称</th>
+					<th>收款单位名称</th>
 					<th>日期</th>
 					<th>金额（元）</th>
 					<th>仓库</th>
@@ -55,7 +55,7 @@
 	  			<a id="entity-search-select-<?php echo $item['fphm_'];?>" class="entity-search-select" href="#" data-toggle="modal" data-keyboard="false" data-backdrop="static">选择</a>
 	        </td>
             <td><!-- <a href="#" id="td_a_fphm"> --><?php echo $item['fphm_'];?><!-- </a> --></td>
-            <td><?php echo $item['dwmc_3'];?></td>
+            <td><?php echo $item['string7_'];?></td>
             <td><?php echo date("Y-m-d h:i:s",strtotime($item['rq_']));?></td>
             <td><?php echo number_format($item['numeric5_'],2);?></td>
             <td><?php echo $item['ckmc_'];?></td>
