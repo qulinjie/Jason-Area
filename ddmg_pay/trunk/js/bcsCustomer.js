@@ -306,12 +306,13 @@ $(document).ready(function(){
 		var accountVal  = $('#edit-entity-ACCOUNT_NO').val();
 		var accountInfo = accountVal.split('-');
 		var accountNo   = accountInfo[0];
+		var customerId  = accountInfo[1];
 		var oldId 		= $('#oldid').val();
 		var accountId   = $('#oldaccountid').val();
 		//var currentPage = $('#entity-current-page').val();
 		var currentPage  = $('#entity-custom-page').val();
 		//判断虚拟账号是否变动
-		if(parseInt(oldId) != parseInt(accountNo)) {
+		if(parseInt(customerId) != parseInt(accountId)) {
 			$.post(BASE_PATH + 'bcsCustomer/updateCustomerList',{"ACCOUNT_NO":accountNo,"ACCOUNT_OLD_NO":oldId,'ACCOUNT_ID':accountId},
 				  function(data) {
 					  if(data) {
